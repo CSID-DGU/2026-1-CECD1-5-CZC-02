@@ -1,0 +1,21 @@
+# Common
+.env
+.DS_Store
+.vscode/
+.idea/
+
+# Frontend
+node_modules/
+dist/
+build/
+
+# Backend
+.gradle/
+build/
+out/
+*.class
+
+# Python
+__pycache__/
+*.pyc
+venv/
