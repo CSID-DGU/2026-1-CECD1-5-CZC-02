@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Settings as SettingsIcon } from 'lucide-react';
-// 이미지 파일들은 src/assets/ 에 넣고 경로 수정하세요
-// import jandiIcon from '../assets/jandi-icon.png';
-// import jandiText from '../assets/jandi-text.png';
-// import gmailIcon from '../assets/gmail-icon.png';
-// import gmailText from '../assets/gmail-text.png';
+import jandiIcon from '../assets/image-8.png';
+import jandiText from '../assets/image-9.png';
+import gmailIcon from '../assets/image-10.png';
+import gmailText from '../assets/image-14.png';
 
 export function SettingsPage() {
   const [connections, setConnections] = useState([
@@ -13,9 +12,8 @@ export function SettingsPage() {
       name: 'Gmail',
       icon: (
         <div className="flex items-center gap-2">
-          {/* <img src={gmailIcon} alt="Gmail Icon" className="w-6 h-6 object-contain" /> */}
-          {/* <img src={gmailText} alt="Gmail" className="h-5 w-12 object-contain" /> */}
-          <span className="text-sm font-medium">✉️ Gmail</span>
+          <img src={gmailIcon} alt="Gmail Icon" className="w-6 h-6 object-contain" />
+          <img src={gmailText} alt="Gmail" className="h-5 w-12 object-contain" style={{ mixBlendMode: 'darken', backgroundColor: '#ffffff' }} />
         </div>
       ),
       connected: true,
@@ -26,9 +24,8 @@ export function SettingsPage() {
       name: 'Jandi',
       icon: (
         <div className="flex items-center gap-2">
-          {/* <img src={jandiIcon} alt="Jandi Icon" className="w-6 h-6 object-contain" /> */}
-          {/* <img src={jandiText} alt="JANDI" className="h-4 object-contain" /> */}
-          <span className="text-sm font-medium">📋 JANDI</span>
+          <img src={jandiIcon} alt="Jandi Icon" className="w-6 h-6 object-contain" />
+          <img src={jandiText} alt="JANDI" className="h-4 object-contain" style={{ mixBlendMode: 'darken', backgroundColor: '#ffffff' }} />
         </div>
       ),
       connected: false,

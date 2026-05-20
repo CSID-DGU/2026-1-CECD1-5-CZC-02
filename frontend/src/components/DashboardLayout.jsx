@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Settings, Search, LayoutDashboard, ChevronDown, ChevronRight } from 'lucide-react';
-// 이미지 파일들은 src/assets/ 에 넣고 경로 수정하세요
-// import logoImg from '../assets/logo.png';
-// import jandiIcon from '../assets/jandi-icon.png';
-// import jandiText from '../assets/jandi-text.png';
-// import gmailIcon from '../assets/gmail-icon.png';
-// import gmailText from '../assets/gmail-text.png';
+import logoImg from '../assets/님버스테크 이미지.png';
+import jandiIcon from '../assets/image-8.png';
+import jandiText from '../assets/image-9.png';
+import gmailIcon from '../assets/image-10.png';
+import gmailText from '../assets/image-14.png';
+
 import { ReminderModal } from './ReminderModal';
 
 export function DashboardLayout({ children }) {
@@ -14,21 +14,16 @@ export function DashboardLayout({ children }) {
   const location = useLocation();
   const [salesmapConnected, setSalesmapConnected] = useState(false);
   const [companyName, setCompanyName] = useState('');
-  const [jandiConnected, setJandiConnected] = useState(false);
-  const [gmailConnected, setGmailConnected] = useState(true);
   const [showReminder, setShowReminder] = useState(false);
   const [currentReminder, setCurrentReminder] = useState(null);
 
   useEffect(() => {
     const connected = localStorage.getItem('salesmapConnected') === 'true';
     const company = localStorage.getItem('salesmapCompany') || '';
-    const jandiConn = localStorage.getItem('jandiConnected') === 'true';
     setSalesmapConnected(connected);
     setCompanyName(company);
-    setJandiConnected(jandiConn);
   }, [location]);
 
-  // 리마인더 로직 - 하루 전과 30분 전
   useEffect(() => {
     const upcomingEvents = [
       {
@@ -47,7 +42,6 @@ export function DashboardLayout({ children }) {
       }
     ];
 
-    // 데모를 위해 3초 후에 리마인더 표시
     const timer = setTimeout(() => {
       setCurrentReminder(upcomingEvents[0]);
       setShowReminder(true);
@@ -76,51 +70,49 @@ export function DashboardLayout({ children }) {
         <div className="w-56 bg-[#F3F4F6] border-r border-gray-200 flex flex-col">
           <div className="p-5 border-b border-gray-200 bg-[#F3F4F6]">
             <div className="flex items-center gap-2">
-              {/* <img src={logoImg} alt="NimbusTech" className="w-7 h-7 object-contain" style={{ mixBlendMode: 'multiply' }} /> */}
-              <div className="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center text-sm">☁️</div>
+              <img src={logoImg} alt="NimbusTech" className="w-7 h-7 object-contain" style={{ mixBlendMode: 'multiply' }} />
               <span className="text-sm text-gray-700 font-medium">NimbusTech</span>
             </div>
           </div>
 
           <nav className="flex-1 py-2">
-            {/* Schedule Automation Section */}
             <div>
               <div className="px-3 py-2 text-xs text-gray-500 uppercase tracking-wide flex items-center justify-between">
                 <span>일정관리 자동화</span>
                 <ChevronRight className="w-3 h-3" />
-              </div>
+             </div>
               <button
                 onClick={() => navigate('/messages/jandi')}
                 className={`w-full flex items-center px-4 py-3 transition-colors ${
                   location.pathname.includes('/messages/jandi')
-                    ? 'bg-white text-gray-900 border-l-2 border-blue-500'
+                    ? 'bg-[#F3F4F6] text-gray-900 border-l-2 border-blue-500'
                     : 'text-gray-600 hover:bg-white/50'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  {/* <img src={jandiIcon} alt="Jandi Icon" className="w-6 h-6 object-contain" /> */}
-                  <span className="text-sm">📋 JANDI</span>
+                  <img src={jandiIcon} alt="JANDI" className="w-6 h-6 object-contain" style={{ mixBlendMode: 'multiply' }} />
+                  <img src={jandiText} alt="JANDI text" className="h-5 object-contain" style={{ mixBlendMode: 'multiply' }} />
                 </div>
               </button>
               <button
                 onClick={() => navigate('/messages/gmail')}
                 className={`w-full flex items-center px-4 py-3 transition-colors ${
                   location.pathname.includes('/messages/gmail')
-                    ? 'bg-white text-gray-900 border-l-2 border-blue-500'
+                    ? 'bg-[#F3F4F6] text-gray-900 border-l-2 border-blue-500'
                     : 'text-gray-600 hover:bg-white/50'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  {/* <img src={gmailIcon} alt="Gmail Icon" className="w-6 h-6 object-contain" /> */}
-                  <span className="text-sm">✉️ Gmail</span>
+                  <img src={gmailIcon} alt="Gmail" className="w-6 h-6 object-contain" style={{ mixBlendMode: 'multiply' }} />
+                  <img src={gmailText} alt="Gmail text" className="h-6 object-contain" style={{ mixBlendMode: 'multiply' }} />
                 </div>
               </button>
             </div>
 
             {/* Main Menu */}
             <div className="mt-6">
-              <div className="px-3 py-2 text-xs text-gray-500 uppercase tracking-wide">
-                메뉴
+              <div className="px-3 py-2 text-xs text-gray-500 uppercase tracking-wide text-left">
+                 메뉴
               </div>
               {menuItems.map((item) => {
                 const Icon = item.icon;
@@ -143,7 +135,7 @@ export function DashboardLayout({ children }) {
           </nav>
 
           <div className="p-4 border-t border-gray-200">
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-gray-500 text-left">
               Salesmap 연동 시스템
             </div>
           </div>
@@ -151,7 +143,6 @@ export function DashboardLayout({ children }) {
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
-          {/* Top Bar */}
           <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <h2 className="text-base text-gray-800">
@@ -174,7 +165,6 @@ export function DashboardLayout({ children }) {
                 <Search className="w-4 h-4 text-gray-600" />
               </button>
 
-              {/* User Profile */}
               <div className="flex items-center gap-2 pl-3 border-l border-gray-200">
                 <div className="w-7 h-7 bg-blue-500 rounded-full flex items-center justify-center">
                   <span className="text-xs text-white">김</span>
@@ -187,7 +177,6 @@ export function DashboardLayout({ children }) {
             </div>
           </div>
 
-          {/* Content Area */}
           <div className="flex-1 overflow-auto">
             {children}
           </div>
