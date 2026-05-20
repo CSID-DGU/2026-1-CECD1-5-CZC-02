@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// 로고 이미지가 있으면 아래 경로를 맞게 수정하세요
-// import logoImg from '../assets/logo.png';
-
+import logoImg from '../assets/님버스테크 이미지.png';
 export function LoginPage() {
   const navigate = useNavigate();
   const [isSignup, setIsSignup] = useState(false);
@@ -25,11 +23,9 @@ export function LoginPage() {
           <div className="text-center max-w-md">
             <div className="border-2 border-blue-200 rounded-2xl px-16 py-12 mb-8 bg-white">
               <div className="flex flex-col items-center mb-6">
-                {/* 로고 이미지가 있으면 아래 주석을 해제하고 위 import도 활성화하세요 */}
-                {/* <img src={logoImg} alt="NimbusTech" className="w-20 h-20 mb-4 object-contain" /> */}
-                <div className="w-20 h-20 mb-4 bg-blue-100 rounded-full flex items-center justify-center text-3xl">
-                  ☁️
-                </div>
+                {}
+                {}
+                <img src={logoImg} alt="NimbusTech" className="w-20 h-20 mb-4 object-contain" />
                 <h1 className="text-3xl text-gray-800 font-medium">NimbusTech</h1>
               </div>
               <p className="text-xl text-gray-600">AI 영업 자동화 에이전트</p>
