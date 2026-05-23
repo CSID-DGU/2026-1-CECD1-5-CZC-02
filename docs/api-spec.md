@@ -26,6 +26,21 @@ SALESMAP 활동 자동화 AI Agent 백엔드 API 명세 초안입니다.
 }
 ```
 
+### Validation Error
+
+요청 DTO 검증에 실패하면 HTTP `400 Bad Request`와 함께 아래 형식으로 응답합니다.
+
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "data": {
+    "title": "제목은 필수입니다.",
+    "content": "내용은 필수입니다."
+  }
+}
+```
+
 ## Health API
 
 ### GET /api/health
@@ -65,7 +80,15 @@ SALESMAP 활동 자동화 AI Agent 백엔드 API 명세 초안입니다.
 }
 ```
 
-응답:
+요청 필드:
+
+| Field | Type | Required | Validation |
+| --- | --- | --- | --- |
+| sourceType | String | Yes | 빈 문자열 불가 |
+| title | String | Yes | 빈 문자열 불가 |
+| content | String | Yes | 빈 문자열 불가 |
+
+성공 응답:
 
 ```json
 {
@@ -77,6 +100,20 @@ SALESMAP 활동 자동화 AI Agent 백엔드 API 명세 초안입니다.
     "title": "고객 미팅 관련 이메일",
     "content": "원본 이메일 또는 메시지 내용",
     "status": "CREATED"
+  }
+}
+```
+
+400 Bad Request:
+
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "data": {
+    "sourceType": "원본 데이터 타입은 필수입니다.",
+    "title": "제목은 필수입니다.",
+    "content": "내용은 필수입니다."
   }
 }
 ```
@@ -128,7 +165,13 @@ AI 분석 요청 및 분석 결과 확인 API입니다.
 }
 ```
 
-응답:
+요청 필드:
+
+| Field | Type | Required | Validation |
+| --- | --- | --- | --- |
+| sourceId | Long | Yes | `null` 불가, 1 이상 |
+
+성공 응답:
 
 ```json
 {
@@ -145,6 +188,18 @@ AI 분석 요청 및 분석 결과 확인 API입니다.
     "followUpAction": "견적서 발송",
     "summary": "고객이 제품 도입을 검토 중이며 다음 미팅 예정",
     "status": "ANALYZED"
+  }
+}
+```
+
+400 Bad Request:
+
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "data": {
+    "sourceId": "sourceId는 1 이상이어야 합니다."
   }
 }
 ```
@@ -201,7 +256,13 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
 }
 ```
 
-응답:
+요청 필드:
+
+| Field | Type | Required | Validation |
+| --- | --- | --- | --- |
+| analysisId | Long | Yes | `null` 불가, 1 이상 |
+
+성공 응답:
 
 ```json
 {
@@ -212,6 +273,18 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
     "analysisId": 1,
     "externalRecordId": "mock-salesmap-001",
     "status": "REGISTERED"
+  }
+}
+```
+
+400 Bad Request:
+
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "data": {
+    "analysisId": "analysisId는 1 이상이어야 합니다."
   }
 }
 ```
@@ -236,7 +309,16 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
 }
 ```
 
-응답:
+요청 필드:
+
+| Field | Type | Required | Validation |
+| --- | --- | --- | --- |
+| analysisId | Long | Yes | `null` 불가, 1 이상 |
+| title | String | Yes | 빈 문자열 불가 |
+| scheduleDateTime | LocalDateTime | Yes | `null` 불가, 현재 또는 미래 시간 |
+| memo | String | Yes | 빈 문자열 불가 |
+
+성공 응답:
 
 ```json
 {
@@ -249,6 +331,21 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
     "scheduleDateTime": "2026-05-29T14:00:00",
     "memo": "견적서 준비 후 미팅",
     "status": "SCHEDULED"
+  }
+}
+```
+
+400 Bad Request:
+
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "data": {
+    "analysisId": "analysisId는 1 이상이어야 합니다.",
+    "title": "일정 제목은 필수입니다.",
+    "scheduleDateTime": "일정 날짜와 시간은 현재 이후여야 합니다.",
+    "memo": "메모는 필수입니다."
   }
 }
 ```
