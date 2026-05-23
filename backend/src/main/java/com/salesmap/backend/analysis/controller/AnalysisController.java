@@ -4,6 +4,7 @@ import com.salesmap.backend.analysis.dto.AnalysisCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisResponse;
 import com.salesmap.backend.analysis.service.AnalysisService;
 import com.salesmap.backend.global.response.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ public class AnalysisController {
     }
 
     @PostMapping
-    public ApiResponse<AnalysisResponse> createAnalysis(@RequestBody AnalysisCreateRequest request) {
+    public ApiResponse<AnalysisResponse> createAnalysis(@Valid @RequestBody AnalysisCreateRequest request) {
         return ApiResponse.success("AI 분석이 완료되었습니다.", analysisService.createAnalysis(request));
     }
 

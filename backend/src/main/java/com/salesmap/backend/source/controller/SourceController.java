@@ -4,6 +4,7 @@ import com.salesmap.backend.global.response.ApiResponse;
 import com.salesmap.backend.source.dto.SourceCreateRequest;
 import com.salesmap.backend.source.dto.SourceResponse;
 import com.salesmap.backend.source.service.SourceService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ public class SourceController {
     }
 
     @PostMapping
-    public ApiResponse<SourceResponse> createSource(@RequestBody SourceCreateRequest request) {
+    public ApiResponse<SourceResponse> createSource(@Valid @RequestBody SourceCreateRequest request) {
         return ApiResponse.success("원본 데이터가 생성되었습니다.", sourceService.createSource(request));
     }
 
