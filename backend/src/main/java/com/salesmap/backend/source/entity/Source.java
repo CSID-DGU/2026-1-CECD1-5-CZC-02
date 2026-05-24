@@ -113,4 +113,8 @@ public class Source extends BaseEntity {
     public LocalDateTime getCollectedAt() {
         return collectedAt;
     }
+
+    public void markAnalyzed() {
+        this.status = SourceStatus.ANALYZED;
+    }
 }
