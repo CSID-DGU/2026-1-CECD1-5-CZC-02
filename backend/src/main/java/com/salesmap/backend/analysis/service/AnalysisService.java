@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -54,5 +55,16 @@ public class AnalysisService {
                 .orElseThrow(() -> new NoSuchElementException("분석 결과를 찾을 수 없습니다."));
 
         return AnalysisResponse.from(analysis);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AnalysisResponse> getAnalysesBySource(Long sourceId) {
+        if (!sourceRepository.existsById(sourceId)) {
+            throw new NoSuchElementException("원본 데이터를 찾을 수 없습니다.");
+        }
+
+        return analysisRepository.findBySourceId(sourceId).stream()
+                .map(AnalysisResponse::from)
+                .toList();
     }
 }

@@ -13,6 +13,7 @@ import com.salesmap.backend.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -59,6 +60,17 @@ public class SourceService {
                 .orElseThrow(() -> new NoSuchElementException("원본 데이터를 찾을 수 없습니다."));
 
         return SourceResponse.from(source);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SourceResponse> getSourcesByUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new NoSuchElementException("사용자를 찾을 수 없습니다.");
+        }
+
+        return sourceRepository.findByUserId(userId).stream()
+                .map(SourceResponse::from)
+                .toList();
     }
 
     private Integration findIntegration(Long integrationId, Long userId) {

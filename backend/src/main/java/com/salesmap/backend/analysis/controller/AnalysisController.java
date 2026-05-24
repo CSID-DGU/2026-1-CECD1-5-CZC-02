@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/analysis")
 public class AnalysisController {
@@ -30,5 +32,10 @@ public class AnalysisController {
     @GetMapping("/{analysisId}")
     public ApiResponse<AnalysisResponse> getAnalysis(@PathVariable Long analysisId) {
         return ApiResponse.success(analysisService.getAnalysis(analysisId));
+    }
+
+    @GetMapping("/source/{sourceId}")
+    public ApiResponse<List<AnalysisResponse>> getAnalysesBySource(@PathVariable Long sourceId) {
+        return ApiResponse.success(analysisService.getAnalysesBySource(sourceId));
     }
 }

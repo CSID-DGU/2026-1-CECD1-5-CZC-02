@@ -12,6 +12,7 @@ import com.salesmap.backend.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -48,6 +49,17 @@ public class ScheduleService {
         );
 
         return ScheduleResponse.from(scheduleRepository.save(schedule));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ScheduleResponse> getSchedulesByUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new NoSuchElementException("사용자를 찾을 수 없습니다.");
+        }
+
+        return scheduleRepository.findByUserId(userId).stream()
+                .map(ScheduleResponse::from)
+                .toList();
     }
 
     private Analysis findAnalysis(Long analysisId) {

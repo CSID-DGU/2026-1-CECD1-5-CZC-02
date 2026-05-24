@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -48,5 +49,16 @@ public class SalesmapService {
         analysis.markApproved();
 
         return SalesmapRegisterResponse.from(salesmapRecordRepository.save(record));
+    }
+
+    @Transactional(readOnly = true)
+    public List<SalesmapRegisterResponse> getRecordsByAnalysis(Long analysisId) {
+        if (!analysisRepository.existsById(analysisId)) {
+            throw new NoSuchElementException("분석 결과를 찾을 수 없습니다.");
+        }
+
+        return salesmapRecordRepository.findByAnalysisId(analysisId).stream()
+                .map(SalesmapRegisterResponse::from)
+                .toList();
     }
 }
