@@ -2,14 +2,15 @@
 
 SALESMAP 활동 자동화 AI Agent의 DB 테이블 설계 초안입니다.
 
-현재 문서는 실제 DB 연동 전 설계 기준입니다. 아직 Entity, Repository, MySQL 설정은 만들지 않았습니다.
+현재 문서는 실제 구현된 JPA Entity와 Repository 기준입니다.
 
 ## Design Notes
 
-- 기본 PK는 `BIGINT` 타입의 auto increment 값을 가정합니다.
-- 시간 컬럼은 `DATETIME` 타입을 가정합니다.
-- 상태값은 우선 문자열 기반 `VARCHAR`로 설계하고, 추후 Java enum 또는 DB enum 적용을 검토할 수 있습니다.
-- 모든 테이블에는 추후 운영 추적을 위해 `created_at`, `updated_at` 컬럼을 두는 것을 권장합니다.
+- 기본 PK는 `BIGINT` auto increment입니다.
+- 모든 Entity는 `BaseEntity`를 상속하며 `created_at`, `updated_at`을 JPA Auditing으로 자동 관리합니다.
+- Java enum은 `@Enumerated(EnumType.STRING)`으로 저장합니다.
+- 관계는 현재 모두 `ManyToOne(fetch = FetchType.LAZY)` 기준입니다.
+- MySQL 테이블은 `spring.jpa.hibernate.ddl-auto=update` 설정으로 생성/갱신됩니다.
 
 ## users
 
@@ -22,16 +23,20 @@ SALESMAP 활동 자동화 AI Agent의 DB 테이블 설계 초안입니다.
 
 | Column | Type Example | Key | Description |
 | --- | --- | --- | --- |
-| id | BIGINT | PK | 사용자 ID |
-| email | VARCHAR(255) | UNIQUE | 사용자 이메일 |
-| name | VARCHAR(100) |  | 사용자 이름 |
-| password | VARCHAR(255) |  | 비밀번호 해시값. 소셜 로그인만 사용할 경우 nullable 가능 |
-| role | VARCHAR(50) |  | 사용자 권한 |
-| status | VARCHAR(50) |  | 사용자 상태 |
-| created_at | DATETIME |  | 생성 시각 |
-| updated_at | DATETIME |  | 수정 시각 |
+| id | BIGINT | PK, NOT NULL | 사용자 ID |
+| email | VARCHAR(255) | UNIQUE, NOT NULL | 사용자 이메일 |
+| name | VARCHAR(100) | NOT NULL | 사용자 이름 |
+| password | VARCHAR(255) | NOT NULL | 비밀번호. 현재는 암호화 전 단계 |
+| role | VARCHAR(50) | NOT NULL | 사용자 권한. 현재 생성 API 기본값은 `USER` |
+| status | VARCHAR(50) | NOT NULL | 사용자 상태 |
+| created_at | DATETIME | NOT NULL | 생성 시각 |
+| updated_at | DATETIME | NOT NULL | 수정 시각 |
 
-상태값 예시:
+제약 조건:
+- PK: `id`
+- UNIQUE: `email`
+
+상태값:
 - `ACTIVE`
 - `INACTIVE`
 - `DELETED`
@@ -52,22 +57,31 @@ Gmail, Jandi, Salesmap 등 외부 서비스 연동 정보를 저장합니다.
 
 | Column | Type Example | Key | Description |
 | --- | --- | --- | --- |
-| id | BIGINT | PK | 연동 ID |
-| user_id | BIGINT | FK | 사용자 ID |
-| provider | VARCHAR(50) |  | 연동 서비스 종류 |
-| external_account_id | VARCHAR(255) |  | 외부 서비스 계정 ID |
-| access_token | TEXT |  | 접근 토큰. 실제 저장 시 암호화 필요 |
-| refresh_token | TEXT |  | 갱신 토큰. 실제 저장 시 암호화 필요 |
-| token_expires_at | DATETIME |  | 토큰 만료 시각 |
-| status | VARCHAR(50) |  | 연동 상태 |
-| created_at | DATETIME |  | 생성 시각 |
-| updated_at | DATETIME |  | 수정 시각 |
+| id | BIGINT | PK, NOT NULL | 연동 ID |
+| user_id | BIGINT | FK, NOT NULL | 사용자 ID |
+| provider | VARCHAR(50) | NOT NULL | 연동 서비스 종류 |
+| external_account_id | VARCHAR(255) | NOT NULL | 외부 서비스 계정 ID |
+| access_token | TEXT | NOT NULL | 접근 토큰. 실제 운영 저장 시 암호화 필요 |
+| refresh_token | TEXT | NOT NULL | 갱신 토큰. 실제 운영 저장 시 암호화 필요 |
+| token_expires_at | DATETIME | NOT NULL | 토큰 만료 시각 |
+| status | VARCHAR(50) | NOT NULL | 연동 상태 |
+| created_at | DATETIME | NOT NULL | 생성 시각 |
+| updated_at | DATETIME | NOT NULL | 수정 시각 |
 
 PK/FK:
 - PK: `id`
 - FK: `user_id` -> `users.id`
 
-상태값 예시:
+제약 조건:
+- UNIQUE: `user_id`, `provider`
+- JPA constraint name: `uk_integrations_user_provider`
+
+provider 값:
+- `GMAIL`
+- `JANDI`
+- `SALESMAP`
+
+상태값:
 - `CONNECTED`
 - `DISCONNECTED`
 - `EXPIRED`
@@ -88,24 +102,30 @@ PK/FK:
 
 | Column | Type Example | Key | Description |
 | --- | --- | --- | --- |
-| id | BIGINT | PK | 원본 데이터 ID |
-| user_id | BIGINT | FK | 사용자 ID |
+| id | BIGINT | PK, NOT NULL | 원본 데이터 ID |
+| user_id | BIGINT | FK, NOT NULL | 사용자 ID |
 | integration_id | BIGINT | FK, nullable | 원본 데이터를 가져온 외부 연동 ID |
-| source_type | VARCHAR(50) |  | 원본 데이터 종류 |
+| source_type | VARCHAR(50) | NOT NULL | 원본 데이터 종류 |
 | external_source_id | VARCHAR(255) | nullable | Gmail message ID, Jandi message ID 등 외부 원본 ID |
-| title | VARCHAR(255) |  | 원본 데이터 제목 |
-| content | TEXT |  | 원본 데이터 내용 |
-| status | VARCHAR(50) |  | 원본 데이터 처리 상태 |
+| title | VARCHAR(255) | NOT NULL | 원본 데이터 제목 |
+| content | TEXT | NOT NULL | 원본 데이터 내용 |
+| status | VARCHAR(50) | NOT NULL | 원본 데이터 처리 상태 |
 | collected_at | DATETIME | nullable | 외부 서비스에서 수집한 시각 |
-| created_at | DATETIME |  | 생성 시각 |
-| updated_at | DATETIME |  | 수정 시각 |
+| created_at | DATETIME | NOT NULL | 생성 시각 |
+| updated_at | DATETIME | NOT NULL | 수정 시각 |
 
 PK/FK:
 - PK: `id`
 - FK: `user_id` -> `users.id`
 - FK: `integration_id` -> `integrations.id`
 
-상태값 예시:
+source_type 값:
+- `EMAIL`
+- `JANDI_MESSAGE`
+- `MEETING_NOTE`
+- `MANUAL_INPUT`
+
+상태값:
 - `CREATED`
 - `COLLECTED`
 - `ANALYSIS_REQUESTED`
@@ -128,8 +148,8 @@ AI 분석 요청과 분석 결과를 저장합니다.
 
 | Column | Type Example | Key | Description |
 | --- | --- | --- | --- |
-| id | BIGINT | PK | 분석 결과 ID |
-| source_id | BIGINT | FK | 원본 데이터 ID |
+| id | BIGINT | PK, NOT NULL | 분석 결과 ID |
+| source_id | BIGINT | FK, NOT NULL | 원본 데이터 ID |
 | customer_name | VARCHAR(255) | nullable | 고객사명 |
 | contact_name | VARCHAR(100) | nullable | 담당자명 |
 | product_name | VARCHAR(255) | nullable | 제품명 |
@@ -137,17 +157,17 @@ AI 분석 요청과 분석 결과를 저장합니다.
 | schedule_text | VARCHAR(255) | nullable | 원문에서 추출한 일정 표현 |
 | follow_up_action | VARCHAR(255) | nullable | 후속 조치 |
 | summary | TEXT | nullable | 요약 내용 |
-| status | VARCHAR(50) |  | 분석 상태 |
+| status | VARCHAR(50) | NOT NULL | 분석 상태 |
 | analyzed_at | DATETIME | nullable | 분석 완료 시각 |
 | approved_at | DATETIME | nullable | 사용자 승인 시각 |
-| created_at | DATETIME |  | 생성 시각 |
-| updated_at | DATETIME |  | 수정 시각 |
+| created_at | DATETIME | NOT NULL | 생성 시각 |
+| updated_at | DATETIME | NOT NULL | 수정 시각 |
 
 PK/FK:
 - PK: `id`
 - FK: `source_id` -> `sources.id`
 
-상태값 예시:
+상태값:
 - `REQUESTED`
 - `ANALYZING`
 - `ANALYZED`
@@ -170,23 +190,23 @@ PK/FK:
 
 | Column | Type Example | Key | Description |
 | --- | --- | --- | --- |
-| id | BIGINT | PK | 일정 ID |
-| user_id | BIGINT | FK | 사용자 ID |
+| id | BIGINT | PK, NOT NULL | 일정 ID |
+| user_id | BIGINT | FK, NOT NULL | 사용자 ID |
 | analysis_id | BIGINT | FK, nullable | 분석 결과 ID |
-| title | VARCHAR(255) |  | 일정 제목 |
-| schedule_datetime | DATETIME |  | 일정 날짜와 시간 |
+| title | VARCHAR(255) | NOT NULL | 일정 제목 |
+| schedule_date_time | DATETIME | NOT NULL | 일정 날짜와 시간 |
 | memo | TEXT | nullable | 일정 메모 |
-| reminder_datetime | DATETIME | nullable | 리마인드 시각 |
-| status | VARCHAR(50) |  | 일정 상태 |
-| created_at | DATETIME |  | 생성 시각 |
-| updated_at | DATETIME |  | 수정 시각 |
+| reminder_date_time | DATETIME | nullable | 리마인드 시각 |
+| status | VARCHAR(50) | NOT NULL | 일정 상태 |
+| created_at | DATETIME | NOT NULL | 생성 시각 |
+| updated_at | DATETIME | NOT NULL | 수정 시각 |
 
 PK/FK:
 - PK: `id`
 - FK: `user_id` -> `users.id`
 - FK: `analysis_id` -> `analyses.id`
 
-상태값 예시:
+상태값:
 - `SCHEDULED`
 - `COMPLETED`
 - `CANCELED`
@@ -207,21 +227,21 @@ Salesmap API 등록 요청과 등록 결과를 저장합니다.
 
 | Column | Type Example | Key | Description |
 | --- | --- | --- | --- |
-| id | BIGINT | PK | Salesmap 등록 기록 ID |
-| analysis_id | BIGINT | FK | 분석 결과 ID |
+| id | BIGINT | PK, NOT NULL | Salesmap 등록 기록 ID |
+| analysis_id | BIGINT | FK, NOT NULL | 분석 결과 ID |
 | external_record_id | VARCHAR(255) | nullable | Salesmap에서 반환한 외부 레코드 ID |
-| request_payload | JSON | nullable | Salesmap 등록 요청 payload |
-| response_payload | JSON | nullable | Salesmap 응답 payload |
-| status | VARCHAR(50) |  | 등록 상태 |
+| request_payload | TEXT | nullable | Salesmap 등록 요청 payload. 현재 JPA `@Lob String` |
+| response_payload | TEXT | nullable | Salesmap 응답 payload. 현재 JPA `@Lob String` |
+| status | VARCHAR(50) | NOT NULL | 등록 상태 |
 | registered_at | DATETIME | nullable | 등록 완료 시각 |
-| created_at | DATETIME |  | 생성 시각 |
-| updated_at | DATETIME |  | 수정 시각 |
+| created_at | DATETIME | NOT NULL | 생성 시각 |
+| updated_at | DATETIME | NOT NULL | 수정 시각 |
 
 PK/FK:
 - PK: `id`
 - FK: `analysis_id` -> `analyses.id`
 
-상태값 예시:
+상태값:
 - `REQUESTED`
 - `REGISTERED`
 - `FAILED`
@@ -269,3 +289,24 @@ users
 -> 사용자가 분석 결과 확인 및 승인
 -> 일정 등록 또는 Salesmap 등록
 ```
+
+## Current Implementation Summary
+
+현재 DB 구현 완료 상태:
+
+| Domain | Table | Entity | Repository | Implemented |
+| --- | --- | --- | --- | --- |
+| user | `users` | `User` | `UserRepository` | Yes |
+| integration | `integrations` | `Integration` | `IntegrationRepository` | Yes |
+| source | `sources` | `Source` | `SourceRepository` | Yes |
+| analysis | `analyses` | `Analysis` | `AnalysisRepository` | Yes |
+| schedule | `schedules` | `Schedule` | `ScheduleRepository` | Yes |
+| salesmap | `salesmap_records` | `SalesmapRecord` | `SalesmapRecordRepository` | Yes |
+
+현재 unique 제약:
+- `users.email`
+- `integrations.user_id + integrations.provider`
+
+현재 실제 API 구현 상태:
+- `User API`는 DB 기반 생성/조회까지 구현되어 있습니다.
+- `Source`, `Analysis`, `Schedule`, `Salesmap` API는 아직 mock Service 기반입니다.
