@@ -8,7 +8,10 @@ import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 public record ScheduleCreateRequest(
-        @NotNull(message = "analysisId는 필수입니다.")
+        @NotNull(message = "userId는 필수입니다.")
+        @Positive(message = "userId는 1 이상이어야 합니다.")
+        Long userId,
+
         @Positive(message = "analysisId는 1 이상이어야 합니다.")
         Long analysisId,
 

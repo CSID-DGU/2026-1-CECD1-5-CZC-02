@@ -137,4 +137,9 @@ public class Analysis extends BaseEntity {
     public LocalDateTime getApprovedAt() {
         return approvedAt;
     }
+
+    public void markApproved() {
+        this.status = AnalysisStatus.APPROVED;
+        this.approvedAt = LocalDateTime.now();
+    }
 }
