@@ -1,0 +1,24 @@
+package com.salesmap.backend.source.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+public record SourceCreateRequest(
+        @NotNull(message = "userId는 필수입니다.")
+        @Positive(message = "userId는 1 이상이어야 합니다.")
+        Long userId,
+
+        @Positive(message = "integrationId는 1 이상이어야 합니다.")
+        Long integrationId,
+
+        @NotBlank(message = "원본 데이터 타입은 필수입니다.")
+        String sourceType,
+
+        @NotBlank(message = "제목은 필수입니다.")
+        String title,
+
+        @NotBlank(message = "내용은 필수입니다.")
+        String content
+) {
+}
