@@ -4,7 +4,7 @@ SALESMAP 활동 자동화 AI Agent 백엔드 API 명세 초안입니다.
 
 모든 응답은 공통 응답 형식인 `ApiResponse`로 감싸서 반환합니다.
 
-현재 `User API`는 MySQL DB 기반으로 동작합니다. 그 외 Source, Analysis, Salesmap, Schedule API는 아직 mock Service 기반입니다.
+현재 `User API`와 `Source API`는 MySQL DB 기반으로 동작합니다. Analysis, Salesmap, Schedule API는 아직 mock Service 기반입니다.
 
 ## Common Response
 
@@ -176,7 +176,7 @@ Path Variable:
 
 ## Source API
 
-원본 데이터 관리 API입니다. 이메일, 메시지, 회의록 등 AI 분석 전 원본 데이터를 다룹니다.
+원본 데이터 관리 API입니다. 이메일, 메시지, 회의록 등 AI 분석 전 원본 데이터를 DB에 저장하고 조회합니다.
 
 ### POST /api/sources
 
@@ -187,6 +187,8 @@ Path Variable:
 
 ```json
 {
+  "userId": 1,
+  "integrationId": null,
   "sourceType": "EMAIL",
   "title": "고객 미팅 관련 이메일",
   "content": "원본 이메일 또는 메시지 내용"
@@ -197,7 +199,9 @@ Path Variable:
 
 | Field | Type | Required | Validation |
 | --- | --- | --- | --- |
-| sourceType | String | Yes | 빈 문자열 불가 |
+| userId | Long | Yes | `null` 불가, 1 이상 |
+| integrationId | Long | No | 값이 있으면 1 이상 |
+| sourceType | String | Yes | 빈 문자열 불가, `EMAIL`, `JANDI_MESSAGE`, `MEETING_NOTE`, `MANUAL_INPUT` 중 하나 |
 | title | String | Yes | 빈 문자열 불가 |
 | content | String | Yes | 빈 문자열 불가 |
 
@@ -209,25 +213,73 @@ Path Variable:
   "message": "원본 데이터가 생성되었습니다.",
   "data": {
     "sourceId": 1,
+    "userId": 1,
+    "integrationId": null,
     "sourceType": "EMAIL",
+    "externalSourceId": null,
     "title": "고객 미팅 관련 이메일",
     "content": "원본 이메일 또는 메시지 내용",
-    "status": "CREATED"
+    "status": "CREATED",
+    "collectedAt": null,
+    "createdAt": "2026-05-24T14:00:00",
+    "updatedAt": "2026-05-24T14:00:00"
   }
 }
 ```
 
-400 Bad Request:
+400 Bad Request - Validation Error:
 
 ```json
 {
   "success": false,
   "message": "Validation failed",
   "data": {
+    "userId": "userId는 필수입니다.",
+    "integrationId": "integrationId는 1 이상이어야 합니다.",
     "sourceType": "원본 데이터 타입은 필수입니다.",
     "title": "제목은 필수입니다.",
     "content": "내용은 필수입니다."
   }
+}
+```
+
+400 Bad Request - Invalid Source Type:
+
+```json
+{
+  "success": false,
+  "message": "지원하지 않는 원본 데이터 타입입니다.",
+  "data": null
+}
+```
+
+400 Bad Request - Integration Owner Mismatch:
+
+```json
+{
+  "success": false,
+  "message": "해당 사용자의 연동 정보가 아닙니다.",
+  "data": null
+}
+```
+
+404 Not Found - User Not Found:
+
+```json
+{
+  "success": false,
+  "message": "사용자를 찾을 수 없습니다.",
+  "data": null
+}
+```
+
+404 Not Found - Integration Not Found:
+
+```json
+{
+  "success": false,
+  "message": "연동 정보를 찾을 수 없습니다.",
+  "data": null
 }
 ```
 
@@ -245,7 +297,7 @@ Path Variable:
 요청:
 없음
 
-응답:
+성공 응답:
 
 ```json
 {
@@ -253,11 +305,27 @@ Path Variable:
   "message": "요청이 성공했습니다.",
   "data": {
     "sourceId": 1,
+    "userId": 1,
+    "integrationId": null,
     "sourceType": "EMAIL",
+    "externalSourceId": null,
     "title": "고객 미팅 관련 이메일",
     "content": "원본 이메일 또는 메시지 내용",
-    "status": "CREATED"
+    "status": "CREATED",
+    "collectedAt": null,
+    "createdAt": "2026-05-24T14:00:00",
+    "updatedAt": "2026-05-24T14:00:00"
   }
+}
+```
+
+404 Not Found:
+
+```json
+{
+  "success": false,
+  "message": "원본 데이터를 찾을 수 없습니다.",
+  "data": null
 }
 ```
 
@@ -466,8 +534,9 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
 ## Current Notes
 
 - User API는 MySQL DB 기반으로 저장 및 조회합니다.
-- Source, Analysis, Salesmap, Schedule API는 아직 mock Service 기반입니다.
-- 현재 Entity와 Repository는 users 도메인에만 적용되어 있습니다.
+- Source API는 MySQL DB 기반으로 저장 및 조회합니다.
+- Analysis, Salesmap, Schedule API는 아직 mock Service 기반입니다.
+- Entity와 Repository는 users, integrations, sources, analyses, schedules, salesmap_records 도메인에 적용되어 있습니다.
 - 아직 인증/인가가 적용되어 있지 않습니다.
 - 아직 Gmail, Jandi, AI module, Salesmap 외부 API를 실제 호출하지 않습니다.
 - 날짜와 시간은 ISO-8601 형식 문자열을 사용합니다. 예: `2026-05-29T14:00:00`
