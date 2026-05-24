@@ -2,7 +2,9 @@
 
 SALESMAP 활동 자동화 AI Agent 백엔드 API 명세 초안입니다.
 
-현재 문서는 DB 연결 전 mock API 기준입니다. 모든 응답은 공통 응답 형식인 `ApiResponse`로 감싸서 반환합니다.
+모든 응답은 공통 응답 형식인 `ApiResponse`로 감싸서 반환합니다.
+
+현재 `User API`는 MySQL DB 기반으로 동작합니다. 그 외 Source, Analysis, Salesmap, Schedule API는 아직 mock Service 기반입니다.
 
 ## Common Response
 
@@ -58,6 +60,117 @@ SALESMAP 활동 자동화 AI Agent 백엔드 API 명세 초안입니다.
   "success": true,
   "message": "Backend server is running",
   "data": "OK"
+}
+```
+
+## User API
+
+사용자 생성 및 조회 API입니다. 현재 `users` Entity와 `UserRepository`를 통해 MySQL DB에 저장하고 조회합니다.
+
+### POST /api/users
+
+설명:
+사용자를 생성합니다. 생성 시 `role`은 `USER`, `status`는 `ACTIVE`로 저장됩니다. 비밀번호 암호화와 로그인 기능은 아직 구현하지 않았습니다.
+
+요청:
+
+```json
+{
+  "email": "test@example.com",
+  "name": "홍길동",
+  "password": "1234"
+}
+```
+
+요청 필드:
+
+| Field | Type | Required | Validation |
+| --- | --- | --- | --- |
+| email | String | Yes | 빈 문자열 불가, 이메일 형식 |
+| name | String | Yes | 빈 문자열 불가 |
+| password | String | Yes | 빈 문자열 불가 |
+
+성공 응답:
+
+```json
+{
+  "success": true,
+  "message": "사용자가 생성되었습니다.",
+  "data": {
+    "id": 1,
+    "email": "test@example.com",
+    "name": "홍길동",
+    "role": "USER",
+    "status": "ACTIVE",
+    "createdAt": "2026-05-24T14:00:00",
+    "updatedAt": "2026-05-24T14:00:00"
+  }
+}
+```
+
+400 Bad Request - Validation Error:
+
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "data": {
+    "email": "이메일 형식이 올바르지 않습니다.",
+    "name": "이름은 필수입니다.",
+    "password": "비밀번호는 필수입니다."
+  }
+}
+```
+
+400 Bad Request - Duplicate Email:
+
+```json
+{
+  "success": false,
+  "message": "이미 사용 중인 이메일입니다.",
+  "data": null
+}
+```
+
+### GET /api/users/{id}
+
+설명:
+사용자 ID로 사용자를 조회합니다.
+
+Path Variable:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| id | Long | 사용자 ID |
+
+요청:
+없음
+
+성공 응답:
+
+```json
+{
+  "success": true,
+  "message": "요청이 성공했습니다.",
+  "data": {
+    "id": 1,
+    "email": "test@example.com",
+    "name": "홍길동",
+    "role": "USER",
+    "status": "ACTIVE",
+    "createdAt": "2026-05-24T14:00:00",
+    "updatedAt": "2026-05-24T14:00:00"
+  }
+}
+```
+
+404 Not Found:
+
+```json
+{
+  "success": false,
+  "message": "사용자를 찾을 수 없습니다.",
+  "data": null
 }
 ```
 
@@ -352,9 +465,9 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
 
 ## Current Notes
 
-- 현재 API는 mock Service 기반입니다.
-- 아직 DB 저장은 하지 않습니다.
-- 아직 Entity와 Repository는 없습니다.
+- User API는 MySQL DB 기반으로 저장 및 조회합니다.
+- Source, Analysis, Salesmap, Schedule API는 아직 mock Service 기반입니다.
+- 현재 Entity와 Repository는 users 도메인에만 적용되어 있습니다.
 - 아직 인증/인가가 적용되어 있지 않습니다.
 - 아직 Gmail, Jandi, AI module, Salesmap 외부 API를 실제 호출하지 않습니다.
 - 날짜와 시간은 ISO-8601 형식 문자열을 사용합니다. 예: `2026-05-29T14:00:00`
