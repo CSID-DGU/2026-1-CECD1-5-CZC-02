@@ -4,7 +4,7 @@ SALESMAP 활동 자동화 AI Agent 백엔드 API 명세 초안입니다.
 
 모든 응답은 공통 응답 형식인 `ApiResponse`로 감싸서 반환합니다.
 
-현재 `User API`와 `Source API`는 MySQL DB 기반으로 동작합니다. Analysis, Salesmap, Schedule API는 아직 mock Service 기반입니다.
+현재 `User API`, `Source API`, `Analysis API`는 MySQL DB 기반으로 동작합니다. Salesmap, Schedule API는 아직 mock Service 기반입니다.
 
 ## Common Response
 
@@ -331,12 +331,12 @@ Path Variable:
 
 ## Analysis API
 
-AI 분석 요청 및 분석 결과 확인 API입니다.
+AI 분석 요청 및 분석 결과 확인 API입니다. 현재 실제 AI module은 호출하지 않고, mock 분석 결과를 `analyses` 테이블에 저장합니다.
 
 ### POST /api/analysis
 
 설명:
-원본 데이터 ID를 기반으로 AI 분석을 요청합니다. 현재는 AI module을 실제 호출하지 않고 mock 분석 결과를 반환합니다.
+`sourceId`를 기반으로 Source를 조회한 뒤 mock 분석 결과를 DB에 저장합니다. 분석 생성 시 Source 상태는 `ANALYZED`로 변경됩니다.
 
 요청:
 
@@ -368,12 +368,16 @@ AI 분석 요청 및 분석 결과 확인 API입니다.
     "scheduleText": "다음 주 수요일 미팅",
     "followUpAction": "견적서 발송",
     "summary": "고객이 제품 도입을 검토 중이며 다음 미팅 예정",
-    "status": "ANALYZED"
+    "status": "ANALYZED",
+    "analyzedAt": "2026-05-24T14:00:00",
+    "approvedAt": null,
+    "createdAt": "2026-05-24T14:00:00",
+    "updatedAt": "2026-05-24T14:00:00"
   }
 }
 ```
 
-400 Bad Request:
+400 Bad Request - Validation Error:
 
 ```json
 {
@@ -385,10 +389,20 @@ AI 분석 요청 및 분석 결과 확인 API입니다.
 }
 ```
 
+404 Not Found - Source Not Found:
+
+```json
+{
+  "success": false,
+  "message": "원본 데이터를 찾을 수 없습니다.",
+  "data": null
+}
+```
+
 ### GET /api/analysis/{analysisId}
 
 설명:
-분석 ID로 AI 분석 결과를 조회합니다.
+분석 ID로 DB에 저장된 AI 분석 결과를 조회합니다.
 
 Path Variable:
 
@@ -399,7 +413,7 @@ Path Variable:
 요청:
 없음
 
-응답:
+성공 응답:
 
 ```json
 {
@@ -415,8 +429,22 @@ Path Variable:
     "scheduleText": "다음 주 수요일 미팅",
     "followUpAction": "견적서 발송",
     "summary": "고객이 제품 도입을 검토 중이며 다음 미팅 예정",
-    "status": "ANALYZED"
+    "status": "ANALYZED",
+    "analyzedAt": "2026-05-24T14:00:00",
+    "approvedAt": null,
+    "createdAt": "2026-05-24T14:00:00",
+    "updatedAt": "2026-05-24T14:00:00"
   }
+}
+```
+
+404 Not Found:
+
+```json
+{
+  "success": false,
+  "message": "분석 결과를 찾을 수 없습니다.",
+  "data": null
 }
 ```
 
@@ -535,7 +563,8 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
 
 - User API는 MySQL DB 기반으로 저장 및 조회합니다.
 - Source API는 MySQL DB 기반으로 저장 및 조회합니다.
-- Analysis, Salesmap, Schedule API는 아직 mock Service 기반입니다.
+- Analysis API는 MySQL DB 기반으로 저장 및 조회합니다. 단, 실제 AI module은 아직 호출하지 않고 mock 분석 결과를 저장합니다.
+- Salesmap, Schedule API는 아직 mock Service 기반입니다.
 - Entity와 Repository는 users, integrations, sources, analyses, schedules, salesmap_records 도메인에 적용되어 있습니다.
 - 아직 인증/인가가 적용되어 있지 않습니다.
 - 아직 Gmail, Jandi, AI module, Salesmap 외부 API를 실제 호출하지 않습니다.
