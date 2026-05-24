@@ -329,6 +329,71 @@ Path Variable:
 }
 ```
 
+### GET /api/sources?userId=1
+
+설명:
+사용자 ID 기준으로 원본 데이터 목록을 조회합니다.
+
+Query Parameter:
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| userId | Long | Yes | 사용자 ID |
+
+성공 응답:
+
+```json
+{
+  "success": true,
+  "message": "요청이 성공했습니다.",
+  "data": [
+    {
+      "sourceId": 1,
+      "userId": 1,
+      "integrationId": null,
+      "sourceType": "EMAIL",
+      "externalSourceId": null,
+      "title": "고객 미팅 관련 이메일",
+      "content": "원본 이메일 또는 메시지 내용",
+      "status": "CREATED",
+      "collectedAt": null,
+      "createdAt": "2026-05-24T14:00:00",
+      "updatedAt": "2026-05-24T14:00:00"
+    }
+  ]
+}
+```
+
+빈 목록 응답:
+
+```json
+{
+  "success": true,
+  "message": "요청이 성공했습니다.",
+  "data": []
+}
+```
+
+400 Bad Request - Missing Query Parameter:
+
+```json
+{
+  "success": false,
+  "message": "필수 요청 파라미터가 누락되었습니다: userId",
+  "data": null
+}
+```
+
+404 Not Found - User Not Found:
+
+```json
+{
+  "success": false,
+  "message": "사용자를 찾을 수 없습니다.",
+  "data": null
+}
+```
+
 ## Analysis API
 
 AI 분석 요청 및 분석 결과 확인 API입니다. 현재 실제 AI module은 호출하지 않고, mock 분석 결과를 `analyses` 테이블에 저장합니다.
@@ -448,6 +513,64 @@ Path Variable:
 }
 ```
 
+### GET /api/analysis/source/{sourceId}
+
+설명:
+원본 데이터 ID 기준으로 AI 분석 결과 목록을 조회합니다.
+
+Path Variable:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| sourceId | Long | 원본 데이터 ID |
+
+성공 응답:
+
+```json
+{
+  "success": true,
+  "message": "요청이 성공했습니다.",
+  "data": [
+    {
+      "analysisId": 1,
+      "sourceId": 1,
+      "customerName": "ABC Corp",
+      "contactName": "홍길동",
+      "productName": "Sales Solution",
+      "amount": 1000000,
+      "scheduleText": "다음 주 수요일 미팅",
+      "followUpAction": "견적서 발송",
+      "summary": "고객이 제품 도입을 검토 중이며 다음 미팅 예정",
+      "status": "ANALYZED",
+      "analyzedAt": "2026-05-24T14:00:00",
+      "approvedAt": null,
+      "createdAt": "2026-05-24T14:00:00",
+      "updatedAt": "2026-05-24T14:00:00"
+    }
+  ]
+}
+```
+
+빈 목록 응답:
+
+```json
+{
+  "success": true,
+  "message": "요청이 성공했습니다.",
+  "data": []
+}
+```
+
+404 Not Found - Source Not Found:
+
+```json
+{
+  "success": false,
+  "message": "원본 데이터를 찾을 수 없습니다.",
+  "data": null
+}
+```
+
 ## Salesmap API
 
 Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤 Salesmap 등록 이력을 DB에 저장하는 흐름입니다.
@@ -513,6 +636,59 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
 }
 ```
 
+### GET /api/salesmap/analysis/{analysisId}
+
+설명:
+분석 결과 ID 기준으로 Salesmap 등록 이력 목록을 조회합니다.
+
+Path Variable:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| analysisId | Long | 분석 결과 ID |
+
+성공 응답:
+
+```json
+{
+  "success": true,
+  "message": "요청이 성공했습니다.",
+  "data": [
+    {
+      "salesmapRecordId": 1,
+      "analysisId": 1,
+      "externalRecordId": "mock-salesmap-1",
+      "requestPayload": "{\"analysisId\":1}",
+      "responsePayload": "{\"externalRecordId\":\"mock-salesmap-1\",\"status\":\"REGISTERED\"}",
+      "status": "REGISTERED",
+      "registeredAt": "2026-05-24T14:00:00",
+      "createdAt": "2026-05-24T14:00:00",
+      "updatedAt": "2026-05-24T14:00:00"
+    }
+  ]
+}
+```
+
+빈 목록 응답:
+
+```json
+{
+  "success": true,
+  "message": "요청이 성공했습니다.",
+  "data": []
+}
+```
+
+404 Not Found - Analysis Not Found:
+
+```json
+{
+  "success": false,
+  "message": "분석 결과를 찾을 수 없습니다.",
+  "data": null
+}
+```
+
 ## Schedule API
 
 분석 결과에서 추출된 일정 또는 후속 조치를 등록하는 API입니다.
@@ -520,13 +696,14 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
 ### POST /api/schedules
 
 설명:
-분석 결과 ID를 기반으로 일정을 생성합니다.
+사용자 ID와 선택적 분석 결과 ID를 기반으로 일정을 생성합니다. `analysisId`가 없으면 일반 사용자 일정으로 저장합니다.
 
 요청:
 
 ```json
 {
-  "analysisId": 1,
+  "userId": 1,
+  "analysisId": null,
   "title": "ABC Corp 미팅",
   "scheduleDateTime": "2026-05-29T14:00:00",
   "memo": "견적서 준비 후 미팅"
@@ -537,7 +714,8 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
 
 | Field | Type | Required | Validation |
 | --- | --- | --- | --- |
-| analysisId | Long | Yes | `null` 불가, 1 이상 |
+| userId | Long | Yes | `null` 불가, 1 이상 |
+| analysisId | Long | No | 값이 있으면 1 이상 |
 | title | String | Yes | 빈 문자열 불가 |
 | scheduleDateTime | LocalDateTime | Yes | `null` 불가, 현재 또는 미래 시간 |
 | memo | String | Yes | 빈 문자열 불가 |
@@ -550,27 +728,116 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
   "message": "일정이 등록되었습니다.",
   "data": {
     "scheduleId": 1,
-    "analysisId": 1,
+    "userId": 1,
+    "analysisId": null,
     "title": "ABC Corp 미팅",
     "scheduleDateTime": "2026-05-29T14:00:00",
     "memo": "견적서 준비 후 미팅",
-    "status": "SCHEDULED"
+    "reminderDateTime": null,
+    "status": "SCHEDULED",
+    "createdAt": "2026-05-24T14:00:00",
+    "updatedAt": "2026-05-24T14:00:00"
   }
 }
 ```
 
-400 Bad Request:
+400 Bad Request - Validation Error:
 
 ```json
 {
   "success": false,
   "message": "Validation failed",
   "data": {
+    "userId": "userId는 필수입니다.",
     "analysisId": "analysisId는 1 이상이어야 합니다.",
     "title": "일정 제목은 필수입니다.",
     "scheduleDateTime": "일정 날짜와 시간은 현재 이후여야 합니다.",
     "memo": "메모는 필수입니다."
   }
+}
+```
+
+404 Not Found - User Not Found:
+
+```json
+{
+  "success": false,
+  "message": "사용자를 찾을 수 없습니다.",
+  "data": null
+}
+```
+
+404 Not Found - Analysis Not Found:
+
+```json
+{
+  "success": false,
+  "message": "분석 결과를 찾을 수 없습니다.",
+  "data": null
+}
+```
+
+### GET /api/schedules?userId=1
+
+설명:
+사용자 ID 기준으로 일정 목록을 조회합니다.
+
+Query Parameter:
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| userId | Long | Yes | 사용자 ID |
+
+성공 응답:
+
+```json
+{
+  "success": true,
+  "message": "요청이 성공했습니다.",
+  "data": [
+    {
+      "scheduleId": 1,
+      "userId": 1,
+      "analysisId": null,
+      "title": "ABC Corp 미팅",
+      "scheduleDateTime": "2026-05-29T14:00:00",
+      "memo": "견적서 준비 후 미팅",
+      "reminderDateTime": null,
+      "status": "SCHEDULED",
+      "createdAt": "2026-05-24T14:00:00",
+      "updatedAt": "2026-05-24T14:00:00"
+    }
+  ]
+}
+```
+
+빈 목록 응답:
+
+```json
+{
+  "success": true,
+  "message": "요청이 성공했습니다.",
+  "data": []
+}
+```
+
+400 Bad Request - Missing Query Parameter:
+
+```json
+{
+  "success": false,
+  "message": "필수 요청 파라미터가 누락되었습니다: userId",
+  "data": null
+}
+```
+
+404 Not Found - User Not Found:
+
+```json
+{
+  "success": false,
+  "message": "사용자를 찾을 수 없습니다.",
+  "data": null
 }
 ```
 
