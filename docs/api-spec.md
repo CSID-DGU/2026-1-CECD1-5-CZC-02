@@ -4,7 +4,7 @@ SALESMAP 활동 자동화 AI Agent 백엔드 API 명세 초안입니다.
 
 모든 응답은 공통 응답 형식인 `ApiResponse`로 감싸서 반환합니다.
 
-현재 `User API`, `Source API`, `Analysis API`는 MySQL DB 기반으로 동작합니다. Salesmap, Schedule API는 아직 mock Service 기반입니다.
+현재 `User API`, `Source API`, `Analysis API`, `Schedule API`, `Salesmap API`는 MySQL DB 기반으로 동작합니다.
 
 ## Common Response
 
@@ -450,12 +450,12 @@ Path Variable:
 
 ## Salesmap API
 
-Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤 Salesmap 등록을 요청하는 흐름입니다.
+Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤 Salesmap 등록 이력을 DB에 저장하는 흐름입니다.
 
 ### POST /api/salesmap/register
 
 설명:
-분석 결과 ID를 기반으로 Salesmap 등록 요청을 처리합니다. 현재는 실제 Salesmap API를 호출하지 않고 mock 등록 결과를 반환합니다.
+`analysisId`를 기반으로 Analysis를 조회한 뒤 Salesmap 등록 이력을 `salesmap_records` 테이블에 저장합니다. 실제 Salesmap 외부 API는 아직 호출하지 않고, mock `externalRecordId`, `requestPayload`, `responsePayload`를 저장합니다. 등록 성공 시 Analysis 상태는 `APPROVED`로 변경됩니다.
 
 요청:
 
@@ -480,13 +480,18 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
   "data": {
     "salesmapRecordId": 1,
     "analysisId": 1,
-    "externalRecordId": "mock-salesmap-001",
-    "status": "REGISTERED"
+    "externalRecordId": "mock-salesmap-1",
+    "requestPayload": "{\"analysisId\":1}",
+    "responsePayload": "{\"externalRecordId\":\"mock-salesmap-1\",\"status\":\"REGISTERED\"}",
+    "status": "REGISTERED",
+    "registeredAt": "2026-05-24T14:00:00",
+    "createdAt": "2026-05-24T14:00:00",
+    "updatedAt": "2026-05-24T14:00:00"
   }
 }
 ```
 
-400 Bad Request:
+400 Bad Request - Validation Error:
 
 ```json
 {
@@ -495,6 +500,16 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
   "data": {
     "analysisId": "analysisId는 1 이상이어야 합니다."
   }
+}
+```
+
+404 Not Found - Analysis Not Found:
+
+```json
+{
+  "success": false,
+  "message": "분석 결과를 찾을 수 없습니다.",
+  "data": null
 }
 ```
 
@@ -564,7 +579,8 @@ Salesmap 등록 요청 API입니다. 사용자가 분석 결과를 승인한 뒤
 - User API는 MySQL DB 기반으로 저장 및 조회합니다.
 - Source API는 MySQL DB 기반으로 저장 및 조회합니다.
 - Analysis API는 MySQL DB 기반으로 저장 및 조회합니다. 단, 실제 AI module은 아직 호출하지 않고 mock 분석 결과를 저장합니다.
-- Salesmap, Schedule API는 아직 mock Service 기반입니다.
+- Schedule API는 MySQL DB 기반으로 저장합니다.
+- Salesmap API는 MySQL DB 기반으로 등록 이력을 저장합니다. 단, 실제 Salesmap 외부 API는 아직 호출하지 않고 mock payload를 저장합니다.
 - Entity와 Repository는 users, integrations, sources, analyses, schedules, salesmap_records 도메인에 적용되어 있습니다.
 - 아직 인증/인가가 적용되어 있지 않습니다.
 - 아직 Gmail, Jandi, AI module, Salesmap 외부 API를 실제 호출하지 않습니다.
