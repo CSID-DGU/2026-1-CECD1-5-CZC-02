@@ -160,9 +160,9 @@ export function MessageView() {
                   {getStatusBadge(message.status)}
                   <span className="text-xs text-gray-500">{message.date}</span>
                 </div>
-                <h4 className="text-sm text-gray-800 mb-1">{message.subject}</h4>
-                <p className="text-xs text-gray-600 mb-1">발신: {message.sender}</p>
-                <p className="text-xs text-gray-500 line-clamp-2">{message.preview}</p>
+                <h4 className="text-sm text-gray-800 mb-1 text-left">{message.subject}</h4>
+                <p className="text-xs text-gray-600 mb-1 text-left">발신: {message.sender}</p>
+                <p className="text-xs text-gray-500 line-clamp-2 text-left">{message.preview}</p>
               </div>
               {selectedMessage?.id === message.id && (
                 <ChevronRight className="w-4 h-4 text-blue-500 flex-shrink-0" />
@@ -190,11 +190,11 @@ export function MessageView() {
                 <div className="space-y-3">
                   <div>
                     <p className="text-xs text-gray-600 mb-1">제목</p>
-                    <p className="text-sm text-gray-800">{selectedMessage.subject}</p>
+                    <p className="text-sm text-gray-800 text-left">{selectedMessage.subject}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-1">AI 분석</p>
-                    <p className="text-sm text-gray-700">{selectedMessage.aiAnalysis}</p>
+                    <p className="text-sm text-gray-700 text-left">{selectedMessage.aiAnalysis}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-1">주요 정보</p>
@@ -214,7 +214,7 @@ export function MessageView() {
               <div>
                 <h4 className="text-xs text-gray-600 mb-2">원문 내용</h4>
                 <div className="bg-gray-50 border border-gray-200 rounded-md p-3">
-                  <p className="text-sm text-gray-700 whitespace-pre-line">{selectedMessage.preview}</p>
+                  <p className="text-sm text-gray-700 whitespace-pre-line text-left">{selectedMessage.preview}</p>
                 </div>
               </div>
 
