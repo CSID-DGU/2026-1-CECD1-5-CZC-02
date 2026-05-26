@@ -7,6 +7,7 @@ import com.salesmap.backend.salesmap.dto.SalesmapRegisterResponse;
 import com.salesmap.backend.salesmap.entity.SalesmapRecord;
 import com.salesmap.backend.salesmap.entity.SalesmapRecordStatus;
 import com.salesmap.backend.salesmap.repository.SalesmapRecordRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,9 +30,10 @@ public class SalesmapService {
     }
 
     @Transactional
-    public SalesmapRegisterResponse register(SalesmapRegisterRequest request) {
+    public SalesmapRegisterResponse register(SalesmapRegisterRequest request, Long authenticatedUserId) {
         Analysis analysis = analysisRepository.findById(request.analysisId())
                 .orElseThrow(() -> new NoSuchElementException("분석 결과를 찾을 수 없습니다."));
+        validateAnalysisOwnership(analysis, authenticatedUserId);
 
         String externalRecordId = "mock-salesmap-" + request.analysisId();
         String requestPayload = "{\"analysisId\":" + request.analysisId() + "}";
@@ -52,13 +54,19 @@ public class SalesmapService {
     }
 
     @Transactional(readOnly = true)
-    public List<SalesmapRegisterResponse> getRecordsByAnalysis(Long analysisId) {
-        if (!analysisRepository.existsById(analysisId)) {
-            throw new NoSuchElementException("분석 결과를 찾을 수 없습니다.");
-        }
+    public List<SalesmapRegisterResponse> getRecordsByAnalysis(Long analysisId, Long authenticatedUserId) {
+        Analysis analysis = analysisRepository.findById(analysisId)
+                .orElseThrow(() -> new NoSuchElementException("분석 결과를 찾을 수 없습니다."));
+        validateAnalysisOwnership(analysis, authenticatedUserId);
 
         return salesmapRecordRepository.findByAnalysisId(analysisId).stream()
                 .map(SalesmapRegisterResponse::from)
                 .toList();
+    }
+
+    private void validateAnalysisOwnership(Analysis analysis, Long authenticatedUserId) {
+        if (!analysis.getSource().getUser().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("해당 분석 결과에 접근할 권한이 없습니다.");
+        }
     }
 }
