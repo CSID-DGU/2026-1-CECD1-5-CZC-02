@@ -1,10 +1,12 @@
 package com.salesmap.backend.schedule.controller;
 
 import com.salesmap.backend.global.response.ApiResponse;
+import com.salesmap.backend.global.security.CustomUserPrincipal;
 import com.salesmap.backend.schedule.dto.ScheduleCreateRequest;
 import com.salesmap.backend.schedule.dto.ScheduleResponse;
 import com.salesmap.backend.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,12 +27,18 @@ public class ScheduleController {
     }
 
     @PostMapping
-    public ApiResponse<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleCreateRequest request) {
-        return ApiResponse.success("일정이 등록되었습니다.", scheduleService.createSchedule(request));
+    public ApiResponse<ScheduleResponse> createSchedule(
+            @Valid @RequestBody ScheduleCreateRequest request,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success("일정이 등록되었습니다.", scheduleService.createSchedule(request, principal.getUserId()));
     }
 
     @GetMapping
-    public ApiResponse<List<ScheduleResponse>> getSchedules(@RequestParam Long userId) {
-        return ApiResponse.success(scheduleService.getSchedulesByUser(userId));
+    public ApiResponse<List<ScheduleResponse>> getSchedules(
+            @RequestParam(required = false) Long userId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success(scheduleService.getSchedulesByUser(userId, principal.getUserId()));
     }
 }

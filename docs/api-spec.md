@@ -181,13 +181,12 @@ Path Variable:
 ### POST /api/sources
 
 설명:
-원본 데이터를 생성합니다.
+로그인한 사용자의 원본 데이터를 생성합니다. 사용자 ID는 JWT에서 가져옵니다. 기존 호환을 위해 `userId`를 보낼 수 있지만, 로그인 사용자 ID와 다르면 `403`을 반환합니다.
 
 요청:
 
 ```json
 {
-  "userId": 1,
   "integrationId": null,
   "sourceType": "EMAIL",
   "title": "고객 미팅 관련 이메일",
@@ -199,7 +198,7 @@ Path Variable:
 
 | Field | Type | Required | Validation |
 | --- | --- | --- | --- |
-| userId | Long | Yes | `null` 불가, 1 이상 |
+| userId | Long | No | 기존 호환용. 값이 있으면 로그인 사용자 ID와 같아야 하며 1 이상 |
 | integrationId | Long | No | 값이 있으면 1 이상 |
 | sourceType | String | Yes | 빈 문자열 불가, `EMAIL`, `JANDI_MESSAGE`, `MEETING_NOTE`, `MANUAL_INPUT` 중 하나 |
 | title | String | Yes | 빈 문자열 불가 |
@@ -234,12 +233,32 @@ Path Variable:
   "success": false,
   "message": "Validation failed",
   "data": {
-    "userId": "userId는 필수입니다.",
+    "userId": "userId는 1 이상이어야 합니다.",
     "integrationId": "integrationId는 1 이상이어야 합니다.",
     "sourceType": "원본 데이터 타입은 필수입니다.",
     "title": "제목은 필수입니다.",
     "content": "내용은 필수입니다."
   }
+}
+```
+
+403 Forbidden - User Mismatch:
+
+```json
+{
+  "success": false,
+  "message": "다른 사용자의 데이터에 접근할 수 없습니다.",
+  "data": null
+}
+```
+
+403 Forbidden - Integration Owner Mismatch:
+
+```json
+{
+  "success": false,
+  "message": "해당 사용자의 연동 정보가 아닙니다.",
+  "data": null
 }
 ```
 
@@ -249,16 +268,6 @@ Path Variable:
 {
   "success": false,
   "message": "지원하지 않는 원본 데이터 타입입니다.",
-  "data": null
-}
-```
-
-400 Bad Request - Integration Owner Mismatch:
-
-```json
-{
-  "success": false,
-  "message": "해당 사용자의 연동 정보가 아닙니다.",
   "data": null
 }
 ```
@@ -329,16 +338,26 @@ Path Variable:
 }
 ```
 
-### GET /api/sources?userId=1
+403 Forbidden:
+
+```json
+{
+  "success": false,
+  "message": "해당 원본 데이터에 접근할 권한이 없습니다.",
+  "data": null
+}
+```
+
+### GET /api/sources
 
 설명:
-사용자 ID 기준으로 원본 데이터 목록을 조회합니다.
+로그인한 사용자의 원본 데이터 목록을 조회합니다.
 
 Query Parameter:
 
 | Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| userId | Long | Yes | 사용자 ID |
+| userId | Long | No | 기존 호환용. 값이 있으면 로그인 사용자 ID와 같아야 합니다. |
 
 성공 응답:
 
@@ -374,12 +393,12 @@ Query Parameter:
 }
 ```
 
-400 Bad Request - Missing Query Parameter:
+403 Forbidden - User Mismatch:
 
 ```json
 {
   "success": false,
-  "message": "필수 요청 파라미터가 누락되었습니다: userId",
+  "message": "다른 사용자의 데이터에 접근할 수 없습니다.",
   "data": null
 }
 ```
@@ -696,13 +715,12 @@ Path Variable:
 ### POST /api/schedules
 
 설명:
-사용자 ID와 선택적 분석 결과 ID를 기반으로 일정을 생성합니다. `analysisId`가 없으면 일반 사용자 일정으로 저장합니다.
+로그인한 사용자 기준으로 일정을 생성합니다. `analysisId`가 없으면 일반 사용자 일정으로 저장합니다. 기존 호환을 위해 `userId`를 보낼 수 있지만, 로그인 사용자 ID와 다르면 `403`을 반환합니다.
 
 요청:
 
 ```json
 {
-  "userId": 1,
   "analysisId": null,
   "title": "ABC Corp 미팅",
   "scheduleDateTime": "2026-05-29T14:00:00",
@@ -714,7 +732,7 @@ Path Variable:
 
 | Field | Type | Required | Validation |
 | --- | --- | --- | --- |
-| userId | Long | Yes | `null` 불가, 1 이상 |
+| userId | Long | No | 기존 호환용. 값이 있으면 로그인 사용자 ID와 같아야 하며 1 이상 |
 | analysisId | Long | No | 값이 있으면 1 이상 |
 | title | String | Yes | 빈 문자열 불가 |
 | scheduleDateTime | LocalDateTime | Yes | `null` 불가, 현재 또는 미래 시간 |
@@ -748,12 +766,32 @@ Path Variable:
   "success": false,
   "message": "Validation failed",
   "data": {
-    "userId": "userId는 필수입니다.",
+    "userId": "userId는 1 이상이어야 합니다.",
     "analysisId": "analysisId는 1 이상이어야 합니다.",
     "title": "일정 제목은 필수입니다.",
     "scheduleDateTime": "일정 날짜와 시간은 현재 이후여야 합니다.",
     "memo": "메모는 필수입니다."
   }
+}
+```
+
+403 Forbidden - User Mismatch:
+
+```json
+{
+  "success": false,
+  "message": "다른 사용자의 데이터에 접근할 수 없습니다.",
+  "data": null
+}
+```
+
+403 Forbidden - Analysis Owner Mismatch:
+
+```json
+{
+  "success": false,
+  "message": "해당 분석 결과에 접근할 권한이 없습니다.",
+  "data": null
 }
 ```
 
@@ -777,16 +815,16 @@ Path Variable:
 }
 ```
 
-### GET /api/schedules?userId=1
+### GET /api/schedules
 
 설명:
-사용자 ID 기준으로 일정 목록을 조회합니다.
+로그인한 사용자의 일정 목록을 조회합니다.
 
 Query Parameter:
 
 | Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| userId | Long | Yes | 사용자 ID |
+| userId | Long | No | 기존 호환용. 값이 있으면 로그인 사용자 ID와 같아야 합니다. |
 
 성공 응답:
 
@@ -821,12 +859,12 @@ Query Parameter:
 }
 ```
 
-400 Bad Request - Missing Query Parameter:
+403 Forbidden - User Mismatch:
 
 ```json
 {
   "success": false,
-  "message": "필수 요청 파라미터가 누락되었습니다: userId",
+  "message": "다른 사용자의 데이터에 접근할 수 없습니다.",
   "data": null
 }
 ```
@@ -849,6 +887,6 @@ Query Parameter:
 - Schedule API는 MySQL DB 기반으로 저장합니다.
 - Salesmap API는 MySQL DB 기반으로 등록 이력을 저장합니다. 단, 실제 Salesmap 외부 API는 아직 호출하지 않고 mock payload를 저장합니다.
 - Entity와 Repository는 users, integrations, sources, analyses, schedules, salesmap_records 도메인에 적용되어 있습니다.
-- 아직 인증/인가가 적용되어 있지 않습니다.
+- JWT 인증이 적용되어 있으며, 보호 API는 `Authorization: Bearer {accessToken}` 헤더가 필요합니다.
 - 아직 Gmail, Jandi, AI module, Salesmap 외부 API를 실제 호출하지 않습니다.
 - 날짜와 시간은 ISO-8601 형식 문자열을 사용합니다. 예: `2026-05-29T14:00:00`

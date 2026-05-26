@@ -9,6 +9,7 @@ import com.salesmap.backend.schedule.entity.ScheduleStatus;
 import com.salesmap.backend.schedule.repository.ScheduleRepository;
 import com.salesmap.backend.user.entity.User;
 import com.salesmap.backend.user.repository.UserRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +34,12 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleResponse createSchedule(ScheduleCreateRequest request) {
-        User user = userRepository.findById(request.userId())
+    public ScheduleResponse createSchedule(ScheduleCreateRequest request, Long authenticatedUserId) {
+        validateRequestedUser(request.userId(), authenticatedUserId);
+
+        User user = userRepository.findById(authenticatedUserId)
                 .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
-        Analysis analysis = findAnalysis(request.analysisId());
+        Analysis analysis = findAnalysis(request.analysisId(), authenticatedUserId);
 
         Schedule schedule = new Schedule(
                 user,
@@ -52,22 +55,36 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleResponse> getSchedulesByUser(Long userId) {
-        if (!userRepository.existsById(userId)) {
+    public List<ScheduleResponse> getSchedulesByUser(Long requestedUserId, Long authenticatedUserId) {
+        validateRequestedUser(requestedUserId, authenticatedUserId);
+
+        if (!userRepository.existsById(authenticatedUserId)) {
             throw new NoSuchElementException("사용자를 찾을 수 없습니다.");
         }
 
-        return scheduleRepository.findByUserId(userId).stream()
+        return scheduleRepository.findByUserId(authenticatedUserId).stream()
                 .map(ScheduleResponse::from)
                 .toList();
     }
 
-    private Analysis findAnalysis(Long analysisId) {
+    private Analysis findAnalysis(Long analysisId, Long authenticatedUserId) {
         if (analysisId == null) {
             return null;
         }
 
-        return analysisRepository.findById(analysisId)
+        Analysis analysis = analysisRepository.findById(analysisId)
                 .orElseThrow(() -> new NoSuchElementException("분석 결과를 찾을 수 없습니다."));
+
+        if (!analysis.getSource().getUser().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("해당 분석 결과에 접근할 권한이 없습니다.");
+        }
+
+        return analysis;
+    }
+
+    private void validateRequestedUser(Long requestedUserId, Long authenticatedUserId) {
+        if (requestedUserId != null && !requestedUserId.equals(authenticatedUserId)) {
+            throw new AccessDeniedException("다른 사용자의 데이터에 접근할 수 없습니다.");
+        }
     }
 }
