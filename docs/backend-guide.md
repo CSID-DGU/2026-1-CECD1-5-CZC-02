@@ -208,6 +208,7 @@ ai
   dto
     AiAnalysisRequest
     AiAnalysisResponse
+    AiErrorResponse
 ```
 
 현재 동작:
@@ -223,18 +224,53 @@ FastAPI 연동 기준 URL 설정:
 ai.module.base-url=${AI_MODULE_BASE_URL:http://localhost:8000}
 ```
 
-AI Module 요청 JSON 예시:
+FastAPI endpoint 계약:
+
+```http
+POST /analyze
+Content-Type: application/json
+```
+
+백엔드에서 AI Module로 보내는 요청 필드:
+
+| Field | Type | Required | Nullable | Description |
+| --- | --- | --- | --- | --- |
+| sourceId | Long | Yes | No | 백엔드 `sources.id` |
+| sourceType | String | Yes | No | `EMAIL`, `JANDI_MESSAGE`, `MEETING_NOTE`, `MANUAL_INPUT` |
+| externalSourceId | String | No | Yes | Gmail/Jandi 등 외부 원본 ID |
+| title | String | Yes | No | 원본 제목 |
+| content | String | Yes | No | 분석 대상 원문 |
+| collectedAt | String | No | Yes | 원본 수집 시각, ISO-8601 형식 |
+
+백엔드 -> AI Module 요청 JSON 예시:
 
 ```json
 {
   "sourceId": 1,
   "sourceType": "EMAIL",
+  "externalSourceId": null,
   "title": "고객 미팅 관련 이메일",
-  "content": "원본 이메일 또는 메시지 내용"
+  "content": "원본 이메일 또는 메시지 내용",
+  "collectedAt": null
 }
 ```
 
-AI Module 응답 JSON 예시:
+AI Module에서 백엔드로 반환하는 성공 응답 필드:
+
+| Field | Type | Required | Nullable | Description |
+| --- | --- | --- | --- | --- |
+| customerName | String | No | Yes | 추출된 고객사명 |
+| contactName | String | No | Yes | 추출된 담당자명 |
+| productName | String | No | Yes | 추출된 제품명 |
+| amount | Long | No | Yes | 추출된 금액 |
+| scheduleTitle | String | No | Yes | 추출된 일정 제목 또는 일정 설명 |
+| scheduleDateTime | String | No | Yes | 추출된 일정 시각, ISO-8601 형식 |
+| todoContent | String | No | Yes | 후속 조치 내용 |
+| keyIssues | String | No | Yes | 주요 이슈 또는 리스크 |
+| summary | String | Yes | No | 원본 커뮤니케이션 요약 |
+| confidenceScore | Number | Yes | No | 분석 신뢰도, `0.0` 이상 `1.0` 이하 |
+
+AI Module -> 백엔드 성공 응답 JSON 예시:
 
 ```json
 {
@@ -245,10 +281,42 @@ AI Module 응답 JSON 예시:
   "scheduleTitle": "다음 주 수요일 미팅",
   "scheduleDateTime": null,
   "todoContent": "견적서 발송",
+  "keyIssues": "예산 검토 및 도입 일정 확인 필요",
   "summary": "고객이 제품 도입을 검토 중이며 다음 미팅 예정",
   "confidenceScore": 0.95
 }
 ```
+
+시간 형식은 ISO-8601 문자열로 통일합니다.
+
+```json
+{
+  "scheduleDateTime": "2026-05-29T14:00:00"
+}
+```
+
+AI Module 실패 응답 필드:
+
+| Field | Type | Required | Nullable | Description |
+| --- | --- | --- | --- | --- |
+| errorCode | String | Yes | No | 오류 코드. 예: `INVALID_REQUEST`, `ANALYSIS_FAILED` |
+| message | String | Yes | No | 사람이 읽을 수 있는 오류 메시지 |
+| details | Object | No | Yes | 필드별 오류 또는 디버깅용 부가 정보 |
+
+AI Module 실패 응답 JSON 예시:
+
+```json
+{
+  "errorCode": "ANALYSIS_FAILED",
+  "message": "AI analysis failed",
+  "details": {
+    "sourceId": 1,
+    "reason": "content is empty or unsupported"
+  }
+}
+```
+
+현재 백엔드는 실제 HTTP 호출을 하지 않으므로 위 실패 응답은 아직 런타임에서 처리하지 않습니다. 실제 FastAPI client 구현 시 non-2xx 응답을 이 형식으로 파싱해 백엔드 공통 오류 응답으로 변환합니다.
 
 ### Schedule API
 

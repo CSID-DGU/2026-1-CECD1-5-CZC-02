@@ -85,8 +85,10 @@ public class AnalysisService {
         return new AiAnalysisRequest(
                 source.getId(),
                 source.getSourceType(),
+                source.getExternalSourceId(),
                 source.getTitle(),
-                source.getContent()
+                source.getContent(),
+                source.getCollectedAt()
         );
     }
 

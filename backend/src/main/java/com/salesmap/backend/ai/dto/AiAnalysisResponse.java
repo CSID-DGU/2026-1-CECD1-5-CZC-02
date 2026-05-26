@@ -10,6 +10,7 @@ public record AiAnalysisResponse(
         String scheduleTitle,
         LocalDateTime scheduleDateTime,
         String todoContent,
+        String keyIssues,
         String summary,
         Double confidenceScore
 ) {

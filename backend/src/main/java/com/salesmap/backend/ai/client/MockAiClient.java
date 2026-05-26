@@ -24,6 +24,7 @@ public class MockAiClient implements AiClient {
                 "다음 주 수요일 미팅",
                 null,
                 "견적서 발송",
+                "예산 검토 및 도입 일정 확인 필요",
                 "고객이 제품 도입을 검토 중이며 다음 미팅 예정",
                 0.95
         );
