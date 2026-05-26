@@ -215,14 +215,25 @@ ai
 
 - `AnalysisService`는 mock 값을 직접 만들지 않습니다.
 - `AnalysisService`는 `AiClient.analyze(...)`를 호출합니다.
-- 현재 Bean은 `MockAiClient`이며 실제 HTTP 호출은 하지 않습니다.
-- FastAPI 연동 시 `AiClient` 구현체를 실제 HTTP client로 교체하면 됩니다.
+- 기본 Bean은 `MockAiClient`이며 실제 HTTP 호출은 하지 않습니다.
+- `ai.module.mode=http`로 설정하면 `HttpAiClient`가 FastAPI AI Module을 호출합니다.
+- `HttpAiClient`는 `POST {ai.module.base-url}/analyze`를 호출합니다.
 
-FastAPI 연동 기준 URL 설정:
+AI Module 설정:
 
 ```properties
+ai.module.mode=${AI_MODULE_MODE:mock}
 ai.module.base-url=${AI_MODULE_BASE_URL:http://localhost:8000}
+ai.module.connect-timeout-ms=${AI_MODULE_CONNECT_TIMEOUT_MS:3000}
+ai.module.read-timeout-ms=${AI_MODULE_READ_TIMEOUT_MS:10000}
 ```
+
+모드별 동작:
+
+| Mode | Bean | Description |
+| --- | --- | --- |
+| `mock` | `MockAiClient` | 기본값. FastAPI 서버 없이 mock 분석 결과 반환 |
+| `http` | `HttpAiClient` | 실제 FastAPI AI Module에 HTTP 요청 |
 
 FastAPI endpoint 계약:
 
@@ -316,7 +327,67 @@ AI Module 실패 응답 JSON 예시:
 }
 ```
 
-현재 백엔드는 실제 HTTP 호출을 하지 않으므로 위 실패 응답은 아직 런타임에서 처리하지 않습니다. 실제 FastAPI client 구현 시 non-2xx 응답을 이 형식으로 파싱해 백엔드 공통 오류 응답으로 변환합니다.
+`HttpAiClient` 실패 처리:
+
+- FastAPI가 non-2xx 응답을 반환하면 `AiErrorResponse`로 파싱합니다.
+- FastAPI 서버가 내려가 있거나 timeout이 발생하면 `AiClientException`을 발생시킵니다.
+- 백엔드는 `AiClientException`을 `502 Bad Gateway`와 `ApiResponse` 형식으로 반환합니다.
+
+백엔드가 반환하는 AI 호출 실패 응답 예시:
+
+```json
+{
+  "success": false,
+  "message": "AI Module 오류: AI analysis failed",
+  "data": {
+    "errorCode": "ANALYSIS_FAILED",
+    "message": "AI analysis failed",
+    "details": {
+      "sourceId": 1,
+      "reason": "content is empty or unsupported"
+    }
+  }
+}
+```
+
+FastAPI 서버 다운 또는 timeout 예시:
+
+```json
+{
+  "success": false,
+  "message": "AI Module 호출에 실패했습니다.",
+  "data": null
+}
+```
+
+로컬 수동 테스트:
+
+1. 기본 mock 모드는 FastAPI 서버 없이 실행합니다.
+
+```properties
+ai.module.mode=mock
+```
+
+2. 실제 FastAPI 연동 모드는 AI Module 서버를 `localhost:8000`에서 실행한 뒤 설정합니다.
+
+```properties
+ai.module.mode=http
+ai.module.base-url=http://localhost:8000
+```
+
+3. 백엔드에서 분석 생성 API를 호출합니다.
+
+```http
+POST /api/analysis
+Authorization: Bearer {accessToken}
+Content-Type: application/json
+```
+
+```json
+{
+  "sourceId": 1
+}
+```
 
 ### Schedule API
 

@@ -1,5 +1,6 @@
 package com.salesmap.backend.global.exception;
 
+import com.salesmap.backend.ai.exception.AiClientException;
 import com.salesmap.backend.global.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,5 +67,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.fail("필수 요청 파라미터가 누락되었습니다: " + exception.getParameterName()));
+    }
+
+    @ExceptionHandler(AiClientException.class)
+    public ResponseEntity<ApiResponse<Object>> handleAiClientException(AiClientException exception) {
+        Object data = exception.getErrorResponse();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_GATEWAY)
+                .body(ApiResponse.fail(exception.getMessage(), data));
     }
 }

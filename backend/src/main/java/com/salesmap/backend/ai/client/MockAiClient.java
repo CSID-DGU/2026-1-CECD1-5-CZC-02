@@ -3,9 +3,11 @@ package com.salesmap.backend.ai.client;
 import com.salesmap.backend.ai.config.AiModuleProperties;
 import com.salesmap.backend.ai.dto.AiAnalysisRequest;
 import com.salesmap.backend.ai.dto.AiAnalysisResponse;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(name = "ai.module.mode", havingValue = "mock", matchIfMissing = true)
 public class MockAiClient implements AiClient {
 
     private final AiModuleProperties aiModuleProperties;
