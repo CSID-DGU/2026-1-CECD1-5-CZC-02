@@ -4,7 +4,9 @@ import com.salesmap.backend.analysis.dto.AnalysisCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisResponse;
 import com.salesmap.backend.analysis.service.AnalysisService;
 import com.salesmap.backend.global.response.ApiResponse;
+import com.salesmap.backend.global.security.CustomUserPrincipal;
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,17 +27,26 @@ public class AnalysisController {
     }
 
     @PostMapping
-    public ApiResponse<AnalysisResponse> createAnalysis(@Valid @RequestBody AnalysisCreateRequest request) {
-        return ApiResponse.success("AI 분석이 완료되었습니다.", analysisService.createAnalysis(request));
+    public ApiResponse<AnalysisResponse> createAnalysis(
+            @Valid @RequestBody AnalysisCreateRequest request,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success("AI 분석이 완료되었습니다.", analysisService.createAnalysis(request, principal.getUserId()));
     }
 
     @GetMapping("/{analysisId}")
-    public ApiResponse<AnalysisResponse> getAnalysis(@PathVariable Long analysisId) {
-        return ApiResponse.success(analysisService.getAnalysis(analysisId));
+    public ApiResponse<AnalysisResponse> getAnalysis(
+            @PathVariable Long analysisId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success(analysisService.getAnalysis(analysisId, principal.getUserId()));
     }
 
     @GetMapping("/source/{sourceId}")
-    public ApiResponse<List<AnalysisResponse>> getAnalysesBySource(@PathVariable Long sourceId) {
-        return ApiResponse.success(analysisService.getAnalysesBySource(sourceId));
+    public ApiResponse<List<AnalysisResponse>> getAnalysesBySource(
+            @PathVariable Long sourceId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success(analysisService.getAnalysesBySource(sourceId, principal.getUserId()));
     }
 }
