@@ -2,6 +2,7 @@ package com.salesmap.backend.global.exception;
 
 import com.salesmap.backend.ai.exception.AiClientException;
 import com.salesmap.backend.global.response.ApiResponse;
+import com.salesmap.backend.salesmap.exception.SalesmapClientException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -71,6 +72,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AiClientException.class)
     public ResponseEntity<ApiResponse<Object>> handleAiClientException(AiClientException exception) {
+        Object data = exception.getErrorResponse();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_GATEWAY)
+                .body(ApiResponse.fail(exception.getMessage(), data));
+    }
+
+    @ExceptionHandler(SalesmapClientException.class)
+    public ResponseEntity<ApiResponse<Object>> handleSalesmapClientException(SalesmapClientException exception) {
         Object data = exception.getErrorResponse();
 
         return ResponseEntity

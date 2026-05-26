@@ -63,6 +63,7 @@ spring.datasource.url=jdbc:mysql://localhost:3306/salesmap?serverTimezone=Asia/S
 spring.datasource.username=root
 spring.datasource.password=YOUR_LOCAL_PASSWORD
 ai.module.base-url=${AI_MODULE_BASE_URL:http://localhost:8000}
+salesmap.api.base-url=${SALESMAP_API_BASE_URL:http://localhost:9000}
 ```
 
 현재 JPA 설정:
@@ -414,10 +415,154 @@ DB 기반으로 동작합니다.
 기능:
 
 - Analysis 기준 Salesmap 등록 이력 생성
-- 실제 Salesmap 외부 API 호출 없이 mock payload 저장
+- `SalesmapClient`를 통해 Salesmap 등록 결과 수신
+- 기본값은 실제 Salesmap 외부 API 호출 없이 `MockSalesmapClient`가 mock payload 반환
 - Analysis 기준 Salesmap 등록 이력 목록 조회
 - 기본 status: `REGISTERED`
 - 등록 성공 시 Analysis status를 `APPROVED`로 변경
+
+### Salesmap API Integration Structure
+
+Salesmap 외부 API 연동을 위한 client 계층이 준비되어 있습니다.
+
+현재 패키지:
+
+```text
+salesmap
+  client
+    SalesmapClient
+    MockSalesmapClient
+    HttpSalesmapClient
+    dto
+      SalesmapApiRegisterRequest
+      SalesmapApiRegisterResponse
+      SalesmapApiErrorResponse
+  config
+    SalesmapApiProperties
+  exception
+    SalesmapClientException
+```
+
+현재 동작:
+
+- `SalesmapService`는 mock 등록 결과를 직접 만들지 않습니다.
+- `SalesmapService`는 `SalesmapClient.register(...)`를 호출합니다.
+- 기본 Bean은 `MockSalesmapClient`이며 실제 HTTP 호출은 하지 않습니다.
+- `salesmap.api.mode=http`로 설정하면 `HttpSalesmapClient`가 외부 Salesmap API를 호출합니다.
+- `HttpSalesmapClient`는 `POST {salesmap.api.base-url}{salesmap.api.register-path}`를 호출합니다.
+
+Salesmap API 설정:
+
+```properties
+salesmap.api.mode=${SALESMAP_API_MODE:mock}
+salesmap.api.base-url=${SALESMAP_API_BASE_URL:http://localhost:9000}
+salesmap.api.register-path=${SALESMAP_API_REGISTER_PATH:/records}
+salesmap.api.connect-timeout-ms=${SALESMAP_API_CONNECT_TIMEOUT_MS:3000}
+salesmap.api.read-timeout-ms=${SALESMAP_API_READ_TIMEOUT_MS:10000}
+```
+
+모드별 동작:
+
+| Mode | Bean | Description |
+| --- | --- | --- |
+| `mock` | `MockSalesmapClient` | 기본값. Salesmap 서버 없이 mock 등록 결과 반환 |
+| `http` | `HttpSalesmapClient` | 실제 Salesmap 외부 API에 HTTP 요청 |
+
+Salesmap API 요청 JSON 예시:
+
+```json
+{
+  "analysisId": 1,
+  "sourceId": 1,
+  "customerName": "ABC Corp",
+  "contactName": "홍길동",
+  "productName": "Sales Solution",
+  "amount": 1000000,
+  "scheduleText": "다음 주 수요일 미팅",
+  "followUpAction": "견적서 발송",
+  "summary": "고객이 제품 도입을 검토 중이며 다음 미팅 예정"
+}
+```
+
+Salesmap API 성공 응답 JSON 예시:
+
+```json
+{
+  "externalRecordId": "salesmap-activity-001",
+  "status": "REGISTERED",
+  "requestPayload": null,
+  "responsePayload": null,
+  "registeredAt": "2026-05-29T14:00:00"
+}
+```
+
+`requestPayload`와 `responsePayload`가 외부 API 응답에 없으면 백엔드 client에서 저장 가능한 JSON 문자열로 보완합니다.
+
+Salesmap API 실패 응답 JSON 예시:
+
+```json
+{
+  "errorCode": "SALESMAP_REGISTER_FAILED",
+  "message": "Salesmap register failed",
+  "details": {
+    "analysisId": 1,
+    "reason": "invalid customer data"
+  }
+}
+```
+
+`HttpSalesmapClient` 실패 처리:
+
+- Salesmap API가 non-2xx 응답을 반환하면 `SalesmapApiErrorResponse`로 파싱합니다.
+- Salesmap API 서버가 내려가 있거나 timeout이 발생하면 `SalesmapClientException`을 발생시킵니다.
+- 백엔드는 `SalesmapClientException`을 `502 Bad Gateway`와 `ApiResponse` 형식으로 반환합니다.
+
+백엔드가 반환하는 Salesmap 호출 실패 응답 예시:
+
+```json
+{
+  "success": false,
+  "message": "Salesmap API 오류: Salesmap register failed",
+  "data": {
+    "errorCode": "SALESMAP_REGISTER_FAILED",
+    "message": "Salesmap register failed",
+    "details": {
+      "analysisId": 1,
+      "reason": "invalid customer data"
+    }
+  }
+}
+```
+
+로컬 수동 테스트:
+
+1. 기본 mock 모드는 Salesmap 서버 없이 실행합니다.
+
+```properties
+salesmap.api.mode=mock
+```
+
+2. 실제 Salesmap 연동 모드는 Salesmap API 서버 주소와 path를 설정합니다.
+
+```properties
+salesmap.api.mode=http
+salesmap.api.base-url=http://localhost:9000
+salesmap.api.register-path=/records
+```
+
+3. 백엔드에서 Salesmap 등록 API를 호출합니다.
+
+```http
+POST /api/salesmap/register
+Authorization: Bearer {accessToken}
+Content-Type: application/json
+```
+
+```json
+{
+  "analysisId": 1
+}
+```
 
 ## Package Structure
 
@@ -484,9 +629,12 @@ schedule
   service
 
 salesmap
+  client
+  config
   controller
   dto
   entity
+  exception
   repository
   service
 ```
