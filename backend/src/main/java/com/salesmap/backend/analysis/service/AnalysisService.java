@@ -1,5 +1,8 @@
 package com.salesmap.backend.analysis.service;
 
+import com.salesmap.backend.ai.client.AiClient;
+import com.salesmap.backend.ai.dto.AiAnalysisRequest;
+import com.salesmap.backend.ai.dto.AiAnalysisResponse;
 import com.salesmap.backend.analysis.dto.AnalysisCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisResponse;
 import com.salesmap.backend.analysis.entity.Analysis;
@@ -20,10 +23,16 @@ public class AnalysisService {
 
     private final AnalysisRepository analysisRepository;
     private final SourceRepository sourceRepository;
+    private final AiClient aiClient;
 
-    public AnalysisService(AnalysisRepository analysisRepository, SourceRepository sourceRepository) {
+    public AnalysisService(
+            AnalysisRepository analysisRepository,
+            SourceRepository sourceRepository,
+            AiClient aiClient
+    ) {
         this.analysisRepository = analysisRepository;
         this.sourceRepository = sourceRepository;
+        this.aiClient = aiClient;
     }
 
     @Transactional
@@ -31,16 +40,17 @@ public class AnalysisService {
         Source source = sourceRepository.findById(request.sourceId())
                 .orElseThrow(() -> new NoSuchElementException("원본 데이터를 찾을 수 없습니다."));
         validateSourceOwnership(source, authenticatedUserId);
+        AiAnalysisResponse aiResult = aiClient.analyze(toAiAnalysisRequest(source));
 
         Analysis analysis = new Analysis(
                 source,
-                "ABC Corp",
-                "홍길동",
-                "Sales Solution",
-                1_000_000L,
-                "다음 주 수요일 미팅",
-                "견적서 발송",
-                "고객이 제품 도입을 검토 중이며 다음 미팅 예정",
+                aiResult.customerName(),
+                aiResult.contactName(),
+                aiResult.productName(),
+                aiResult.amount(),
+                buildScheduleText(aiResult),
+                aiResult.todoContent(),
+                aiResult.summary(),
                 AnalysisStatus.ANALYZED,
                 LocalDateTime.now(),
                 null
@@ -69,6 +79,23 @@ public class AnalysisService {
         return analysisRepository.findBySourceId(sourceId).stream()
                 .map(AnalysisResponse::from)
                 .toList();
+    }
+
+    private AiAnalysisRequest toAiAnalysisRequest(Source source) {
+        return new AiAnalysisRequest(
+                source.getId(),
+                source.getSourceType(),
+                source.getTitle(),
+                source.getContent()
+        );
+    }
+
+    private String buildScheduleText(AiAnalysisResponse aiResult) {
+        if (aiResult.scheduleDateTime() == null) {
+            return aiResult.scheduleTitle();
+        }
+
+        return aiResult.scheduleTitle() + " (" + aiResult.scheduleDateTime() + ")";
     }
 
     private void validateAnalysisOwnership(Analysis analysis, Long authenticatedUserId) {
