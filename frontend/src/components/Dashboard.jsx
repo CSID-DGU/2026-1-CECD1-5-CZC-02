@@ -11,6 +11,7 @@ export function Dashboard() {
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
 
+  // TODO: Replace mock users with backend user/team API when team member APIs are available.
   const [users, setUsers] = useState([
     { id: 'user1', name: '김영업', selected: true },
     { id: 'user2', name: '박세일', selected: true },
@@ -20,6 +21,7 @@ export function Dashboard() {
 
   const currentUserId = 'user1';
 
+  // TODO: Replace mock calendar events with GET /api/schedules response.
   const [events, setEvents] = useState([
     { id: 'e1', date: 5, type: 'call', title: '고객 전화', time: '10:00', userId: 'user1', userName: '김영업', description: 'ABC 기업 담당자와 신규 제품 문의 관련 통화', relatedPerson: 'ABC 기업 김담당' },
     { id: 'e2', date: 5, type: 'meeting', title: '오전 팀 미팅', time: '09:00', userId: 'user2', userName: '박세일', description: '주간 영업 현황 공유', relatedPerson: '영업팀 전체' },
@@ -31,12 +33,14 @@ export function Dashboard() {
     { id: 'e8', date: 22, type: 'meeting', title: '클라이언트 미팅', time: '13:00', userId: 'user2', userName: '박세일', description: '프로젝트 진행 상황 점검', relatedPerson: 'JKL 회사' }
   ]);
 
+  // TODO: Replace mock today's schedule with filtered GET /api/schedules response.
   const [todaySchedule] = useState([
     { id: '1', time: '10:00', title: '김영희 고객 미팅', type: 'meeting', userId: 'user1', userName: '김영업' },
     { id: '2', time: '14:00', title: '신규 제안 발표', type: 'meeting', userId: 'user2', userName: '박세일' },
     { id: '3', time: '16:30', title: '박철수 고객 전화', type: 'call', userId: 'user1', userName: '김영업' }
   ]);
 
+  // TODO: Replace mock upcoming schedule with filtered GET /api/schedules response.
   const [upcomingSchedule] = useState([
     { id: '4', time: '09:00', title: '이민수 고객 이메일 확인', type: 'email', date: '05/11', userId: 'user1', userName: '김영업' },
     { id: '5', time: '11:00', title: '최지연 미팅', type: 'meeting', date: '05/12', userId: 'user2', userName: '박세일' },
