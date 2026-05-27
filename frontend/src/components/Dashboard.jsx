@@ -1,5 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ChevronDown, Search, Check, X, Edit2, Save } from 'lucide-react';
+import { createSchedule, getSchedules } from '../api/schedules';
+import { createSource, getSources } from '../api/sources';
+import { getAnalysesBySource } from '../api/analyses';
+import { getSalesmapRecordsByAnalysis } from '../api/salesmapRecords';
+import { getApiErrorMessage } from '../api/errors';
 
 export function Dashboard() {
   const [currentMonth, setCurrentMonth] = useState(new Date(2026, 4, 1));
@@ -8,9 +13,19 @@ export function Dashboard() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState(null);
+  const [apiStatuses, setApiStatuses] = useState({
+    schedules: { label: '일정 API', status: 'loading', count: null, message: '조회 중' },
+    sources: { label: '소스 API', status: 'loading', count: null, message: '조회 중' },
+    analyses: { label: '분석 API', status: 'idle', count: null, message: '소스 조회 후 확인' },
+    salesmapRecords: { label: 'Salesmap 등록 API', status: 'idle', count: null, message: '분석 조회 후 확인' }
+  });
+  const [testPanelMessage, setTestPanelMessage] = useState('');
+  const [isCreatingTestData, setIsCreatingTestData] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
 
+  // TODO: Replace mock users with backend user/team API when team member APIs are available.
   const [users, setUsers] = useState([
     { id: 'user1', name: '김영업', selected: true },
     { id: 'user2', name: '박세일', selected: true },
@@ -20,6 +35,7 @@ export function Dashboard() {
 
   const currentUserId = 'user1';
 
+  // TODO: Replace mock calendar events with GET /api/schedules response.
   const [events, setEvents] = useState([
     { id: 'e1', date: 5, type: 'call', title: '고객 전화', time: '10:00', userId: 'user1', userName: '김영업', description: 'ABC 기업 담당자와 신규 제품 문의 관련 통화', relatedPerson: 'ABC 기업 김담당' },
     { id: 'e2', date: 5, type: 'meeting', title: '오전 팀 미팅', time: '09:00', userId: 'user2', userName: '박세일', description: '주간 영업 현황 공유', relatedPerson: '영업팀 전체' },
@@ -31,18 +47,120 @@ export function Dashboard() {
     { id: 'e8', date: 22, type: 'meeting', title: '클라이언트 미팅', time: '13:00', userId: 'user2', userName: '박세일', description: '프로젝트 진행 상황 점검', relatedPerson: 'JKL 회사' }
   ]);
 
+  // TODO: Replace mock today's schedule with filtered GET /api/schedules response.
   const [todaySchedule] = useState([
     { id: '1', time: '10:00', title: '김영희 고객 미팅', type: 'meeting', userId: 'user1', userName: '김영업' },
     { id: '2', time: '14:00', title: '신규 제안 발표', type: 'meeting', userId: 'user2', userName: '박세일' },
     { id: '3', time: '16:30', title: '박철수 고객 전화', type: 'call', userId: 'user1', userName: '김영업' }
   ]);
 
+  // TODO: Replace mock upcoming schedule with filtered GET /api/schedules response.
   const [upcomingSchedule] = useState([
     { id: '4', time: '09:00', title: '이민수 고객 이메일 확인', type: 'email', date: '05/11', userId: 'user1', userName: '김영업' },
     { id: '5', time: '11:00', title: '최지연 미팅', type: 'meeting', date: '05/12', userId: 'user2', userName: '박세일' },
     { id: '6', time: '15:00', title: '월간 영업 보고', type: 'meeting', date: '05/14', userId: 'user3', userName: '이마케' },
     { id: '7', time: '10:30', title: '신규 고객 상담', type: 'call', date: '05/15', userId: 'user1', userName: '김영업' }
   ]);
+
+  useEffect(() => {
+    const updateApiStatus = (key, nextStatus) => {
+      setApiStatuses((prev) => ({
+        ...prev,
+        [key]: {
+          ...prev[key],
+          ...nextStatus
+        }
+      }));
+    };
+
+    const handleApiError = (key, error) => {
+      console.error(`Failed to fetch ${key}:`, error);
+      updateApiStatus(key, {
+        status: 'error',
+        count: null,
+        message: getApiErrorMessage(error)
+      });
+    };
+
+    const fetchDashboardApiStatuses = async () => {
+      try {
+        const schedules = await getSchedules();
+        updateApiStatus('schedules', {
+          status: 'success',
+          count: schedules.length,
+          message: '확인됨'
+        });
+      } catch (error) {
+        handleApiError('schedules', error);
+      }
+
+      let sources = [];
+
+      try {
+        sources = await getSources();
+        updateApiStatus('sources', {
+          status: 'success',
+          count: sources.length,
+          message: '확인됨'
+        });
+      } catch (error) {
+        handleApiError('sources', error);
+      }
+
+      const firstSourceId = sources[0]?.sourceId;
+
+      if (!firstSourceId) {
+        updateApiStatus('analyses', {
+          status: 'idle',
+          count: 0,
+          message: '조회할 소스 없음'
+        });
+        updateApiStatus('salesmapRecords', {
+          status: 'idle',
+          count: 0,
+          message: '조회할 분석 없음'
+        });
+        return;
+      }
+
+      let analyses = [];
+
+      try {
+        analyses = await getAnalysesBySource(firstSourceId);
+        updateApiStatus('analyses', {
+          status: 'success',
+          count: analyses.length,
+          message: `sourceId ${firstSourceId} 기준`
+        });
+      } catch (error) {
+        handleApiError('analyses', error);
+      }
+
+      const firstAnalysisId = analyses[0]?.analysisId;
+
+      if (!firstAnalysisId) {
+        updateApiStatus('salesmapRecords', {
+          status: 'idle',
+          count: 0,
+          message: '조회할 분석 없음'
+        });
+        return;
+      }
+
+      try {
+        const records = await getSalesmapRecordsByAnalysis(firstAnalysisId);
+        updateApiStatus('salesmapRecords', {
+          status: 'success',
+          count: records.length,
+          message: `analysisId ${firstAnalysisId} 기준`
+        });
+      } catch (error) {
+        handleApiError('salesmapRecords', error);
+      }
+    };
+
+    fetchDashboardApiStatuses();
+  }, [refreshKey]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -170,10 +288,139 @@ export function Dashboard() {
 
   const monthName = currentMonth.toLocaleString('ko-KR', { year: 'numeric', month: 'long' });
 
+  const getApiStatusText = (status) => {
+    if (status.status === 'success') {
+      return `${status.count}건 확인됨`;
+    }
+
+    if (status.status === 'error') {
+      return status.message;
+    }
+
+    return status.message;
+  };
+
+  const getApiStatusColor = (status) => {
+    if (status.status === 'success') {
+      return 'text-green-700 bg-green-50 border-green-200';
+    }
+
+    if (status.status === 'error') {
+      return 'text-red-700 bg-red-50 border-red-200';
+    }
+
+    return 'text-gray-600 bg-gray-50 border-gray-200';
+  };
+
+  const formatLocalDateTime = (date) => {
+    const pad = (value) => String(value).padStart(2, '0');
+
+    return [
+      date.getFullYear(),
+      pad(date.getMonth() + 1),
+      pad(date.getDate())
+    ].join('-') + 'T' + [
+      pad(date.getHours()),
+      pad(date.getMinutes()),
+      pad(date.getSeconds())
+    ].join(':');
+  };
+
+  const logApiError = (label, error) => {
+    console.error(label, {
+      status: error.response?.status,
+      message: error.response?.data?.message,
+      data: error.response?.data?.data,
+      rawError: error
+    });
+  };
+
+  const handleCreateTestSource = async () => {
+    try {
+      setIsCreatingTestData(true);
+      setTestPanelMessage('');
+
+      await createSource({
+        sourceType: 'EMAIL',
+        title: '테스트 이메일',
+        content: '고객사 미팅 일정과 후속 조치가 포함된 테스트 내용입니다.'
+      });
+
+      setTestPanelMessage('Source 생성 성공');
+      setRefreshKey((prev) => prev + 1);
+    } catch (error) {
+      logApiError('Failed to create test source. Check request body and backend DTO.', error);
+      setTestPanelMessage(`Source 생성 실패: ${getApiErrorMessage(error)}`);
+    } finally {
+      setIsCreatingTestData(false);
+    }
+  };
+
+  const handleCreateTestSchedule = async () => {
+    const oneHourLater = new Date(Date.now() + 60 * 60 * 1000);
+
+    try {
+      setIsCreatingTestData(true);
+      setTestPanelMessage('');
+
+      await createSchedule({
+        title: '테스트 일정',
+        scheduleDateTime: formatLocalDateTime(oneHourLater),
+        memo: '프론트-백 통합 테스트 일정'
+      });
+
+      setTestPanelMessage('Schedule 생성 성공');
+      setRefreshKey((prev) => prev + 1);
+    } catch (error) {
+      logApiError('Failed to create test schedule. Check request body and backend DTO.', error);
+      setTestPanelMessage(`Schedule 생성 실패: ${getApiErrorMessage(error)}`);
+    } finally {
+      setIsCreatingTestData(false);
+    }
+  };
+
   return (
     <div className="p-6 flex gap-6 h-full">
       {/* Left: Schedule Panels */}
       <div className="w-72 space-y-5 flex flex-col">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <h3 className="text-sm text-gray-700 mb-3">보호 API 연결 상태</h3>
+          <div className="space-y-2">
+            {Object.entries(apiStatuses).map(([key, status]) => (
+              <div
+                key={key}
+                className={`border rounded px-3 py-2 ${getApiStatusColor(status)}`}
+              >
+                <div className="text-xs font-medium">{status.label}</div>
+                <div className="text-xs mt-0.5">{getApiStatusText(status)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <h3 className="text-sm text-gray-700 mb-3">API 테스트 패널</h3>
+          <div className="space-y-2">
+            <button
+              onClick={handleCreateTestSource}
+              disabled={isCreatingTestData}
+              className="w-full px-3 py-2 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+            >
+              Source 생성 테스트
+            </button>
+            <button
+              onClick={handleCreateTestSchedule}
+              disabled={isCreatingTestData}
+              className="w-full px-3 py-2 text-xs border border-gray-300 hover:bg-gray-50 disabled:bg-gray-100 text-gray-700 rounded"
+            >
+              Schedule 생성 테스트
+            </button>
+            {testPanelMessage && (
+              <p className="text-xs text-gray-600">{testPanelMessage}</p>
+            )}
+          </div>
+        </div>
+
         {/* Today's Schedule */}
         <div className="flex-1">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 h-full flex flex-col">

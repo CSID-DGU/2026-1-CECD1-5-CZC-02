@@ -3,6 +3,7 @@ package com.salesmap.backend.global.exception;
 import com.salesmap.backend.ai.exception.AiClientException;
 import com.salesmap.backend.global.response.ApiResponse;
 import com.salesmap.backend.salesmap.exception.SalesmapClientException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -68,6 +69,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.fail("필수 요청 파라미터가 누락되었습니다: " + exception.getParameterName()));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDataIntegrityViolationException(
+            DataIntegrityViolationException exception
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.fail("데이터 저장 중 오류가 발생했습니다."));
     }
 
     @ExceptionHandler(AiClientException.class)

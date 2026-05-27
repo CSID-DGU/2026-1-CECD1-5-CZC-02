@@ -25,6 +25,7 @@ export function DashboardLayout({ children }) {
   }, [location]);
 
   useEffect(() => {
+    // TODO: Replace this local mock reminder list with GET /api/schedules when schedule UI is connected to backend.
     const upcomingEvents = [
       {
         title: 'ABC 기업 미팅',
@@ -54,6 +55,11 @@ export function DashboardLayout({ children }) {
     if (!salesmapConnected) {
       navigate('/salesmap-login');
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    navigate('/login', { replace: true });
   };
 
   const menuItems = [
@@ -173,6 +179,12 @@ export function DashboardLayout({ children }) {
                   <span className="text-sm text-gray-700">김영업</span>
                   <ChevronDown className="w-3 h-3 text-gray-500" />
                 </div>
+                <button
+                  onClick={handleLogout}
+                  className="ml-2 px-2.5 py-1 text-xs border border-gray-300 rounded text-gray-600 hover:bg-gray-50"
+                >
+                  로그아웃
+                </button>
               </div>
             </div>
           </div>
