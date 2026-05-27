@@ -1,5 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ChevronDown, Search, Check, X, Edit2, Save } from 'lucide-react';
+import { getSchedules } from '../api/schedules';
+import { getSources } from '../api/sources';
+import { getAnalysesBySource } from '../api/analyses';
+import { getSalesmapRecordsByAnalysis } from '../api/salesmapRecords';
+import { getApiErrorMessage } from '../api/errors';
 
 export function Dashboard() {
   const [currentMonth, setCurrentMonth] = useState(new Date(2026, 4, 1));
@@ -8,6 +13,12 @@ export function Dashboard() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState(null);
+  const [apiStatuses, setApiStatuses] = useState({
+    schedules: { label: '일정 API', status: 'loading', count: null, message: '조회 중' },
+    sources: { label: '소스 API', status: 'loading', count: null, message: '조회 중' },
+    analyses: { label: '분석 API', status: 'idle', count: null, message: '소스 조회 후 확인' },
+    salesmapRecords: { label: 'Salesmap 등록 API', status: 'idle', count: null, message: '분석 조회 후 확인' }
+  });
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
 
@@ -47,6 +58,106 @@ export function Dashboard() {
     { id: '6', time: '15:00', title: '월간 영업 보고', type: 'meeting', date: '05/14', userId: 'user3', userName: '이마케' },
     { id: '7', time: '10:30', title: '신규 고객 상담', type: 'call', date: '05/15', userId: 'user1', userName: '김영업' }
   ]);
+
+  useEffect(() => {
+    const updateApiStatus = (key, nextStatus) => {
+      setApiStatuses((prev) => ({
+        ...prev,
+        [key]: {
+          ...prev[key],
+          ...nextStatus
+        }
+      }));
+    };
+
+    const handleApiError = (key, error) => {
+      console.error(`Failed to fetch ${key}:`, error);
+      updateApiStatus(key, {
+        status: 'error',
+        count: null,
+        message: getApiErrorMessage(error)
+      });
+    };
+
+    const fetchDashboardApiStatuses = async () => {
+      try {
+        const schedules = await getSchedules();
+        updateApiStatus('schedules', {
+          status: 'success',
+          count: schedules.length,
+          message: '확인됨'
+        });
+      } catch (error) {
+        handleApiError('schedules', error);
+      }
+
+      let sources = [];
+
+      try {
+        sources = await getSources();
+        updateApiStatus('sources', {
+          status: 'success',
+          count: sources.length,
+          message: '확인됨'
+        });
+      } catch (error) {
+        handleApiError('sources', error);
+      }
+
+      const firstSourceId = sources[0]?.sourceId;
+
+      if (!firstSourceId) {
+        updateApiStatus('analyses', {
+          status: 'idle',
+          count: 0,
+          message: '조회할 소스 없음'
+        });
+        updateApiStatus('salesmapRecords', {
+          status: 'idle',
+          count: 0,
+          message: '조회할 분석 없음'
+        });
+        return;
+      }
+
+      let analyses = [];
+
+      try {
+        analyses = await getAnalysesBySource(firstSourceId);
+        updateApiStatus('analyses', {
+          status: 'success',
+          count: analyses.length,
+          message: `sourceId ${firstSourceId} 기준`
+        });
+      } catch (error) {
+        handleApiError('analyses', error);
+      }
+
+      const firstAnalysisId = analyses[0]?.analysisId;
+
+      if (!firstAnalysisId) {
+        updateApiStatus('salesmapRecords', {
+          status: 'idle',
+          count: 0,
+          message: '조회할 분석 없음'
+        });
+        return;
+      }
+
+      try {
+        const records = await getSalesmapRecordsByAnalysis(firstAnalysisId);
+        updateApiStatus('salesmapRecords', {
+          status: 'success',
+          count: records.length,
+          message: `analysisId ${firstAnalysisId} 기준`
+        });
+      } catch (error) {
+        handleApiError('salesmapRecords', error);
+      }
+    };
+
+    fetchDashboardApiStatuses();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -174,10 +285,49 @@ export function Dashboard() {
 
   const monthName = currentMonth.toLocaleString('ko-KR', { year: 'numeric', month: 'long' });
 
+  const getApiStatusText = (status) => {
+    if (status.status === 'success') {
+      return `${status.count}건 확인됨`;
+    }
+
+    if (status.status === 'error') {
+      return status.message;
+    }
+
+    return status.message;
+  };
+
+  const getApiStatusColor = (status) => {
+    if (status.status === 'success') {
+      return 'text-green-700 bg-green-50 border-green-200';
+    }
+
+    if (status.status === 'error') {
+      return 'text-red-700 bg-red-50 border-red-200';
+    }
+
+    return 'text-gray-600 bg-gray-50 border-gray-200';
+  };
+
   return (
     <div className="p-6 flex gap-6 h-full">
       {/* Left: Schedule Panels */}
       <div className="w-72 space-y-5 flex flex-col">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <h3 className="text-sm text-gray-700 mb-3">보호 API 연결 상태</h3>
+          <div className="space-y-2">
+            {Object.entries(apiStatuses).map(([key, status]) => (
+              <div
+                key={key}
+                className={`border rounded px-3 py-2 ${getApiStatusColor(status)}`}
+              >
+                <div className="text-xs font-medium">{status.label}</div>
+                <div className="text-xs mt-0.5">{getApiStatusText(status)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Today's Schedule */}
         <div className="flex-1">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 h-full flex flex-col">
