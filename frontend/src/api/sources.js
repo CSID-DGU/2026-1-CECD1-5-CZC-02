@@ -11,3 +11,9 @@ export async function getSourceById(sourceId) {
 
   return response.data.data;
 }
+
+export async function createSource(payload) {
+  const response = await api.post('/api/sources', payload);
+
+  return response.data.data;
+}

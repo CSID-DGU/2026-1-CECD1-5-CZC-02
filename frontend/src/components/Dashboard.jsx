@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ChevronDown, Search, Check, X, Edit2, Save } from 'lucide-react';
-import { getSchedules } from '../api/schedules';
-import { getSources } from '../api/sources';
+import { createSchedule, getSchedules } from '../api/schedules';
+import { createSource, getSources } from '../api/sources';
 import { getAnalysesBySource } from '../api/analyses';
 import { getSalesmapRecordsByAnalysis } from '../api/salesmapRecords';
 import { getApiErrorMessage } from '../api/errors';
@@ -19,6 +19,9 @@ export function Dashboard() {
     analyses: { label: '분석 API', status: 'idle', count: null, message: '소스 조회 후 확인' },
     salesmapRecords: { label: 'Salesmap 등록 API', status: 'idle', count: null, message: '분석 조회 후 확인' }
   });
+  const [testPanelMessage, setTestPanelMessage] = useState('');
+  const [isCreatingTestData, setIsCreatingTestData] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
 
@@ -157,7 +160,7 @@ export function Dashboard() {
     };
 
     fetchDashboardApiStatuses();
-  }, []);
+  }, [refreshKey]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -309,6 +312,73 @@ export function Dashboard() {
     return 'text-gray-600 bg-gray-50 border-gray-200';
   };
 
+  const formatLocalDateTime = (date) => {
+    const pad = (value) => String(value).padStart(2, '0');
+
+    return [
+      date.getFullYear(),
+      pad(date.getMonth() + 1),
+      pad(date.getDate())
+    ].join('-') + 'T' + [
+      pad(date.getHours()),
+      pad(date.getMinutes()),
+      pad(date.getSeconds())
+    ].join(':');
+  };
+
+  const logApiError = (label, error) => {
+    console.error(label, {
+      status: error.response?.status,
+      message: error.response?.data?.message,
+      data: error.response?.data?.data,
+      rawError: error
+    });
+  };
+
+  const handleCreateTestSource = async () => {
+    try {
+      setIsCreatingTestData(true);
+      setTestPanelMessage('');
+
+      await createSource({
+        sourceType: 'EMAIL',
+        title: '테스트 이메일',
+        content: '고객사 미팅 일정과 후속 조치가 포함된 테스트 내용입니다.'
+      });
+
+      setTestPanelMessage('Source 생성 성공');
+      setRefreshKey((prev) => prev + 1);
+    } catch (error) {
+      logApiError('Failed to create test source. Check request body and backend DTO.', error);
+      setTestPanelMessage(`Source 생성 실패: ${getApiErrorMessage(error)}`);
+    } finally {
+      setIsCreatingTestData(false);
+    }
+  };
+
+  const handleCreateTestSchedule = async () => {
+    const oneHourLater = new Date(Date.now() + 60 * 60 * 1000);
+
+    try {
+      setIsCreatingTestData(true);
+      setTestPanelMessage('');
+
+      await createSchedule({
+        title: '테스트 일정',
+        scheduleDateTime: formatLocalDateTime(oneHourLater),
+        memo: '프론트-백 통합 테스트 일정'
+      });
+
+      setTestPanelMessage('Schedule 생성 성공');
+      setRefreshKey((prev) => prev + 1);
+    } catch (error) {
+      logApiError('Failed to create test schedule. Check request body and backend DTO.', error);
+      setTestPanelMessage(`Schedule 생성 실패: ${getApiErrorMessage(error)}`);
+    } finally {
+      setIsCreatingTestData(false);
+    }
+  };
+
   return (
     <div className="p-6 flex gap-6 h-full">
       {/* Left: Schedule Panels */}
@@ -325,6 +395,29 @@ export function Dashboard() {
                 <div className="text-xs mt-0.5">{getApiStatusText(status)}</div>
               </div>
             ))}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <h3 className="text-sm text-gray-700 mb-3">API 테스트 패널</h3>
+          <div className="space-y-2">
+            <button
+              onClick={handleCreateTestSource}
+              disabled={isCreatingTestData}
+              className="w-full px-3 py-2 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+            >
+              Source 생성 테스트
+            </button>
+            <button
+              onClick={handleCreateTestSchedule}
+              disabled={isCreatingTestData}
+              className="w-full px-3 py-2 text-xs border border-gray-300 hover:bg-gray-50 disabled:bg-gray-100 text-gray-700 rounded"
+            >
+              Schedule 생성 테스트
+            </button>
+            {testPanelMessage && (
+              <p className="text-xs text-gray-600">{testPanelMessage}</p>
+            )}
           </div>
         </div>
 
