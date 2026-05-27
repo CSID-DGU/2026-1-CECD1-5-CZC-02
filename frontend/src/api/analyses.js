@@ -12,3 +12,11 @@ export async function getAnalysisById(analysisId) {
 
   return response.data.data;
 }
+
+// Analysis creation exists on the backend, but UI trigger is intentionally deferred
+// until the source analysis workflow is finalized.
+export async function createAnalysis(payload) {
+  const response = await api.post('/api/analysis', payload);
+
+  return response.data.data;
+}

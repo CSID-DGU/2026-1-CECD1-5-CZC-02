@@ -7,6 +7,7 @@ import { getSalesmapRecordsByAnalysis } from '../api/salesmapRecords';
 import { getApiErrorMessage } from '../api/errors';
 
 export function Dashboard() {
+  const isDev = import.meta.env.DEV;
   const [currentMonth, setCurrentMonth] = useState(new Date(2026, 4, 1));
   const [showUserFilter, setShowUserFilter] = useState(false);
   const [userSearch, setUserSearch] = useState('');
@@ -398,28 +399,30 @@ export function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <h3 className="text-sm text-gray-700 mb-3">API 테스트 패널</h3>
-          <div className="space-y-2">
-            <button
-              onClick={handleCreateTestSource}
-              disabled={isCreatingTestData}
-              className="w-full px-3 py-2 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
-            >
-              Source 생성 테스트
-            </button>
-            <button
-              onClick={handleCreateTestSchedule}
-              disabled={isCreatingTestData}
-              className="w-full px-3 py-2 text-xs border border-gray-300 hover:bg-gray-50 disabled:bg-gray-100 text-gray-700 rounded"
-            >
-              Schedule 생성 테스트
-            </button>
-            {testPanelMessage && (
-              <p className="text-xs text-gray-600">{testPanelMessage}</p>
-            )}
+        {isDev && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <h3 className="text-sm text-gray-700 mb-3">API 테스트 패널</h3>
+            <div className="space-y-2">
+              <button
+                onClick={handleCreateTestSource}
+                disabled={isCreatingTestData}
+                className="w-full px-3 py-2 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+              >
+                Source 생성 테스트
+              </button>
+              <button
+                onClick={handleCreateTestSchedule}
+                disabled={isCreatingTestData}
+                className="w-full px-3 py-2 text-xs border border-gray-300 hover:bg-gray-50 disabled:bg-gray-100 text-gray-700 rounded"
+              >
+                Schedule 생성 테스트
+              </button>
+              {testPanelMessage && (
+                <p className="text-xs text-gray-600">{testPanelMessage}</p>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Today's Schedule */}
         <div className="flex-1">
