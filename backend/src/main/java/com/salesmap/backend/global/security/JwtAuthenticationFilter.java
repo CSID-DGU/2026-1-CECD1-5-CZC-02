@@ -9,12 +9,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
@@ -35,9 +38,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+        String requestUri = request.getRequestURI();
+        boolean debugTarget = isDebugTarget(requestUri);
         String token = resolveToken(request);
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {
+        if (debugTarget) {
+            log.debug("[JWT DEBUG] uri={}, authorizationHeaderPresent={}, bearerTokenPresent={}",
+                    requestUri,
+                    request.getHeader(AUTHORIZATION_HEADER) != null,
+                    token != null
+            );
+        }
+
+        boolean validToken = token != null && jwtTokenProvider.validateToken(token);
+
+        if (debugTarget) {
+            log.debug("[JWT DEBUG] uri={}, tokenValid={}", requestUri, validToken);
+        }
+
+        if (validToken) {
             try {
                 Long userId = jwtTokenProvider.getUserId(token);
                 UserDetails userDetails = customUserDetailsService.loadUserById(userId);
@@ -48,9 +67,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         userDetails.getAuthorities()
                 );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                if (debugTarget) {
+                    log.debug("[JWT DEBUG] uri={}, authenticationSet=true, userId={}, principalType={}",
+                            requestUri,
+                            userId,
+                            userDetails.getClass().getName()
+                    );
+                }
             } catch (RuntimeException exception) {
                 SecurityContextHolder.clearContext();
+
+                if (debugTarget) {
+                    log.debug("[JWT DEBUG] uri={}, authenticationSet=false, reason={}",
+                            requestUri,
+                            exception.getMessage(),
+                            exception
+                    );
+                }
             }
+        } else if (debugTarget) {
+            log.debug("[JWT DEBUG] uri={}, authenticationSet=false", requestUri);
         }
 
         filterChain.doFilter(request, response);
@@ -64,5 +101,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         return null;
+    }
+
+    private boolean isDebugTarget(String requestUri) {
+        return "/api/salesmap/register".equals(requestUri) || "/api/analysis".equals(requestUri);
     }
 }

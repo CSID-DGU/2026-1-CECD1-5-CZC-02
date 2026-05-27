@@ -7,6 +7,12 @@ export async function getSalesmapRecordsByAnalysis(analysisId) {
   return response.data.data;
 }
 
+export async function registerSalesmapRecord(payload) {
+  const response = await api.post('/api/salesmap/register', payload);
+
+  return response.data.data;
+}
+
 // TODO: Backend does not provide GET /api/salesmap/records/{recordId} yet.
 export async function getSalesmapRecordById(recordId) {
   throw new Error(`Salesmap record detail API is not available yet. recordId=${recordId}`);
