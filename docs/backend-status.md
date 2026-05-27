@@ -1,160 +1,169 @@
 # Backend Status
 
-팀 공유용 백엔드 진행 상태 요약입니다.
+Dongguk University 종합설계 프로젝트 `SALESMAP 활동 자동화 AI Agent`의 백엔드 진행 상태입니다.
 
-## Current Status
+## Current Summary
 
-현재 백엔드는 Spring Boot + MySQL + JPA 기반으로 주요 도메인 API가 동작합니다.
+현재 백엔드는 Spring Boot + MySQL + JPA 기반으로 핵심 도메인 API가 동작하며, React + Vite 프론트엔드와 JWT 인증 흐름 및 주요 업무 흐름이 연결되어 있습니다.
 
-완료된 핵심 작업:
+완료된 핵심 흐름:
+
+```text
+회원가입/로그인
+  -> JWT accessToken 저장
+  -> Source 생성/조회
+  -> MockAiClient 기반 Analysis 생성/조회
+  -> MockSalesmapClient 기반 Salesmap 등록/조회
+```
+
+## Completed Backend Features
 
 - JWT 기반 회원가입, 로그인, 내 정보 조회
 - BCrypt 비밀번호 암호화
-- 보호 API에 `Authorization: Bearer {accessToken}` 적용
-- Source, Schedule, Analysis, Salesmap API 소유권 검증
-- 다른 사용자의 `sourceId`, `analysisId`, `userId` 접근 시 `403` 반환
-- User, Integration, Source, Analysis, Schedule, SalesmapRecord Entity/Repository 구성
-- Source, Analysis, Schedule, Salesmap 주요 API DB 기반 동작
+- `Authorization: Bearer {accessToken}` 기반 보호 API
+- `ApiResponse` 공통 응답 구조
+- DTO Validation 및 `GlobalExceptionHandler`
+- User, Integration, Source, Analysis, Schedule, SalesmapRecord Entity/Repository
+- User, Source, Analysis, Schedule, Salesmap API DB 기반 동작
+- Source/Schedule/Analysis/Salesmap 소유권 검증
 - AI Module client 구조 분리
+  - `AiClient`
+  - `MockAiClient`
+  - `HttpAiClient`
 - Salesmap API client 구조 분리
-- mock/http 모드 전환 구조 적용
-- 프론트 연동 문서 작성: [frontend-api-guide.md](./frontend-api-guide.md)
+  - `SalesmapClient`
+  - `MockSalesmapClient`
+  - `HttpSalesmapClient`
+- `mock` / `http` property 기반 전환 구조
 
-## Frontend Team Notes
+## Frontend Integration Status
 
-프론트엔드는 아래 문서를 우선 참고하면 됩니다.
+현재 `feature/frontend-backend-integration` 브랜치에서 다음 프론트-백엔드 연동이 완료되었습니다.
 
-- API 사용 흐름: [frontend-api-guide.md](./frontend-api-guide.md)
-- 전체 API 명세: [api-spec.md](./api-spec.md)
+- JWT 로그인/회원가입 프론트 연동
+- `localStorage.accessToken` 저장
+- axios interceptor 기반 Authorization 자동 첨부
+- `ProtectedRoute` 적용
+- 로그아웃 시 accessToken 삭제
+- `GET /api/sources` 보호 API 연결
+- `GET /api/schedules` 보호 API 연결
+- Source 생성 테스트 연결
+- Schedule 생성 테스트 연결
+- Source 상세 조회 연결
+- `GET /api/analysis/source/{sourceId}` 연결
+- `POST /api/analysis` MockAiClient 기반 분석 생성 연결
+- Analysis 결과 표시
+- `POST /api/salesmap/register` 연결
+- `GET /api/salesmap/analysis/{analysisId}` Mock Salesmap 등록 결과 조회
+- `MessageView` 기반 Source -> Analysis -> Salesmap 흐름 연결
 
-중요 연동 규칙:
+## Current E2E Test Flow
 
-- 로그인 또는 회원가입 후 `accessToken`을 저장합니다.
-- 보호 API 호출 시 항상 아래 헤더를 보냅니다.
+현재 로컬에서 가능한 통합 테스트 흐름:
 
-```http
-Authorization: Bearer {accessToken}
-```
+1. 프론트에서 회원가입 또는 로그인
+2. accessToken이 `localStorage`에 저장되는지 확인
+3. `/dashboard` 진입
+4. Source 생성 테스트 실행
+5. Source 목록에서 생성된 Source 선택
+6. Source 상세 조회
+7. AI 분석 테스트 실행
+8. Analysis 결과 표시 확인
+9. SALESMAP 등록 테스트 실행
+10. SalesmapRecord 등록 결과 표시 확인
 
-- 신규 화면에서는 `userId`를 직접 보내지 않습니다.
-- Source/Schedule 목록은 로그인 사용자 기준입니다.
+## Mock Mode
 
-```http
-GET /api/sources
-GET /api/schedules
-```
-
-- 다른 사용자의 리소스 접근 시 `403`이 반환됩니다.
-- 외부 AI Module 또는 Salesmap API 장애 시 백엔드는 `502`를 반환합니다.
-
-## AI Module Team Notes
-
-백엔드와 AI Module 연동 기준:
-
-```http
-POST /analyze
-```
-
-백엔드가 AI Module로 보내는 주요 필드:
-
-- `sourceId`
-- `sourceType`
-- `externalSourceId`
-- `title`
-- `content`
-- `collectedAt`
-
-AI Module이 반환해야 하는 주요 필드:
-
-- `customerName`
-- `contactName`
-- `productName`
-- `amount`
-- `scheduleTitle`
-- `scheduleDateTime`
-- `todoContent`
-- `keyIssues`
-- `summary`
-- `confidenceScore`
-
-규칙:
-
-- `scheduleDateTime`은 ISO-8601 형식입니다.
-- `confidenceScore`는 `0.0` 이상 `1.0` 이하입니다.
-- 실패 응답은 `errorCode`, `message`, `details` 구조를 사용합니다.
-
-상세 계약은 [backend-guide.md](./backend-guide.md)의 AI Module 섹션을 참고합니다.
-
-## Salesmap Integration Notes
-
-Salesmap 외부 API 연동은 client 구조만 준비되어 있습니다.
-
-현재 백엔드는 아래 구조를 사용합니다.
-
-```text
-SalesmapService
-  -> SalesmapClient
-      -> MockSalesmapClient
-      -> HttpSalesmapClient
-```
-
-Salesmap API 요청에 포함되는 주요 필드:
-
-- `analysisId`
-- `sourceId`
-- `customerName`
-- `contactName`
-- `productName`
-- `amount`
-- `scheduleText`
-- `followUpAction`
-- `summary`
-
-실제 Salesmap API endpoint와 인증 방식이 확정되면 `HttpSalesmapClient`에 인증 헤더와 실제 path를 반영하면 됩니다.
-
-## Mock / HTTP Mode
-
-현재 기본값은 모두 mock입니다.
+현재 기본값은 외부 서버 없이 테스트 가능한 mock 모드입니다.
 
 ```properties
 ai.module.mode=mock
 salesmap.api.mode=mock
 ```
 
-mock 모드에서는 외부 서버가 없어도 백엔드 API 테스트가 가능합니다.
+Mock 동작:
 
-실제 AI Module 호출로 전환:
+- `MockAiClient`: FastAPI 서버 없이 고정 분석 결과를 반환하고 `analyses` 테이블에 저장
+- `MockSalesmapClient`: 실제 Salesmap 외부 API 호출 없이 mock `externalRecordId`, `requestPayload`, `responsePayload`를 반환하고 `salesmap_records` 테이블에 저장
+
+실제 연동 전환 예시:
 
 ```properties
 ai.module.mode=http
 ai.module.base-url=http://localhost:8000
-```
 
-실제 Salesmap API 호출로 전환:
-
-```properties
 salesmap.api.mode=http
 salesmap.api.base-url=http://localhost:9000
 salesmap.api.register-path=/records
 ```
 
-## Next Work
+## Recent Backend Fixes
 
-앞으로 필요한 작업:
+Salesmap 등록 테스트 중 401처럼 보이던 문제가 있었으나, 실제 원인은 DB 저장 오류였습니다.
 
-- 실제 FastAPI AI Module 구현 및 `/analyze` 연동 테스트
-- 실제 Salesmap API endpoint, 인증 방식, 요청/응답 필드 확정
-- Gmail/Jandi 연동 API 구현
+반영된 수정:
+
+- `salesmap_records.request_payload` 컬럼을 `LONGTEXT`로 변경
+- `salesmap_records.response_payload` 컬럼을 `LONGTEXT`로 변경
+- `/error`를 Security `permitAll`에 추가
+- `DataIntegrityViolationException` JSON 응답 처리 추가
+- `SalesmapController`에서 `Authentication` 기반 사용자 확인으로 수정
+- Salesmap register 진단용 로그를 `debug` 수준으로 추가
+
+## Database Tables
+
+현재 구현된 주요 테이블:
+
+- `users`
+- `integrations`
+- `sources`
+- `analyses`
+- `schedules`
+- `salesmap_records`
+
+주의:
+
+- `salesmap_records.request_payload`, `salesmap_records.response_payload`는 JSON payload 저장을 위해 `LONGTEXT`입니다.
+- JPA `ddl-auto=update` 기준으로 로컬 DB 스키마가 갱신됩니다.
+
+## Frontend Team Notes
+
+프론트 팀은 아래 문서를 우선 참고하면 됩니다.
+
+- [frontend-api-guide.md](./frontend-api-guide.md)
+- [api-spec.md](./api-spec.md)
+
+핵심 규칙:
+
+- 로그인/회원가입 성공 시 `accessToken`을 저장합니다.
+- 보호 API는 axios interceptor가 자동으로 Authorization 헤더를 붙입니다.
+- 일반 사용자 화면에서는 `userId`를 직접 보내지 않는 흐름을 우선 사용합니다.
+- 다른 사용자의 `sourceId`, `analysisId`, `userId` 접근은 `403`입니다.
+
+## AI Module Team Notes
+
+FastAPI AI Module 실제 연동은 아직 미구현입니다.
+
+현재 백엔드는 다음 구조를 준비했습니다.
+
+```text
+AnalysisService
+  -> AiClient
+      -> MockAiClient
+      -> HttpAiClient
+```
+
+실제 FastAPI endpoint는 `/analyze`를 기준으로 준비되어 있습니다. 계약 상세는 [backend-guide.md](./backend-guide.md)의 AI Module 섹션을 참고합니다.
+
+## Remaining Work
+
+- 실제 Gmail OAuth 및 Gmail 데이터 수집
+- 실제 JANDI 연동
+- 실제 FastAPI AI Module `/analyze` 구현 및 연동 테스트
+- 실제 Salesmap 외부 API endpoint, 인증 방식, request/response 확정
 - Integration 생성/조회 API 구현
-- 프론트 화면과 API 연결 테스트
-- 주요 API 통합 테스트 작성
-- 운영용 환경 변수 정리
-- refresh token 또는 token 만료 처리 정책 확정
-
-## Meeting Summary
-
-현재 백엔드는 인증, DB 기반 주요 도메인 API, 소유권 검증, AI/Salesmap 외부 연동 client 구조까지 완료되었습니다.
-
-프론트는 `frontend-api-guide.md` 기준으로 JWT 로그인 후 API를 붙이면 됩니다.
-
-AI Module과 Salesmap은 현재 mock 기본값으로 동작하며, 실제 서버가 준비되면 property만 `http`로 바꿔 연동 테스트를 시작할 수 있습니다.
+- Swagger/OpenAPI 문서화
+- Docker 및 배포 환경 구성
+- 운영 로그 정책 정리
+- refresh token 또는 token 만료 UX 정책
+- 백엔드 통합 테스트 및 프론트 E2E 테스트 보강
