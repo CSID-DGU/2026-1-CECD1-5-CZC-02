@@ -37,8 +37,10 @@ public class ScheduleController {
     @GetMapping
     public ApiResponse<List<ScheduleResponse>> getSchedules(
             @RequestParam(required = false) Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        return ApiResponse.success(scheduleService.getSchedulesByUser(userId, principal.getUserId()));
+        return ApiResponse.success(scheduleService.getSchedulesByUser(userId, principal.getUserId(), page, size));
     }
 }
