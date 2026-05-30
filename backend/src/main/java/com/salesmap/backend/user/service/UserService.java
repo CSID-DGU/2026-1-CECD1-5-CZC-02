@@ -5,6 +5,7 @@ import com.salesmap.backend.user.dto.UserResponse;
 import com.salesmap.backend.user.entity.User;
 import com.salesmap.backend.user.entity.UserStatus;
 import com.salesmap.backend.user.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +17,11 @@ public class UserService {
     private static final String DEFAULT_ROLE = "USER";
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -30,7 +33,7 @@ public class UserService {
         User user = new User(
                 request.email(),
                 request.name(),
-                request.password(),
+                passwordEncoder.encode(request.password()),
                 DEFAULT_ROLE,
                 UserStatus.ACTIVE
         );

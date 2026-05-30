@@ -33,11 +33,11 @@ public class SalesmapRecord extends BaseEntity {
     private String externalRecordId;
 
     @Lob
-    @Column
+    @Column(columnDefinition = "LONGTEXT")
     private String requestPayload;
 
     @Lob
-    @Column
+    @Column(columnDefinition = "LONGTEXT")
     private String responsePayload;
 
     @Enumerated(EnumType.STRING)

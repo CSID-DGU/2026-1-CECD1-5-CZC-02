@@ -10,6 +10,9 @@ import com.salesmap.backend.source.entity.SourceType;
 import com.salesmap.backend.source.repository.SourceRepository;
 import com.salesmap.backend.user.entity.User;
 import com.salesmap.backend.user.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,10 +37,12 @@ public class SourceService {
     }
 
     @Transactional
-    public SourceResponse createSource(SourceCreateRequest request) {
-        User user = userRepository.findById(request.userId())
+    public SourceResponse createSource(SourceCreateRequest request, Long authenticatedUserId) {
+        validateRequestedUser(request.userId(), authenticatedUserId);
+
+        User user = userRepository.findById(authenticatedUserId)
                 .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
-        Integration integration = findIntegration(request.integrationId(), request.userId());
+        Integration integration = findIntegration(request.integrationId(), authenticatedUserId);
         SourceType sourceType = parseSourceType(request.sourceType());
 
         Source source = new Source(
@@ -55,22 +60,46 @@ public class SourceService {
     }
 
     @Transactional(readOnly = true)
-    public SourceResponse getSource(Long sourceId) {
+    public SourceResponse getSource(Long sourceId, Long authenticatedUserId) {
         Source source = sourceRepository.findById(sourceId)
                 .orElseThrow(() -> new NoSuchElementException("원본 데이터를 찾을 수 없습니다."));
+
+        if (!source.getUser().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("해당 원본 데이터에 접근할 권한이 없습니다.");
+        }
 
         return SourceResponse.from(source);
     }
 
     @Transactional(readOnly = true)
-    public List<SourceResponse> getSourcesByUser(Long userId) {
-        if (!userRepository.existsById(userId)) {
+    public List<SourceResponse> getSourcesByUser(Long requestedUserId, Long authenticatedUserId, int page, int size) {
+        validateRequestedUser(requestedUserId, authenticatedUserId);
+
+        if (!userRepository.existsById(authenticatedUserId)) {
             throw new NoSuchElementException("사용자를 찾을 수 없습니다.");
         }
 
-        return sourceRepository.findByUserId(userId).stream()
+        PageRequest pageRequest = PageRequest.of(
+                normalizePage(page),
+                normalizeSize(size),
+                Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+
+        return sourceRepository.findByUserId(authenticatedUserId, pageRequest).stream()
                 .map(SourceResponse::from)
                 .toList();
+    }
+
+    private int normalizePage(int page) {
+        return Math.max(page, 0);
+    }
+
+    private int normalizeSize(int size) {
+        if (size < 1) {
+            return 10;
+        }
+
+        return Math.min(size, 100);
     }
 
     private Integration findIntegration(Long integrationId, Long userId) {
@@ -82,10 +111,16 @@ public class SourceService {
                 .orElseThrow(() -> new NoSuchElementException("연동 정보를 찾을 수 없습니다."));
 
         if (!integration.getUser().getId().equals(userId)) {
-            throw new IllegalArgumentException("해당 사용자의 연동 정보가 아닙니다.");
+            throw new AccessDeniedException("해당 사용자의 연동 정보가 아닙니다.");
         }
 
         return integration;
+    }
+
+    private void validateRequestedUser(Long requestedUserId, Long authenticatedUserId) {
+        if (requestedUserId != null && !requestedUserId.equals(authenticatedUserId)) {
+            throw new AccessDeniedException("다른 사용자의 데이터에 접근할 수 없습니다.");
+        }
     }
 
     private SourceType parseSourceType(String sourceType) {

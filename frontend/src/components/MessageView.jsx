@@ -1,11 +1,27 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Edit, Trash2, Send, ChevronRight } from 'lucide-react';
+import { createAnalysis, getAnalysesBySource } from '../api/analyses';
+import { getApiErrorMessage } from '../api/errors';
+import { getSalesmapRecordsByAnalysis, registerSalesmapRecord } from '../api/salesmapRecords';
+import { getSourceById, getSources } from '../api/sources';
 
 export function MessageView() {
+  const isDev = import.meta.env.DEV;
   const { source } = useParams();
+  const navigate = useNavigate();
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [statusFilter, setStatusFilter] = useState('pending');
+  const [backendSources, setBackendSources] = useState([]);
+  const [sourceListMessage, setSourceListMessage] = useState('Source 조회 중');
+  const [selectedSourceDetail, setSelectedSourceDetail] = useState(null);
+  const [sourceAnalyses, setSourceAnalyses] = useState([]);
+  const [sourceDetailMessage, setSourceDetailMessage] = useState('');
+  const [analysisActionMessage, setAnalysisActionMessage] = useState('');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [salesmapRecordsByAnalysisId, setSalesmapRecordsByAnalysisId] = useState({});
+  const [salesmapActionByAnalysisId, setSalesmapActionByAnalysisId] = useState({});
+  const [registeringAnalysisId, setRegisteringAnalysisId] = useState(null);
 
   const [messages, setMessages] = useState([
     {
@@ -76,6 +92,68 @@ export function MessageView() {
     }
   ]);
 
+  const selectedSourceId = source?.startsWith('source-')
+    ? Number(source.replace('source-', ''))
+    : null;
+
+  useEffect(() => {
+    const fetchSources = async () => {
+      try {
+        const sources = await getSources();
+        setBackendSources(sources);
+        setSourceListMessage(`${sources.length}건 확인됨`);
+      } catch (error) {
+        console.error('Failed to fetch sources:', {
+          status: error.response?.status,
+          message: error.response?.data?.message,
+          data: error.response?.data?.data,
+          rawError: error
+        });
+        setSourceListMessage(getApiErrorMessage(error));
+      }
+    };
+
+    fetchSources();
+  }, []);
+
+  useEffect(() => {
+    if (!selectedSourceId) {
+      setSelectedSourceDetail(null);
+      setSourceAnalyses([]);
+      setSourceDetailMessage('');
+      return;
+    }
+
+    const fetchSourceDetail = async () => {
+      try {
+        setSourceDetailMessage('Source 상세 조회 중');
+        const [sourceDetail, analyses] = await Promise.all([
+          getSourceById(selectedSourceId),
+          getAnalysesBySource(selectedSourceId)
+        ]);
+
+        setSelectedSourceDetail(sourceDetail);
+        setSourceAnalyses(analyses);
+        setSalesmapRecordsByAnalysisId({});
+        setSalesmapActionByAnalysisId({});
+        setSourceDetailMessage('');
+      } catch (error) {
+        console.error('Failed to fetch source detail or analyses:', {
+          sourceId: selectedSourceId,
+          status: error.response?.status,
+          message: error.response?.data?.message,
+          data: error.response?.data?.data,
+          rawError: error
+        });
+        setSelectedSourceDetail(null);
+        setSourceAnalyses([]);
+        setSourceDetailMessage(getApiErrorMessage(error));
+      }
+    };
+
+    fetchSourceDetail();
+  }, [selectedSourceId]);
+
   const handleAction = (messageId, action) => {
     if (action === 'approve') {
       setMessages(messages.map(msg =>
@@ -107,10 +185,109 @@ export function MessageView() {
     msg => msg.source === currentSource && msg.status === statusFilter
   );
 
+  const handleSourceClick = (sourceId) => {
+    setSelectedMessage(null);
+    navigate(`/messages/source-${sourceId}`);
+  };
+
+  const handleCreateAnalysis = async () => {
+    if (!selectedSourceId) {
+      return;
+    }
+
+    try {
+      setIsAnalyzing(true);
+      setAnalysisActionMessage('');
+
+      await createAnalysis({ sourceId: selectedSourceId });
+      const analyses = await getAnalysesBySource(selectedSourceId);
+
+      setSourceAnalyses(analyses);
+      setAnalysisActionMessage('AI 분석 테스트 완료');
+    } catch (error) {
+      console.error('Failed to create analysis:', {
+        sourceId: selectedSourceId,
+        status: error.response?.status,
+        message: error.response?.data?.message,
+        data: error.response?.data?.data,
+        rawError: error
+      });
+      setAnalysisActionMessage(`AI 분석 테스트 실패: ${getApiErrorMessage(error)}`);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const handleRegisterSalesmap = async (analysisId) => {
+    try {
+      setRegisteringAnalysisId(analysisId);
+      setSalesmapActionByAnalysisId((prev) => ({
+        ...prev,
+        [analysisId]: ''
+      }));
+
+      await registerSalesmapRecord({ analysisId });
+      const records = await getSalesmapRecordsByAnalysis(analysisId);
+
+      setSalesmapRecordsByAnalysisId((prev) => ({
+        ...prev,
+        [analysisId]: records
+      }));
+      setSalesmapActionByAnalysisId((prev) => ({
+        ...prev,
+        [analysisId]: 'SALESMAP 등록 테스트 완료'
+      }));
+    } catch (error) {
+      console.error('Failed to register salesmap record:', {
+        analysisId,
+        status: error.response?.status,
+        message: error.response?.data?.message,
+        data: error.response?.data?.data,
+        rawError: error
+      });
+      setSalesmapActionByAnalysisId((prev) => ({
+        ...prev,
+        [analysisId]: `SALESMAP 등록 테스트 실패: ${getApiErrorMessage(error)}`
+      }));
+    } finally {
+      setRegisteringAnalysisId(null);
+    }
+  };
+
   return (
     <div className="p-6 h-full flex gap-5">
       {/* Left: Message List */}
       <div className="flex-1 space-y-4 overflow-auto">
+        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm text-gray-700">백엔드 Source 목록</h3>
+            <span className="text-xs text-gray-500">{sourceListMessage}</span>
+          </div>
+          {backendSources.length > 0 ? (
+            <div className="space-y-2 max-h-48 overflow-y-auto">
+              {backendSources.map((item) => (
+                <button
+                  key={item.sourceId}
+                  onClick={() => handleSourceClick(item.sourceId)}
+                  className={`w-full text-left border rounded-md p-3 transition-colors ${
+                    selectedSourceId === item.sourceId
+                      ? 'border-blue-400 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-sm text-gray-800 truncate">{item.title}</p>
+                    <span className="text-xs text-gray-500">{item.sourceType}</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1 line-clamp-1">{item.content}</p>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-gray-500">생성된 Source가 없거나 조회 대기 중입니다.</p>
+          )}
+        </div>
+
         <div className="flex gap-2 mb-4 border-b border-gray-200">
           <button
             onClick={() => setStatusFilter('pending')}
@@ -144,7 +321,7 @@ export function MessageView() {
           </button>
         </div>
 
-        {filteredMessages.map(message => (
+        {!selectedSourceId && filteredMessages.map(message => (
           <div
             key={message.id}
             onClick={() => setSelectedMessage(message)}
@@ -174,7 +351,120 @@ export function MessageView() {
 
       {/* Right: AI Analysis Panel */}
       <div className="w-96 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col">
-        {selectedMessage ? (
+        {selectedSourceId ? (
+          <>
+            <div className="border-b border-gray-200 px-5 py-4">
+              <h3 className="text-sm text-gray-800">Source 상세</h3>
+            </div>
+
+            <div className="flex-1 overflow-auto p-5 space-y-4">
+              {sourceDetailMessage && (
+                <p className="text-sm text-gray-500">{sourceDetailMessage}</p>
+              )}
+
+              {selectedSourceDetail && (
+                <>
+                  <div className="bg-gray-50 border border-gray-200 rounded-md p-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs text-gray-500">{selectedSourceDetail.sourceType}</span>
+                      <span className="text-xs text-gray-500">{selectedSourceDetail.status}</span>
+                    </div>
+                    <h4 className="text-sm text-gray-800 text-left mb-2">{selectedSourceDetail.title}</h4>
+                    <p className="text-sm text-gray-700 whitespace-pre-line text-left">{selectedSourceDetail.content}</p>
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+                    <div className="flex items-center justify-between gap-3 mb-2">
+                      <h4 className="text-sm text-blue-700">Analysis 조회 결과</h4>
+                      {isDev && (
+                        <button
+                          onClick={handleCreateAnalysis}
+                          disabled={isAnalyzing}
+                          className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+                        >
+                          {isAnalyzing ? '분석 중...' : 'AI 분석 테스트'}
+                        </button>
+                      )}
+                    </div>
+                    {analysisActionMessage && (
+                      <p className="text-xs text-gray-600 mb-2 text-left">{analysisActionMessage}</p>
+                    )}
+                    {sourceAnalyses.length === 0 ? (
+                      <p className="text-sm text-gray-600 text-left">아직 분석 결과가 없습니다.</p>
+                    ) : (
+                      <div className="space-y-3">
+                        {sourceAnalyses.map((analysis) => (
+                          <div key={analysis.analysisId} className="bg-white border border-blue-100 rounded p-3">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-xs text-gray-500">#{analysis.analysisId}</span>
+                              <span className="text-xs text-gray-500">{analysis.status}</span>
+                            </div>
+                            <div className="space-y-2">
+                              <div>
+                                <p className="text-xs text-gray-500 mb-1">요약</p>
+                                <p className="text-sm text-gray-700 text-left">{analysis.summary}</p>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500 mb-1">후속 조치</p>
+                                <p className="text-sm text-gray-700 text-left">{analysis.followUpAction || '-'}</p>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500 mb-1">일정 정보</p>
+                                <p className="text-sm text-gray-700 text-left">{analysis.scheduleText || '-'}</p>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500 mb-1">고객 / 제품 / 금액</p>
+                                <p className="text-sm text-gray-700 text-left">
+                                  {analysis.customerName || '-'} / {analysis.productName || '-'} / {analysis.amount ?? '-'}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="mt-3 pt-3 border-t border-blue-50">
+                              {isDev && (
+                                <button
+                                  onClick={() => handleRegisterSalesmap(analysis.analysisId)}
+                                  disabled={registeringAnalysisId === analysis.analysisId}
+                                  className="w-full px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+                                >
+                                  {registeringAnalysisId === analysis.analysisId ? '등록 중...' : 'SALESMAP 등록 테스트'}
+                                </button>
+                              )}
+                              {salesmapActionByAnalysisId[analysis.analysisId] && (
+                                <p className="text-xs text-gray-600 mt-2 text-left">
+                                  {salesmapActionByAnalysisId[analysis.analysisId]}
+                                </p>
+                              )}
+                              {salesmapRecordsByAnalysisId[analysis.analysisId]?.length > 0 && (
+                                <div className="mt-2 space-y-2">
+                                  {salesmapRecordsByAnalysisId[analysis.analysisId].map((record) => (
+                                    <div key={record.salesmapRecordId} className="bg-gray-50 border border-gray-200 rounded p-2">
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-xs text-gray-500">Record #{record.salesmapRecordId}</span>
+                                        <span className="text-xs text-gray-700">{record.status}</span>
+                                      </div>
+                                      <p className="text-xs text-gray-700 mt-1 text-left">
+                                        externalRecordId: {record.externalRecordId || '-'}
+                                      </p>
+                                      <p className="text-xs text-gray-500 mt-1 text-left">
+                                        registeredAt: {record.registeredAt || '-'}
+                                      </p>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* TODO: keyIssues/confidenceScore are not included in the current backend AnalysisResponse. */}
+                </>
+              )}
+            </div>
+          </>
+        ) : selectedMessage ? (
           <>
             <div className="border-b border-gray-200 px-5 py-4">
               <h3 className="text-sm text-gray-800">상세 정보</h3>
