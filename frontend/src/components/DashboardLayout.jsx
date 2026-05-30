@@ -145,7 +145,7 @@ export function DashboardLayout({ children }) {
         <div className="flex-1 flex flex-col">
           <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <h2 className="text-base text-gray-800">
+              <h2 className="text-base !font-bold !text-black">
                 {menuItems.find(item => item.path === location.pathname)?.label || '대시보드'}
               </h2>
             </div>
