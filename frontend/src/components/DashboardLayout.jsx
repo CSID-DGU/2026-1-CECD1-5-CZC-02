@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Settings, Search, LayoutDashboard, ChevronDown, ChevronRight } from 'lucide-react';
-import logoImg from '../assets/님버스테크 이미지.png';
-import jandiIcon from '../assets/image-8.png';
-import jandiText from '../assets/image-9.png';
-import gmailIcon from '../assets/image-10.png';
-import gmailText from '../assets/image-14.png';
+import nimbusTechLogo from '../assets/님버스테크 로고.png';
+import jandiLogo from '../assets/잔디 로고 이미지 .jpg';
+import gmailLogo from '../assets/gmail로고 이미지 spaced.png';
 
 import { ReminderModal } from './ReminderModal';
 
@@ -75,10 +73,12 @@ export function DashboardLayout({ children }) {
         {/* Sidebar */}
         <div className="w-56 bg-[#F3F4F6] border-r border-gray-200 flex flex-col">
           <div className="p-5 border-b border-gray-200 bg-[#F3F4F6]">
-            <div className="flex items-center gap-2">
-              <img src={logoImg} alt="NimbusTech" className="w-7 h-7 object-contain" style={{ mixBlendMode: 'multiply' }} />
-              <span className="text-sm text-gray-700 font-medium">NimbusTech</span>
-            </div>
+            <img
+              src={nimbusTechLogo}
+              alt="NIMBUS TECH"
+              className="block w-44 h-auto object-contain"
+              style={{ mixBlendMode: 'multiply' }}
+            />
           </div>
 
           <nav className="flex-1 py-2">
@@ -91,27 +91,21 @@ export function DashboardLayout({ children }) {
                 onClick={() => navigate('/messages/jandi')}
                 className={`w-full flex items-center px-4 py-3 transition-colors ${
                   location.pathname.includes('/messages/jandi')
-                    ? 'bg-[#F3F4F6] text-gray-900 border-l-2 border-blue-500'
+                    ? 'bg-white text-gray-900 border-l-2 border-blue-500'
                     : 'text-gray-600 hover:bg-white/50'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <img src={jandiIcon} alt="JANDI" className="w-6 h-6 object-contain" style={{ mixBlendMode: 'multiply' }} />
-                  <img src={jandiText} alt="JANDI text" className="h-5 object-contain" style={{ mixBlendMode: 'multiply' }} />
-                </div>
+                <img src={jandiLogo} alt="JANDI" className="h-8 w-auto object-contain" style={{ mixBlendMode: 'multiply' }} />
               </button>
               <button
                 onClick={() => navigate('/messages/gmail')}
                 className={`w-full flex items-center px-4 py-3 transition-colors ${
                   location.pathname.includes('/messages/gmail')
-                    ? 'bg-[#F3F4F6] text-gray-900 border-l-2 border-blue-500'
+                    ? 'bg-white text-gray-900 border-l-2 border-blue-500'
                     : 'text-gray-600 hover:bg-white/50'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <img src={gmailIcon} alt="Gmail" className="w-6 h-6 object-contain" style={{ mixBlendMode: 'multiply' }} />
-                  <img src={gmailText} alt="Gmail text" className="h-6 object-contain" style={{ mixBlendMode: 'multiply' }} />
-                </div>
+                <img src={gmailLogo} alt="Gmail" className="ml-1.5 h-[22px] w-auto object-contain" style={{ mixBlendMode: 'multiply' }} />
               </button>
             </div>
 

@@ -614,7 +614,7 @@ export function Dashboard() {
       {/* Schedule Detail Modal */}
       {showScheduleModal && selectedDate && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div ref={modalRef} className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] overflow-auto border border-gray-200 shadow-xl">
+          <div ref={modalRef} className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] overflow-auto border border-gray-200 shadow-xl text-left">
             <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
               <h3 className="text-base text-gray-800">
                 {currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월 {selectedDate}일 일정
