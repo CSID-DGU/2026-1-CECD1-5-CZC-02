@@ -56,7 +56,7 @@ export function SettingsPage() {
   return (
     <div className="p-6">
       <div className="max-w-2xl">
-        <h2 className="text-lg !font-bold !text-black mb-6">계정 설정</h2>
+        <h2 className="text-lg !font-semibold !text-black mb-6">계정 설정</h2>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
           <div className="p-5 border-b border-gray-200 flex items-center justify-between">

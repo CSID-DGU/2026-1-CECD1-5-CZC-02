@@ -90,7 +90,7 @@ export function LoginPage() {
         <div className="flex-1 bg-white flex items-center justify-center p-12">
           <div className="w-full max-w-md">
             <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-8">
-              <h2 className="text-xl !font-bold !text-black mb-8 text-center">
+              <h2 className="text-xl !font-semibold !text-black mb-8 text-center">
                 {isSignup ? '회원가입' : '로그인'}
               </h2>
 
