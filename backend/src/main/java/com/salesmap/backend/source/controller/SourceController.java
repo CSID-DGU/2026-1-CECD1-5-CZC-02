@@ -38,9 +38,11 @@ public class SourceController {
     @GetMapping
     public ApiResponse<List<SourceResponse>> getSources(
             @RequestParam(required = false) Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        return ApiResponse.success(sourceService.getSourcesByUser(userId, principal.getUserId()));
+        return ApiResponse.success(sourceService.getSourcesByUser(userId, principal.getUserId(), page, size));
     }
 
     @GetMapping("/{sourceId}")

@@ -9,6 +9,8 @@ import com.salesmap.backend.schedule.entity.ScheduleStatus;
 import com.salesmap.backend.schedule.repository.ScheduleRepository;
 import com.salesmap.backend.user.entity.User;
 import com.salesmap.backend.user.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,16 +57,34 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleResponse> getSchedulesByUser(Long requestedUserId, Long authenticatedUserId) {
+    public List<ScheduleResponse> getSchedulesByUser(Long requestedUserId, Long authenticatedUserId, int page, int size) {
         validateRequestedUser(requestedUserId, authenticatedUserId);
 
         if (!userRepository.existsById(authenticatedUserId)) {
             throw new NoSuchElementException("사용자를 찾을 수 없습니다.");
         }
 
-        return scheduleRepository.findByUserId(authenticatedUserId).stream()
+        PageRequest pageRequest = PageRequest.of(
+                normalizePage(page),
+                normalizeSize(size),
+                Sort.by(Sort.Direction.DESC, "scheduleDateTime")
+        );
+
+        return scheduleRepository.findByUserId(authenticatedUserId, pageRequest).stream()
                 .map(ScheduleResponse::from)
                 .toList();
+    }
+
+    private int normalizePage(int page) {
+        return Math.max(page, 0);
+    }
+
+    private int normalizeSize(int size) {
+        if (size < 1) {
+            return 10;
+        }
+
+        return Math.min(size, 100);
     }
 
     private Analysis findAnalysis(Long analysisId, Long authenticatedUserId) {
