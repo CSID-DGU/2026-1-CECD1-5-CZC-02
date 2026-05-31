@@ -20,3 +20,9 @@ export async function createAnalysis(payload) {
 
   return response.data.data;
 }
+
+export async function createGroupAnalysis(payload) {
+  const response = await api.post('/api/analysis/group', payload);
+
+  return response.data.data;
+}

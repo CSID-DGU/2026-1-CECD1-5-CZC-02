@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Edit, Trash2, Send, ChevronRight } from 'lucide-react';
-import { createAnalysis, getAnalysesBySource } from '../api/analyses';
+import { createAnalysis, createGroupAnalysis, getAnalysesBySource } from '../api/analyses';
 import { getApiErrorMessage } from '../api/errors';
 import { getSalesmapRecordsByAnalysis, registerSalesmapRecord } from '../api/salesmapRecords';
 import { getSourceById, getSources } from '../api/sources';
@@ -199,10 +199,15 @@ export function MessageView() {
       setIsAnalyzing(true);
       setAnalysisActionMessage('');
 
-      await createAnalysis({ sourceId: selectedSourceId });
+      const createdAnalysis = selectedSourceDetail?.sourceGroupId
+        ? await createGroupAnalysis({ sourceGroupId: selectedSourceDetail.sourceGroupId })
+        : await createAnalysis({ sourceId: selectedSourceId });
       const analyses = await getAnalysesBySource(selectedSourceId);
+      const nextAnalyses = analyses.some((analysis) => analysis.analysisId === createdAnalysis.analysisId)
+        ? analyses
+        : [createdAnalysis, ...analyses];
 
-      setSourceAnalyses(analyses);
+      setSourceAnalyses(nextAnalyses);
       setAnalysisActionMessage('AI 분석 테스트 완료');
     } catch (error) {
       console.error('Failed to create analysis:', {

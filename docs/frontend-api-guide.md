@@ -90,6 +90,7 @@ export async function getSources() {
 - `frontend/src/api/sources.js`
 - `frontend/src/api/schedules.js`
 - `frontend/src/api/analyses.js`
+- `frontend/src/api/integrations.js`
 - `frontend/src/api/salesmapRecords.js`
 - `frontend/src/api/client.js`
 
@@ -100,6 +101,26 @@ export async function getSources() {
 - `schedules.js`: Schedule 생성, 목록 조회
 - `analyses.js`: Analysis 생성, 상세 조회, Source 기준 목록 조회
 - `salesmapRecords.js`: Salesmap 등록, Analysis 기준 등록 이력 조회
+
+## Gmail Auto Sync
+
+로그인 성공 후 프론트는 `localStorage.accessToken`을 저장한 다음 Gmail 자동 동기화를 시도합니다.
+
+흐름:
+
+```text
+POST /api/auth/login
+  -> localStorage.accessToken 저장
+  -> GET /api/integrations
+  -> GMAIL provider가 CONNECTED이면 POST /api/integrations/gmail/collect 호출
+  -> 대시보드로 이동
+```
+
+주의:
+
+- Gmail 연동 정보가 없으면 자동 수집을 건너뜁니다.
+- Gmail 수집 실패가 로그인 자체를 막지는 않습니다.
+- 자동 수집 API는 기존 JWT Authorization header를 사용합니다.
 
 ## Protected Routing
 
@@ -148,7 +169,8 @@ Source 목록 조회
   -> GET /api/sources/{sourceId}
   -> GET /api/analysis/source/{sourceId}
   -> AI 분석 테스트 버튼
-  -> POST /api/analysis
+  -> if sourceGroupId exists, call POST /api/analysis/group
+  -> otherwise, call POST /api/analysis
   -> Analysis 목록 재조회
   -> SALESMAP 등록 테스트 버튼
   -> POST /api/salesmap/register
@@ -156,6 +178,9 @@ Source 목록 조회
 ```
 
 현재 AI는 실제 FastAPI가 아니라 백엔드 `MockAiClient` 결과를 사용합니다. Salesmap 등록도 실제 외부 API가 아니라 `MockSalesmapClient` 결과를 사용합니다.
+
+Gmail collected Sources have `sourceGroupId` based on the Gmail thread ID, so the UI calls the SourceGroup analysis API first.
+For manually created Sources without `sourceGroupId`, the UI keeps the existing single Source analysis API.
 
 ## Main Request Examples
 
@@ -232,6 +257,22 @@ Content-Type: application/json
 ```json
 {
   "sourceId": 1
+}
+```
+
+### Create Group Analysis
+
+Use this when the selected Source has `sourceGroupId`.
+
+```http
+POST /api/analysis/group
+Authorization: Bearer {accessToken}
+Content-Type: application/json
+```
+
+```json
+{
+  "sourceGroupId": 1
 }
 ```
 

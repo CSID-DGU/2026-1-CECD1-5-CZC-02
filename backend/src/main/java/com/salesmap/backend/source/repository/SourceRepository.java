@@ -1,6 +1,7 @@
 package com.salesmap.backend.source.repository;
 
 import com.salesmap.backend.source.entity.Source;
+import com.salesmap.backend.source.entity.SourceType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,12 @@ public interface SourceRepository extends JpaRepository<Source, Long> {
     Page<Source> findByUserId(Long userId, Pageable pageable);
 
     List<Source> findByIntegrationId(Long integrationId);
+
+    List<Source> findBySourceGroupIdOrderBySentAtAscIdAsc(Long sourceGroupId);
+
+    boolean existsByIntegrationIdAndSourceTypeAndExternalSourceId(
+            Long integrationId,
+            SourceType sourceType,
+            String externalSourceId
+    );
 }

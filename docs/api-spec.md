@@ -146,6 +146,110 @@ Response:
 }
 ```
 
+## Integration API
+
+### POST /api/integrations
+
+로그인 사용자의 외부 서비스 연동 정보를 저장합니다. Gmail OAuth가 연결되면 같은 구조로 Gmail 계정 정보와 토큰을 저장합니다.
+
+Authorization: 필요
+
+Request Body:
+
+```json
+{
+  "provider": "GMAIL",
+  "externalAccountId": "user@gmail.com",
+  "accessToken": "access-token",
+  "refreshToken": "refresh-token",
+  "tokenExpiresAt": "2026-06-01T12:00:00"
+}
+```
+
+Request Fields:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| provider | String | Yes | `GMAIL`, `JANDI`, `SALESMAP` |
+| externalAccountId | String | Yes | 외부 서비스 계정 ID |
+| accessToken | String | Yes | 외부 서비스 access token |
+| refreshToken | String | Yes | 외부 서비스 refresh token |
+| tokenExpiresAt | LocalDateTime | Yes | 토큰 만료 시각 |
+
+Status:
+
+- `400`: 지원하지 않는 provider 또는 이미 연동된 provider
+- `401`: 인증 필요
+
+### GET /api/integrations
+
+로그인 사용자의 외부 서비스 연동 목록을 조회합니다.
+
+### GET /api/integrations/{provider}
+
+로그인 사용자의 특정 provider 연동 정보를 조회합니다.
+
+## Gmail Integration API
+
+실제 Gmail OAuth와 Gmail API 수집을 담당합니다. Google Cloud Console에서 Gmail API를 활성화하고 OAuth Client ID/Secret을 환경변수로 설정해야 합니다.
+
+### GET /api/integrations/gmail/authorize
+
+Google OAuth 로그인 URL을 생성합니다.
+
+Authorization: 필요
+
+Response:
+
+```json
+{
+  "success": true,
+  "message": "요청이 성공했습니다.",
+  "data": {
+    "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth?..."
+  }
+}
+```
+
+### GET /api/integrations/gmail/callback
+
+Google OAuth redirect URI입니다. Google이 전달한 `code`, `state`를 검증하고 access token / refresh token을 발급받아 `integrations`에 저장합니다.
+
+Authorization: 불필요
+
+Query Parameters:
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| code | String | Yes | Google authorization code |
+| state | String | Yes | 백엔드가 생성한 state |
+
+### POST /api/integrations/gmail/collect
+
+연동된 Gmail 계정에서 메일을 수집해 `sources`에 저장합니다. 최초 수집 시 최근 1개월 데이터를 수집하고, 이후에는 `integrations.lastSyncedAt` 이후 신규 데이터를 증분 수집합니다. Gmail message ID를 `externalSourceId`로 사용해 중복 저장을 방지하고, Gmail thread ID를 `source_groups.external_group_id`로 저장해 같은 메일 스레드를 하나의 그룹으로 묶습니다.
+
+Authorization: 필요
+
+Response:
+
+```json
+{
+  "success": true,
+  "message": "Gmail 메일 수집이 완료되었습니다.",
+  "data": {
+    "integrationId": 1,
+    "previousLastSyncedAt": null,
+    "currentLastSyncedAt": "2026-05-31T02:00:00",
+    "requestedCount": 120,
+    "savedCount": 8,
+    "skippedCount": 2,
+    "savedSourceGroupIds": [1, 2],
+    "savedSourceIds": [1, 2, 3],
+    "skippedExternalSourceIds": ["188abc"]
+  }
+}
+```
+
 ## Source API
 
 ### POST /api/sources
@@ -160,8 +264,10 @@ Request Body:
 {
   "integrationId": null,
   "sourceType": "EMAIL",
+  "externalSourceId": "gmail-message-001",
   "title": "테스트 이메일",
-  "content": "고객사 미팅 일정과 후속 조치가 포함된 테스트 내용입니다."
+  "content": "고객사 미팅 일정과 후속 조치가 포함된 테스트 내용입니다.",
+  "collectedAt": "2026-05-28T14:00:00"
 }
 ```
 
@@ -172,8 +278,15 @@ Request Fields:
 | userId | Long | No | 기존 호환용. 있으면 로그인 사용자 ID와 같아야 함 |
 | integrationId | Long | No | 연동 계정 ID. null 가능 |
 | sourceType | String | Yes | `EMAIL`, `JANDI_MESSAGE`, `MEETING_NOTE`, `MANUAL_INPUT` |
+| externalSourceId | String | No | Gmail message ID, Jandi message ID 등 외부 원본 ID |
 | title | String | Yes | 원본 데이터 제목 |
 | content | String | Yes | 원본 내용 |
+| collectedAt | LocalDateTime | No | 외부 서비스에서 수집한 시각 |
+
+중복 처리:
+
+- `externalSourceId`가 있으면 `integrationId`가 필요합니다.
+- 같은 `integrationId`, `sourceType`, `externalSourceId` 조합이 이미 저장되어 있으면 중복 저장을 막습니다.
 
 Response:
 
@@ -200,6 +313,7 @@ Response:
 Status:
 
 - `400`: Validation 실패 또는 잘못된 `sourceType`
+- `400`: 외부 원본 ID 중복 또는 외부 원본 ID에 필요한 연동 정보 누락
 - `401`: 인증 필요
 - `403`: 다른 사용자의 `userId` 또는 `integrationId`
 - `404`: user 또는 integration 없음
@@ -451,6 +565,54 @@ Status:
 - `404`: Source 없음
 - `502`: `ai.module.mode=http`에서 AI Module 호출 실패
 
+### POST /api/analysis/group
+
+SourceGroup을 기반으로 같은 Gmail thread 또는 JANDI conversation에 속한 메시지들을 묶어 AI 분석을 생성합니다.
+기존 `POST /api/analysis` 단일 Source 분석은 유지합니다.
+
+Authorization: 필요
+
+Request Body:
+
+```json
+{
+  "sourceGroupId": 1
+}
+```
+
+Backend -> AI Module request example:
+
+```json
+{
+  "sourceGroup": {
+    "groupId": "thread-abc-123",
+    "sourceType": "EMAIL",
+    "title": "5월 20일 미팅 일정 조율",
+    "deduplicated": true
+  },
+  "messages": [
+    {
+      "sourceId": 101,
+      "externalSourceId": "gmail-msg-001",
+      "direction": "SENT",
+      "senderName": "송하경",
+      "senderEmail": "hakyung@example.com",
+      "receiverNames": ["이상수"],
+      "receiverEmails": ["sangsu@example.com"],
+      "sentAt": "2026-05-10T09:00:00",
+      "content": "이 과장님 5월 20일에 미팅 괜찮으신가요?"
+    }
+  ]
+}
+```
+
+Notes:
+
+- Gmail은 `threadId`를 `source_groups.external_group_id`로 저장합니다.
+- Gmail `messageId`는 `sources.external_source_id`로 저장하고 중복 제거 기준으로 사용합니다.
+- Gmail `content`는 저장 전 text/plain 우선 추출, HTML/CSS/script 태그 제거, HTML entity 및 공백 정리를 거칩니다.
+- 그룹 분석 결과는 현재 Analysis 테이블 구조를 유지하기 위해 그룹의 첫 번째 Source를 대표 Source로 연결합니다.
+
 ### GET /api/analysis/source/{sourceId}
 
 Source 기준 Analysis 목록을 조회합니다.
@@ -607,7 +769,10 @@ Status:
 
 ## Notes
 
-- `SourceCreateRequest`는 현재 `externalSourceId`, `collectedAt`을 request body로 받지 않습니다.
+- `SourceCreateRequest`는 `externalSourceId`, `collectedAt`을 request body로 받을 수 있습니다.
+- Gmail 수집 데이터는 Gmail thread ID 기준 `SourceGroup`으로 묶이고, 각 메시지는 `Source`로 저장됩니다.
+- Gmail 메시지는 `direction`, `senderName`, `senderEmail`, `receiverNames`, `receiverEmails`, `sentAt` 메타데이터를 포함할 수 있습니다.
+- Gmail 최초 수집은 최근 1개월 기준이며, 이후 수집은 마지막 수집 시점 이후 신규 데이터 기준입니다.
 - `ScheduleCreateRequest`는 `description`이 아니라 `memo`를 사용합니다.
 - 날짜/시간은 ISO-8601 문자열을 사용합니다. 예: `2026-05-29T14:00:00`
 - 목록 조회 결과가 없으면 빈 배열 `[]`을 반환합니다.

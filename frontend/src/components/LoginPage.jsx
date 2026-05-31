@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
+import { syncGmailIfConnected } from '../api/integrations';
 import logoImg from '../assets/님버스테크 로고.png';
 
 export function LoginPage() {
@@ -45,6 +46,7 @@ export function LoginPage() {
       }
 
       localStorage.setItem('accessToken', accessToken);
+      await syncGmailIfConnected();
       navigate('/dashboard');
     } catch (error) {
       const message = error.response?.data?.message || '요청 처리 중 오류가 발생했습니다.';

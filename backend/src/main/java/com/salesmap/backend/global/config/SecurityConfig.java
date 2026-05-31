@@ -59,6 +59,7 @@ public class SecurityConfig {
                                 "/api/auth/signup",
                                 "/api/auth/login",
                                 "/api/health",
+                                "/api/integrations/gmail/callback",
                                 "/error",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",

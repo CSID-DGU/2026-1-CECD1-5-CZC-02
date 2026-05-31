@@ -1,0 +1,32 @@
+import { api } from './client';
+
+export async function getIntegrations() {
+  const response = await api.get('/api/integrations');
+
+  const data = response.data.data;
+  return Array.isArray(data) ? data : data ? [data] : [];
+}
+
+export async function collectGmailMessages() {
+  const response = await api.post('/api/integrations/gmail/collect');
+
+  return response.data.data;
+}
+
+export async function syncGmailIfConnected() {
+  try {
+    const integrations = await getIntegrations();
+    const gmailIntegration = integrations.find(
+      (integration) => integration.provider === 'GMAIL' && integration.status === 'CONNECTED'
+    );
+
+    if (!gmailIntegration) {
+      return null;
+    }
+
+    return await collectGmailMessages();
+  } catch (error) {
+    console.warn('Gmail auto sync skipped:', error.response?.data?.message || error.message);
+    return null;
+  }
+}

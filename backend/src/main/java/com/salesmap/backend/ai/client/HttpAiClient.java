@@ -5,6 +5,7 @@ import com.salesmap.backend.ai.config.AiModuleProperties;
 import com.salesmap.backend.ai.dto.AiAnalysisRequest;
 import com.salesmap.backend.ai.dto.AiAnalysisResponse;
 import com.salesmap.backend.ai.dto.AiErrorResponse;
+import com.salesmap.backend.ai.dto.AiGroupAnalysisRequest;
 import com.salesmap.backend.ai.exception.AiClientException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
@@ -34,6 +35,15 @@ public class HttpAiClient implements AiClient {
 
     @Override
     public AiAnalysisResponse analyze(AiAnalysisRequest request) {
+        return postAnalyze(request);
+    }
+
+    @Override
+    public AiAnalysisResponse analyzeGroup(AiGroupAnalysisRequest request) {
+        return postAnalyze(request);
+    }
+
+    private AiAnalysisResponse postAnalyze(Object request) {
         try {
             AiAnalysisResponse response = restClient.post()
                     .uri("/analyze")
