@@ -16,7 +16,12 @@ async def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
     if not message.strip():
         raise HTTPException(status_code=400, detail="message 또는 content는 필수입니다.")
 
-    analysis_result = await analyze_message(_build_analysis_text(request))
+    analysis_result = await analyze_message(
+        _build_analysis_text(request),
+        request.messages,
+        _requester_name(request),
+        request.existingSchedules,
+    )
     schedule = analysis_result.schedule
 
     return AnalyzeResponse(
@@ -24,6 +29,10 @@ async def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
         contactName=analysis_result.contact_person,
         productName=None,
         amount=None,
+        actionType=analysis_result.action_type,
+        targetScheduleId=analysis_result.target_schedule_id,
+        targetScheduleTitle=analysis_result.target_schedule_title,
+        actionReason=analysis_result.action_reason,
         scheduleTitle=schedule.title if schedule else None,
         scheduleDateTime=to_backend_datetime(
             schedule.date if schedule else None,
@@ -43,7 +52,10 @@ async def analyze_schedule_only(request: AnalyzeRequest) -> ScheduleAnalyzeRespo
     if not message.strip():
         raise HTTPException(status_code=400, detail="message 또는 content는 필수입니다.")
 
-    return ScheduleAnalyzeResponse(success=True, schedule=analyze_schedule(message))
+    return ScheduleAnalyzeResponse(
+        success=True,
+        schedule=analyze_schedule(message, request.messages, _requester_name(request)),
+    )
 
 
 @router.post("/api/analyze", response_model=AnalyzeResponse, include_in_schema=False)
@@ -63,3 +75,7 @@ def _build_analysis_text(request: AnalyzeRequest) -> str:
     if title and title not in message:
         return f"{title} {message}"
     return message
+
+
+def _requester_name(request: AnalyzeRequest) -> str | None:
+    return request.requester.name if request.requester else None

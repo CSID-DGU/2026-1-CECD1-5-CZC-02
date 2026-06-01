@@ -41,6 +41,18 @@ public class Analysis extends BaseEntity {
     @Column
     private Long amount;
 
+    @Column(length = 50)
+    private String actionType;
+
+    @Column
+    private Long targetScheduleId;
+
+    @Column(length = 255)
+    private String targetScheduleTitle;
+
+    @Column(length = 255)
+    private String actionReason;
+
     @Column(length = 255)
     private String scheduleText;
 
@@ -70,6 +82,10 @@ public class Analysis extends BaseEntity {
             String contactName,
             String productName,
             Long amount,
+            String actionType,
+            Long targetScheduleId,
+            String targetScheduleTitle,
+            String actionReason,
             String scheduleText,
             String followUpAction,
             String summary,
@@ -82,6 +98,10 @@ public class Analysis extends BaseEntity {
         this.contactName = contactName;
         this.productName = productName;
         this.amount = amount;
+        this.actionType = actionType;
+        this.targetScheduleId = targetScheduleId;
+        this.targetScheduleTitle = targetScheduleTitle;
+        this.actionReason = actionReason;
         this.scheduleText = scheduleText;
         this.followUpAction = followUpAction;
         this.summary = summary;
@@ -112,6 +132,22 @@ public class Analysis extends BaseEntity {
 
     public Long getAmount() {
         return amount;
+    }
+
+    public String getActionType() {
+        return actionType;
+    }
+
+    public Long getTargetScheduleId() {
+        return targetScheduleId;
+    }
+
+    public String getTargetScheduleTitle() {
+        return targetScheduleTitle;
+    }
+
+    public String getActionReason() {
+        return actionReason;
     }
 
     public String getScheduleText() {

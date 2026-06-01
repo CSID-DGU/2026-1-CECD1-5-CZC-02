@@ -8,9 +8,10 @@ WEEKDAYS = ["월요일", "화요일", "수요일", "목요일", "금요일", "�
 
 def extract_date(text: str) -> Optional[str]:
     """월/일, 요일, 오늘/내일/모레 표현을 추출합니다."""
-    month_day = re.search(r"(\d{1,2})월\s*(\d{1,2})일", text)
-    if month_day:
-        return f"{int(month_day.group(1))}월 {int(month_day.group(2))}일"
+    month_days = re.findall(r"(\d{1,2})월\s*(\d{1,2})일", text)
+    if month_days:
+        month, day = month_days[-1]
+        return f"{int(month)}월 {int(day)}일"
 
     for weekday in WEEKDAYS:
         if weekday in text:
@@ -20,9 +21,9 @@ def extract_date(text: str) -> Optional[str]:
         if relative_date in text:
             return relative_date
 
-    iso_date = re.search(r"(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})", text)
-    if iso_date:
-        year, month, day = iso_date.groups()
+    iso_dates = re.findall(r"(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})", text)
+    if iso_dates:
+        year, month, day = iso_dates[-1]
         return f"{year}-{int(month):02d}-{int(day):02d}"
 
     return None
@@ -30,21 +31,21 @@ def extract_date(text: str) -> Optional[str]:
 
 def extract_time(text: str) -> Optional[str]:
     """오전/오후가 붙은 시간과 일반 '3시' 형태를 추출합니다."""
-    meridiem_time = re.search(r"(오전|오후)\s*(\d{1,2})시(?:\s*(\d{1,2})분)?", text)
-    if meridiem_time:
-        meridiem, hour, minute = meridiem_time.groups()
+    meridiem_times = re.findall(r"(오전|오후)\s*(\d{1,2})시(?:\s*(\d{1,2})분)?", text)
+    if meridiem_times:
+        meridiem, hour, minute = meridiem_times[-1]
         minute_text = f" {int(minute)}분" if minute else ""
         return f"{meridiem} {int(hour)}시{minute_text}"
 
-    simple_time = re.search(r"(\d{1,2})시(?:\s*(\d{1,2})분)?", text)
-    if simple_time:
-        hour, minute = simple_time.groups()
+    simple_times = re.findall(r"(?<!월\s)(\d{1,2})시(?:\s*(\d{1,2})분)?", text)
+    if simple_times:
+        hour, minute = simple_times[-1]
         minute_text = f" {int(minute)}분" if minute else ""
         return f"{int(hour)}시{minute_text}"
 
-    colon_time = re.search(r"(\d{1,2}):(\d{2})", text)
-    if colon_time:
-        hour, minute = colon_time.groups()
+    colon_times = re.findall(r"(\d{1,2}):(\d{2})", text)
+    if colon_times:
+        hour, minute = colon_times[-1]
         return f"{int(hour)}:{minute}"
 
     return None

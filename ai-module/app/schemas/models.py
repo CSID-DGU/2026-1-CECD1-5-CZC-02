@@ -21,6 +21,10 @@ class AnalysisResultSchema(BaseModel):
     customer_name: Optional[str] = None
     contact_person: Optional[str] = None
     activity_type: str  # MEETING, CALL, EMAIL, TASK
+    action_type: str = "UNKNOWN"  # CREATE, UPDATE, CANCEL, CONFIRM, UNKNOWN
+    target_schedule_id: Optional[int] = None
+    target_schedule_title: Optional[str] = None
+    action_reason: Optional[str] = None
     todo_required: bool
     todo_content: Optional[str] = None
     schedule: Optional[ScheduleSchema] = None

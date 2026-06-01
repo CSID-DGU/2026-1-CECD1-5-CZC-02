@@ -2,6 +2,53 @@
 from typing import Dict, List, Tuple
 
 
+CREATE_KEYWORDS = [
+    "가능하",
+    "잡아",
+    "잡을",
+    "일정",
+    "회의",
+    "미팅",
+    "뵙",
+    "만나",
+]
+
+CANCEL_KEYWORDS = [
+    "취소",
+    "캔슬",
+    "못 갈",
+    "못가",
+    "어렵",
+    "불가",
+    "안 될",
+    "안될",
+    "보류",
+    "무산",
+]
+
+UPDATE_KEYWORDS = [
+    "변경",
+    "수정",
+    "미루",
+    "연기",
+    "앞당",
+    "바꾸",
+    "옮기",
+    "다시 잡",
+    "리스케줄",
+]
+
+CONFIRM_KEYWORDS = [
+    "확정",
+    "좋습니다",
+    "좋아요",
+    "가능합니다",
+    "네",
+    "그때 뵙",
+    "진행하",
+]
+
+
 def classify_activity_type(text: str) -> Tuple[str, float]:
     """
     텍스트 기반 활동 유형 분류
@@ -73,6 +120,20 @@ def classify_activity_type(text: str) -> Tuple[str, float]:
     return best_type, confidence
 
 
+def classify_action_type(text: str) -> Tuple[str, str]:
+    normalized = text.lower()
+
+    if _contains_any(normalized, CANCEL_KEYWORDS):
+        return "CANCEL", "취소/불가 표현이 포함되어 있습니다."
+    if _contains_any(normalized, UPDATE_KEYWORDS):
+        return "UPDATE", "일정 변경 표현이 포함되어 있습니다."
+    if _contains_any(normalized, CONFIRM_KEYWORDS):
+        return "CONFIRM", "일정 확정 표현이 포함되어 있습니다."
+    if _contains_any(normalized, CREATE_KEYWORDS):
+        return "CREATE", "새 일정 생성으로 볼 수 있는 표현이 포함되어 있습니다."
+    return "UNKNOWN", "일정 생성/수정/취소 의도를 확정하기 어렵습니다."
+
+
 def classify_keywords(text: str, nouns: List[str], participants: List[str]) -> Dict[str, List[str]]:
     event_keywords = ["회의", "미팅", "통화", "전화", "상담", "논의", "리뷰", "보고"]
     project_patterns = [
@@ -112,3 +173,7 @@ def _dedupe(values: List[str]) -> List[str]:
             result.append(value)
             seen.add(value)
     return result
+
+
+def _contains_any(text: str, keywords: List[str]) -> bool:
+    return any(keyword in text for keyword in keywords)

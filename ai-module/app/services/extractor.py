@@ -38,9 +38,11 @@ def extract_participants(text: str, nouns: Optional[List[str]] = None) -> List[s
         title_words = {"대리", "과장", "차장", "부장", "팀장", "이사", "대표"}
         for index, noun in enumerate(nouns):
             if noun in title_words and index > 0:
-                candidates.append(f"{nouns[index - 1]}{noun}")
+                previous = nouns[index - 1]
+                if previous not in title_words:
+                    candidates.append(f"{previous}{noun}")
 
-    return _dedupe(candidates)
+    return _dedupe([candidate for candidate in candidates if _is_valid_person(candidate)])
 
 
 def _extract_nouns_fallback(text: str) -> List[str]:
@@ -110,3 +112,13 @@ def _dedupe(values: List[str]) -> List[str]:
             result.append(value)
             seen.add(value)
     return result
+
+
+def _is_valid_person(value: str) -> bool:
+    title_words = ["대리", "과장", "차장", "부장", "팀장", "이사", "대표"]
+    if value in title_words:
+        return False
+    title_count = sum(1 for title in title_words if title in value)
+    if title_count > 1:
+        return False
+    return len(value) >= 2

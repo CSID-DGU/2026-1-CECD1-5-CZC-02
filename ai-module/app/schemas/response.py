@@ -17,6 +17,10 @@ class AnalyzeResponse(BaseModel):
     contactName: Optional[str] = None
     productName: Optional[str] = None
     amount: Optional[int] = Field(default=None, ge=0)
+    actionType: str = "UNKNOWN"
+    targetScheduleId: Optional[int] = None
+    targetScheduleTitle: Optional[str] = None
+    actionReason: Optional[str] = None
     scheduleTitle: Optional[str] = None
     scheduleDateTime: Optional[datetime] = None
     todoContent: Optional[str] = None
