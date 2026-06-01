@@ -103,4 +103,15 @@ public class Schedule extends BaseEntity {
     public ScheduleStatus getStatus() {
         return status;
     }
+
+    public void update(String title, LocalDateTime scheduleDateTime, String memo) {
+        this.title = title;
+        this.scheduleDateTime = scheduleDateTime;
+        this.memo = memo;
+        this.status = ScheduleStatus.SCHEDULED;
+    }
+
+    public void cancel() {
+        this.status = ScheduleStatus.CANCELED;
+    }
 }
