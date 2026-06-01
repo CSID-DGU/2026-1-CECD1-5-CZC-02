@@ -1,5 +1,6 @@
 package com.salesmap.backend.ai.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmap.backend.ai.config.AiModuleProperties;
 import com.salesmap.backend.ai.dto.AiAnalysisRequest;
@@ -7,6 +8,8 @@ import com.salesmap.backend.ai.dto.AiAnalysisResponse;
 import com.salesmap.backend.ai.dto.AiErrorResponse;
 import com.salesmap.backend.ai.dto.AiGroupAnalysisRequest;
 import com.salesmap.backend.ai.exception.AiClientException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
@@ -16,11 +19,15 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Map;
 
 @Component
 @ConditionalOnProperty(name = "ai.module.mode", havingValue = "http")
 public class HttpAiClient implements AiClient {
+
+    private static final Logger log = LoggerFactory.getLogger(HttpAiClient.class);
 
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
@@ -45,6 +52,9 @@ public class HttpAiClient implements AiClient {
 
     private AiAnalysisResponse postAnalyze(Object request) {
         try {
+            log.debug("Calling AI Module /analyze with request type={}", request.getClass().getSimpleName());
+            log.debug("AI Module /analyze request JSON={}", toDebugJson(request));
+
             AiAnalysisResponse response = restClient.post()
                     .uri("/analyze")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -59,6 +69,11 @@ public class HttpAiClient implements AiClient {
             if (response == null) {
                 throw new AiClientException("AI Module 응답이 비어 있습니다.");
             }
+
+            log.debug("AI Module /analyze completed. actionType={}, confidenceScore={}",
+                    response.actionType(),
+                    response.confidenceScore()
+            );
 
             return response;
         } catch (AiClientException exception) {
@@ -77,13 +92,51 @@ public class HttpAiClient implements AiClient {
 
     private AiClientException toAiClientException(ClientHttpResponse response) {
         try {
-            AiErrorResponse errorResponse = objectMapper.readValue(response.getBody(), AiErrorResponse.class);
+            String rawBody = new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8);
+            AiErrorResponse errorResponse = parseErrorResponse(rawBody);
+            String message = errorResponse.message() == null || errorResponse.message().isBlank()
+                    ? rawBody
+                    : errorResponse.message();
+
             return new AiClientException(
-                    "AI Module 오류: " + errorResponse.message(),
+                    "AI Module 오류: " + message,
                     errorResponse
             );
         } catch (IOException exception) {
             return new AiClientException("AI Module 오류 응답을 처리할 수 없습니다.", exception);
+        }
+    }
+
+    private AiErrorResponse parseErrorResponse(String rawBody) {
+        if (rawBody == null || rawBody.isBlank()) {
+            return new AiErrorResponse(
+                    "AI_EMPTY_ERROR_RESPONSE",
+                    "AI Module 오류 응답이 비어 있습니다.",
+                    Map.of()
+            );
+        }
+
+        try {
+            AiErrorResponse errorResponse = objectMapper.readValue(rawBody, AiErrorResponse.class);
+            if (errorResponse.message() != null && !errorResponse.message().isBlank()) {
+                return errorResponse;
+            }
+        } catch (IOException ignored) {
+            // Preserve the raw response body below.
+        }
+
+        return new AiErrorResponse(
+                "AI_RAW_ERROR_RESPONSE",
+                rawBody,
+                Map.of("rawBody", rawBody)
+        );
+    }
+
+    private String toDebugJson(Object request) {
+        try {
+            return objectMapper.writeValueAsString(request);
+        } catch (JsonProcessingException exception) {
+            return "Failed to serialize AI request for debug logging: " + exception.getMessage();
         }
     }
 }

@@ -5,6 +5,7 @@ import { Dashboard } from './components/Dashboard';
 import { SettingsPage } from './components/SettingsPage';
 import { SalesmapLoginPage } from './components/SalesmapLoginPage';
 import { MessageView } from './components/MessageView';
+import { GmailOAuthCallbackPage } from './components/GmailOAuthCallbackPage';
 
 function ProtectedRoute({ children }) {
   const accessToken = localStorage.getItem('accessToken');
@@ -46,6 +47,13 @@ export default function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <SettingsPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/settings/gmail/callback" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <GmailOAuthCallbackPage />
               </DashboardLayout>
             </ProtectedRoute>
           } />

@@ -7,6 +7,20 @@ export async function getIntegrations() {
   return Array.isArray(data) ? data : data ? [data] : [];
 }
 
+export async function getGmailAuthorizationUrl() {
+  const response = await api.get('/api/integrations/gmail/authorize');
+
+  return response.data.data;
+}
+
+export async function completeGmailOAuth({ code, state }) {
+  const response = await api.get('/api/integrations/gmail/callback', {
+    params: { code, state },
+  });
+
+  return response.data.data;
+}
+
 export async function collectGmailMessages() {
   const response = await api.post('/api/integrations/gmail/collect');
 

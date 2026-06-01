@@ -96,6 +96,17 @@ public class AnalysisService {
                 .orElseThrow(() -> new NoSuchElementException("Source not found."));
         validateSourceOwnership(source, authenticatedUserId);
 
+        if (source.getSourceGroup() != null) {
+            List<Long> groupSourceIds = sourceRepository.findBySourceGroupIdOrderBySentAtAscIdAsc(source.getSourceGroup().getId())
+                    .stream()
+                    .map(Source::getId)
+                    .toList();
+
+            return analysisRepository.findBySourceIdIn(groupSourceIds).stream()
+                    .map(AnalysisResponse::from)
+                    .toList();
+        }
+
         return analysisRepository.findBySourceId(sourceId).stream()
                 .map(AnalysisResponse::from)
                 .toList();

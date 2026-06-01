@@ -8,4 +8,6 @@ import java.util.List;
 public interface AnalysisRepository extends JpaRepository<Analysis, Long> {
 
     List<Analysis> findBySourceId(Long sourceId);
+
+    List<Analysis> findBySourceIdIn(List<Long> sourceIds);
 }

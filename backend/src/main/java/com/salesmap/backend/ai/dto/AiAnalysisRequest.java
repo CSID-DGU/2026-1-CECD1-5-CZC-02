@@ -1,7 +1,7 @@
 package com.salesmap.backend.ai.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salesmap.backend.source.entity.SourceType;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,6 +11,7 @@ public record AiAnalysisRequest(
         String externalSourceId,
         String title,
         String content,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime collectedAt,
         RequesterInfo requester,
         SourceGroupInfo sourceGroup,
@@ -41,6 +42,7 @@ public record AiAnalysisRequest(
             String senderEmail,
             List<String> receiverNames,
             List<String> receiverEmails,
+            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
             LocalDateTime sentAt,
             String content
     ) {
@@ -49,6 +51,7 @@ public record AiAnalysisRequest(
     public record ExistingScheduleInfo(
             Long scheduleId,
             String title,
+            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
             LocalDateTime scheduleDateTime,
             List<String> participants
     ) {
