@@ -10,6 +10,8 @@ import com.salesmap.backend.source.entity.SourceType;
 import com.salesmap.backend.source.repository.SourceRepository;
 import com.salesmap.backend.user.entity.User;
 import com.salesmap.backend.user.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,16 +44,20 @@ public class SourceService {
                 .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
         Integration integration = findIntegration(request.integrationId(), authenticatedUserId);
         SourceType sourceType = parseSourceType(request.sourceType());
+        String externalSourceId = normalizeExternalSourceId(request.externalSourceId());
+        validateExternalSource(externalSourceId, integration, sourceType);
+
+        SourceStatus status = isCollectedSource(request, externalSourceId) ? SourceStatus.COLLECTED : SourceStatus.CREATED;
 
         Source source = new Source(
                 user,
                 integration,
                 sourceType,
-                null,
+                externalSourceId,
                 request.title(),
                 request.content(),
-                SourceStatus.CREATED,
-                null
+                status,
+                request.collectedAt()
         );
 
         return SourceResponse.from(sourceRepository.save(source));
@@ -70,16 +76,34 @@ public class SourceService {
     }
 
     @Transactional(readOnly = true)
-    public List<SourceResponse> getSourcesByUser(Long requestedUserId, Long authenticatedUserId) {
+    public List<SourceResponse> getSourcesByUser(Long requestedUserId, Long authenticatedUserId, int page, int size) {
         validateRequestedUser(requestedUserId, authenticatedUserId);
 
         if (!userRepository.existsById(authenticatedUserId)) {
             throw new NoSuchElementException("사용자를 찾을 수 없습니다.");
         }
 
-        return sourceRepository.findByUserId(authenticatedUserId).stream()
+        PageRequest pageRequest = PageRequest.of(
+                normalizePage(page),
+                normalizeSize(size),
+                Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+
+        return sourceRepository.findByUserId(authenticatedUserId, pageRequest).stream()
                 .map(SourceResponse::from)
                 .toList();
+    }
+
+    private int normalizePage(int page) {
+        return Math.max(page, 0);
+    }
+
+    private int normalizeSize(int size) {
+        if (size < 1) {
+            return 10;
+        }
+
+        return Math.min(size, 100);
     }
 
     private Integration findIntegration(Long integrationId, Long userId) {
@@ -103,9 +127,43 @@ public class SourceService {
         }
     }
 
+    private String normalizeExternalSourceId(String externalSourceId) {
+        if (externalSourceId == null || externalSourceId.isBlank()) {
+            return null;
+        }
+
+        return externalSourceId.trim();
+    }
+
+    private void validateExternalSource(String externalSourceId, Integration integration, SourceType sourceType) {
+        if (externalSourceId == null) {
+            return;
+        }
+
+        if (integration == null) {
+            throw new IllegalArgumentException("외부 원본 ID가 있는 데이터는 연동 정보가 필요합니다.");
+        }
+
+        boolean duplicated = sourceRepository.existsByIntegrationIdAndSourceTypeAndExternalSourceId(
+                integration.getId(),
+                sourceType,
+                externalSourceId
+        );
+
+        if (duplicated) {
+            throw new IllegalArgumentException("이미 저장된 외부 원본 데이터입니다.");
+        }
+    }
+
+    private boolean isCollectedSource(SourceCreateRequest request, String externalSourceId) {
+        return request.integrationId() != null
+                || externalSourceId != null
+                || request.collectedAt() != null;
+    }
+
     private SourceType parseSourceType(String sourceType) {
         try {
-            return SourceType.valueOf(sourceType);
+            return SourceType.valueOf(sourceType.trim().toUpperCase());
         } catch (IllegalArgumentException exception) {
             throw new IllegalArgumentException("지원하지 않는 원본 데이터 타입입니다.");
         }

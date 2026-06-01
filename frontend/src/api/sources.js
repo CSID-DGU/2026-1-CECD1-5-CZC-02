@@ -1,7 +1,7 @@
 import { api } from './client';
 
-export async function getSources() {
-  const response = await api.get('/api/sources');
+export async function getSources(params = {}) {
+  const response = await api.get('/api/sources', { params });
 
   return response.data.data;
 }

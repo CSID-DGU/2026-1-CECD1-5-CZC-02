@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Edit, Trash2, Send, ChevronRight } from 'lucide-react';
-import { createAnalysis, getAnalysesBySource } from '../api/analyses';
+import { createAnalysis, createGroupAnalysis, getAnalysesBySource } from '../api/analyses';
 import { getApiErrorMessage } from '../api/errors';
 import { getSalesmapRecordsByAnalysis, registerSalesmapRecord } from '../api/salesmapRecords';
 import { getSourceById, getSources } from '../api/sources';
 
 export function MessageView() {
+  const isDev = import.meta.env.DEV;
   const { source } = useParams();
   const navigate = useNavigate();
   const [selectedMessage, setSelectedMessage] = useState(null);
@@ -198,10 +199,15 @@ export function MessageView() {
       setIsAnalyzing(true);
       setAnalysisActionMessage('');
 
-      await createAnalysis({ sourceId: selectedSourceId });
+      const createdAnalysis = selectedSourceDetail?.sourceGroupId
+        ? await createGroupAnalysis({ sourceGroupId: selectedSourceDetail.sourceGroupId })
+        : await createAnalysis({ sourceId: selectedSourceId });
       const analyses = await getAnalysesBySource(selectedSourceId);
+      const nextAnalyses = analyses.some((analysis) => analysis.analysisId === createdAnalysis.analysisId)
+        ? analyses
+        : [createdAnalysis, ...analyses];
 
-      setSourceAnalyses(analyses);
+      setSourceAnalyses(nextAnalyses);
       setAnalysisActionMessage('AI 분석 테스트 완료');
     } catch (error) {
       console.error('Failed to create analysis:', {
@@ -375,13 +381,15 @@ export function MessageView() {
                   <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
                     <div className="flex items-center justify-between gap-3 mb-2">
                       <h4 className="text-sm text-blue-700">Analysis 조회 결과</h4>
-                      <button
-                        onClick={handleCreateAnalysis}
-                        disabled={isAnalyzing}
-                        className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
-                      >
-                        {isAnalyzing ? '분석 중...' : 'AI 분석 테스트'}
-                      </button>
+                      {isDev && (
+                        <button
+                          onClick={handleCreateAnalysis}
+                          disabled={isAnalyzing}
+                          className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+                        >
+                          {isAnalyzing ? '분석 중...' : 'AI 분석 테스트'}
+                        </button>
+                      )}
                     </div>
                     {analysisActionMessage && (
                       <p className="text-xs text-gray-600 mb-2 text-left">{analysisActionMessage}</p>
@@ -417,13 +425,15 @@ export function MessageView() {
                               </div>
                             </div>
                             <div className="mt-3 pt-3 border-t border-blue-50">
-                              <button
-                                onClick={() => handleRegisterSalesmap(analysis.analysisId)}
-                                disabled={registeringAnalysisId === analysis.analysisId}
-                                className="w-full px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
-                              >
-                                {registeringAnalysisId === analysis.analysisId ? '등록 중...' : 'SALESMAP 등록 테스트'}
-                              </button>
+                              {isDev && (
+                                <button
+                                  onClick={() => handleRegisterSalesmap(analysis.analysisId)}
+                                  disabled={registeringAnalysisId === analysis.analysisId}
+                                  className="w-full px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+                                >
+                                  {registeringAnalysisId === analysis.analysisId ? '등록 중...' : 'SALESMAP 등록 테스트'}
+                                </button>
+                              )}
                               {salesmapActionByAnalysisId[analysis.analysisId] && (
                                 <p className="text-xs text-gray-600 mt-2 text-left">
                                   {salesmapActionByAnalysisId[analysis.analysisId]}

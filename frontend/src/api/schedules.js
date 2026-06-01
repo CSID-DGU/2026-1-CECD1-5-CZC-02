@@ -1,7 +1,7 @@
 import { api } from './client';
 
-export async function getSchedules() {
-  const response = await api.get('/api/schedules');
+export async function getSchedules(params = {}) {
+  const response = await api.get('/api/schedules', { params });
 
   return response.data.data;
 }

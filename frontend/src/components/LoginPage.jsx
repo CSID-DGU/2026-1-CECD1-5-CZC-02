@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
-import logoImg from '../assets/님버스테크 이미지.png';
+import { syncGmailIfConnected } from '../api/integrations';
+import logoImg from '../assets/님버스테크 로고.png';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ export function LoginPage() {
       }
 
       localStorage.setItem('accessToken', accessToken);
+      await syncGmailIfConnected();
       navigate('/dashboard');
     } catch (error) {
       const message = error.response?.data?.message || '요청 처리 중 오류가 발생했습니다.';
@@ -71,12 +73,11 @@ export function LoginPage() {
         {/* Left: Brand Area */}
         <div className="flex-1 bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-12">
           <div className="text-center max-w-md">
-            <div className="border-2 border-blue-200 rounded-2xl px-16 py-12 mb-8 bg-white">
+            <div className="border-2 border-blue-200 rounded-2xl px-16 py-12 mb-8 bg-white min-h-[285px] flex flex-col items-center justify-center">
               <div className="flex flex-col items-center mb-6">
                 {}
                 {}
-                <img src={logoImg} alt="NimbusTech" className="w-20 h-20 mb-4 object-contain" />
-                <h1 className="text-3xl text-gray-800 font-medium">NimbusTech</h1>
+                <img src={logoImg} alt="NimbusTech" className="w-96 h-auto object-contain" />
               </div>
               <p className="text-xl text-gray-600">AI 영업 자동화 에이전트</p>
             </div>
@@ -91,7 +92,7 @@ export function LoginPage() {
         <div className="flex-1 bg-white flex items-center justify-center p-12">
           <div className="w-full max-w-md">
             <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-8">
-              <h2 className="text-xl text-gray-800 mb-8 text-center">
+              <h2 className="text-xl !font-semibold !text-black mb-8 text-center">
                 {isSignup ? '회원가입' : '로그인'}
               </h2>
 

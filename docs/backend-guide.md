@@ -174,12 +174,65 @@ DB 기반으로 동작합니다.
 - `User` 필수 참조
 - `Integration` 선택 참조
 - 기본 status: `CREATED`
+- 외부 수집 데이터는 `externalSourceId`, `collectedAt` 저장 가능
+- 같은 `integrationId`, `sourceType`, `externalSourceId` 조합의 중복 저장 방지
+
+### Integration API
+
+DB 기반으로 동작합니다.
+
+- `POST /api/integrations`
+- `GET /api/integrations`
+- `GET /api/integrations/{provider}`
+
+기능:
+
+- 로그인 사용자 기준 외부 서비스 연동 정보 생성
+- Gmail/Jandi/Salesmap provider 지원
+- 같은 사용자/provider 중복 연동 방지
+- 연동 목록 조회
+- provider 기준 연동 정보 조회
+- 기본 status: `CONNECTED`
+
+### Gmail Integration API
+
+실제 Gmail OAuth와 Gmail API 수집 흐름이 추가되었습니다.
+
+- `GET /api/integrations/gmail/authorize`
+- `GET /api/integrations/gmail/callback`
+- `POST /api/integrations/gmail/collect`
+
+기능:
+
+- Google OAuth authorization URL 생성
+- OAuth callback에서 access token / refresh token 교환
+- Gmail 계정 이메일을 `externalAccountId`로 저장
+- Gmail message ID를 `externalSourceId`로 사용
+- Gmail thread ID를 `source_groups.external_group_id`로 저장
+- Gmail thread ID 기준으로 여러 메시지 Source를 하나의 SourceGroup으로 묶음
+- 각 Gmail 메시지 Source에 direction, sender/receiver, sentAt 메타데이터 저장
+- Gmail 본문 저장 전 text/plain 우선 추출, HTML/CSS/script 태그 제거, HTML entity 및 공백 정리
+- 최초 수집 시 최근 1개월 Gmail 메시지 수집
+- 이후 수집 시 `integrations.lastSyncedAt` 이후 신규 메시지만 증분 수집
+- 수집 완료 후 `integrations.lastSyncedAt` 업데이트
+- 이미 저장된 Gmail message ID는 중복 저장하지 않고 건너뜀
+- 새 메일은 `sources`에 `sourceType=EMAIL`, `status=COLLECTED`로 저장
+
+필요 환경변수:
+
+```properties
+GMAIL_CLIENT_ID=Google OAuth Client ID
+GMAIL_CLIENT_SECRET=Google OAuth Client Secret
+GMAIL_REDIRECT_URI=http://localhost:8080/api/integrations/gmail/callback
+GMAIL_COLLECT_PAGE_SIZE=500
+```
 
 ### Analysis API
 
 DB 기반으로 동작합니다.
 
 - `POST /api/analysis`
+- `POST /api/analysis/group`
 - `GET /api/analysis/{analysisId}`
 - `GET /api/analysis/source/{sourceId}`
 
@@ -216,6 +269,7 @@ ai
 
 - `AnalysisService`는 mock 값을 직접 만들지 않습니다.
 - `AnalysisService`는 `AiClient.analyze(...)`를 호출합니다.
+- SourceGroup 기반 분석은 `AiClient.analyzeGroup(...)`를 호출합니다.
 - 기본 Bean은 `MockAiClient`이며 실제 HTTP 호출은 하지 않습니다.
 - `ai.module.mode=http`로 설정하면 `HttpAiClient`가 FastAPI AI Module을 호출합니다.
 - `HttpAiClient`는 `POST {ai.module.base-url}/analyze`를 호출합니다.
@@ -264,6 +318,46 @@ Content-Type: application/json
   "title": "고객 미팅 관련 이메일",
   "content": "원본 이메일 또는 메시지 내용",
   "collectedAt": null
+}
+```
+
+SourceGroup 기반 분석 요청 JSON 예시:
+
+```json
+{
+  "sourceGroup": {
+    "groupId": "thread-abc-123",
+    "sourceType": "EMAIL",
+    "title": "5월 20일 미팅 일정 조율",
+    "deduplicated": true
+  },
+  "messages": [
+    {
+      "sourceId": 101,
+      "externalSourceId": "gmail-msg-001",
+      "direction": "SENT",
+      "senderName": "송하경",
+      "senderEmail": "hakyung@example.com",
+      "receiverNames": ["이상수"],
+      "receiverEmails": ["sangsu@example.com"],
+      "sentAt": "2026-05-10T09:00:00",
+      "content": "이 과장님 5월 20일에 미팅 괜찮으신가요?"
+    }
+  ]
+}
+```
+
+Backend API:
+
+```http
+POST /api/analysis/group
+Authorization: Bearer {accessToken}
+Content-Type: application/json
+```
+
+```json
+{
+  "sourceGroupId": 1
 }
 ```
 
@@ -791,7 +885,6 @@ GET /api/salesmap/analysis/1
 - 실제 Jandi API 연동
 - 실제 AI Module 호출
 - 실제 Salesmap 외부 API 호출
-- Integration 생성/조회 API
 - Source 수집 자동화
 - Schedule 수정/완료/취소 API
 - Salesmap 등록 재시도/실패 처리 고도화

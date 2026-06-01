@@ -64,6 +64,7 @@ Gmail, Jandi, Salesmap 등 외부 서비스 연동 정보를 저장합니다.
 | access_token | TEXT | NOT NULL | 접근 토큰. 실제 운영 저장 시 암호화 필요 |
 | refresh_token | TEXT | NOT NULL | 갱신 토큰. 실제 운영 저장 시 암호화 필요 |
 | token_expires_at | DATETIME | NOT NULL | 토큰 만료 시각 |
+| last_synced_at | DATETIME | nullable | 마지막 외부 데이터 수집 완료 시각 |
 | status | VARCHAR(50) | NOT NULL | 연동 상태 |
 | created_at | DATETIME | NOT NULL | 생성 시각 |
 | updated_at | DATETIME | NOT NULL | 수정 시각 |
@@ -105,12 +106,19 @@ provider 값:
 | id | BIGINT | PK, NOT NULL | 원본 데이터 ID |
 | user_id | BIGINT | FK, NOT NULL | 사용자 ID |
 | integration_id | BIGINT | FK, nullable | 원본 데이터를 가져온 외부 연동 ID |
+| source_group_id | BIGINT | FK, nullable | thread/conversation 단위 SourceGroup ID |
 | source_type | VARCHAR(50) | NOT NULL | 원본 데이터 종류 |
 | external_source_id | VARCHAR(255) | nullable | Gmail message ID, Jandi message ID 등 외부 원본 ID |
 | title | VARCHAR(255) | NOT NULL | 원본 데이터 제목 |
 | content | TEXT | NOT NULL | 원본 데이터 내용 |
 | status | VARCHAR(50) | NOT NULL | 원본 데이터 처리 상태 |
 | collected_at | DATETIME | nullable | 외부 서비스에서 수집한 시각 |
+| direction | VARCHAR(50) | nullable | 메시지 방향. `SENT`, `RECEIVED`, `UNKNOWN` |
+| sender_name | VARCHAR(255) | nullable | 발신자 이름 |
+| sender_email | VARCHAR(255) | nullable | 발신자 이메일 |
+| receiver_names | VARCHAR(1000) | nullable | 수신자 이름 목록 |
+| receiver_emails | VARCHAR(1000) | nullable | 수신자 이메일 목록 |
+| sent_at | DATETIME | nullable | 메시지 발송 시각 |
 | created_at | DATETIME | NOT NULL | 생성 시각 |
 | updated_at | DATETIME | NOT NULL | 수정 시각 |
 
@@ -135,7 +143,35 @@ source_type 값:
 관계:
 - 하나의 사용자는 여러 원본 데이터를 가질 수 있습니다.
 - 하나의 연동 계정에서 여러 원본 데이터가 수집될 수 있습니다.
+- 하나의 SourceGroup은 여러 Source 메시지를 포함할 수 있습니다.
 - 하나의 원본 데이터는 하나 이상의 분석 결과를 가질 수 있습니다.
+
+## source_groups
+
+Gmail thread, Jandi conversation 등 같은 대화 흐름에 속한 Source 메시지를 묶습니다.
+
+목적:
+AI 모듈이 단일 메시지가 아니라 같은 회의/일정 조율 맥락 전체를 함께 분석할 수 있도록 thread/conversation 단위 그룹을 관리합니다.
+
+주요 컬럼:
+
+| Column | Type Example | Key | Description |
+| --- | --- | --- | --- |
+| id | BIGINT | PK, NOT NULL | SourceGroup ID |
+| user_id | BIGINT | FK, NOT NULL | 사용자 ID |
+| integration_id | BIGINT | FK, NOT NULL | 외부 연동 ID |
+| source_type | VARCHAR(50) | NOT NULL | 원본 데이터 종류 |
+| external_group_id | VARCHAR(255) | NOT NULL | Gmail thread ID, Jandi conversation/thread ID |
+| title | VARCHAR(255) | NOT NULL | 그룹 제목 |
+| deduplicated | BOOLEAN | NOT NULL | 중복 제거 적용 여부 |
+| created_at | DATETIME | NOT NULL | 생성 시각 |
+| updated_at | DATETIME | NOT NULL | 수정 시각 |
+
+제약 조건:
+- UNIQUE: `integration_id`, `source_type`, `external_group_id`
+
+관계:
+- `source_groups` 1:N `sources`
 
 ## analyses
 
@@ -261,7 +297,9 @@ users 1 ── N sources
 users 1 ── N schedules
 
 integrations 1 ── N sources
+integrations 1 ── N source_groups
 
+source_groups 1 ── N sources
 sources 1 ── N analyses
 
 analyses 1 ── N schedules
@@ -307,6 +345,9 @@ users
 - `users.email`
 - `integrations.user_id + integrations.provider`
 
+현재 service 계층 중복 방지:
+- `sources.integration_id + sources.source_type + sources.external_source_id`
+
 현재 실제 API 구현 상태:
 - `User API`는 DB 기반 생성/조회까지 구현되어 있습니다.
-- `Source`, `Analysis`, `Schedule`, `Salesmap` API는 아직 mock Service 기반입니다.
+- `Integration`, `Source`, `Analysis`, `Schedule`, `Salesmap` API는 DB 기반으로 동작합니다.

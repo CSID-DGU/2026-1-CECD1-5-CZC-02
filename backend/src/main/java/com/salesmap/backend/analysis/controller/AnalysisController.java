@@ -1,6 +1,7 @@
 package com.salesmap.backend.analysis.controller;
 
 import com.salesmap.backend.analysis.dto.AnalysisCreateRequest;
+import com.salesmap.backend.analysis.dto.AnalysisGroupCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisResponse;
 import com.salesmap.backend.analysis.service.AnalysisService;
 import com.salesmap.backend.global.response.ApiResponse;
@@ -31,7 +32,15 @@ public class AnalysisController {
             @Valid @RequestBody AnalysisCreateRequest request,
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
-        return ApiResponse.success("AI 분석이 완료되었습니다.", analysisService.createAnalysis(request, principal.getUserId()));
+        return ApiResponse.success("AI analysis completed.", analysisService.createAnalysis(request, principal.getUserId()));
+    }
+
+    @PostMapping("/group")
+    public ApiResponse<AnalysisResponse> createGroupAnalysis(
+            @Valid @RequestBody AnalysisGroupCreateRequest request,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success("AI group analysis completed.", analysisService.createGroupAnalysis(request, principal.getUserId()));
     }
 
     @GetMapping("/{analysisId}")

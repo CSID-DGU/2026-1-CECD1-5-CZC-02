@@ -56,6 +56,9 @@ public class Integration extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime tokenExpiresAt;
 
+    @Column
+    private LocalDateTime lastSyncedAt;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private IntegrationStatus status;
@@ -109,7 +112,31 @@ public class Integration extends BaseEntity {
         return tokenExpiresAt;
     }
 
+    public LocalDateTime getLastSyncedAt() {
+        return lastSyncedAt;
+    }
+
     public IntegrationStatus getStatus() {
         return status;
+    }
+
+    public void updateToken(
+            String externalAccountId,
+            String accessToken,
+            String refreshToken,
+            LocalDateTime tokenExpiresAt,
+            IntegrationStatus status
+    ) {
+        this.externalAccountId = externalAccountId;
+        this.accessToken = accessToken;
+        if (refreshToken != null && !refreshToken.isBlank()) {
+            this.refreshToken = refreshToken;
+        }
+        this.tokenExpiresAt = tokenExpiresAt;
+        this.status = status;
+    }
+
+    public void updateLastSyncedAt(LocalDateTime lastSyncedAt) {
+        this.lastSyncedAt = lastSyncedAt;
     }
 }
