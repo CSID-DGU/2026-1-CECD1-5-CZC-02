@@ -2,6 +2,7 @@ package com.salesmap.backend.salesmap.service;
 
 import com.salesmap.backend.analysis.entity.Analysis;
 import com.salesmap.backend.analysis.repository.AnalysisRepository;
+import com.salesmap.backend.analysis.service.AnalysisService;
 import com.salesmap.backend.salesmap.client.SalesmapClient;
 import com.salesmap.backend.salesmap.client.dto.SalesmapApiRegisterRequest;
 import com.salesmap.backend.salesmap.client.dto.SalesmapApiRegisterResponse;
@@ -23,15 +24,18 @@ public class SalesmapService {
 
     private final SalesmapRecordRepository salesmapRecordRepository;
     private final AnalysisRepository analysisRepository;
+    private final AnalysisService analysisService;
     private final SalesmapClient salesmapClient;
 
     public SalesmapService(
             SalesmapRecordRepository salesmapRecordRepository,
             AnalysisRepository analysisRepository,
+            AnalysisService analysisService,
             SalesmapClient salesmapClient
     ) {
         this.salesmapRecordRepository = salesmapRecordRepository;
         this.analysisRepository = analysisRepository;
+        this.analysisService = analysisService;
         this.salesmapClient = salesmapClient;
     }
 
@@ -52,6 +56,7 @@ public class SalesmapService {
         );
 
         analysis.markApproved();
+        analysisService.applyApprovedScheduleAction(analysis, authenticatedUserId);
 
         return SalesmapRegisterResponse.from(salesmapRecordRepository.save(record));
     }

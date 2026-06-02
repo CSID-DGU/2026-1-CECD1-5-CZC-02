@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmap.backend.gmail.config.GmailOAuthProperties;
 import com.salesmap.backend.gmail.dto.GmailAuthorizeResponse;
 import com.salesmap.backend.gmail.dto.GmailCollectResponse;
+import com.salesmap.backend.gmail.dto.GmailMessagePreview;
 import com.salesmap.backend.gmail.dto.GmailOAuthCallbackResponse;
 import com.salesmap.backend.integration.entity.Integration;
 import com.salesmap.backend.integration.entity.IntegrationProvider;
@@ -20,10 +21,15 @@ import com.salesmap.backend.source.repository.SourceRepository;
 import com.salesmap.backend.user.entity.User;
 import com.salesmap.backend.user.repository.UserRepository;
 import org.springframework.http.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.nio.charset.StandardCharsets;
@@ -42,11 +48,18 @@ import java.util.regex.Pattern;
 @Service
 public class GmailIntegrationService {
 
+    private static final Logger log = LoggerFactory.getLogger(GmailIntegrationService.class);
+
     private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
     private static final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
+    private static final String GOOGLE_TOKEN_INFO_URL = "https://oauth2.googleapis.com/tokeninfo";
     private static final String GOOGLE_USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo";
     private static final String GMAIL_MESSAGES_URL = "https://gmail.googleapis.com/gmail/v1/users/me/messages";
     private static final ZoneId DEFAULT_ZONE = ZoneId.of("Asia/Seoul");
+    private static final int DEFAULT_MANUAL_RECENT_DAYS = 30;
+    private static final int MAX_MANUAL_RECENT_DAYS = 90;
+    private static final String SYNC_MODE_AUTO_INCREMENTAL = "AUTO_INCREMENTAL";
+    private static final String SYNC_MODE_MANUAL_RECENT = "MANUAL_RECENT";
     private static final DateTimeFormatter GMAIL_SEARCH_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
     private static final Pattern HTML_BLOCK_PATTERN = Pattern.compile("(?is)<(script|style|head|meta|title)[^>]*>.*?</\\1>");
     private static final Pattern HTML_TAG_PATTERN = Pattern.compile("(?is)<[^>]+>");
@@ -82,6 +95,12 @@ public class GmailIntegrationService {
 
     public GmailAuthorizeResponse createAuthorizationUrl(Long authenticatedUserId) {
         validateOAuthProperties();
+        log.info("Creating Gmail OAuth authorization URL. userId={}, clientId={}, redirectUri={}, scope={}",
+                authenticatedUserId,
+                maskClientId(properties.getClientId()),
+                properties.getRedirectUri(),
+                properties.getScope()
+        );
 
         String url = UriComponentsBuilder.fromUriString(GOOGLE_AUTH_URL)
                 .queryParam("client_id", properties.getClientId())
@@ -98,8 +117,15 @@ public class GmailIntegrationService {
         return new GmailAuthorizeResponse(url);
     }
 
+    @Transactional
     public GmailOAuthCallbackResponse handleCallback(String code, String state) {
         validateOAuthProperties();
+        log.info("Handling Gmail OAuth callback. redirectUri={}, clientId={}, codePresent={}, statePresent={}",
+                properties.getRedirectUri(),
+                maskClientId(properties.getClientId()),
+                code != null && !code.isBlank(),
+                state != null && !state.isBlank()
+        );
 
         Long userId = stateService.parseUserId(state);
         User user = userRepository.findById(userId)
@@ -138,16 +164,45 @@ public class GmailIntegrationService {
                             IntegrationStatus.CONNECTED
                     ));
                 });
+        Integration savedIntegration = integrationRepository.save(integration);
+        log.info("Gmail integration saved. userId={}, integrationId={}, gmailAccount={}, status={}",
+                userId,
+                savedIntegration.getId(),
+                savedIntegration.getExternalAccountId(),
+                savedIntegration.getStatus()
+        );
 
         return new GmailOAuthCallbackResponse(
-                integration.getId(),
+                savedIntegration.getId(),
                 userId,
-                integration.getProvider().name(),
-                integration.getExternalAccountId()
+                savedIntegration.getProvider().name(),
+                savedIntegration.getExternalAccountId()
         );
     }
 
-    public GmailCollectResponse collectMessages(Long authenticatedUserId) {
+    @Transactional
+    public void disconnect(Long authenticatedUserId) {
+        Integration integration = integrationRepository.findByUserIdAndProvider(authenticatedUserId, IntegrationProvider.GMAIL)
+                .orElseThrow(() -> new NoSuchElementException("Gmail 연동 정보를 찾을 수 없습니다."));
+
+        integration.disconnect();
+        integrationRepository.save(integration);
+        log.info("Disconnected Gmail integration. userId={}, integrationId={}, gmailAccount={}, status={}",
+                authenticatedUserId,
+                integration.getId(),
+                integration.getExternalAccountId(),
+                integration.getStatus()
+        );
+    }
+
+    public GmailCollectResponse collectMessages(
+            Long authenticatedUserId,
+            String requestedMode,
+            Integer requestedRecentDays,
+            boolean debug,
+            boolean ignoreQuery,
+            String queryOverride
+    ) {
         User user = userRepository.findById(authenticatedUserId)
                 .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
         Integration integration = integrationRepository.findByUserIdAndProvider(authenticatedUserId, IntegrationProvider.GMAIL)
@@ -158,17 +213,72 @@ public class GmailIntegrationService {
         }
 
         String accessToken = getValidAccessToken(integration);
+        String gmailAccountEmail = fetchEmail(accessToken);
+        String tokenGrantedScopes = fetchGrantedScopes(accessToken);
         LocalDateTime previousLastSyncedAt = integration.getLastSyncedAt();
         LocalDateTime syncStartedAt = LocalDateTime.now(DEFAULT_ZONE);
-        List<JsonNode> messageSummaries = listAllMessages(accessToken, previousLastSyncedAt);
+        String syncMode = resolveSyncMode(requestedMode);
+        String gmailSearchQuery = resolveSearchQuery(syncMode, previousLastSyncedAt, requestedRecentDays, ignoreQuery, queryOverride);
+        int gmailMaxResults = normalizePageSize(syncMode);
+        List<String> attemptedGmailQueries = new ArrayList<>();
+        log.info("Starting Gmail collect. userId={}, appUserEmail={}, gmailAccountEmail={}, integrationId={}, mode={}, query={}, maxResults={}, oauthScope={}, tokenGrantedScopes={}, ignoreQuery={}",
+                authenticatedUserId,
+                user.getEmail(),
+                gmailAccountEmail,
+                integration.getId(),
+                syncMode,
+                gmailSearchQuery,
+                gmailMaxResults,
+                properties.getScope(),
+                tokenGrantedScopes,
+                ignoreQuery
+        );
+        GmailListResult gmailListResult = listAllMessages(accessToken, gmailSearchQuery, gmailMaxResults, gmailMaxResults);
+        attemptedGmailQueries.add(displayQuery(gmailSearchQuery));
+        if (shouldTryFallbackQueries(gmailListResult, ignoreQuery, queryOverride)) {
+            for (String fallbackQuery : fallbackQueries(requestedRecentDays)) {
+                GmailListResult fallbackResult = listAllMessages(accessToken, fallbackQuery, gmailMaxResults, gmailMaxResults);
+                attemptedGmailQueries.add(displayQuery(fallbackQuery));
+                log.info("Gmail fallback list attempt. userId={}, integrationId={}, query={}, fetchedCount={}, resultSizeEstimate={}",
+                        authenticatedUserId,
+                        integration.getId(),
+                        fallbackQuery,
+                        fallbackResult.messageSummaries().size(),
+                        fallbackResult.resultSizeEstimate()
+                );
+                if (!fallbackResult.messageSummaries().isEmpty()) {
+                    gmailSearchQuery = fallbackQuery;
+                    gmailListResult = fallbackResult;
+                    break;
+                }
+            }
+        }
+        List<JsonNode> messageSummaries = gmailListResult.messageSummaries();
+        List<String> rawFetchedMessageIds = messageSummaries.stream()
+                .map(message -> message.path("id").asText(""))
+                .filter(id -> !id.isBlank())
+                .limit(10)
+                .toList();
+        List<GmailMessagePreview> rawFetchedMessagesPreview = buildMessagePreviews(accessToken, messageSummaries, debug ? 10 : 0);
 
         int requestedCount = messageSummaries.size();
         int savedCount = 0;
         int skippedCount = 0;
+        int skippedDuplicateCount = 0;
+        LocalDateTime latestMessageDate = null;
         List<Long> savedSourceGroupIds = new ArrayList<>();
         List<Long> savedSourceIds = new ArrayList<>();
         List<String> skippedExternalSourceIds = new ArrayList<>();
         List<String> failedReasons = new ArrayList<>();
+
+        log.info("Fetched Gmail message summaries. userId={}, integrationId={}, fetchedCount={}, resultSizeEstimate={}, firstMessageIds={}, preview={}",
+                authenticatedUserId,
+                integration.getId(),
+                requestedCount,
+                gmailListResult.resultSizeEstimate(),
+                rawFetchedMessageIds,
+                rawFetchedMessagesPreview
+        );
 
         for (JsonNode messageSummary : messageSummaries) {
             String messageId = requiredText(messageSummary, "id");
@@ -180,8 +290,13 @@ public class GmailIntegrationService {
 
             if (duplicated) {
                 skippedCount++;
+                skippedDuplicateCount++;
                 skippedExternalSourceIds.add(messageId);
-                failedReasons.add(messageId + ": duplicated");
+                String duplicateSubject = findPreviewSubject(rawFetchedMessagesPreview, messageId);
+                log.debug("Skipped duplicated Gmail message. messageId={}, title={}", messageId, duplicateSubject);
+                failedReasons.add(duplicateSubject == null || duplicateSubject.isBlank()
+                        ? messageId + ": duplicated"
+                        : messageId + ": duplicated - " + duplicateSubject);
                 continue;
             }
 
@@ -190,6 +305,7 @@ public class GmailIntegrationService {
                 String threadId = requiredText(message, "threadId");
                 String subject = extractSubject(message);
                 LocalDateTime sentAt = extractSentAt(message);
+                latestMessageDate = maxDateTime(latestMessageDate, sentAt);
                 SourceGroup sourceGroup = findOrCreateSourceGroup(
                         user,
                         integration,
@@ -217,22 +333,55 @@ public class GmailIntegrationService {
                 savedCount++;
                 addIfAbsent(savedSourceGroupIds, sourceGroup.getId());
                 savedSourceIds.add(source.getId());
+                log.info("Saved Gmail message as Source. messageId={}, sourceId={}, threadId={}, title={}",
+                        messageId,
+                        source.getId(),
+                        threadId,
+                        subject
+                );
             } catch (RuntimeException exception) {
                 skippedCount++;
                 skippedExternalSourceIds.add(messageId);
                 failedReasons.add(messageId + ": " + exception.getClass().getSimpleName() + " - " + exception.getMessage());
+                log.warn("Failed to save Gmail message. messageId={}, reason={}", messageId, exception.getMessage());
             }
         }
 
-        integration.updateLastSyncedAt(syncStartedAt);
-        integrationRepository.save(integration);
+        boolean lastSyncedAtUpdated = requestedCount > 0;
+        LocalDateTime currentLastSyncedAt = lastSyncedAtUpdated ? syncStartedAt : previousLastSyncedAt;
+        if (lastSyncedAtUpdated) {
+            integration.updateLastSyncedAt(syncStartedAt);
+            integrationRepository.save(integration);
+        } else {
+            log.info("Gmail collect fetched no messages. lastSyncedAt was not updated. userId={}, integrationId={}, query={}",
+                    authenticatedUserId,
+                    integration.getId(),
+                    gmailSearchQuery
+            );
+        }
 
         return new GmailCollectResponse(
                 integration.getId(),
                 previousLastSyncedAt,
+                currentLastSyncedAt,
                 syncStartedAt,
+                latestMessageDate,
+                user.getEmail(),
+                gmailAccountEmail,
+                properties.getScope(),
+                tokenGrantedScopes,
+                gmailSearchQuery,
+                attemptedGmailQueries,
+                rawFetchedMessageIds,
+                rawFetchedMessagesPreview,
+                gmailListResult.resultSizeEstimate(),
+                gmailMaxResults,
+                lastSyncedAtUpdated,
+                syncMode,
+                requestedCount,
                 requestedCount,
                 savedCount,
+                skippedDuplicateCount,
                 skippedCount,
                 savedSourceGroupIds,
                 savedSourceIds,
@@ -291,14 +440,31 @@ public class GmailIntegrationService {
         body.add("redirect_uri", properties.getRedirectUri());
         body.add("grant_type", "authorization_code");
 
-        String response = restClient.post()
-                .uri(GOOGLE_TOKEN_URL)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(body)
-                .retrieve()
-                .body(String.class);
+        try {
+            String response = restClient.post()
+                    .uri(GOOGLE_TOKEN_URL)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(body)
+                    .retrieve()
+                    .body(String.class);
 
-        return parseJson(response);
+            return parseJson(response);
+        } catch (RestClientResponseException exception) {
+            log.warn("Gmail OAuth token exchange failed. status={}, redirectUri={}, clientId={}, responseBody={}",
+                    exception.getStatusCode(),
+                    properties.getRedirectUri(),
+                    maskClientId(properties.getClientId()),
+                    exception.getResponseBodyAsString()
+            );
+            throw new IllegalArgumentException("Gmail OAuth 인증 코드가 만료되었거나 이미 사용되었습니다. 설정 화면에서 다시 Gmail 연결을 시도해주세요.");
+        } catch (RestClientException exception) {
+            log.warn("Gmail OAuth token exchange request failed. redirectUri={}, clientId={}, message={}",
+                    properties.getRedirectUri(),
+                    maskClientId(properties.getClientId()),
+                    exception.getMessage()
+            );
+            throw new IllegalArgumentException("Gmail OAuth 토큰 요청에 실패했습니다. 잠시 후 다시 시도해주세요.");
+        }
     }
 
     private JsonNode refreshAccessToken(String refreshToken) {
@@ -328,28 +494,54 @@ public class GmailIntegrationService {
         return requiredText(parseJson(response), "email");
     }
 
-    private List<JsonNode> listAllMessages(String accessToken, LocalDateTime lastSyncedAt) {
+    private String fetchGrantedScopes(String accessToken) {
+        try {
+            String response = restClient.get()
+                    .uri(UriComponentsBuilder.fromUriString(GOOGLE_TOKEN_INFO_URL)
+                            .queryParam("access_token", accessToken)
+                            .build()
+                            .encode()
+                            .toUriString())
+                    .retrieve()
+                    .body(String.class);
+
+            return optionalText(parseJson(response), "scope");
+        } catch (RestClientException exception) {
+            log.warn("Failed to fetch Google tokeninfo scope. message={}", exception.getMessage());
+            return null;
+        }
+    }
+
+    private GmailListResult listAllMessages(String accessToken, String searchQuery, int pageSize, int maxTotalResults) {
         List<JsonNode> messageSummaries = new ArrayList<>();
         String pageToken = null;
+        int resultSizeEstimate = 0;
 
         do {
-            JsonNode response = listMessages(accessToken, lastSyncedAt, pageToken);
+            JsonNode response = listMessages(accessToken, searchQuery, pageSize, pageToken);
+            resultSizeEstimate = Math.max(resultSizeEstimate, response.path("resultSizeEstimate").asInt(0));
             JsonNode messages = response.path("messages");
             if (messages.isArray()) {
                 for (JsonNode message : messages) {
+                    if (messageSummaries.size() >= maxTotalResults) {
+                        break;
+                    }
                     messageSummaries.add(message);
                 }
             }
             pageToken = optionalText(response, "nextPageToken");
-        } while (pageToken != null && !pageToken.isBlank());
+        } while (pageToken != null && !pageToken.isBlank() && messageSummaries.size() < maxTotalResults);
 
-        return messageSummaries;
+        return new GmailListResult(messageSummaries, resultSizeEstimate);
     }
 
-    private JsonNode listMessages(String accessToken, LocalDateTime lastSyncedAt, String pageToken) {
+    private JsonNode listMessages(String accessToken, String searchQuery, int maxResults, String pageToken) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(GMAIL_MESSAGES_URL)
-                .queryParam("maxResults", normalizePageSize())
-                .queryParam("q", buildSearchQuery(lastSyncedAt));
+                .queryParam("maxResults", maxResults);
+
+        if (searchQuery != null && !searchQuery.isBlank()) {
+            builder.queryParam("q", searchQuery);
+        }
 
         if (pageToken != null && !pageToken.isBlank()) {
             builder.queryParam("pageToken", pageToken);
@@ -372,6 +564,44 @@ public class GmailIntegrationService {
                 .body(String.class);
 
         return parseJson(response);
+    }
+
+    private List<GmailMessagePreview> buildMessagePreviews(
+            String accessToken,
+            List<JsonNode> messageSummaries,
+            int limit
+    ) {
+        if (limit < 1) {
+            return List.of();
+        }
+
+        List<GmailMessagePreview> previews = new ArrayList<>();
+        for (JsonNode messageSummary : messageSummaries.stream().limit(limit).toList()) {
+            try {
+                JsonNode message = getMessage(accessToken, requiredText(messageSummary, "id"));
+                previews.add(new GmailMessagePreview(
+                        requiredText(message, "id"),
+                        optionalText(message, "threadId"),
+                        extractSubject(message),
+                        message.path("internalDate").asText(null)
+                ));
+            } catch (RuntimeException exception) {
+                log.warn("Failed to build Gmail debug preview. messageSummary={}, reason={}",
+                        messageSummary,
+                        exception.getMessage()
+                );
+            }
+        }
+
+        return previews;
+    }
+
+    private String findPreviewSubject(List<GmailMessagePreview> previews, String messageId) {
+        return previews.stream()
+                .filter(preview -> messageId.equals(preview.id()))
+                .map(GmailMessagePreview::subject)
+                .findFirst()
+                .orElse(null);
     }
 
     private String extractSubject(JsonNode message) {
@@ -661,18 +891,82 @@ public class GmailIntegrationService {
         return value.asText();
     }
 
-    private String buildSearchQuery(LocalDateTime lastSyncedAt) {
-        if (lastSyncedAt == null) {
-            return "newer_than:30d";
+    private String resolveSyncMode(String requestedMode) {
+        if ("auto".equalsIgnoreCase(requestedMode) || SYNC_MODE_AUTO_INCREMENTAL.equalsIgnoreCase(requestedMode)) {
+            return SYNC_MODE_AUTO_INCREMENTAL;
         }
 
-        return "after:" + lastSyncedAt.toLocalDate().format(GMAIL_SEARCH_DATE_FORMATTER);
+        return SYNC_MODE_MANUAL_RECENT;
     }
 
-    private int normalizePageSize() {
+    private String resolveSearchQuery(
+            String syncMode,
+            LocalDateTime lastSyncedAt,
+            Integer requestedRecentDays,
+            boolean ignoreQuery,
+            String queryOverride
+    ) {
+        if (ignoreQuery) {
+            return null;
+        }
+
+        if (queryOverride != null && !queryOverride.isBlank()) {
+            return queryOverride.trim();
+        }
+
+        return buildSearchQuery(syncMode, lastSyncedAt, requestedRecentDays);
+    }
+
+    private boolean shouldTryFallbackQueries(
+            GmailListResult gmailListResult,
+            boolean ignoreQuery,
+            String queryOverride
+    ) {
+        return gmailListResult.messageSummaries().isEmpty()
+                && !ignoreQuery
+                && (queryOverride == null || queryOverride.isBlank());
+    }
+
+    private List<String> fallbackQueries(Integer requestedRecentDays) {
+        int recentDays = normalizeRecentDays(requestedRecentDays);
+        List<String> queries = new ArrayList<>();
+        queries.add(null);
+        queries.add("newer_than:" + recentDays + "d");
+        queries.add("in:anywhere");
+        return queries;
+    }
+
+    private String displayQuery(String query) {
+        return query == null || query.isBlank() ? "(query 없음)" : query;
+    }
+
+    private String buildSearchQuery(String syncMode, LocalDateTime lastSyncedAt, Integer requestedRecentDays) {
+        if (SYNC_MODE_AUTO_INCREMENTAL.equals(syncMode) && lastSyncedAt != null) {
+            return "in:anywhere after:" + lastSyncedAt
+                    .minusDays(1)
+                    .toLocalDate()
+                    .format(GMAIL_SEARCH_DATE_FORMATTER);
+        }
+
+        return "in:anywhere newer_than:" + normalizeRecentDays(requestedRecentDays) + "d";
+    }
+
+    private int normalizeRecentDays(Integer requestedRecentDays) {
+        if (requestedRecentDays == null || requestedRecentDays < 1) {
+            return DEFAULT_MANUAL_RECENT_DAYS;
+        }
+
+        return Math.min(requestedRecentDays, MAX_MANUAL_RECENT_DAYS);
+    }
+
+    private int normalizePageSize(String syncMode) {
         int pageSize = properties.getCollectPageSize();
         if (pageSize < 1) {
-            return 500;
+            pageSize = 500;
+        }
+
+        if (SYNC_MODE_MANUAL_RECENT.equals(syncMode)) {
+            return 100;
         }
 
         return Math.min(pageSize, 500);
@@ -690,6 +984,15 @@ public class GmailIntegrationService {
         return value == null || value.isBlank();
     }
 
+    private String maskClientId(String clientId) {
+        if (clientId == null || clientId.isBlank()) {
+            return "(empty)";
+        }
+
+        int visibleLength = Math.min(clientId.length(), 8);
+        return clientId.substring(0, visibleLength) + "...";
+    }
+
     private String truncate(String value, int maxLength) {
         if (value == null || value.length() <= maxLength) {
             return value;
@@ -702,5 +1005,20 @@ public class GmailIntegrationService {
         if (!values.contains(value)) {
             values.add(value);
         }
+    }
+
+    private LocalDateTime maxDateTime(LocalDateTime current, LocalDateTime candidate) {
+        if (candidate == null) {
+            return current;
+        }
+
+        if (current == null || candidate.isAfter(current)) {
+            return candidate;
+        }
+
+        return current;
+    }
+
+    private record GmailListResult(List<JsonNode> messageSummaries, int resultSizeEstimate) {
     }
 }

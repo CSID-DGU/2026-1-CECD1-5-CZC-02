@@ -1,179 +1,145 @@
-"""키워드 기반 분류기"""
+import re
 from typing import Dict, List, Tuple
 
 
-CREATE_KEYWORDS = [
-    "가능하",
-    "잡아",
-    "잡을",
-    "일정",
-    "회의",
-    "미팅",
-    "뵙",
-    "만나",
+CREATE_PATTERNS = [
+    "일정 등록 부탁드립니다",
+    "일정 등록 부탁",
+    "미팅을 진행하고 싶습니다",
+    "미팅 요청",
+    "일정 생성 요청",
+    "미팅을 잡아주세요",
+    "일정을 잡아주세요",
+    "상담 요청",
+    "회의 요청",
+    "통화 요청",
+    "진행하면 좋겠습니다",
+    "진행하고 싶습니다",
 ]
 
-CANCEL_KEYWORDS = [
-    "취소",
-    "캔슬",
-    "못 갈",
-    "못가",
-    "어렵",
-    "불가",
-    "안 될",
-    "안될",
-    "보류",
-    "무산",
+UPDATE_PATTERNS = [
+    "변경해주세요",
+    "변경하고 싶습니다",
+    "연기해주세요",
+    "앞당겨주세요",
+    "시간을 바꿔주세요",
+    "날짜를 바꿔주세요",
+    "일정 변경",
+    "변경 요청",
 ]
 
-UPDATE_KEYWORDS = [
-    "변경",
-    "수정",
-    "미루",
-    "연기",
-    "앞당",
-    "바꾸",
-    "옮기",
-    "다시 잡",
-    "리스케줄",
+CANCEL_PATTERNS = [
+    "취소해주세요",
+    "취소합니다",
+    "취소해야 할 것 같습니다",
+    "진행하지 않습니다",
+    "미팅 취소",
+    "일정 취소",
 ]
 
-CONFIRM_KEYWORDS = [
-    "확정",
-    "좋습니다",
-    "좋아요",
-    "가능합니다",
-    "네",
-    "그때 뵙",
-    "진행하",
+CONFIRM_PATTERNS = [
+    "확정합니다",
+    "그대로 진행",
+    "확인했습니다",
+    "참석 가능합니다",
+    "예정대로 진행",
 ]
+
+GENERAL_PATTERNS = [
+    "견적서 전달",
+    "자료 전달",
+    "첨부드립니다",
+    "검토 부탁드립니다",
+    "문의사항 있으시면 연락",
+    "문의사항 있으면 연락",
+]
+
+SCHEDULE_WORDS = ["미팅", "회의", "상담", "통화", "일정"]
 
 
 def classify_activity_type(text: str) -> Tuple[str, float]:
-    """
-    텍스트 기반 활동 유형 분류
-    Returns: (activity_type, confidence)
-    
-    활동 유형: MEETING, CALL, EMAIL, TASK
-    """
-    text = text.lower()
-    
-    # 점수 계산
-    scores = {
-        "MEETING": 0.0,
-        "CALL": 0.0,
-        "EMAIL": 0.0,
-        "TASK": 0.0,
-    }
-    
-    # MEETING 키워드
-    meeting_keywords = {
-        '회의': 1.0, '미팅': 1.0, '만남': 0.8, '협의': 0.9,
-        '토론': 0.8, '회담': 0.9, '논의': 0.7, '세션': 0.8,
-        '리뷰': 0.7, '컨퍼런스': 0.9, '모임': 0.7
-    }
-    for kw, score in meeting_keywords.items():
-        if kw in text:
-            scores["MEETING"] += score
-    
-    # CALL 키워드
-    call_keywords = {
-        '통화': 1.0, '전화': 1.0, '콜': 0.9, '전화주': 0.8,
-        '전화받': 0.8, '음성': 0.7, '목소리': 0.6
-    }
-    for kw, score in call_keywords.items():
-        if kw in text:
-            scores["CALL"] += score
-    
-    # EMAIL 키워드
-    email_keywords = {
-        '이메일': 1.0, '메일': 0.8, '메시지': 0.6, '발송': 0.7,
-        '회신': 0.8, 'email': 0.9, 'mail': 0.8, '편지': 0.5
-    }
-    for kw, score in email_keywords.items():
-        if kw in text:
-            scores["EMAIL"] += score
-    
-    # TASK 키워드
-    task_keywords = {
-        '업무': 0.9, '작업': 0.9, '태스크': 1.0, '일정': 0.7,
-        '과제': 0.8, '프로젝트': 0.8, '수행': 0.6, '완료': 0.5,
-        '진행': 0.5, '처리': 0.5, '확인': 0.4, '검토': 0.6
-    }
-    for kw, score in task_keywords.items():
-        if kw in text:
-            scores["TASK"] += score
-    
-    # 최고 점수 활동 유형 선택
-    best_type = max(scores, key=scores.get)
-    best_score = scores[best_type]
-    
-    # 신뢰도 정규화 (0.0 ~ 1.0)
-    max_possible_score = 2.0  # 단어가 최대 2번 나올 수 있다고 가정
-    confidence = min(best_score / max_possible_score, 1.0)
-    
-    # 점수가 모두 0이면 기본값 (낮은 신뢰도)
-    if best_score == 0:
-        best_type = "MEETING"
-        confidence = 0.3
-    
-    return best_type, confidence
+    if any(word in text for word in ["미팅", "회의", "상담", "만남"]):
+        return "MEETING", 0.9
+    if any(word in text for word in ["통화", "전화"]):
+        return "CALL", 0.85
+    if any(word in text for word in ["메일", "이메일", "첨부", "견적서"]):
+        return "EMAIL", 0.8
+    return "TASK", 0.5
 
 
 def classify_action_type(text: str) -> Tuple[str, str]:
-    normalized = text.lower()
+    normalized = _normalize(text)
+    has_date_time = _has_date_or_time(normalized)
+    has_schedule_word = any(word in normalized for word in SCHEDULE_WORDS)
 
-    if _contains_any(normalized, CANCEL_KEYWORDS):
-        return "CANCEL", "취소/불가 표현이 포함되어 있습니다."
-    if _contains_any(normalized, UPDATE_KEYWORDS):
+    if _contains_any(normalized, CANCEL_PATTERNS):
+        return "CANCEL", "일정 취소 표현이 포함되어 있습니다."
+    if _contains_any(normalized, UPDATE_PATTERNS):
         return "UPDATE", "일정 변경 표현이 포함되어 있습니다."
-    if _contains_any(normalized, CONFIRM_KEYWORDS):
-        return "CONFIRM", "일정 확정 표현이 포함되어 있습니다."
-    if _contains_any(normalized, CREATE_KEYWORDS):
-        return "CREATE", "새 일정 생성으로 볼 수 있는 표현이 포함되어 있습니다."
-    return "UNKNOWN", "일정 생성/수정/취소 의도를 확정하기 어렵습니다."
+
+    # 날짜/시간이 포함된 "진행하겠습니다"는 사용자가 일정을 확정한 것으로 보고 내부 일정 생성 대상으로 처리한다.
+    if has_date_time and has_schedule_word and any(word in normalized for word in ["진행하겠습니다", "진행하면 좋겠습니다"]):
+        return "CREATE", "날짜/시간과 미팅 진행 의사가 포함되어 있어 일정 생성 대상으로 판단했습니다."
+
+    if _contains_any(normalized, CREATE_PATTERNS) or (
+        has_date_time and has_schedule_word and _has_request_expression(normalized)
+    ):
+        return "CREATE", "일정 생성 요청 표현과 날짜/시간 정보가 포함되어 있습니다."
+    if _contains_any(normalized, CONFIRM_PATTERNS):
+        return "CONFIRM", "일정 확인 또는 확정 표현이 포함되어 있습니다."
+    if _contains_any(normalized, GENERAL_PATTERNS):
+        return "UNKNOWN", "일정 생성/수정/취소 표현이나 명확한 날짜/시간이 없어 일반 영업 메일로 판단했습니다."
+    return "UNKNOWN", "일정 의도가 명확하지 않아 확인이 필요합니다."
 
 
 def classify_keywords(text: str, nouns: List[str], participants: List[str]) -> Dict[str, List[str]]:
-    event_keywords = ["회의", "미팅", "통화", "전화", "상담", "논의", "리뷰", "보고"]
+    event_keywords = [keyword for keyword in ["미팅", "회의", "상담", "통화"] if keyword in text]
     project_patterns = [
-        r"([A-Za-z0-9가-힣]+)\s*프로젝트",
-        r"([A-Za-z0-9가-힣]+)\s*과제",
+        r"([A-Za-z0-9가-힣]+?)\s*프로젝트",
+        r"([A-Za-z0-9가-힣]+?)\s*과제",
     ]
 
-    events = [keyword for keyword in event_keywords if keyword in text]
     projects = []
     for pattern in project_patterns:
-        for match in re_findall(pattern, text):
-            projects.append(f"{match} 프로젝트" if "프로젝트" in pattern else f"{match} 과제")
-
-    if not projects:
-        for index, noun in enumerate(nouns):
-            if noun == "프로젝트" and index > 0:
-                projects.append(f"{nouns[index - 1]} 프로젝트")
+        for match in re.findall(pattern, text):
+            projects.append(match.strip())
 
     return {
         "people": participants,
-        "event": _dedupe(events),
+        "event": _dedupe(event_keywords),
         "project": _dedupe(projects),
     }
 
 
-def re_findall(pattern: str, text: str) -> List[str]:
-    import re
+def _normalize(text: str) -> str:
+    return re.sub(r"\s+", " ", text).strip()
 
-    return re.findall(pattern, text)
+
+def _contains_any(text: str, patterns: List[str]) -> bool:
+    return any(pattern in text for pattern in patterns)
+
+
+def _has_date_or_time(text: str) -> bool:
+    return bool(
+        re.search(r"\d{4}[-/.]\d{1,2}[-/.]\d{1,2}", text)
+        or re.search(r"\d{4}년\s*\d{1,2}월\s*\d{1,2}일", text)
+        or re.search(r"\d{1,2}월\s*\d{1,2}일", text)
+        or re.search(r"(오전|오후)\s*\d{1,2}시", text)
+        or re.search(r"\d{1,2}:\d{2}", text)
+        or any(word in text for word in ["다음 주", "이번 주", "오늘", "내일"])
+    )
+
+
+def _has_request_expression(text: str) -> bool:
+    return any(word in text for word in ["요청", "부탁", "진행하고 싶", "잡고 싶", "잡아주세요", "등록"])
 
 
 def _dedupe(values: List[str]) -> List[str]:
     result = []
     seen = set()
     for value in values:
+        value = value.strip()
         if value and value not in seen:
             result.append(value)
             seen.add(value)
     return result
-
-
-def _contains_any(text: str, keywords: List[str]) -> bool:
-    return any(keyword in text for keyword in keywords)

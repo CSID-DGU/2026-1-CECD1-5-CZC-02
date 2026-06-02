@@ -4,10 +4,14 @@ import com.salesmap.backend.global.response.ApiResponse;
 import com.salesmap.backend.global.security.CustomUserPrincipal;
 import com.salesmap.backend.schedule.dto.ScheduleCreateRequest;
 import com.salesmap.backend.schedule.dto.ScheduleResponse;
+import com.salesmap.backend.schedule.dto.ScheduleUpdateRequest;
 import com.salesmap.backend.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,5 +46,23 @@ public class ScheduleController {
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         return ApiResponse.success(scheduleService.getSchedulesByUser(userId, principal.getUserId(), page, size));
+    }
+
+    @PatchMapping("/{scheduleId}")
+    public ApiResponse<ScheduleResponse> updateSchedule(
+            @PathVariable Long scheduleId,
+            @RequestBody ScheduleUpdateRequest request,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success("일정이 수정되었습니다.", scheduleService.updateSchedule(scheduleId, request, principal.getUserId()));
+    }
+
+    @DeleteMapping("/{scheduleId}")
+    public ApiResponse<Void> deleteSchedule(
+            @PathVariable Long scheduleId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        scheduleService.deleteSchedule(scheduleId, principal.getUserId());
+        return ApiResponse.success("일정이 삭제되었습니다.", null);
     }
 }

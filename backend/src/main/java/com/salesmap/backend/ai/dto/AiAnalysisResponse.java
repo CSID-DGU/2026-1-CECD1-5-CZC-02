@@ -7,6 +7,7 @@ public record AiAnalysisResponse(
         String contactName,
         String productName,
         Long amount,
+        String attendees,
         String actionType,
         Long targetScheduleId,
         String targetScheduleTitle,

@@ -1,19 +1,99 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Settings, Search, LayoutDashboard, ChevronDown, ChevronRight } from 'lucide-react';
 import nimbusTechLogo from '../assets/님버스테크 로고.png';
 import jandiLogo from '../assets/잔디 로고 이미지 .jpg';
 import gmailLogo from '../assets/gmail로고 이미지 spaced.png';
-
+import { getMe } from '../api/auth';
+import { getSchedules } from '../api/schedules';
 import { ReminderModal } from './ReminderModal';
+
+const SUMMARY_STORAGE_PREFIX = 'schedule-summary-shown';
+const THIRTY_MINUTES_STORAGE_PREFIX = 'schedule-30m-shown';
+
+function formatDate(date) {
+  return date.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+function formatTime(date) {
+  return date.toLocaleTimeString('ko-KR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function isSameDate(left, right) {
+  return (
+    left.getFullYear() === right.getFullYear()
+    && left.getMonth() === right.getMonth()
+    && left.getDate() === right.getDate()
+  );
+}
+
+function toScheduleDateTime(value) {
+  if (!value) {
+    return null;
+  }
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function toReminderItem(schedule) {
+  const dateTime = toScheduleDateTime(schedule.scheduleDateTime);
+  if (!dateTime) {
+    return null;
+  }
+
+  return {
+    id: schedule.scheduleId,
+    title: schedule.title || '일정',
+    dateTime: schedule.scheduleDateTime,
+    date: formatDate(dateTime),
+    time: formatTime(dateTime),
+    type: '일정',
+    content: schedule.memo || '',
+  };
+}
+
+function userInitial(name, email) {
+  const source = (name || email || 'U').trim();
+  return source.charAt(0).toUpperCase();
+}
 
 export function DashboardLayout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [salesmapConnected, setSalesmapConnected] = useState(() => localStorage.getItem('salesmapConnected') === 'true');
   const [companyName, setCompanyName] = useState(() => localStorage.getItem('salesmapCompany') || '');
+  const [currentUser, setCurrentUser] = useState(null);
   const [showReminder, setShowReminder] = useState(false);
   const [currentReminder, setCurrentReminder] = useState(null);
+  const [reminderQueue, setReminderQueue] = useState([]);
+
+  const enqueueReminder = useCallback((reminder) => {
+    setReminderQueue((prev) => {
+      const exists = prev.some((item) => item.id === reminder.id);
+      if (exists || currentReminder?.id === reminder.id) {
+        return prev;
+      }
+
+      return [...prev, reminder];
+    });
+  }, [currentReminder]);
+
+  useEffect(() => {
+    if (!currentReminder && reminderQueue.length > 0) {
+      const [nextReminder, ...rest] = reminderQueue;
+      setCurrentReminder(nextReminder);
+      setReminderQueue(rest);
+      setShowReminder(true);
+    }
+  }, [currentReminder, reminderQueue]);
 
   useEffect(() => {
     const timerId = window.setTimeout(() => {
@@ -27,31 +107,125 @@ export function DashboardLayout({ children }) {
   }, [location]);
 
   useEffect(() => {
-    // TODO: Replace this local mock reminder list with GET /api/schedules when schedule UI is connected to backend.
-    const upcomingEvents = [
-      {
-        title: 'ABC 기업 미팅',
-        date: '2026-05-05',
-        time: '14:00',
-        content: '신규 제품 구매 상담 및 계약 논의',
-        type: '미팅'
-      },
-      {
-        title: '김영희 고객 전화 통화',
-        date: '2026-05-04',
-        time: '16:30',
-        content: '제안서 피드백 논의',
-        type: '전화'
+    let ignore = false;
+
+    const fetchUser = async () => {
+      try {
+        const me = await getMe();
+        if (!ignore) {
+          setCurrentUser(me);
+        }
+      } catch (error) {
+        console.error('Failed to fetch current user:', error);
       }
-    ];
+    };
 
-    const timer = setTimeout(() => {
-      setCurrentReminder(upcomingEvents[0]);
-      setShowReminder(true);
-    }, 3000);
+    fetchUser();
 
-    return () => clearTimeout(timer);
+    return () => {
+      ignore = true;
+    };
   }, []);
+
+  const fetchSchedulesForReminder = useCallback(async () => {
+    try {
+      return await getSchedules({ size: 100 });
+    } catch (error) {
+      console.error('Failed to fetch schedules for reminders:', error);
+      return [];
+    }
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const showLoginSummary = async () => {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      const storageKey = `${SUMMARY_STORAGE_PREFIX}:${today.toISOString().slice(0, 10)}`;
+
+      if (sessionStorage.getItem(storageKey)) {
+        return;
+      }
+
+      const schedules = await fetchSchedulesForReminder();
+      if (ignore) {
+        return;
+      }
+
+      const items = schedules
+        .filter((schedule) => schedule.status !== 'CANCELED')
+        .map(toReminderItem)
+        .filter(Boolean)
+        .filter((item) => {
+          const itemDate = toScheduleDateTime(item.dateTime);
+          return itemDate && (isSameDate(itemDate, today) || isSameDate(itemDate, tomorrow));
+        })
+        .sort((left, right) => new Date(left.dateTime) - new Date(right.dateTime));
+
+      sessionStorage.setItem(storageKey, 'true');
+
+      if (items.length > 0) {
+        enqueueReminder({
+          id: `${storageKey}:summary`,
+          kind: 'SUMMARY',
+          label: '오늘과 내일의 일정',
+          title: `오늘과 내일 일정 ${items.length}건이 있습니다.`,
+          items,
+        });
+      }
+    };
+
+    showLoginSummary();
+
+    return () => {
+      ignore = true;
+    };
+  }, [enqueueReminder, fetchSchedulesForReminder]);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const checkThirtyMinuteReminders = async () => {
+      const schedules = await fetchSchedulesForReminder();
+      if (ignore) {
+        return;
+      }
+
+      const now = new Date();
+      schedules
+        .filter((schedule) => schedule.status !== 'CANCELED')
+        .forEach((schedule) => {
+          const item = toReminderItem(schedule);
+          if (!item) {
+            return;
+          }
+
+          const scheduleDate = toScheduleDateTime(item.dateTime);
+          const minutesLeft = (scheduleDate.getTime() - now.getTime()) / (1000 * 60);
+          const storageKey = `${THIRTY_MINUTES_STORAGE_PREFIX}:${schedule.scheduleId}:${item.dateTime}`;
+
+          if (minutesLeft > 0 && minutesLeft <= 30 && !sessionStorage.getItem(storageKey)) {
+            sessionStorage.setItem(storageKey, 'true');
+            enqueueReminder({
+              ...item,
+              id: storageKey,
+              kind: 'THIRTY_MINUTES',
+              label: '30분 전 알림',
+            });
+          }
+        });
+    };
+
+    checkThirtyMinuteReminders();
+    const intervalId = window.setInterval(checkThirtyMinuteReminders, 60 * 1000);
+
+    return () => {
+      ignore = true;
+      window.clearInterval(intervalId);
+    };
+  }, [enqueueReminder, fetchSchedulesForReminder]);
 
   const handleSalesmapClick = () => {
     if (!salesmapConnected) {
@@ -66,16 +240,27 @@ export function DashboardLayout({ children }) {
 
   const menuItems = [
     { path: '/dashboard', icon: LayoutDashboard, label: '대시보드' },
-    { path: '/settings', icon: Settings, label: '설정' }
+    { path: '/settings', icon: Settings, label: '설정' },
   ];
 
+  const pageTitle = (() => {
+    if (location.pathname.startsWith('/messages')) {
+      return '메일 상세 및 AI 분석';
+    }
+    if (location.pathname.startsWith('/settings/gmail/callback')) {
+      return 'Gmail 연동';
+    }
+    return menuItems.find(item => item.path === location.pathname)?.label || '대시보드';
+  })();
+
   const isActive = (path) => location.pathname === path;
+  const displayName = currentUser?.name || currentUser?.email || '사용자';
+  const avatarText = userInitial(currentUser?.name, currentUser?.email);
 
   return (
     <>
-      <div className="h-screen flex bg-[#F8F9FA]">
-        {/* Sidebar */}
-        <div className="w-56 bg-[#F3F4F6] border-r border-gray-200 flex flex-col">
+      <div className="h-screen flex bg-[#F8F9FA] overflow-hidden">
+        <div className="w-56 shrink-0 bg-[#F3F4F6] border-r border-gray-200 flex flex-col">
           <div className="p-5 border-b border-gray-200 bg-[#F3F4F6]">
             <img
               src={nimbusTechLogo}
@@ -90,7 +275,7 @@ export function DashboardLayout({ children }) {
               <div className="px-3 py-2 text-xs text-gray-500 uppercase tracking-wide flex items-center justify-between">
                 <span>일정관리 자동화</span>
                 <ChevronRight className="w-3 h-3" />
-             </div>
+              </div>
               <button
                 onClick={() => navigate('/messages/jandi')}
                 className={`w-full flex items-center px-4 py-3 transition-colors ${
@@ -113,10 +298,9 @@ export function DashboardLayout({ children }) {
               </button>
             </div>
 
-            {/* Main Menu */}
             <div className="mt-6">
               <div className="px-3 py-2 text-xs text-gray-500 uppercase tracking-wide text-left">
-                 메뉴
+                메뉴
               </div>
               {menuItems.map((item) => {
                 const Icon = item.icon;
@@ -145,12 +329,11 @@ export function DashboardLayout({ children }) {
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 min-w-0 flex flex-col">
           <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <h2 className="text-base !font-semibold !text-black">
-                {menuItems.find(item => item.path === location.pathname)?.label || '대시보드'}
+                {pageTitle}
               </h2>
             </div>
 
@@ -171,10 +354,10 @@ export function DashboardLayout({ children }) {
 
               <div className="flex items-center gap-2 pl-3 border-l border-gray-200">
                 <div className="w-7 h-7 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-xs text-white">김</span>
+                  <span className="text-xs font-semibold text-white">{avatarText}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-sm text-gray-700">김영업</span>
+                  <span className="text-sm text-gray-700">{displayName}</span>
                   <ChevronDown className="w-3 h-3 text-gray-500" />
                 </div>
                 <button
@@ -187,7 +370,7 @@ export function DashboardLayout({ children }) {
             </div>
           </div>
 
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1 min-w-0 overflow-auto">
             {children}
           </div>
         </div>
@@ -196,7 +379,10 @@ export function DashboardLayout({ children }) {
       {currentReminder && (
         <ReminderModal
           isOpen={showReminder}
-          onClose={() => setShowReminder(false)}
+          onClose={() => {
+            setShowReminder(false);
+            setCurrentReminder(null);
+          }}
           reminder={currentReminder}
         />
       )}

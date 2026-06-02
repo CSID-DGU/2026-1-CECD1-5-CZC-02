@@ -86,7 +86,8 @@ public class SourceService {
         PageRequest pageRequest = PageRequest.of(
                 normalizePage(page),
                 normalizeSize(size),
-                Sort.by(Sort.Direction.DESC, "createdAt")
+                Sort.by(Sort.Direction.DESC, "sentAt")
+                        .and(Sort.by(Sort.Direction.DESC, "createdAt"))
         );
 
         return sourceRepository.findByUserId(authenticatedUserId, pageRequest).stream()

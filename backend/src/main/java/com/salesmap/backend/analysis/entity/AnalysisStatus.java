@@ -5,6 +5,7 @@ public enum AnalysisStatus {
     ANALYZING,
     ANALYZED,
     APPROVED,
+    DELETED,
     REJECTED,
     FAILED
 }

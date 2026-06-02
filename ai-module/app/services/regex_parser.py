@@ -7,37 +7,43 @@ WEEKDAYS = ["월요일", "화요일", "수요일", "목요일", "금요일", "�
 
 
 def extract_date(text: str) -> Optional[str]:
-    """월/일, 요일, 오늘/내일/모레 표현을 추출합니다."""
-    month_days = re.findall(r"(\d{1,2})월\s*(\d{1,2})일", text)
-    if month_days:
-        month, day = month_days[-1]
-        return f"{int(month)}월 {int(day)}일"
-
-    for weekday in WEEKDAYS:
-        if weekday in text:
-            return weekday
-
-    for relative_date in ("오늘", "내일", "모레"):
-        if relative_date in text:
-            return relative_date
-
     iso_dates = re.findall(r"(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})", text)
     if iso_dates:
         year, month, day = iso_dates[-1]
         return f"{year}-{int(month):02d}-{int(day):02d}"
 
+    korean_dates = re.findall(r"(?:(\d{4})년\s*)?(\d{1,2})월\s*(\d{1,2})일", text)
+    if korean_dates:
+        year, month, day = korean_dates[-1]
+        if year:
+            return f"{year}-{int(month):02d}-{int(day):02d}"
+        current_year = datetime.now().year
+        return f"{current_year}-{int(month):02d}-{int(day):02d}"
+
+    for weekday in WEEKDAYS:
+        if weekday in text:
+            return weekday
+
+    relative_dates = {
+        "오늘": "오늘",
+        "내일": "내일",
+        "모레": "모레",
+    }
+    for keyword, value in relative_dates.items():
+        if keyword in text:
+            return value
+
     return None
 
 
 def extract_time(text: str) -> Optional[str]:
-    """오전/오후가 붙은 시간과 일반 '3시' 형태를 추출합니다."""
     meridiem_times = re.findall(r"(오전|오후)\s*(\d{1,2})시(?:\s*(\d{1,2})분)?", text)
     if meridiem_times:
         meridiem, hour, minute = meridiem_times[-1]
         minute_text = f" {int(minute)}분" if minute else ""
         return f"{meridiem} {int(hour)}시{minute_text}"
 
-    simple_times = re.findall(r"(?<!월\s)(\d{1,2})시(?:\s*(\d{1,2})분)?", text)
+    simple_times = re.findall(r"(?<!월\s)(?<!일\s)(\d{1,2})시(?:\s*(\d{1,2})분)?", text)
     if simple_times:
         hour, minute = simple_times[-1]
         minute_text = f" {int(minute)}분" if minute else ""
@@ -56,7 +62,6 @@ def extract_date_and_time(text: str) -> Tuple[Optional[str], Optional[str]]:
 
 
 def to_backend_datetime(date_text: Optional[str], time_text: Optional[str]) -> Optional[datetime]:
-    """백엔드 LocalDateTime 역직렬화를 위한 ISO datetime으로 변환합니다."""
     if not date_text:
         return None
 
@@ -84,16 +89,6 @@ def _date_to_datetime(date_text: str) -> Optional[datetime]:
         if days_ahead <= 0:
             days_ahead += 7
         return today + timedelta(days=days_ahead)
-
-    month_day = re.match(r"(\d{1,2})월\s*(\d{1,2})일", date_text)
-    if month_day:
-        month = int(month_day.group(1))
-        day = int(month_day.group(2))
-        year = today.year
-        candidate = datetime(year, month, day)
-        if candidate.date() < today.date():
-            candidate = datetime(year + 1, month, day)
-        return candidate
 
     try:
         return datetime.fromisoformat(date_text)

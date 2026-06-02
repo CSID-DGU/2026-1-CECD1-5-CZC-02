@@ -1,7 +1,13 @@
 import { api } from './client';
 
 export async function getSources(params = {}) {
-  const response = await api.get('/api/sources', { params });
+  const response = await api.get('/api/sources', {
+    params: {
+      page: 0,
+      size: 20,
+      ...params,
+    },
+  });
 
   return response.data.data;
 }

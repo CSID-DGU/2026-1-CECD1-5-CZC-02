@@ -20,6 +20,9 @@ class AnalysisResultSchema(BaseModel):
     summary: str
     customer_name: Optional[str] = None
     contact_person: Optional[str] = None
+    product_name: Optional[str] = None
+    attendees: Optional[List[str]] = None
+    amount: Optional[int] = None
     activity_type: str  # MEETING, CALL, EMAIL, TASK
     action_type: str = "UNKNOWN"  # CREATE, UPDATE, CANCEL, CONFIRM, UNKNOWN
     target_schedule_id: Optional[int] = None

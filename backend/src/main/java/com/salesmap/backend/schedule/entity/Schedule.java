@@ -41,7 +41,7 @@ public class Schedule extends BaseEntity {
     private LocalDateTime scheduleDateTime;
 
     @Lob
-    @Column
+    @Column(columnDefinition = "LONGTEXT")
     private String memo;
 
     @Column

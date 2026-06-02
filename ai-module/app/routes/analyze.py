@@ -27,8 +27,9 @@ async def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
     return AnalyzeResponse(
         customerName=analysis_result.customer_name,
         contactName=analysis_result.contact_person,
-        productName=None,
-        amount=None,
+        productName=analysis_result.product_name,
+        attendees=", ".join(analysis_result.attendees or []) or None,
+        amount=analysis_result.amount,
         actionType=analysis_result.action_type,
         targetScheduleId=analysis_result.target_schedule_id,
         targetScheduleTitle=analysis_result.target_schedule_title,

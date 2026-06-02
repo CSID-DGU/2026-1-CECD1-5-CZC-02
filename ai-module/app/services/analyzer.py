@@ -1,26 +1,30 @@
-"""규칙 기반 분석 통합 모듈"""
-from typing import Iterable, List, Optional
+"""Rule-based analysis orchestration for sales activity emails."""
+import re
+from datetime import datetime, timedelta
+from typing import Iterable, List, Optional, Tuple
 
 from app.schemas.models import AnalysisResultSchema, ScheduleSchema
 from app.schemas.request import ExistingScheduleInfo, MessageItem
 from app.schemas.response import ScheduleResponse
-from app.services.classifier import classify_action_type, classify_activity_type, classify_keywords
-from app.services.extractor import extract_nouns, extract_participants
-from app.services.preprocess import preprocess_text
-from app.services.regex_parser import extract_date_and_time
-from app.services.schedule_generator import generate_schedule
 
 
-CONNECTOR_KEYWORDS = {
-    "연결",
-    "전달",
-    "확인",
-    "조율",
-    "잡아주세요",
-    "담당자",
-    "팀원",
-    "분들",
-}
+SCHEDULE_WORDS = ("미팅", "회의", "상담", "통화", "일정")
+CREATE_WORDS = (
+    "일정 등록 부탁",
+    "일정 등록",
+    "미팅을 진행하고 싶",
+    "미팅 요청",
+    "일정 생성 요청",
+    "미팅을 잡",
+    "일정을 잡",
+    "가능하실까요",
+    "진행하면 좋겠습니다",
+    "요청드립니다",
+)
+UPDATE_WORDS = ("변경", "연기", "앞당", "시간을 바", "날짜를 바", "조율")
+CANCEL_WORDS = ("취소", "진행하지 않습니다", "진행하지 않겠습니다")
+CONFIRM_WORDS = ("확정", "그대로 진행", "확인했습니다", "참석 가능", "예정대로 진행", "진행하겠습니다")
+GENERAL_WORDS = ("견적서", "첨부", "자료", "소개 자료", "기능 설명서", "검토 후", "문의사항")
 
 
 def analyze_schedule(
@@ -28,13 +32,16 @@ def analyze_schedule(
     messages: Optional[List[MessageItem]] = None,
     requester_name: Optional[str] = None,
 ) -> ScheduleResponse:
-    """전처리 -> Komoran 명사 -> regex -> 키워드 분류 -> 일정 JSON 생성"""
-    cleaned_text = preprocess_text(message)
-    nouns = extract_nouns(cleaned_text)
-    date, time = extract_date_and_time(cleaned_text)
-    participants = select_participants(cleaned_text, nouns, messages or [], requester_name)
-    classified = classify_keywords(cleaned_text, nouns, participants)
-    return generate_schedule(cleaned_text, classified, date, time)
+    text = normalize(message)
+    date, time = extract_date_and_time(text)
+    attendees = select_participants(text, messages or [], requester_name)
+
+    return ScheduleResponse(
+        title=extract_schedule_title(text) or "영업 일정",
+        date=date,
+        time=time,
+        participants=attendees,
+    )
 
 
 async def analyze_message(
@@ -43,59 +50,253 @@ async def analyze_message(
     requester_name: Optional[str] = None,
     existing_schedules: Optional[List[ExistingScheduleInfo]] = None,
 ) -> AnalysisResultSchema:
-    schedule_response = analyze_schedule(message, messages, requester_name)
-    cleaned_text = preprocess_text(message)
-    activity_type, activity_confidence = classify_activity_type(cleaned_text)
-    action_type, action_reason = classify_action_type(cleaned_text)
-    target_schedule = select_target_schedule(cleaned_text, schedule_response, existing_schedules or [])
+    text = normalize(message)
+    schedule_response = analyze_schedule(text, messages, requester_name)
+    action_type, action_reason = classify_action_type(text)
+    customer_name = extract_customer(text)
+    product_name = extract_product(text)
+    amount = extract_amount(text)
+    attendees = select_participants(text, messages or [], requester_name)
 
-    schedule = ScheduleSchema(
-        title=schedule_response.title,
-        date=schedule_response.date or "",
-        time=schedule_response.time or "",
-        participants=schedule_response.participants,
-        location=None,
+    target_schedule = None
+    if action_type in {"UPDATE", "CANCEL", "CONFIRM"}:
+        target_schedule = select_target_schedule(text, schedule_response, existing_schedules or [])
+
+    has_schedule_datetime = bool(schedule_response.date and schedule_response.time)
+    should_include_schedule = (
+        action_type in {"CREATE", "UPDATE", "CANCEL", "CONFIRM"}
+        and (has_schedule_datetime or action_type in {"UPDATE", "CANCEL", "CONFIRM"})
     )
 
+    schedule = None
+    if should_include_schedule:
+        schedule = ScheduleSchema(
+            title=schedule_response.title,
+            date=schedule_response.date or "",
+            time=schedule_response.time or "",
+            participants=attendees,
+            location=None,
+        )
+
     return AnalysisResultSchema(
-        summary=_build_summary(schedule_response),
-        customer_name=None,
-        contact_person=schedule_response.participants[0] if schedule_response.participants else None,
-        activity_type=activity_type,
+        summary=build_summary(action_type, schedule_response, text, customer_name, product_name, amount, attendees),
+        customer_name=customer_name,
+        contact_person=first_contact(attendees),
+        product_name=product_name,
+        attendees=attendees,
+        amount=amount,
+        activity_type=classify_activity_type(text),
         action_type=action_type,
         target_schedule_id=target_schedule.scheduleId if target_schedule else None,
         target_schedule_title=target_schedule.title if target_schedule else None,
         action_reason=action_reason,
-        todo_required=action_type in {"CREATE", "UPDATE", "CANCEL"} and bool(schedule_response.title),
-        todo_content=_build_todo_content(action_type, schedule_response),
+        todo_required=action_type in {"CREATE", "UPDATE", "CANCEL"} and schedule is not None,
+        todo_content=build_todo_content(action_type, schedule_response, product_name),
         schedule=schedule,
-        confidence=max(activity_confidence, 0.7),
+        confidence=0.85,
     )
 
 
-def _build_summary(schedule: ScheduleResponse) -> str:
-    parts = [schedule.title]
+def classify_activity_type(text: str) -> str:
+    if any(word in text for word in ("미팅", "회의", "상담", "만남")):
+        return "MEETING"
+    if any(word in text for word in ("통화", "전화")):
+        return "CALL"
+    if any(word in text for word in ("메일", "이메일", "첨부", "견적서", "자료")):
+        return "EMAIL"
+    return "TASK"
+
+
+def classify_action_type(text: str) -> Tuple[str, str]:
+    has_date_time = bool(extract_date(text) or extract_time(text))
+    has_schedule_word = any(word in text for word in SCHEDULE_WORDS)
+
+    if contains_any(text, CANCEL_WORDS):
+        return "CANCEL", "일정 취소 표현이 포함되어 있습니다."
+    if contains_any(text, UPDATE_WORDS):
+        return "UPDATE", "일정 변경 표현이 포함되어 있습니다."
+    if contains_any(text, CONFIRM_WORDS) and has_schedule_word:
+        return "CONFIRM", "일정 확인 또는 확정 표현이 포함되어 있습니다."
+    if contains_any(text, CREATE_WORDS) and (has_schedule_word or has_date_time):
+        return "CREATE", "일정 생성 요청 표현과 날짜/시간 정보가 포함되어 있습니다."
+    if has_date_time and has_schedule_word and any(word in text for word in ("진행", "가능", "요청")):
+        return "CREATE", "날짜/시간과 미팅 진행 의사가 포함되어 있어 일정 생성 대상으로 판단했습니다."
+    if contains_any(text, GENERAL_WORDS):
+        return "UNKNOWN", "자료 전달 또는 검토 요청 성격이며 일정 의도가 명확하지 않습니다."
+    return "UNKNOWN", "일정 의도가 명확하지 않아 확인이 필요합니다."
+
+
+def build_summary(
+    action_type: str,
+    schedule: ScheduleResponse,
+    text: str,
+    customer_name: Optional[str],
+    product_name: Optional[str],
+    amount: Optional[int],
+    attendees: List[str],
+) -> str:
+    if action_type == "UNKNOWN":
+        if any(word in text for word in ("견적서", "첨부")):
+            return "견적서 전달 메일"
+        if any(word in text for word in ("자료", "소개 자료", "기능 설명서")):
+            target = product_name or "제품"
+            company = customer_name or "고객사"
+            return f"{company}의 {target} 자료 문의 메일"
+        return "일정 의도가 명확하지 않은 일반 영업 메일"
+
+    parts = []
+    if customer_name:
+        parts.append(customer_name)
+    if product_name:
+        parts.append(product_name)
+    if amount:
+        parts.append(f"{amount:,}원")
+    if schedule.title:
+        parts.append(schedule.title)
     if schedule.date:
         parts.append(schedule.date)
     if schedule.time:
-        parts.append(schedule.time)
-    if schedule.participants:
-        parts.append(", ".join(schedule.participants))
-    return " / ".join(parts)
+        parts.append(format_time_for_summary(schedule.time))
+    if attendees:
+        parts.append("참석자: " + ", ".join(attendees))
+    return " / ".join(parts) if parts else schedule.title
 
 
-def _build_todo_content(action_type: str, schedule: ScheduleResponse) -> Optional[str]:
-    if not schedule.title:
-        return None
+def build_todo_content(action_type: str, schedule: ScheduleResponse, product_name: Optional[str]) -> Optional[str]:
+    if action_type == "UNKNOWN":
+        if product_name:
+            return f"{product_name} 자료 요청 검토 후 필요 시 후속 미팅 제안"
+        return "검토 후 필요 시 문의 대응"
     if action_type == "CANCEL":
         return f"{schedule.title} 취소 확인"
     if action_type == "UPDATE":
         return f"{schedule.title} 일정 변경 확인"
     if action_type == "CONFIRM":
-        return f"{schedule.title} 확정"
+        return f"{schedule.title} 확정 확인"
     if action_type == "CREATE":
-        return f"{schedule.title} 준비"
+        return "미팅 일정 등록 및 미팅 준비"
     return None
+
+
+def extract_customer(text: str) -> Optional[str]:
+    patterns = [
+        r"([A-Za-z][A-Za-z0-9&.\- ]{1,40})\s+[가-힣]{2,4}입니다",
+        r"([A-Za-z][A-Za-z0-9&.\- ]{1,40})\s*(?:고객사|기업|주식회사|Corp)\s+[가-힣]{2,4}입니다",
+        r"([A-Za-z][A-Za-z0-9&.\- ]{1,40})\s*(?:고객사|기업|주식회사|Corp)(?:와|과|에서|의| )",
+        r"([가-힣A-Za-z0-9&.\- ]{2,40}?\s*(?:고객사|기업|주식회사|Corp))\s+[가-힣]{2,4}입니다",
+        r"([가-힣A-Za-z0-9&.\- ]{2,40}?\s*(?:고객사|기업|주식회사|Corp))(?:와|과|에서|의| )",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text)
+        if match:
+            value = clean_entity(strip_date_time_prefix(match.group(1)))
+            if is_valid_customer(value):
+                return value
+    return None
+
+
+def extract_product(text: str) -> Optional[str]:
+    patterns = [
+        r"([A-Za-z][A-Za-z0-9&.\- ]{1,50})\s*(?:관련\s*)?(?:소개 자료|주요 기능 설명서|기능 설명서|자료)",
+        r"([A-Za-z][A-Za-z0-9&.\- ]{1,50})\s*(?:제품 소개|도입 관련|도입 검토|도입 건)",
+        r"([A-Za-z][A-Za-z0-9&.\- ]{1,50})\s*(?:Platform|Solution|솔루션|서비스|시스템)",
+        r"([가-힣A-Za-z0-9&.\- ]{2,50})\s*(?:제품 소개|솔루션|서비스|시스템)",
+        r"([A-Za-z][A-Za-z0-9&.\- ]{1,50})\s*제품",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text)
+        if match:
+            value = clean_entity(strip_date_time_prefix(match.group(1)))
+            value = remove_customer_tail(value)
+            if is_valid_product(value):
+                return value
+    return None
+
+
+def extract_amount(text: str) -> Optional[int]:
+    match = re.search(r"약?\s*([0-9,]+)\s*(만원|원)", text)
+    if not match:
+        return None
+
+    number = int(match.group(1).replace(",", ""))
+    unit = match.group(2)
+    return number * 10000 if unit == "만원" else number
+
+
+def extract_schedule_title(text: str) -> Optional[str]:
+    product = extract_product(text)
+    if product and any(word in text for word in SCHEDULE_WORDS):
+        return f"{product} 관련 미팅"
+
+    patterns = [
+        r"([가-힣A-Za-z0-9&.\- ]{2,60}?(?:제품 소개 미팅|도입 관련 미팅|도입 검토 미팅|미팅|회의|상담|통화))",
+        r"([가-힣A-Za-z0-9&.\- ]{2,60}?(?:후속 논의|일정 조율))",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text)
+        if match:
+            title = clean_entity(strip_date_time_prefix(match.group(1)))
+            if title:
+                return title
+    return None
+
+
+def extract_date_and_time(text: str) -> Tuple[Optional[str], Optional[str]]:
+    return extract_date(text), extract_time(text)
+
+
+def extract_date(text: str) -> Optional[str]:
+    iso = re.findall(r"(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})", text)
+    if iso:
+        year, month, day = iso[-1]
+        return f"{year}-{int(month):02d}-{int(day):02d}"
+
+    korean = re.findall(r"(?:(\d{4})년\s*)?(\d{1,2})월\s*(\d{1,2})일", text)
+    if korean:
+        year, month, day = korean[-1]
+        return f"{int(year) if year else datetime.now().year}-{int(month):02d}-{int(day):02d}"
+
+    weekdays = {
+        "월요일": 0,
+        "화요일": 1,
+        "수요일": 2,
+        "목요일": 3,
+        "금요일": 4,
+        "토요일": 5,
+        "일요일": 6,
+    }
+    for prefix, offset in (("이번 주", 0), ("다음 주", 7)):
+        for weekday, index in weekdays.items():
+            if f"{prefix} {weekday}" in text:
+                return next_weekday(index, offset)
+    return None
+
+
+def extract_time(text: str) -> Optional[str]:
+    matches = re.findall(r"(오전|오후)\s*(\d{1,2})시(?:\s*(\d{1,2})분)?", text)
+    if matches:
+        meridiem, hour_text, minute_text = matches[-1]
+        hour = int(hour_text)
+        if meridiem == "오후" and hour != 12:
+            hour += 12
+        if meridiem == "오전" and hour == 12:
+            hour = 0
+        return f"{hour:02d}:{int(minute_text or 0):02d}"
+
+    colon = re.findall(r"(\d{1,2}):(\d{2})", text)
+    if colon:
+        hour, minute = colon[-1]
+        return f"{int(hour):02d}:{int(minute):02d}"
+    return None
+
+
+def next_weekday(target_weekday: int, base_offset: int = 0) -> str:
+    today = datetime.now()
+    days_ahead = target_weekday - today.weekday() + base_offset
+    if days_ahead <= 0:
+        days_ahead += 7
+    target = today + timedelta(days=days_ahead)
+    return target.strftime("%Y-%m-%d")
 
 
 def select_target_schedule(
@@ -108,10 +309,9 @@ def select_target_schedule(
 
     scored = []
     for existing in existing_schedules:
-        score = _schedule_match_score(text, schedule, existing)
+        score = schedule_match_score(text, schedule, existing)
         if score > 0:
             scored.append((score, existing))
-
     if not scored:
         return None
 
@@ -119,63 +319,33 @@ def select_target_schedule(
     return scored[0][1]
 
 
-def _schedule_match_score(
-    text: str,
-    schedule: ScheduleResponse,
-    existing: ExistingScheduleInfo,
-) -> int:
+def schedule_match_score(text: str, schedule: ScheduleResponse, existing: ExistingScheduleInfo) -> int:
     score = 0
     title = existing.title or ""
     if title and title in text:
-        score += 4
-    if schedule.title and title and _has_shared_token(schedule.title, title):
-        score += 2
+        score += 5
+    if schedule.title and title and has_shared_token(schedule.title, title):
+        score += 3
     if existing.scheduleDateTime:
-        date_text = existing.scheduleDateTime.strftime("%Y-%m-%d")
         month_day_text = f"{existing.scheduleDateTime.month}월 {existing.scheduleDateTime.day}일"
-        time_text = f"{existing.scheduleDateTime.hour}시"
-        if date_text in text:
-            score += 4
+        hour_text = f"{existing.scheduleDateTime.hour}시"
         if month_day_text in text:
             score += 4
-        if time_text in text:
+        if hour_text in text:
             score += 2
-    for participant in existing.participants:
-        if participant and participant in text:
-            score += 1
     return score
-
-
-def _has_shared_token(left: str, right: str) -> bool:
-    left_tokens = {token for token in left.split() if len(token) >= 2}
-    right_tokens = {token for token in right.split() if len(token) >= 2}
-    return bool(left_tokens & right_tokens)
 
 
 def select_participants(
     text: str,
-    nouns: List[str],
     messages: List[MessageItem],
     requester_name: Optional[str] = None,
 ) -> List[str]:
-    """본문 직접 언급자를 우선하고, sender/receiver는 비어 있을 때만 보조로 씁니다."""
-    requester_aliases = _name_aliases(requester_name)
-    metadata_names = _metadata_names(messages)
-    direct_participants = [
-        name for name in extract_participants(text, nouns)
-        if name not in requester_aliases
-    ]
-    if _has_connector_context(text):
-        group_participants = _extract_group_participants(text)
-        direct_participants = [
-            name for name in direct_participants
-            if name not in metadata_names
-        ]
-        return _dedupe([*direct_participants, *group_participants])
+    explicit = extract_attendees(text)
+    if explicit:
+        return explicit
 
-    if direct_participants:
-        return _dedupe(direct_participants)
-
+    requester_aliases = name_aliases(requester_name)
     metadata_candidates = []
     for message in messages:
         if message.direction == "RECEIVED":
@@ -186,62 +356,108 @@ def select_participants(
             metadata_candidates.append(message.senderName)
             metadata_candidates.extend(message.receiverNames)
 
-    return _dedupe([
+    return dedupe([
         name for name in metadata_candidates
         if name and name not in requester_aliases
     ])
 
 
-def _has_connector_context(text: str) -> bool:
-    return any(keyword in text for keyword in CONNECTOR_KEYWORDS)
+def extract_attendees(text: str) -> List[str]:
+    match = re.search(r"참석자는\s*(.+?)(?:입니다|입니다\.|$)", text, re.DOTALL)
+    if not match:
+        return []
+    raw = match.group(1).replace("\n", " ")
+    return dedupe([item.strip(" .") for item in re.split(r"[,，]", raw) if item.strip(" .")])
 
 
-def _name_aliases(name: Optional[str]) -> set[str]:
+def first_contact(attendees: List[str]) -> Optional[str]:
+    if not attendees:
+        return None
+    for attendee in attendees:
+        if any(token in attendee for token in ("고객사", "Corp", "기업", "주식회사", "Systems")):
+            return attendee
+    return attendees[0]
+
+
+def has_shared_token(left: str, right: str) -> bool:
+    left_tokens = {token for token in left.split() if len(token) >= 2}
+    right_tokens = {token for token in right.split() if len(token) >= 2}
+    return bool(left_tokens & right_tokens)
+
+
+def contains_any(text: str, patterns: Iterable[str]) -> bool:
+    return any(pattern in text for pattern in patterns)
+
+
+def normalize(text: str) -> str:
+    return re.sub(r"\s+", " ", text or "").strip()
+
+
+def clean_entity(value: str) -> str:
+    value = re.sub(r"\s+", " ", value or "")
+    return value.strip(" .,\n\t")
+
+
+def strip_date_time_prefix(value: str) -> str:
+    value = re.sub(r"\d{4}[-/.]\d{1,2}[-/.]\d{1,2}", "", value)
+    value = re.sub(r"\d{4}년\s*\d{1,2}월\s*\d{1,2}일", "", value)
+    value = re.sub(r"\d{1,2}월\s*\d{1,2}일", "", value)
+    value = re.sub(r"(오전|오후)\s*\d{1,2}시(?:\s*\d{1,2}분)?", "", value)
+    value = re.sub(r"^\s*\d{1,2}\s*", "", value)
+    value = re.sub(r"^\s*(시에|에서|와|과)\s*", "", value)
+    return clean_entity(value)
+
+
+def remove_customer_tail(value: str) -> str:
+    value = re.sub(r".*?(?:시에|에서)\s*", "", value)
+    value = re.sub(r"\b[A-Za-z0-9&.\- ]+?\s*(?:고객사|기업|Corp)와\s*", "", value)
+    value = re.sub(r"\b[A-Za-z0-9&.\- ]+?\s*(?:고객사|기업|Corp)과\s*", "", value)
+    return clean_entity(value)
+
+
+def is_valid_customer(value: str) -> bool:
+    if not value or len(value) < 2:
+        return False
+    lowered = value.lower()
+    return not any(blocked in lowered for blocked in ("안녕하세요", "오후", "오전", "sales analytics platform"))
+
+
+def is_valid_product(value: str) -> bool:
+    if not value or len(value) < 2:
+        return False
+    blocked = {"제품", "고객", "신규 고객", "안녕하세요", "Delta Systems 최유진입니다"}
+    return value not in blocked
+
+
+def format_time_for_summary(time_text: Optional[str]) -> str:
+    if not time_text:
+        return ""
+    match = re.match(r"(\d{2}):(\d{2})", time_text)
+    if not match:
+        return time_text
+    hour = int(match.group(1))
+    minute = int(match.group(2))
+    meridiem = "오전" if hour < 12 else "오후"
+    display_hour = hour if hour <= 12 else hour - 12
+    if display_hour == 0:
+        display_hour = 12
+    return f"{meridiem} {display_hour}시" + (f" {minute}분" if minute else "")
+
+
+def name_aliases(name: Optional[str]) -> set[str]:
     if not name:
         return set()
-
     aliases = {name}
     if len(name) >= 2:
         aliases.add(name[1:])
-
-    title_words = ["대리", "과장", "차장", "부장", "팀장", "이사", "대표", "님", "씨"]
-    for title in title_words:
-        aliases.add(f"{name}{title}")
-        if len(name) >= 2:
-            aliases.add(f"{name[1:]}{title}")
-        aliases.add(f"{name[0]}{title}")
-
     return aliases
 
 
-def _metadata_names(messages: List[MessageItem]) -> set[str]:
-    names = set()
-    for message in messages:
-        if message.senderName:
-            names.add(message.senderName)
-        names.update(message.receiverNames)
-    return names
-
-
-def _extract_group_participants(text: str) -> List[str]:
-    import re
-
-    patterns = [
-        r"([가-힣A-Za-z0-9]+팀)",
-        r"([가-힣A-Za-z0-9]+부서)",
-        r"([가-힣A-Za-z0-9]+담당자)",
-    ]
-    groups = []
-    for pattern in patterns:
-        groups.extend(re.findall(pattern, text))
-    return _dedupe(groups)
-
-
-def _dedupe(values: Iterable[str]) -> List[str]:
+def dedupe(values: Iterable[str]) -> List[str]:
     result = []
     seen = set()
     for value in values:
-        value = value.strip()
+        value = clean_entity(value)
         if value and value not in seen:
             result.append(value)
             seen.add(value)

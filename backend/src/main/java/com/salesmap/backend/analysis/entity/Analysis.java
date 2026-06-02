@@ -41,6 +41,9 @@ public class Analysis extends BaseEntity {
     @Column
     private Long amount;
 
+    @Column(length = 500)
+    private String attendees;
+
     @Column(length = 50)
     private String actionType;
 
@@ -50,13 +53,13 @@ public class Analysis extends BaseEntity {
     @Column(length = 255)
     private String targetScheduleTitle;
 
-    @Column(length = 255)
+    @Column(length = 500)
     private String actionReason;
 
-    @Column(length = 255)
+    @Column(length = 500)
     private String scheduleText;
 
-    @Column(length = 255)
+    @Column(length = 500)
     private String followUpAction;
 
     @Lob
@@ -82,6 +85,7 @@ public class Analysis extends BaseEntity {
             String contactName,
             String productName,
             Long amount,
+            String attendees,
             String actionType,
             Long targetScheduleId,
             String targetScheduleTitle,
@@ -98,6 +102,7 @@ public class Analysis extends BaseEntity {
         this.contactName = contactName;
         this.productName = productName;
         this.amount = amount;
+        this.attendees = attendees;
         this.actionType = actionType;
         this.targetScheduleId = targetScheduleId;
         this.targetScheduleTitle = targetScheduleTitle;
@@ -132,6 +137,10 @@ public class Analysis extends BaseEntity {
 
     public Long getAmount() {
         return amount;
+    }
+
+    public String getAttendees() {
+        return attendees;
     }
 
     public String getActionType() {
@@ -177,5 +186,59 @@ public class Analysis extends BaseEntity {
     public void markApproved() {
         this.status = AnalysisStatus.APPROVED;
         this.approvedAt = LocalDateTime.now();
+    }
+
+    public void markDeleted() {
+        this.status = AnalysisStatus.DELETED;
+    }
+
+    public void updateEditableFields(
+            String customerName,
+            String contactName,
+            String productName,
+            Long amount,
+            String attendees,
+            String actionType,
+            String targetScheduleTitle,
+            String actionReason,
+            String scheduleText,
+            String followUpAction,
+            String summary
+    ) {
+        this.customerName = customerName;
+        this.contactName = contactName;
+        this.productName = productName;
+        this.amount = amount;
+        this.attendees = attendees;
+        this.actionType = actionType;
+        this.targetScheduleTitle = targetScheduleTitle;
+        this.actionReason = actionReason;
+        this.scheduleText = scheduleText;
+        this.followUpAction = followUpAction;
+        this.summary = summary;
+    }
+
+    public void linkCreatedSchedule(Long scheduleId, String scheduleTitle) {
+        this.targetScheduleId = scheduleId;
+        this.targetScheduleTitle = scheduleTitle;
+        this.actionReason = appendActionReason(this.actionReason, "Created scheduleId=" + scheduleId);
+    }
+
+    public void linkTargetSchedule(Long scheduleId, String scheduleTitle, String actionResult) {
+        this.targetScheduleId = scheduleId;
+        this.targetScheduleTitle = scheduleTitle;
+        this.actionReason = appendActionReason(this.actionReason, actionResult + " scheduleId=" + scheduleId);
+    }
+
+    private String appendActionReason(String currentReason, String reasonToAppend) {
+        String nextReason = currentReason == null || currentReason.isBlank()
+                ? reasonToAppend
+                : currentReason + " / " + reasonToAppend;
+
+        if (nextReason.length() <= 255) {
+            return nextReason;
+        }
+
+        return nextReason.substring(0, 255);
     }
 }

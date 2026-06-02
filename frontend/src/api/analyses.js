@@ -26,3 +26,9 @@ export async function createGroupAnalysis(payload) {
 
   return response.data.data;
 }
+
+export async function updateAnalysis(analysisId, payload) {
+  const response = await api.patch(`/api/analysis/${analysisId}`, payload);
+
+  return response.data.data;
+}

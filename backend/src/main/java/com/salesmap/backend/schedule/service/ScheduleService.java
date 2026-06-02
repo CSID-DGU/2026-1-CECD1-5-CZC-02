@@ -4,6 +4,7 @@ import com.salesmap.backend.analysis.entity.Analysis;
 import com.salesmap.backend.analysis.repository.AnalysisRepository;
 import com.salesmap.backend.schedule.dto.ScheduleCreateRequest;
 import com.salesmap.backend.schedule.dto.ScheduleResponse;
+import com.salesmap.backend.schedule.dto.ScheduleUpdateRequest;
 import com.salesmap.backend.schedule.entity.Schedule;
 import com.salesmap.backend.schedule.entity.ScheduleStatus;
 import com.salesmap.backend.schedule.repository.ScheduleRepository;
@@ -48,7 +49,7 @@ public class ScheduleService {
                 analysis,
                 request.title(),
                 request.scheduleDateTime(),
-                request.memo(),
+                truncate(request.memo(), 2000),
                 null,
                 ScheduleStatus.SCHEDULED
         );
@@ -75,16 +76,42 @@ public class ScheduleService {
                 .toList();
     }
 
-    private int normalizePage(int page) {
-        return Math.max(page, 0);
+    @Transactional
+    public ScheduleResponse updateSchedule(Long scheduleId, ScheduleUpdateRequest request, Long authenticatedUserId) {
+        Schedule schedule = findScheduleOwnedBy(scheduleId, authenticatedUserId);
+
+        String nextTitle = isBlank(request.title()) ? schedule.getTitle() : request.title().trim();
+        String nextMemo = request.memo() == null ? schedule.getMemo() : truncate(request.memo(), 2000);
+
+        schedule.update(
+                truncate(nextTitle, 255),
+                request.scheduleDateTime() == null ? schedule.getScheduleDateTime() : request.scheduleDateTime(),
+                nextMemo
+        );
+
+        return ScheduleResponse.from(schedule);
     }
 
-    private int normalizeSize(int size) {
-        if (size < 1) {
-            return 10;
+    @Transactional
+    public void deleteSchedule(Long scheduleId, Long authenticatedUserId) {
+        Schedule schedule = findScheduleOwnedBy(scheduleId, authenticatedUserId);
+
+        if (schedule.getAnalysis() != null) {
+            schedule.getAnalysis().markDeleted();
         }
 
-        return Math.min(size, 100);
+        scheduleRepository.delete(schedule);
+    }
+
+    private Schedule findScheduleOwnedBy(Long scheduleId, Long authenticatedUserId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new NoSuchElementException("일정을 찾을 수 없습니다."));
+
+        if (!schedule.getUser().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("다른 사용자의 일정에 접근할 수 없습니다.");
+        }
+
+        return schedule;
     }
 
     private Analysis findAnalysis(Long analysisId, Long authenticatedUserId) {
@@ -106,5 +133,29 @@ public class ScheduleService {
         if (requestedUserId != null && !requestedUserId.equals(authenticatedUserId)) {
             throw new AccessDeniedException("다른 사용자의 데이터에 접근할 수 없습니다.");
         }
+    }
+
+    private int normalizePage(int page) {
+        return Math.max(page, 0);
+    }
+
+    private int normalizeSize(int size) {
+        if (size < 1) {
+            return 10;
+        }
+
+        return Math.min(size, 100);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
+    }
+
+    private String truncate(String value, int maxLength) {
+        if (value == null || value.length() <= maxLength) {
+            return value;
+        }
+
+        return value.substring(0, maxLength);
     }
 }

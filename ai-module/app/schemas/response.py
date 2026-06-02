@@ -16,6 +16,7 @@ class AnalyzeResponse(BaseModel):
     customerName: Optional[str] = None
     contactName: Optional[str] = None
     productName: Optional[str] = None
+    attendees: Optional[str] = None
     amount: Optional[int] = Field(default=None, ge=0)
     actionType: str = "UNKNOWN"
     targetScheduleId: Optional[int] = None

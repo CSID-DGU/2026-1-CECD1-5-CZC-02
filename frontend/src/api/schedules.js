@@ -11,3 +11,15 @@ export async function createSchedule(payload) {
 
   return response.data.data;
 }
+
+export async function updateSchedule(scheduleId, payload) {
+  const response = await api.patch(`/api/schedules/${scheduleId}`, payload);
+
+  return response.data.data;
+}
+
+export async function deleteSchedule(scheduleId) {
+  const response = await api.delete(`/api/schedules/${scheduleId}`);
+
+  return response.data.data;
+}

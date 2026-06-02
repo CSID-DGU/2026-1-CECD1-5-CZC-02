@@ -33,6 +33,7 @@ public class MockAiClient implements AiClient {
                 "홍길동",
                 "Sales Solution",
                 1_000_000L,
+                "ABC 고객사 박지훈, 영업팀 이민재",
                 "CREATE",
                 null,
                 null,

@@ -139,4 +139,9 @@ public class Integration extends BaseEntity {
     public void updateLastSyncedAt(LocalDateTime lastSyncedAt) {
         this.lastSyncedAt = lastSyncedAt;
     }
+
+    public void disconnect() {
+        this.status = IntegrationStatus.DISCONNECTED;
+        this.lastSyncedAt = null;
+    }
 }
