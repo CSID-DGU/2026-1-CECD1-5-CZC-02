@@ -21,8 +21,16 @@ export async function completeGmailOAuth({ code, state }) {
   return response.data.data;
 }
 
-export async function collectGmailMessages() {
-  const response = await api.post('/api/integrations/gmail/collect');
+export async function disconnectGmailIntegration() {
+  const response = await api.delete('/api/integrations/gmail');
+
+  return response.data.data;
+}
+
+export async function collectGmailMessages(params = {}) {
+  const response = await api.post('/api/integrations/gmail/collect', null, {
+    params,
+  });
 
   return response.data.data;
 }
@@ -38,7 +46,7 @@ export async function syncGmailIfConnected() {
       return null;
     }
 
-    return await collectGmailMessages();
+    return await collectGmailMessages({ mode: 'auto' });
   } catch (error) {
     console.warn('Gmail auto sync skipped:', error.response?.data?.message || error.message);
     return null;

@@ -15,10 +15,10 @@ export function Dashboard() {
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState(null);
   const [apiStatuses, setApiStatuses] = useState({
-    schedules: { label: '일정 API', status: 'loading', count: null, message: '조회 중' },
-    sources: { label: '소스 API', status: 'loading', count: null, message: '조회 중' },
-    analyses: { label: '분석 API', status: 'idle', count: null, message: '소스 조회 후 확인' },
-    salesmapRecords: { label: 'Salesmap 등록 API', status: 'idle', count: null, message: '분석 조회 후 확인' }
+    schedules: { label: '일정 조회', status: 'loading', count: null, message: '조회 중' },
+    sources: { label: '메일 조회', status: 'loading', count: null, message: '조회 중' },
+    analyses: { label: 'AI 분석 조회', status: 'idle', count: null, message: '메일 조회 후 확인' },
+    salesmapRecords: { label: 'Salesmap 등록 조회', status: 'idle', count: null, message: '분석 조회 후 확인' },
   });
   const [testPanelMessage, setTestPanelMessage] = useState('');
   const [isCreatingTestData, setIsCreatingTestData] = useState(false);
@@ -26,41 +26,37 @@ export function Dashboard() {
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
 
-  // TODO: Replace mock users with backend user/team API when team member APIs are available.
   const [users, setUsers] = useState([
     { id: 'user1', name: '김영업', selected: true },
     { id: 'user2', name: '박세일', selected: true },
-    { id: 'user3', name: '이마케', selected: false },
-    { id: 'user4', name: '최영업', selected: false }
+    { id: 'user3', name: '이마케터', selected: false },
+    { id: 'user4', name: '최영업', selected: false },
   ]);
 
   const currentUserId = 'user1';
 
-  // TODO: Replace mock calendar events with GET /api/schedules response.
   const [events, setEvents] = useState([
     { id: 'e1', date: 5, type: 'call', title: '고객 전화', time: '10:00', userId: 'user1', userName: '김영업', description: 'ABC 기업 담당자와 신규 제품 문의 관련 통화', relatedPerson: 'ABC 기업 김담당' },
     { id: 'e2', date: 5, type: 'meeting', title: '오전 팀 미팅', time: '09:00', userId: 'user2', userName: '박세일', description: '주간 영업 현황 공유', relatedPerson: '영업팀 전체' },
     { id: 'e3', date: 10, type: 'meeting', title: '고객사 미팅', time: '14:00', userId: 'user2', userName: '박세일', description: 'XYZ 회사 계약 논의', relatedPerson: 'XYZ 회사 이사장' },
     { id: 'e4', date: 12, type: 'meeting', title: '제안 발표', time: '15:00', userId: 'user1', userName: '김영업', description: 'DEF 그룹 신규 제안서 발표', relatedPerson: 'DEF 그룹 임원진' },
     { id: 'e5', date: 12, type: 'task', title: '보고서 작성', time: '10:00', userId: 'user1', userName: '김영업', description: '월간 영업 실적 보고서 작성', relatedPerson: '-' },
-    { id: 'e6', date: 15, type: 'email', title: '제안서 발송', time: '11:00', userId: 'user3', userName: '이마케', description: 'GHI 기업에 제안서 이메일 전송', relatedPerson: 'GHI 기업 구매팀' },
+    { id: 'e6', date: 15, type: 'email', title: '제안서 발송', time: '11:00', userId: 'user3', userName: '이마케터', description: 'GHI 기업에 제안서 이메일 전송', relatedPerson: 'GHI 기업 구매팀' },
     { id: 'e7', date: 18, type: 'call', title: '영업 콜', time: '16:00', userId: 'user1', userName: '김영업', description: '신규 고객 상담 전화', relatedPerson: '최지연 과장' },
-    { id: 'e8', date: 22, type: 'meeting', title: '클라이언트 미팅', time: '13:00', userId: 'user2', userName: '박세일', description: '프로젝트 진행 상황 점검', relatedPerson: 'JKL 회사' }
+    { id: 'e8', date: 22, type: 'meeting', title: '클라이언트 미팅', time: '13:00', userId: 'user2', userName: '박세일', description: '프로젝트 진행 상황 점검', relatedPerson: 'JKL 회사' },
   ]);
 
-  // TODO: Replace mock today's schedule with filtered GET /api/schedules response.
   const [todaySchedule] = useState([
-    { id: '1', time: '10:00', title: '김영희 고객 미팅', type: 'meeting', userId: 'user1', userName: '김영업' },
-    { id: '2', time: '14:00', title: '신규 제안 발표', type: 'meeting', userId: 'user2', userName: '박세일' },
-    { id: '3', time: '16:30', title: '박철수 고객 전화', type: 'call', userId: 'user1', userName: '김영업' }
+    { id: '1', time: '10:00', title: '김영희 고객 미팅', type: 'meeting', userId: 'user1', userName: '김영업', status: 'SCHEDULED' },
+    { id: '2', time: '14:00', title: '신규 제안 발표', type: 'meeting', userId: 'user2', userName: '박세일', status: 'SCHEDULED' },
+    { id: '3', time: '16:30', title: '박철수 고객 전화', type: 'call', userId: 'user1', userName: '김영업', status: 'SCHEDULED' },
   ]);
 
-  // TODO: Replace mock upcoming schedule with filtered GET /api/schedules response.
   const [upcomingSchedule] = useState([
-    { id: '4', time: '09:00', title: '이민수 고객 이메일 확인', type: 'email', date: '05/11', userId: 'user1', userName: '김영업' },
-    { id: '5', time: '11:00', title: '최지연 미팅', type: 'meeting', date: '05/12', userId: 'user2', userName: '박세일' },
-    { id: '6', time: '15:00', title: '월간 영업 보고', type: 'meeting', date: '05/14', userId: 'user3', userName: '이마케' },
-    { id: '7', time: '10:30', title: '신규 고객 상담', type: 'call', date: '05/15', userId: 'user1', userName: '김영업' }
+    { id: '4', time: '09:00', title: '이민수 고객 이메일 확인', type: 'email', date: '05/11', userId: 'user1', userName: '김영업', status: 'SCHEDULED' },
+    { id: '5', time: '11:00', title: '최지연 미팅', type: 'meeting', date: '05/12', userId: 'user2', userName: '박세일', status: 'SCHEDULED' },
+    { id: '6', time: '15:00', title: '월간 영업 보고', type: 'meeting', date: '05/14', userId: 'user3', userName: '이마케터', status: 'COMPLETED' },
+    { id: '7', time: '10:30', title: '신규 고객 상담', type: 'call', date: '05/15', userId: 'user1', userName: '김영업', status: 'CANCELED' },
   ]);
 
   useEffect(() => {
@@ -69,8 +65,8 @@ export function Dashboard() {
         ...prev,
         [key]: {
           ...prev[key],
-          ...nextStatus
-        }
+          ...nextStatus,
+        },
       }));
     };
 
@@ -79,7 +75,7 @@ export function Dashboard() {
       updateApiStatus(key, {
         status: 'error',
         count: null,
-        message: getApiErrorMessage(error)
+        message: getApiErrorMessage(error),
       });
     };
 
@@ -89,7 +85,7 @@ export function Dashboard() {
         updateApiStatus('schedules', {
           status: 'success',
           count: schedules.length,
-          message: '확인됨'
+          message: '확인됨',
         });
       } catch (error) {
         handleApiError('schedules', error);
@@ -102,7 +98,7 @@ export function Dashboard() {
         updateApiStatus('sources', {
           status: 'success',
           count: sources.length,
-          message: '확인됨'
+          message: '확인됨',
         });
       } catch (error) {
         handleApiError('sources', error);
@@ -114,12 +110,12 @@ export function Dashboard() {
         updateApiStatus('analyses', {
           status: 'idle',
           count: 0,
-          message: '조회할 소스 없음'
+          message: '조회할 메일 없음',
         });
         updateApiStatus('salesmapRecords', {
           status: 'idle',
           count: 0,
-          message: '조회할 분석 없음'
+          message: '조회할 분석 없음',
         });
         return;
       }
@@ -131,7 +127,7 @@ export function Dashboard() {
         updateApiStatus('analyses', {
           status: 'success',
           count: analyses.length,
-          message: `sourceId ${firstSourceId} 기준`
+          message: '확인됨',
         });
       } catch (error) {
         handleApiError('analyses', error);
@@ -143,7 +139,7 @@ export function Dashboard() {
         updateApiStatus('salesmapRecords', {
           status: 'idle',
           count: 0,
-          message: '조회할 분석 없음'
+          message: '조회할 분석 없음',
         });
         return;
       }
@@ -153,7 +149,7 @@ export function Dashboard() {
         updateApiStatus('salesmapRecords', {
           status: 'success',
           count: records.length,
-          message: `analysisId ${firstAnalysisId} 기준`
+          message: '확인됨',
         });
       } catch (error) {
         handleApiError('salesmapRecords', error);
@@ -287,6 +283,23 @@ export function Dashboard() {
     }
   };
 
+  const getScheduleStatusLabel = (status) => {
+    switch (status) {
+      case 'SCHEDULED': return '진행 예정';
+      case 'COMPLETED': return '완료';
+      case 'CANCELED': return '취소';
+      default: return '진행 예정';
+    }
+  };
+
+  const getScheduleStatusColor = (status) => {
+    switch (status) {
+      case 'COMPLETED': return 'bg-green-100 text-green-700 border-green-200';
+      case 'CANCELED': return 'bg-red-100 text-red-700 border-red-200';
+      default: return 'bg-blue-100 text-blue-700 border-blue-200';
+    }
+  };
+
   const monthName = currentMonth.toLocaleString('ko-KR', { year: 'numeric', month: 'long' });
 
   const getApiStatusText = (status) => {
@@ -319,11 +332,11 @@ export function Dashboard() {
     return [
       date.getFullYear(),
       pad(date.getMonth() + 1),
-      pad(date.getDate())
+      pad(date.getDate()),
     ].join('-') + 'T' + [
       pad(date.getHours()),
       pad(date.getMinutes()),
-      pad(date.getSeconds())
+      pad(date.getSeconds()),
     ].join(':');
   };
 
@@ -332,7 +345,7 @@ export function Dashboard() {
       status: error.response?.status,
       message: error.response?.data?.message,
       data: error.response?.data?.data,
-      rawError: error
+      rawError: error,
     });
   };
 
@@ -343,15 +356,15 @@ export function Dashboard() {
 
       await createSource({
         sourceType: 'EMAIL',
-        title: '테스트 이메일',
-        content: '고객사 미팅 일정과 후속 조치가 포함된 테스트 내용입니다.'
+        title: '예시 이메일',
+        content: '고객사 미팅 일정과 후속 조치가 포함된 예시 내용입니다.',
       });
 
-      setTestPanelMessage('Source 생성 성공');
+      setTestPanelMessage('메일 예시 데이터가 생성되었습니다.');
       setRefreshKey((prev) => prev + 1);
     } catch (error) {
-      logApiError('Failed to create test source. Check request body and backend DTO.', error);
-      setTestPanelMessage(`Source 생성 실패: ${getApiErrorMessage(error)}`);
+      logApiError('Failed to create sample source. Check request body and backend DTO.', error);
+      setTestPanelMessage(`메일 예시 데이터 생성 실패: ${getApiErrorMessage(error)}`);
     } finally {
       setIsCreatingTestData(false);
     }
@@ -365,16 +378,16 @@ export function Dashboard() {
       setTestPanelMessage('');
 
       await createSchedule({
-        title: '테스트 일정',
+        title: '예시 일정',
         scheduleDateTime: formatLocalDateTime(oneHourLater),
-        memo: '프론트-백 통합 테스트 일정'
+        memo: '프론트-백 연동 확인용 일정',
       });
 
-      setTestPanelMessage('Schedule 생성 성공');
+      setTestPanelMessage('일정 예시 데이터가 생성되었습니다.');
       setRefreshKey((prev) => prev + 1);
     } catch (error) {
-      logApiError('Failed to create test schedule. Check request body and backend DTO.', error);
-      setTestPanelMessage(`Schedule 생성 실패: ${getApiErrorMessage(error)}`);
+      logApiError('Failed to create sample schedule. Check request body and backend DTO.', error);
+      setTestPanelMessage(`일정 예시 데이터 생성 실패: ${getApiErrorMessage(error)}`);
     } finally {
       setIsCreatingTestData(false);
     }
@@ -382,97 +395,81 @@ export function Dashboard() {
 
   return (
     <div className="p-6 flex gap-6 h-full">
-      {/* Left: Schedule Panels */}
       <div className="w-72 space-y-5 flex flex-col">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <h3 className="text-sm text-gray-700 mb-3">보호 API 연결 상태</h3>
-          <div className="space-y-2">
-            {Object.entries(apiStatuses).map(([key, status]) => (
-              <div
-                key={key}
-                className={`border rounded px-3 py-2 ${getApiStatusColor(status)}`}
-              >
-                <div className="text-xs font-medium">{status.label}</div>
-                <div className="text-xs mt-0.5">{getApiStatusText(status)}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {isDev && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-sm text-gray-700 mb-3">API 테스트 패널</h3>
-            <div className="space-y-2">
-              <button
-                onClick={handleCreateTestSource}
-                disabled={isCreatingTestData}
-                className="w-full px-3 py-2 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
-              >
-                Source 생성 테스트
-              </button>
-              <button
-                onClick={handleCreateTestSchedule}
-                disabled={isCreatingTestData}
-                className="w-full px-3 py-2 text-xs border border-gray-300 hover:bg-gray-50 disabled:bg-gray-100 text-gray-700 rounded"
-              >
-                Schedule 생성 테스트
-              </button>
-              {testPanelMessage && (
-                <p className="text-xs text-gray-600">{testPanelMessage}</p>
-              )}
+          <details className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <summary className="text-sm text-gray-700 cursor-pointer">개발용 연동 확인</summary>
+            <div className="space-y-2 mt-3">
+              {Object.entries(apiStatuses).map(([key, status]) => (
+                <div
+                  key={key}
+                  className={`border rounded px-3 py-2 ${getApiStatusColor(status)}`}
+                >
+                  <div className="text-xs font-medium">{status.label}</div>
+                  <div className="text-xs mt-0.5">{getApiStatusText(status)}</div>
+                </div>
+              ))}
+
+              <div className="pt-2 space-y-2">
+                <button
+                  onClick={handleCreateTestSource}
+                  disabled={isCreatingTestData}
+                  className="w-full px-3 py-2 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+                >
+                  메일 예시 생성
+                </button>
+                <button
+                  onClick={handleCreateTestSchedule}
+                  disabled={isCreatingTestData}
+                  className="w-full px-3 py-2 text-xs border border-gray-300 hover:bg-gray-50 disabled:bg-gray-100 text-gray-700 rounded"
+                >
+                  일정 예시 생성
+                </button>
+                {testPanelMessage && (
+                  <p className="text-xs text-gray-600">{testPanelMessage}</p>
+                )}
+              </div>
             </div>
-          </div>
+          </details>
         )}
 
-        {/* Today's Schedule */}
         <div className="flex-1">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 h-full flex flex-col">
             <h3 className="text-sm text-gray-700 mb-4">오늘의 일정</h3>
             <div className="space-y-2.5 overflow-y-auto flex-1">
               {filteredTodaySchedule.map(item => (
-                <div
+                <ScheduleListItem
                   key={item.id}
-                  className={`flex items-start gap-2.5 p-2.5 border rounded-md ${getTypeColor(item.type)}`}
-                >
-                  <div className={`w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 ${getTypeDot(item.type)}`}></div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-gray-700">{item.time} - {item.title}</div>
-                    <div className="text-xs text-gray-500 mt-0.5">{item.userName}</div>
-                  </div>
-                </div>
+                  item={item}
+                  getTypeColor={getTypeColor}
+                  getTypeDot={getTypeDot}
+                  getScheduleStatusColor={getScheduleStatusColor}
+                  getScheduleStatusLabel={getScheduleStatusLabel}
+                />
               ))}
             </div>
           </div>
         </div>
 
-        {/* Upcoming Schedule */}
         <div className="flex-1">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 h-full flex flex-col">
             <h3 className="text-sm text-gray-700 mb-4">다가오는 일정</h3>
             <div className="space-y-2.5 overflow-y-auto flex-1">
               {filteredUpcomingSchedule.map(item => (
-                <div
+                <ScheduleListItem
                   key={item.id}
-                  className={`flex items-start gap-2.5 p-2.5 border rounded-md ${getTypeColor(item.type)}`}
-                >
-                  <div className={`w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 ${getTypeDot(item.type)}`}></div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      {item.date && (
-                        <span className="text-xs text-gray-500">{item.date}</span>
-                      )}
-                      <span className="text-sm text-gray-700">{item.time} - {item.title}</span>
-                    </div>
-                    <div className="text-xs text-gray-500 mt-0.5">{item.userName}</div>
-                  </div>
-                </div>
+                  item={item}
+                  getTypeColor={getTypeColor}
+                  getTypeDot={getTypeDot}
+                  getScheduleStatusColor={getScheduleStatusColor}
+                  getScheduleStatusLabel={getScheduleStatusLabel}
+                />
               ))}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Right: Calendar */}
       <div className="flex-1">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 h-full flex flex-col">
           <div className="mb-5 flex items-center justify-between">
@@ -487,7 +484,6 @@ export function Dashboard() {
                 </button>
               </div>
 
-              {/* User Filter Dropdown */}
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setShowUserFilter(!showUserFilter)}
@@ -579,7 +575,7 @@ export function Dashboard() {
                             </div>
                           ))}
                           {dayEvents.length > 3 && (
-                            <div className="text-xs text-gray-500 px-1">+{dayEvents.length - 3}개</div>
+                            <div className="text-xs text-gray-500 px-1">+{dayEvents.length - 3}건</div>
                           )}
                         </div>
                       </>
@@ -591,27 +587,14 @@ export function Dashboard() {
           </div>
 
           <div className="mt-4 pt-4 border-t border-gray-100 flex gap-4 text-xs">
-            <div className="flex items-center gap-1.5">
-              <div className="w-2.5 h-2.5 bg-orange-400 rounded-full"></div>
-              <span className="text-gray-600">전화</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-2.5 h-2.5 bg-blue-400 rounded-full"></div>
-              <span className="text-gray-600">미팅</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-2.5 h-2.5 bg-green-400 rounded-full"></div>
-              <span className="text-gray-600">이메일</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-2.5 h-2.5 bg-purple-400 rounded-full"></div>
-              <span className="text-gray-600">업무</span>
-            </div>
+            <Legend color="bg-orange-400" label="전화" />
+            <Legend color="bg-blue-400" label="미팅" />
+            <Legend color="bg-green-400" label="이메일" />
+            <Legend color="bg-purple-400" label="업무" />
           </div>
         </div>
       </div>
 
-      {/* Schedule Detail Modal */}
       {showScheduleModal && selectedDate && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
           <div ref={modalRef} className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] overflow-auto border border-gray-200 shadow-xl text-left">
@@ -727,17 +710,17 @@ export function Dashboard() {
                       </div>
                       <div className="space-y-2 text-sm">
                         <div>
-                          <span className="text-xs text-gray-500">관련 고객/담당자:</span>
+                          <span className="text-xs text-gray-500">관련 고객/담당자</span>
                           <p className="text-gray-700">{event.relatedPerson}</p>
                         </div>
                         <div>
-                          <span className="text-xs text-gray-500">설명:</span>
+                          <span className="text-xs text-gray-500">설명</span>
                           <p className="text-gray-700">{event.description}</p>
                         </div>
                       </div>
                       {event.userId !== currentUserId && (
                         <div className="mt-3 pt-3 border-t border-gray-200">
-                          <span className="text-xs text-gray-500 italic">다른 사용자의 일정입니다 (보기 전용)</span>
+                          <span className="text-xs text-gray-500 italic">다른 사용자의 일정입니다. 보기만 가능합니다.</span>
                         </div>
                       )}
                     </div>
@@ -748,6 +731,35 @@ export function Dashboard() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function ScheduleListItem({ item, getTypeColor, getTypeDot, getScheduleStatusColor, getScheduleStatusLabel }) {
+  return (
+    <div className={`flex items-start gap-2.5 p-2.5 border rounded-md ${getTypeColor(item.type)}`}>
+      <div className={`w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 ${getTypeDot(item.type)}`}></div>
+      <div className="flex-1 min-w-0">
+        <div className="text-sm text-gray-700">
+          {item.date && <span className="text-xs text-gray-500 mr-2">{item.date}</span>}
+          {item.time} - {item.title}
+        </div>
+        <div className="flex items-center gap-2 mt-1">
+          <div className="text-xs text-gray-500">{item.userName}</div>
+          <span className={`px-2 py-0.5 text-[11px] rounded-full border ${getScheduleStatusColor(item.status)}`}>
+            {getScheduleStatusLabel(item.status)}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Legend({ color, label }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <div className={`w-2.5 h-2.5 ${color} rounded-full`}></div>
+      <span className="text-gray-600">{label}</span>
     </div>
   );
 }

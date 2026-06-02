@@ -1,13 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { completeGmailOAuth } from '../api/integrations';
 
 export function GmailOAuthCallbackPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const hasCompletedRef = useRef(false);
   const [message] = useState('Gmail 계정 연동을 완료하는 중입니다.');
 
   useEffect(() => {
+    if (hasCompletedRef.current) {
+      return;
+    }
+
+    hasCompletedRef.current = true;
+
     const completeOAuth = async () => {
       const code = searchParams.get('code');
       const state = searchParams.get('state');
@@ -20,7 +27,7 @@ export function GmailOAuthCallbackPage() {
       }
 
       if (!code || !state) {
-        sessionStorage.setItem('gmailOAuthMessage', 'Gmail OAuth code 또는 state가 없습니다.');
+        sessionStorage.setItem('gmailOAuthMessage', 'Gmail OAuth code 또는 state가 없습니다. 다시 연결해주세요.');
         navigate('/settings?gmail=error', { replace: true });
         return;
       }
@@ -39,7 +46,7 @@ export function GmailOAuthCallbackPage() {
         });
         sessionStorage.setItem(
           'gmailOAuthMessage',
-          error.response?.data?.message || 'Gmail 계정 연동에 실패했습니다.'
+          error.response?.data?.message || 'Gmail 계정 연동에 실패했습니다. 다시 연결해주세요.'
         );
         navigate('/settings?gmail=error', { replace: true });
       }

@@ -11,7 +11,7 @@ import gmailText from '../assets/image-14.png';
 export function SettingsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [integrations, setIntegrations] = useState([]);
-  const [jandiConnected, setJandiConnected] = useState(false);
+  const [jandiConnected, setJandiConnected] = useState(() => localStorage.getItem('jandiConnected') === 'true');
   const [isLoading, setIsLoading] = useState(true);
   const [isConnectingGmail, setIsConnectingGmail] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
@@ -22,11 +22,6 @@ export function SettingsPage() {
     [integrations]
   );
   const gmailConnected = gmailIntegration?.status === 'CONNECTED';
-
-  useEffect(() => {
-    const storedJandiConnected = localStorage.getItem('jandiConnected') === 'true';
-    setJandiConnected(storedJandiConnected);
-  }, []);
 
   useEffect(() => {
     const loadIntegrations = async () => {
@@ -54,20 +49,26 @@ export function SettingsPage() {
   useEffect(() => {
     const gmailResult = searchParams.get('gmail');
     const storedMessage = sessionStorage.getItem('gmailOAuthMessage');
+    let timerId;
 
     if (gmailResult === 'connected') {
-      setStatusMessage(storedMessage || 'Gmail 계정 연동이 완료되었습니다.');
-      setErrorMessage('');
-      sessionStorage.removeItem('gmailOAuthMessage');
-      setSearchParams({}, { replace: true });
-      return;
+      timerId = window.setTimeout(() => {
+        setStatusMessage(storedMessage || 'Gmail 계정 연결이 완료되었습니다.');
+        setErrorMessage('');
+        sessionStorage.removeItem('gmailOAuthMessage');
+        setSearchParams({}, { replace: true });
+      }, 0);
+      return () => window.clearTimeout(timerId);
     }
 
     if (gmailResult === 'error') {
-      setStatusMessage('');
-      setErrorMessage(storedMessage || 'Gmail 계정 연동에 실패했습니다.');
-      sessionStorage.removeItem('gmailOAuthMessage');
-      setSearchParams({}, { replace: true });
+      timerId = window.setTimeout(() => {
+        setStatusMessage('');
+        setErrorMessage(storedMessage || 'Gmail 계정 연결에 실패했습니다.');
+        sessionStorage.removeItem('gmailOAuthMessage');
+        setSearchParams({}, { replace: true });
+      }, 0);
+      return () => window.clearTimeout(timerId);
     }
   }, [searchParams, setSearchParams]);
 
@@ -79,7 +80,7 @@ export function SettingsPage() {
 
       const response = await getGmailAuthorizationUrl();
       if (!response?.authorizationUrl) {
-        throw new Error('Gmail authorizationUrl이 응답에 없습니다.');
+        throw new Error('Gmail 연결 주소가 응답에 없습니다.');
       }
 
       window.location.assign(response.authorizationUrl);
@@ -123,24 +124,24 @@ export function SettingsPage() {
     },
     {
       id: 'jandi',
-      name: 'Jandi',
+      name: 'JANDI',
       connected: jandiConnected,
-      statusText: jandiConnected ? '연결됨' : '연결되지 않음',
+      statusText: jandiConnected ? '연결됨' : '연동 준비 중',
       icon: (
         <div className="flex items-center gap-2">
           <img src={jandiIcon} alt="Jandi Icon" className="w-6 h-6 object-contain" />
           <img src={jandiText} alt="JANDI" className="h-4 object-contain" style={{ mixBlendMode: 'darken', backgroundColor: '#ffffff' }} />
         </div>
       ),
-      buttonText: jandiConnected ? '연결 해제' : '연결',
-      disabled: false,
+      buttonText: jandiConnected ? '연결 해제' : '준비 중',
+      disabled: !jandiConnected,
       onClick: handleJandiToggle,
     },
   ];
 
   return (
-    <div className="p-6">
-      <div className="max-w-2xl">
+    <div className="p-6 h-full overflow-y-auto">
+      <div className="max-w-3xl mx-auto">
         <h2 className="text-lg !font-semibold !text-black mb-6">계정 설정</h2>
 
         {(statusMessage || errorMessage) && (
@@ -167,9 +168,9 @@ export function SettingsPage() {
                   connection.connected ? 'bg-blue-50' : 'bg-white'
                 }`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 min-w-0">
                   {connection.icon}
-                  <div className="flex flex-col items-start">
+                  <div className="flex flex-col items-start min-w-0">
                     <span className={`text-xs ${connection.connected ? 'text-blue-600' : 'text-gray-500'}`}>
                       {connection.statusText}
                     </span>
@@ -230,7 +231,7 @@ export function SettingsPage() {
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
               <div>
                 <p className="text-sm text-gray-800">자동 동기화</p>
-                <p className="text-xs text-gray-500">AI 분석 결과를 자동으로 Salesmap에 전송</p>
+                <p className="text-xs text-gray-500">AI 분석 결과를 Salesmap에 자동 전송</p>
               </div>
               <button className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200">
                 활성화
@@ -238,10 +239,10 @@ export function SettingsPage() {
             </div>
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
               <div>
-                <p className="text-sm text-gray-800">API 연결 상태</p>
-                <p className="text-xs text-gray-500">Salesmap API 연결 확인</p>
+                <p className="text-sm text-gray-800">연결 상태</p>
+                <p className="text-xs text-gray-500">Salesmap 외부 등록 기능은 연동 준비 중입니다.</p>
               </div>
-              <span className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">연결됨</span>
+              <span className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">연동 준비 중</span>
             </div>
           </div>
         </div>

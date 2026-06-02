@@ -10,16 +10,20 @@ import { ReminderModal } from './ReminderModal';
 export function DashboardLayout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [salesmapConnected, setSalesmapConnected] = useState(false);
-  const [companyName, setCompanyName] = useState('');
+  const [salesmapConnected, setSalesmapConnected] = useState(() => localStorage.getItem('salesmapConnected') === 'true');
+  const [companyName, setCompanyName] = useState(() => localStorage.getItem('salesmapCompany') || '');
   const [showReminder, setShowReminder] = useState(false);
   const [currentReminder, setCurrentReminder] = useState(null);
 
   useEffect(() => {
-    const connected = localStorage.getItem('salesmapConnected') === 'true';
-    const company = localStorage.getItem('salesmapCompany') || '';
-    setSalesmapConnected(connected);
-    setCompanyName(company);
+    const timerId = window.setTimeout(() => {
+      const connected = localStorage.getItem('salesmapConnected') === 'true';
+      const company = localStorage.getItem('salesmapCompany') || '';
+      setSalesmapConnected(connected);
+      setCompanyName(company);
+    }, 0);
+
+    return () => window.clearTimeout(timerId);
   }, [location]);
 
   useEffect(() => {
