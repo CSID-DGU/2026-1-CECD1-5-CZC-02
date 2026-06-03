@@ -1,20 +1,70 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// 로고 이미지가 있으면 아래 경로를 맞게 수정하세요
-// import logoImg from '../assets/logo.png';
+import { api } from '../api/client';
+import { syncGmailIfConnected } from '../api/integrations';
+import logoImg from '../assets/님버스테크 로고.png';
 
 export function LoginPage() {
   const navigate = useNavigate();
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState({
-    id: '',
+    email: '',
+    name: '',
     password: '',
     passwordConfirm: ''
   });
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate('/dashboard');
+    setErrorMessage('');
+
+    if (isSignup && formData.password !== formData.passwordConfirm) {
+      setErrorMessage('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      const response = isSignup
+        ? await api.post('/api/auth/signup', {
+            email: formData.email,
+            password: formData.password,
+            name: formData.name,
+          })
+        : await api.post('/api/auth/login', {
+            email: formData.email,
+            password: formData.password,
+          });
+
+      const accessToken = response.data?.data?.accessToken;
+
+      if (!accessToken) {
+        throw new Error('토큰이 응답에 포함되지 않았습니다.');
+      }
+
+      localStorage.setItem('accessToken', accessToken);
+      await syncGmailIfConnected();
+      navigate('/dashboard');
+    } catch (error) {
+      const message = error.response?.data?.message || '요청 처리 중 오류가 발생했습니다.';
+      setErrorMessage(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const toggleMode = () => {
+    setIsSignup(!isSignup);
+    setErrorMessage('');
+    setFormData({
+      email: '',
+      name: '',
+      password: '',
+      passwordConfirm: ''
+    });
   };
 
   return (
@@ -23,14 +73,11 @@ export function LoginPage() {
         {/* Left: Brand Area */}
         <div className="flex-1 bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-12">
           <div className="text-center max-w-md">
-            <div className="border-2 border-blue-200 rounded-2xl px-16 py-12 mb-8 bg-white">
+            <div className="border-2 border-blue-200 rounded-2xl px-16 py-12 mb-8 bg-white min-h-[285px] flex flex-col items-center justify-center">
               <div className="flex flex-col items-center mb-6">
-                {/* 로고 이미지가 있으면 아래 주석을 해제하고 위 import도 활성화하세요 */}
-                {/* <img src={logoImg} alt="NimbusTech" className="w-20 h-20 mb-4 object-contain" /> */}
-                <div className="w-20 h-20 mb-4 bg-blue-100 rounded-full flex items-center justify-center text-3xl">
-                  ☁️
-                </div>
-                <h1 className="text-3xl text-gray-800 font-medium">NimbusTech</h1>
+                {}
+                {}
+                <img src={logoImg} alt="NimbusTech" className="w-96 h-auto object-contain" />
               </div>
               <p className="text-xl text-gray-600">AI 영업 자동화 에이전트</p>
             </div>
@@ -45,21 +92,36 @@ export function LoginPage() {
         <div className="flex-1 bg-white flex items-center justify-center p-12">
           <div className="w-full max-w-md">
             <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-8">
-              <h2 className="text-xl text-gray-800 mb-8 text-center">
+              <h2 className="text-xl !font-semibold !text-black mb-8 text-center">
                 {isSignup ? '회원가입' : '로그인'}
               </h2>
 
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="block text-sm text-gray-700 mb-2">아이디</label>
+                  <label className="block text-sm text-gray-700 mb-2">이메일</label>
                   <input
-                    type="text"
-                    value={formData.id}
-                    onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded outline-none focus:border-blue-500 text-sm"
-                    placeholder="아이디를 입력하세요"
+                    placeholder="이메일을 입력하세요"
+                    autoComplete="email"
                   />
                 </div>
+
+                {isSignup && (
+                  <div>
+                    <label className="block text-sm text-gray-700 mb-2">이름</label>
+                    <input
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded outline-none focus:border-blue-500 text-sm"
+                      placeholder="이름을 입력하세요"
+                      autoComplete="name"
+                    />
+                  </div>
+                )}
 
                 <div>
                   <label className="block text-sm text-gray-700 mb-2">비밀번호</label>
@@ -69,6 +131,7 @@ export function LoginPage() {
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded outline-none focus:border-blue-500 text-sm"
                     placeholder="비밀번호를 입력하세요"
+                    autoComplete={isSignup ? 'new-password' : 'current-password'}
                   />
                 </div>
 
@@ -81,21 +144,27 @@ export function LoginPage() {
                       onChange={(e) => setFormData({ ...formData, passwordConfirm: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded outline-none focus:border-blue-500 text-sm"
                       placeholder="비밀번호를 다시 입력하세요"
+                      autoComplete="new-password"
                     />
                   </div>
                 )}
 
+                {errorMessage && (
+                  <p className="text-sm text-red-600">{errorMessage}</p>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded text-sm"
+                  disabled={isSubmitting}
+                  className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white py-2.5 rounded text-sm"
                 >
-                  {isSignup ? '회원가입' : '로그인'}
+                  {isSubmitting ? '처리 중...' : isSignup ? '회원가입' : '로그인'}
                 </button>
               </form>
 
               <div className="mt-6 text-center">
                 <button
-                  onClick={() => setIsSignup(!isSignup)}
+                  onClick={toggleMode}
                   className="text-xs text-gray-600 hover:text-gray-800"
                 >
                   {isSignup ? '이미 계정이 있으신가요? 로그인' : '계정이 없으신가요? 회원가입'}

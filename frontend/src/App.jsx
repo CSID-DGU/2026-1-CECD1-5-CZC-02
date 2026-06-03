@@ -5,6 +5,17 @@ import { Dashboard } from './components/Dashboard';
 import { SettingsPage } from './components/SettingsPage';
 import { SalesmapLoginPage } from './components/SalesmapLoginPage';
 import { MessageView } from './components/MessageView';
+import { GmailOAuthCallbackPage } from './components/GmailOAuthCallbackPage';
+
+function ProtectedRoute({ children }) {
+  const accessToken = localStorage.getItem('accessToken');
+
+  if (!accessToken) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
 
 export default function App() {
   return (
@@ -13,21 +24,38 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/salesmap-login" element={<SalesmapLoginPage />} />
+          <Route path="/salesmap-login" element={
+            <ProtectedRoute>
+              <SalesmapLoginPage />
+            </ProtectedRoute>
+          } />
           <Route path="/dashboard" element={
-            <DashboardLayout>
-              <Dashboard />
-            </DashboardLayout>
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Dashboard />
+              </DashboardLayout>
+            </ProtectedRoute>
           } />
           <Route path="/messages/:source" element={
-            <DashboardLayout>
-              <MessageView />
-            </DashboardLayout>
+            <ProtectedRoute>
+              <DashboardLayout>
+                <MessageView />
+              </DashboardLayout>
+            </ProtectedRoute>
           } />
           <Route path="/settings" element={
-            <DashboardLayout>
-              <SettingsPage />
-            </DashboardLayout>
+            <ProtectedRoute>
+              <DashboardLayout>
+                <SettingsPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/settings/gmail/callback" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <GmailOAuthCallbackPage />
+              </DashboardLayout>
+            </ProtectedRoute>
           } />
         </Routes>
       </div>
