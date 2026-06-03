@@ -110,22 +110,22 @@ public class AnalysisService {
                 truncate(request.contactName(), 100),
                 truncate(request.productName(), 255),
                 request.amount(),
-                truncate(request.attendees(), 500),
+                truncate(request.attendees(), 2000),
                 truncate(request.actionType(), 50),
-                truncate(request.targetScheduleTitle(), 255),
-                truncate(request.actionReason(), 255),
-                truncate(request.scheduleText(), 500),
-                truncate(request.followUpAction(), 500),
-                request.summary()
+                truncate(request.targetScheduleTitle(), 2000),
+                truncate(request.actionReason(), 2000),
+                truncate(request.scheduleText(), 2000),
+                truncate(request.followUpAction(), 2000),
+                truncate(request.summary(), 4000)
         );
 
         return AnalysisResponse.from(analysis);
     }
 
     @Transactional
-    public void applyApprovedScheduleAction(Analysis analysis, Long authenticatedUserId) {
+    public Schedule applyApprovedScheduleAction(Analysis analysis, Long authenticatedUserId) {
         validateAnalysisOwnership(analysis, authenticatedUserId);
-        applyScheduleAction(analysis, toAiAnalysisResponse(analysis), authenticatedUserId);
+        return applyScheduleAction(analysis, toAiAnalysisResponse(analysis), authenticatedUserId);
     }
 
     @Transactional(readOnly = true)
@@ -157,14 +157,14 @@ public class AnalysisService {
                 truncate(aiResult.contactName(), 100),
                 truncate(aiResult.productName(), 255),
                 aiResult.amount(),
-                truncate(aiResult.attendees(), 500),
+                truncate(aiResult.attendees(), 2000),
                 truncate(aiResult.actionType(), 50),
                 aiResult.targetScheduleId(),
-                truncate(aiResult.targetScheduleTitle(), 255),
-                truncate(aiResult.actionReason(), 255),
-                truncate(buildScheduleText(aiResult), 255),
-                truncate(aiResult.todoContent(), 255),
-                aiResult.summary(),
+                truncate(aiResult.targetScheduleTitle(), 2000),
+                truncate(aiResult.actionReason(), 2000),
+                truncate(buildScheduleText(aiResult), 2000),
+                truncate(aiResult.todoContent(), 2000),
+                truncate(aiResult.summary(), 4000),
                 AnalysisStatus.ANALYZED,
                 LocalDateTime.now(),
                 null
@@ -299,7 +299,7 @@ public class AnalysisService {
         );
     }
 
-    private void applyScheduleAction(Analysis analysis, AiAnalysisResponse aiResult, Long authenticatedUserId) {
+    private Schedule applyScheduleAction(Analysis analysis, AiAnalysisResponse aiResult, Long authenticatedUserId) {
         log.info(
                 "[AI_ANALYSIS] actionType={}, analysisId={}, sourceId={}, targetScheduleId={}, targetScheduleTitle={}, scheduleTitle={}, scheduleDateTime={}",
                 aiResult.actionType(),
@@ -312,21 +312,22 @@ public class AnalysisService {
         );
 
         if (aiResult.actionType() == null) {
-            return;
+            return null;
         }
 
         if ("CREATE".equals(aiResult.actionType())) {
-            if (analysis.getTargetScheduleId() != null
-                    && scheduleRepository.findById(analysis.getTargetScheduleId()).isPresent()) {
+            Schedule existingSchedule = analysis.getTargetScheduleId() == null
+                    ? null
+                    : scheduleRepository.findById(analysis.getTargetScheduleId()).orElse(null);
+            if (existingSchedule != null) {
                 log.info(
                         "[SCHEDULE_CREATE] skip duplicate creation. analysisId={}, scheduleId={}",
                         analysis.getId(),
                         analysis.getTargetScheduleId()
                 );
-                return;
+                return existingSchedule;
             }
-            createScheduleFromAnalysis(analysis, aiResult);
-            return;
+            return createScheduleFromAnalysis(analysis, aiResult);
         }
 
         Schedule schedule = findTargetSchedule(aiResult, authenticatedUserId);
@@ -339,7 +340,7 @@ public class AnalysisService {
                     aiResult.targetScheduleTitle(),
                     aiResult.scheduleTitle()
             );
-            return;
+            return null;
         }
 
         if ("CANCEL".equals(aiResult.actionType())) {
@@ -351,7 +352,7 @@ public class AnalysisService {
                     schedule.getId(),
                     schedule.getStatus()
             );
-            return;
+            return schedule;
         }
 
         if ("UPDATE".equals(aiResult.actionType())) {
@@ -369,7 +370,10 @@ public class AnalysisService {
                     schedule.getTitle(),
                     schedule.getScheduleDateTime()
             );
+            return schedule;
         }
+
+        return null;
     }
 
     private Schedule findTargetSchedule(AiAnalysisResponse aiResult, Long authenticatedUserId) {
@@ -398,7 +402,7 @@ public class AnalysisService {
                 .orElse(null);
     }
 
-    private void createScheduleFromAnalysis(Analysis analysis, AiAnalysisResponse aiResult) {
+    private Schedule createScheduleFromAnalysis(Analysis analysis, AiAnalysisResponse aiResult) {
         if (aiResult.scheduleDateTime() == null) {
             log.info(
                     "Skip CREATE schedule because scheduleDateTime is null. analysisId={}, scheduleTitle={}, summary={}",
@@ -406,7 +410,7 @@ public class AnalysisService {
                     aiResult.scheduleTitle(),
                     aiResult.summary()
             );
-            return;
+            return null;
         }
 
         Schedule schedule = new Schedule(
@@ -436,6 +440,8 @@ public class AnalysisService {
                 savedSchedule.getScheduleDateTime()
         );
         log.info("[ANALYSIS_UPDATE] analysisId={}, targetScheduleId={}", analysis.getId(), analysis.getTargetScheduleId());
+
+        return savedSchedule;
     }
 
     private void syncLinkedScheduleFromAnalysis(Analysis analysis, Long authenticatedUserId) {

@@ -411,6 +411,18 @@ public class GmailIntegrationService {
                 )));
     }
 
+    @Transactional
+    public String getValidAccessTokenForUser(Long authenticatedUserId) {
+        Integration integration = integrationRepository.findByUserIdAndProvider(authenticatedUserId, IntegrationProvider.GMAIL)
+                .orElseThrow(() -> new NoSuchElementException("Gmail integration not found."));
+
+        if (integration.getStatus() != IntegrationStatus.CONNECTED) {
+            throw new IllegalArgumentException("Gmail integration is not connected.");
+        }
+
+        return getValidAccessToken(integration);
+    }
+
     private String getValidAccessToken(Integration integration) {
         if (integration.getTokenExpiresAt().isAfter(LocalDateTime.now(DEFAULT_ZONE).plusMinutes(1))) {
             return integration.getAccessToken();

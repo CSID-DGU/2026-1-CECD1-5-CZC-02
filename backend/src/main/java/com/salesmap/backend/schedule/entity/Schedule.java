@@ -47,6 +47,9 @@ public class Schedule extends BaseEntity {
     @Column
     private LocalDateTime reminderDateTime;
 
+    @Column(length = 255)
+    private String googleCalendarEventId;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private ScheduleStatus status;
@@ -100,6 +103,10 @@ public class Schedule extends BaseEntity {
         return reminderDateTime;
     }
 
+    public String getGoogleCalendarEventId() {
+        return googleCalendarEventId;
+    }
+
     public ScheduleStatus getStatus() {
         return status;
     }
@@ -113,5 +120,13 @@ public class Schedule extends BaseEntity {
 
     public void cancel() {
         this.status = ScheduleStatus.CANCELED;
+    }
+
+    public void linkGoogleCalendarEvent(String googleCalendarEventId) {
+        this.googleCalendarEventId = googleCalendarEventId;
+    }
+
+    public boolean hasGoogleCalendarEvent() {
+        return googleCalendarEventId != null && !googleCalendarEventId.isBlank();
     }
 }

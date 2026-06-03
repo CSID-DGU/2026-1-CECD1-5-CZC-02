@@ -15,6 +15,7 @@ public record ScheduleResponse(
         LocalDateTime scheduleDateTime,
         String memo,
         LocalDateTime reminderDateTime,
+        String googleCalendarEventId,
         ScheduleStatus status,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
@@ -35,6 +36,7 @@ public record ScheduleResponse(
                 schedule.getScheduleDateTime(),
                 schedule.getMemo(),
                 schedule.getReminderDateTime(),
+                schedule.getGoogleCalendarEventId(),
                 schedule.getStatus(),
                 schedule.getCreatedAt(),
                 schedule.getUpdatedAt()

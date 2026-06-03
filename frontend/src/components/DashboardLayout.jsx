@@ -5,6 +5,7 @@ import nimbusTechLogo from '../assets/님버스테크 로고.png';
 import jandiLogo from '../assets/잔디 로고 이미지 .jpg';
 import gmailLogo from '../assets/gmail로고 이미지 spaced.png';
 import { getMe } from '../api/auth';
+import { getIntegrations } from '../api/integrations';
 import { getSchedules } from '../api/schedules';
 import { ReminderModal } from './ReminderModal';
 
@@ -70,6 +71,7 @@ export function DashboardLayout({ children }) {
   const location = useLocation();
   const [salesmapConnected, setSalesmapConnected] = useState(() => localStorage.getItem('salesmapConnected') === 'true');
   const [companyName, setCompanyName] = useState(() => localStorage.getItem('salesmapCompany') || '');
+  const [gmailCalendarConnected, setGmailCalendarConnected] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [showReminder, setShowReminder] = useState(false);
   const [currentReminder, setCurrentReminder] = useState(null);
@@ -104,6 +106,35 @@ export function DashboardLayout({ children }) {
     }, 0);
 
     return () => window.clearTimeout(timerId);
+  }, [location]);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const fetchIntegrationStatus = async () => {
+      try {
+        const integrations = await getIntegrations();
+        if (ignore) {
+          return;
+        }
+
+        const gmailConnected = integrations.some(
+          (integration) => integration.provider === 'GMAIL' && integration.status === 'CONNECTED'
+        );
+        setGmailCalendarConnected(gmailConnected);
+      } catch (error) {
+        console.error('Failed to fetch integration status:', error);
+        if (!ignore) {
+          setGmailCalendarConnected(false);
+        }
+      }
+    };
+
+    fetchIntegrationStatus();
+
+    return () => {
+      ignore = true;
+    };
   }, [location]);
 
   useEffect(() => {
@@ -228,8 +259,8 @@ export function DashboardLayout({ children }) {
   }, [enqueueReminder, fetchSchedulesForReminder]);
 
   const handleSalesmapClick = () => {
-    if (!salesmapConnected) {
-      navigate('/salesmap-login');
+    if (!gmailCalendarConnected && !salesmapConnected) {
+      navigate('/settings');
     }
   };
 
@@ -256,6 +287,8 @@ export function DashboardLayout({ children }) {
   const isActive = (path) => location.pathname === path;
   const displayName = currentUser?.name || currentUser?.email || '사용자';
   const avatarText = userInitial(currentUser?.name, currentUser?.email);
+  const topSalesmapConnected = gmailCalendarConnected || salesmapConnected;
+  const topCompanyName = topSalesmapConnected ? (companyName || '(주)님버스테크') : 'Salesmap 연동';
 
   return (
     <>
@@ -341,12 +374,12 @@ export function DashboardLayout({ children }) {
               <button
                 onClick={handleSalesmapClick}
                 className={`px-4 py-1.5 text-sm border rounded ${
-                  salesmapConnected
+                  topSalesmapConnected
                     ? 'border-green-300 bg-green-50 text-green-700'
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                {salesmapConnected ? companyName : 'Salesmap 연동'}
+                {topCompanyName}
               </button>
               <button className="p-1.5 hover:bg-gray-100 rounded">
                 <Search className="w-4 h-4 text-gray-600" />

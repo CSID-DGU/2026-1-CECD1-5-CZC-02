@@ -1,6 +1,7 @@
 package com.salesmap.backend.global.exception;
 
 import com.salesmap.backend.ai.exception.AiClientException;
+import com.salesmap.backend.calendar.exception.GoogleCalendarClientException;
 import com.salesmap.backend.global.response.ApiResponse;
 import com.salesmap.backend.salesmap.exception.SalesmapClientException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -96,6 +97,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(SalesmapClientException.class)
     public ResponseEntity<ApiResponse<Object>> handleSalesmapClientException(SalesmapClientException exception) {
+        Object data = exception.getErrorResponse();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_GATEWAY)
+                .body(ApiResponse.fail(exception.getMessage(), data));
+    }
+
+    @ExceptionHandler(GoogleCalendarClientException.class)
+    public ResponseEntity<ApiResponse<Object>> handleGoogleCalendarClientException(GoogleCalendarClientException exception) {
         Object data = exception.getErrorResponse();
 
         return ResponseEntity

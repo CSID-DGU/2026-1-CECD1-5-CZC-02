@@ -41,7 +41,8 @@ public class Analysis extends BaseEntity {
     @Column
     private Long amount;
 
-    @Column(length = 500)
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String attendees;
 
     @Column(length = 50)
@@ -50,20 +51,24 @@ public class Analysis extends BaseEntity {
     @Column
     private Long targetScheduleId;
 
-    @Column(length = 255)
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String targetScheduleTitle;
 
-    @Column(length = 500)
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String actionReason;
 
-    @Column(length = 500)
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String scheduleText;
 
-    @Column(length = 500)
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String followUpAction;
 
     @Lob
-    @Column
+    @Column(columnDefinition = "LONGTEXT")
     private String summary;
 
     @Enumerated(EnumType.STRING)

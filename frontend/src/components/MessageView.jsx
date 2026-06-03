@@ -132,6 +132,71 @@ function formatSalesmapStatus(status) {
   }
 }
 
+function formatRegisterButtonLabel(actionType) {
+  switch (actionType) {
+    case 'CANCEL':
+      return '등록된 일정 삭제';
+    case 'UPDATE':
+      return '등록된 일정 변경';
+    case 'CREATE':
+      return '일정 등록';
+    default:
+      return 'Salesmap 등록';
+  }
+}
+
+function formatRegisteringLabel(actionType) {
+  switch (actionType) {
+    case 'CANCEL':
+      return '삭제 중...';
+    case 'UPDATE':
+      return '변경 중...';
+    case 'CREATE':
+      return '등록 중...';
+    default:
+      return '처리 중...';
+  }
+}
+
+function formatRegisterSuccessMessage(actionType) {
+  switch (actionType) {
+    case 'CANCEL':
+      return '등록된 일정이 삭제되었습니다.';
+    case 'UPDATE':
+      return '등록된 일정이 변경되었습니다.';
+    case 'CREATE':
+      return '일정 등록이 완료되었습니다.';
+    default:
+      return 'Salesmap 반영이 완료되었습니다.';
+  }
+}
+
+function formatSalesmapResultTitle(actionType) {
+  switch (actionType) {
+    case 'CANCEL':
+      return '일정 삭제 결과';
+    case 'UPDATE':
+      return '일정 변경 결과';
+    case 'CREATE':
+      return '일정 등록 결과';
+    default:
+      return 'Salesmap 반영 결과';
+  }
+}
+
+function getSalesmapResultClass(actionType) {
+  switch (actionType) {
+    case 'CANCEL':
+      return 'border-red-100 bg-red-50';
+    case 'UPDATE':
+      return 'border-amber-100 bg-amber-50';
+    case 'CREATE':
+      return 'border-green-100 bg-green-50';
+    default:
+      return 'border-gray-200 bg-gray-50';
+  }
+}
+
 function formatMoney(value) {
   if (value === null || value === undefined || value === '' || value === '-') {
     return EMPTY_TEXT;
@@ -359,6 +424,9 @@ export function MessageView() {
   };
 
   const handleRegisterSalesmap = async (analysisId) => {
+    const currentAnalysis = sourceAnalyses.find((analysis) => analysis.analysisId === analysisId);
+    const actionType = currentAnalysis?.actionType;
+
     try {
       setRegisteringAnalysisId(analysisId);
       setSalesmapActionByAnalysisId((prev) => ({ ...prev, [analysisId]: '' }));
@@ -371,7 +439,7 @@ export function MessageView() {
       setSalesmapRecordsByAnalysisId((prev) => ({ ...prev, [analysisId]: records }));
       setSalesmapActionByAnalysisId((prev) => ({
         ...prev,
-        [analysisId]: 'Salesmap 등록이 완료되었습니다.',
+        [analysisId]: formatRegisterSuccessMessage(actionType),
       }));
     } catch (error) {
       console.error('Failed to register salesmap record:', {
@@ -384,7 +452,7 @@ export function MessageView() {
       });
       setSalesmapActionByAnalysisId((prev) => ({
         ...prev,
-        [analysisId]: `Salesmap 등록 실패: ${formatDetailedError(error)}`,
+        [analysisId]: `${formatRegisterButtonLabel(actionType)} 실패: ${formatDetailedError(error)}`,
       }));
     } finally {
       setRegisteringAnalysisId(null);
@@ -695,7 +763,7 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
               disabled={isRegistering || analysis.status === 'APPROVED' || analysis.status === 'DELETED'}
               className="px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
             >
-              {isRegistering ? '등록 중...' : 'Salesmap 등록'}
+              {isRegistering ? formatRegisteringLabel(analysis.actionType) : formatRegisterButtonLabel(analysis.actionType)}
             </button>
           </div>
         )}
@@ -707,17 +775,26 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
         {records.length > 0 && (
           <div className="mt-2 space-y-2">
             {records.map((record) => (
-              <div key={record.salesmapRecordId} className="bg-gray-50 border border-gray-200 rounded p-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500">Salesmap 등록 번호 #{record.salesmapRecordId}</span>
-                  <span className="text-xs text-gray-700">{formatSalesmapStatus(record.status)}</span>
+              <div key={record.salesmapRecordId} className={`rounded-lg border p-3 ${getSalesmapResultClass(analysis.actionType)}`}>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="text-left">
+                    <p className="text-xs font-semibold text-gray-900">{formatSalesmapResultTitle(analysis.actionType)}</p>
+                    <p className="mt-0.5 text-[11px] text-gray-500">처리 번호 #{record.salesmapRecordId}</p>
+                  </div>
+                  <span className="rounded-full border border-white/70 bg-white px-2 py-0.5 text-xs font-medium text-gray-700">
+                    {formatSalesmapStatus(record.status)}
+                  </span>
                 </div>
-                <p className="text-xs text-gray-700 mt-1 text-left break-words">
-                  Salesmap 등록 ID: {formatEmpty(record.externalRecordId)}
-                </p>
-                <p className="text-xs text-gray-500 mt-1 text-left">
-                  등록 시간: {formatEmpty(record.registeredAt)}
-                </p>
+                <div className="mt-2 grid gap-1 text-left text-xs text-gray-700">
+                  <p>
+                    <span className="text-gray-500">연동 ID</span>
+                    <span className="ml-2 font-medium break-words">{formatEmpty(record.externalRecordId)}</span>
+                  </p>
+                  <p>
+                    <span className="text-gray-500">처리 시간</span>
+                    <span className="ml-2 font-medium">{formatEmpty(record.registeredAt)}</span>
+                  </p>
+                </div>
               </div>
             ))}
           </div>

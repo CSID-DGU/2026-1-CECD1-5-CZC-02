@@ -2,6 +2,7 @@ package com.salesmap.backend.schedule.service;
 
 import com.salesmap.backend.analysis.entity.Analysis;
 import com.salesmap.backend.analysis.repository.AnalysisRepository;
+import com.salesmap.backend.calendar.service.GoogleCalendarEventService;
 import com.salesmap.backend.schedule.dto.ScheduleCreateRequest;
 import com.salesmap.backend.schedule.dto.ScheduleResponse;
 import com.salesmap.backend.schedule.dto.ScheduleUpdateRequest;
@@ -25,15 +26,18 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
     private final AnalysisRepository analysisRepository;
+    private final GoogleCalendarEventService googleCalendarEventService;
 
     public ScheduleService(
             ScheduleRepository scheduleRepository,
             UserRepository userRepository,
-            AnalysisRepository analysisRepository
+            AnalysisRepository analysisRepository,
+            GoogleCalendarEventService googleCalendarEventService
     ) {
         this.scheduleRepository = scheduleRepository;
         this.userRepository = userRepository;
         this.analysisRepository = analysisRepository;
+        this.googleCalendarEventService = googleCalendarEventService;
     }
 
     @Transactional
@@ -88,6 +92,7 @@ public class ScheduleService {
                 request.scheduleDateTime() == null ? schedule.getScheduleDateTime() : request.scheduleDateTime(),
                 nextMemo
         );
+        googleCalendarEventService.updateEventForSchedule(schedule, authenticatedUserId);
 
         return ScheduleResponse.from(schedule);
     }
@@ -100,6 +105,7 @@ public class ScheduleService {
             schedule.getAnalysis().markDeleted();
         }
 
+        googleCalendarEventService.deleteEventForSchedule(schedule, authenticatedUserId);
         scheduleRepository.delete(schedule);
     }
 

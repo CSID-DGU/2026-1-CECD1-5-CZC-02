@@ -180,16 +180,16 @@ def build_todo_content(action_type: str, schedule: ScheduleResponse, product_nam
 
 def extract_customer(text: str) -> Optional[str]:
     patterns = [
+        r"([A-Za-z][A-Za-z0-9&.\- ]{0,30}\s*(?:고객사|기업|주식회사|Corp|Systems))(?:와|과|에서|의|\s|$)",
+        r"([가-힣A-Za-z0-9&.\- ]{2,40}?\s*(?:고객사|기업|주식회사|Corp|Systems))(?:와|과|에서|의|\s|$)",
+        r"([A-Za-z][A-Za-z0-9&.\- ]{1,40})\s*(?:고객사|기업|주식회사|Corp|Systems)\s+[가-힣]{2,4}입니다",
+        r"([가-힣A-Za-z0-9&.\- ]{2,40}?\s*(?:고객사|기업|주식회사|Corp|Systems))\s+[가-힣]{2,4}입니다",
         r"([A-Za-z][A-Za-z0-9&.\- ]{1,40})\s+[가-힣]{2,4}입니다",
-        r"([A-Za-z][A-Za-z0-9&.\- ]{1,40})\s*(?:고객사|기업|주식회사|Corp)\s+[가-힣]{2,4}입니다",
-        r"([A-Za-z][A-Za-z0-9&.\- ]{1,40})\s*(?:고객사|기업|주식회사|Corp)(?:와|과|에서|의| )",
-        r"([가-힣A-Za-z0-9&.\- ]{2,40}?\s*(?:고객사|기업|주식회사|Corp))\s+[가-힣]{2,4}입니다",
-        r"([가-힣A-Za-z0-9&.\- ]{2,40}?\s*(?:고객사|기업|주식회사|Corp))(?:와|과|에서|의| )",
     ]
     for pattern in patterns:
         match = re.search(pattern, text)
         if match:
-            value = clean_entity(strip_date_time_prefix(match.group(1)))
+            value = clean_company_name(clean_entity(strip_date_time_prefix(match.group(1))))
             if is_valid_customer(value):
                 return value
     return None
@@ -200,7 +200,7 @@ def extract_product(text: str) -> Optional[str]:
         r"([A-Za-z][A-Za-z0-9&.\- ]{1,50})\s*(?:관련\s*)?(?:소개 자료|주요 기능 설명서|기능 설명서|자료)",
         r"([A-Za-z][A-Za-z0-9&.\- ]{1,50})\s*(?:제품 소개|도입 관련|도입 검토|도입 건)",
         r"([A-Za-z][A-Za-z0-9&.\- ]{1,50})\s*(?:Platform|Solution|솔루션|서비스|시스템)",
-        r"([가-힣A-Za-z0-9&.\- ]{2,50})\s*(?:제품 소개|솔루션|서비스|시스템)",
+        r"\b(CRM)\s*(?:도입|검토|관련|미팅)",
         r"([A-Za-z][A-Za-z0-9&.\- ]{1,50})\s*제품",
     ]
     for pattern in patterns:
@@ -228,16 +228,18 @@ def extract_schedule_title(text: str) -> Optional[str]:
     if product and any(word in text for word in SCHEDULE_WORDS):
         return f"{product} 관련 미팅"
 
+    context_candidates = title_contexts(text)
     patterns = [
-        r"([가-힣A-Za-z0-9&.\- ]{2,60}?(?:제품 소개 미팅|도입 관련 미팅|도입 검토 미팅|미팅|회의|상담|통화))",
-        r"([가-힣A-Za-z0-9&.\- ]{2,60}?(?:후속 논의|일정 조율))",
+        r"([가-힣A-Za-z0-9&.\- ]{2,45}?(?:제품 소개 미팅|도입 관련 미팅|도입 검토 미팅|미팅|회의|상담|통화))",
+        r"([가-힣A-Za-z0-9&.\- ]{2,45}?(?:후속 논의|일정 조율))",
     ]
-    for pattern in patterns:
-        match = re.search(pattern, text)
-        if match:
-            title = clean_entity(strip_date_time_prefix(match.group(1)))
-            if title:
-                return title
+    for context in context_candidates:
+        for pattern in patterns:
+            match = re.search(pattern, context)
+            if match:
+                title = clean_schedule_title(clean_entity(strip_date_time_prefix(match.group(1))))
+                if title:
+                    return title
     return None
 
 
@@ -367,6 +369,7 @@ def extract_attendees(text: str) -> List[str]:
     if not match:
         return []
     raw = match.group(1).replace("\n", " ")
+    raw = re.sub(r"^기존과\s*동일하게\s*", "", raw)
     return dedupe([item.strip(" .") for item in re.split(r"[,，]", raw) if item.strip(" .")])
 
 
@@ -393,6 +396,21 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text or "").strip()
 
 
+def title_contexts(text: str) -> List[str]:
+    contexts = []
+    before_greeting = re.split(r"안녕하세요[.。]?", text, maxsplit=1)[0].strip()
+    if before_greeting:
+        contexts.append(before_greeting)
+
+    for sentence in re.split(r"[.!?。]|(?:\s{2,})", text):
+        sentence = clean_entity(sentence)
+        if sentence and any(word in sentence for word in SCHEDULE_WORDS):
+            contexts.append(sentence)
+
+    contexts.append(text)
+    return contexts
+
+
 def clean_entity(value: str) -> str:
     value = re.sub(r"\s+", " ", value or "")
     return value.strip(" .,\n\t")
@@ -405,6 +423,23 @@ def strip_date_time_prefix(value: str) -> str:
     value = re.sub(r"(오전|오후)\s*\d{1,2}시(?:\s*\d{1,2}분)?", "", value)
     value = re.sub(r"^\s*\d{1,2}\s*", "", value)
     value = re.sub(r"^\s*(시에|에서|와|과)\s*", "", value)
+    return clean_entity(value)
+
+
+def clean_company_name(value: str) -> str:
+    value = clean_entity(value)
+    value = re.sub(r"\s+(제품|미팅|회의|상담|통화).*$", "", value)
+    return clean_entity(value)
+
+
+def clean_schedule_title(value: str) -> str:
+    value = clean_entity(value)
+    value = re.sub(r"\s*일정\s*(변경|취소|확정)?\s*요청.*$", "", value)
+    value = re.sub(r"\s*안녕하세요.*$", "", value)
+    if value.endswith("변경"):
+        value = value[:-2].strip()
+    if value.endswith("취소"):
+        value = value[:-2].strip()
     return clean_entity(value)
 
 
