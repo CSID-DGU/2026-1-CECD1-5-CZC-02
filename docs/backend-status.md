@@ -1,169 +1,166 @@
 # Backend Status
 
-Dongguk University 종합설계 프로젝트 `SALESMAP 활동 자동화 AI Agent`의 백엔드 진행 상태입니다.
+이 문서는 SALESMAP 활동 자동화 AI Agent의 최종 시연 기준 백엔드 상태를 팀원이 빠르게 이해하기 위한 요약입니다.
 
-## Current Summary
+## 현재 한 줄 요약
 
-현재 백엔드는 Spring Boot + MySQL + JPA 기반으로 핵심 도메인 API가 동작하며, React + Vite 프론트엔드와 JWT 인증 흐름 및 주요 업무 흐름이 연결되어 있습니다.
+Gmail에서 실제 메일을 수집하고, FastAPI AI 모듈로 분석한 뒤, 사용자가 승인하면 Google Calendar 이벤트를 생성/수정/삭제합니다. Salesmap은 Google Calendar 양방향 연동을 통해 TODO가 자동 반영되는 구조입니다.
 
-완료된 핵심 흐름:
+## 완료된 핵심 흐름
 
 ```text
 회원가입/로그인
-  -> JWT accessToken 저장
-  -> Source 생성/조회
-  -> MockAiClient 기반 Analysis 생성/조회
-  -> MockSalesmapClient 기반 Salesmap 등록/조회
+  -> JWT 인증
+  -> Gmail OAuth 연결
+  -> Gmail 메일 수집
+  -> Source / SourceGroup 저장
+  -> FastAPI AI 분석
+  -> Analysis 저장
+  -> 사용자 확인/수정
+  -> 일정 등록/변경/삭제 승인
+  -> 내부 Schedule 반영
+  -> Google Calendar 이벤트 생성/수정/삭제
+  -> Salesmap 캘린더 양방향 연동으로 TODO 반영
 ```
 
-## Completed Backend Features
+## 완료된 기능
 
-- JWT 기반 회원가입, 로그인, 내 정보 조회
+- Spring Boot + JPA + MySQL 기반 백엔드
+- JWT 회원가입, 로그인, 내 정보 조회
 - BCrypt 비밀번호 암호화
-- `Authorization: Bearer {accessToken}` 기반 보호 API
-- `ApiResponse` 공통 응답 구조
+- `ApiResponse` 공통 응답
 - DTO Validation 및 `GlobalExceptionHandler`
-- User, Integration, Source, Analysis, Schedule, SalesmapRecord Entity/Repository
-- User, Source, Analysis, Schedule, Salesmap API DB 기반 동작
-- Source/Schedule/Analysis/Salesmap 소유권 검증
-- AI Module client 구조 분리
-  - `AiClient`
-  - `MockAiClient`
-  - `HttpAiClient`
-- Salesmap API client 구조 분리
-  - `SalesmapClient`
-  - `MockSalesmapClient`
-  - `HttpSalesmapClient`
-- `mock` / `http` property 기반 전환 구조
+- Swagger/OpenAPI UI
+- 사용자 소유권 검증
+- Gmail OAuth 연결/해제
+- Gmail 메일 수집
+- Gmail messageId 중복 제거
+- Gmail threadId 기준 `SourceGroup` 그룹핑
+- Source 목록/상세 조회
+- SourceGroup 기반 AI 분석 API
+- FastAPI AI 모듈 HTTP 연동
+- AI 분석 결과 저장 및 수정
+- Analysis actionType 기반 Schedule 처리
+- Google Calendar API 이벤트 생성/수정/삭제
+- Salesmap 직접 TODO API 대신 Google Calendar 경유 연동
+- 프론트 대시보드 캘린더와 일정 목록 연동
 
-## Frontend Integration Status
+## 주요 도메인
 
-현재 `feature/frontend-backend-integration` 브랜치에서 다음 프론트-백엔드 연동이 완료되었습니다.
+| 도메인 | 역할 |
+| --- | --- |
+| `user` | 사용자 계정과 인증 기준 데이터 |
+| `auth` | JWT 회원가입/로그인/내 정보 |
+| `integration` | 외부 연동 계정 정보 |
+| `gmail` | Gmail OAuth와 메일 수집 |
+| `source` | 수집된 원본 메일/메시지 |
+| `analysis` | AI 분석 요청/결과 |
+| `schedule` | 내부 캘린더 일정 |
+| `calendar` | Google Calendar 이벤트 연동 |
+| `salesmap` | Salesmap 등록 이력 및 승인 흐름 |
+| `ai` | FastAPI AI 모듈 client |
 
-- JWT 로그인/회원가입 프론트 연동
-- `localStorage.accessToken` 저장
-- axios interceptor 기반 Authorization 자동 첨부
-- `ProtectedRoute` 적용
-- 로그아웃 시 accessToken 삭제
-- `GET /api/sources` 보호 API 연결
-- `GET /api/schedules` 보호 API 연결
-- Source 생성 테스트 연결
-- Schedule 생성 테스트 연결
-- Source 상세 조회 연결
-- `GET /api/analysis/source/{sourceId}` 연결
-- `POST /api/analysis` MockAiClient 기반 분석 생성 연결
-- Analysis 결과 표시
-- `POST /api/salesmap/register` 연결
-- `GET /api/salesmap/analysis/{analysisId}` Mock Salesmap 등록 결과 조회
-- `MessageView` 기반 Source -> Analysis -> Salesmap 흐름 연결
-
-## Current E2E Test Flow
-
-현재 로컬에서 가능한 통합 테스트 흐름:
-
-1. 프론트에서 회원가입 또는 로그인
-2. accessToken이 `localStorage`에 저장되는지 확인
-3. `/dashboard` 진입
-4. Source 생성 테스트 실행
-5. Source 목록에서 생성된 Source 선택
-6. Source 상세 조회
-7. AI 분석 테스트 실행
-8. Analysis 결과 표시 확인
-9. SALESMAP 등록 테스트 실행
-10. SalesmapRecord 등록 결과 표시 확인
-
-## Mock Mode
-
-현재 기본값은 외부 서버 없이 테스트 가능한 mock 모드입니다.
-
-```properties
-ai.module.mode=mock
-salesmap.api.mode=mock
-```
-
-Mock 동작:
-
-- `MockAiClient`: FastAPI 서버 없이 고정 분석 결과를 반환하고 `analyses` 테이블에 저장
-- `MockSalesmapClient`: 실제 Salesmap 외부 API 호출 없이 mock `externalRecordId`, `requestPayload`, `responsePayload`를 반환하고 `salesmap_records` 테이블에 저장
-
-실제 연동 전환 예시:
-
-```properties
-ai.module.mode=http
-ai.module.base-url=http://localhost:8000
-
-salesmap.api.mode=http
-salesmap.api.base-url=http://localhost:9000
-salesmap.api.register-path=/records
-```
-
-## Recent Backend Fixes
-
-Salesmap 등록 테스트 중 401처럼 보이던 문제가 있었으나, 실제 원인은 DB 저장 오류였습니다.
-
-반영된 수정:
-
-- `salesmap_records.request_payload` 컬럼을 `LONGTEXT`로 변경
-- `salesmap_records.response_payload` 컬럼을 `LONGTEXT`로 변경
-- `/error`를 Security `permitAll`에 추가
-- `DataIntegrityViolationException` JSON 응답 처리 추가
-- `SalesmapController`에서 `Authentication` 기반 사용자 확인으로 수정
-- Salesmap register 진단용 로그를 `debug` 수준으로 추가
-
-## Database Tables
-
-현재 구현된 주요 테이블:
+## DB 테이블
 
 - `users`
 - `integrations`
+- `source_groups`
 - `sources`
 - `analyses`
 - `schedules`
 - `salesmap_records`
 
-주의:
+중요 컬럼:
 
-- `salesmap_records.request_payload`, `salesmap_records.response_payload`는 JSON payload 저장을 위해 `LONGTEXT`입니다.
-- JPA `ddl-auto=update` 기준으로 로컬 DB 스키마가 갱신됩니다.
+- `integrations.provider`: `GMAIL` 등 외부 서비스 구분
+- `sources.external_source_id`: Gmail messageId
+- `source_groups.external_group_id`: Gmail threadId
+- `analyses.action_type`: `CREATE`, `UPDATE`, `CANCEL`, `CONFIRM`, `UNKNOWN`
+- `schedules.google_calendar_event_id`: Google Calendar 이벤트 ID
+- `salesmap_records.status`: 등록/변경/삭제 이력 상태
 
-## Frontend Team Notes
+## 현재 Salesmap 연동 방식
 
-프론트 팀은 아래 문서를 우선 참고하면 됩니다.
+Salesmap 담당자 확인 결과, 외부에서 TODO를 직접 생성/수정하는 API는 제공되지 않습니다.
 
-- [frontend-api-guide.md](./frontend-api-guide.md)
-- [api-spec.md](./api-spec.md)
-
-핵심 규칙:
-
-- 로그인/회원가입 성공 시 `accessToken`을 저장합니다.
-- 보호 API는 axios interceptor가 자동으로 Authorization 헤더를 붙입니다.
-- 일반 사용자 화면에서는 `userId`를 직접 보내지 않는 흐름을 우선 사용합니다.
-- 다른 사용자의 `sourceId`, `analysisId`, `userId` 접근은 `403`입니다.
-
-## AI Module Team Notes
-
-FastAPI AI Module 실제 연동은 아직 미구현입니다.
-
-현재 백엔드는 다음 구조를 준비했습니다.
+따라서 현재 최종 시연 구조는 다음과 같습니다.
 
 ```text
-AnalysisService
-  -> AiClient
-      -> MockAiClient
-      -> HttpAiClient
+우리 웹에서 AI 분석 결과 승인
+  -> 백엔드가 Google Calendar API로 이벤트 생성/수정/삭제
+  -> Salesmap의 Google Calendar 양방향 연동이 이벤트를 감지
+  -> Salesmap TODO에 자동 반영
 ```
 
-실제 FastAPI endpoint는 `/analyze`를 기준으로 준비되어 있습니다. 계약 상세는 [backend-guide.md](./backend-guide.md)의 AI Module 섹션을 참고합니다.
+Salesmap에서 필요한 사용자 설정:
 
-## Remaining Work
+1. Salesmap 개인 설정
+2. 연동
+3. 캘린더
+4. Google 계정 연결
+5. 양방향 연동 선택
+6. 가져오기 유형을 미팅 등으로 지정
+7. 저장
 
-- 실제 Gmail OAuth 및 Gmail 데이터 수집
-- 실제 JANDI 연동
-- 실제 FastAPI AI Module `/analyze` 구현 및 연동 테스트
-- 실제 Salesmap 외부 API endpoint, 인증 방식, request/response 확정
-- Integration 생성/조회 API 구현
-- Swagger/OpenAPI 문서화
-- Docker 및 배포 환경 구성
-- 운영 로그 정책 정리
-- refresh token 또는 token 만료 UX 정책
-- 백엔드 통합 테스트 및 프론트 E2E 테스트 보강
+## 실행에 필요한 환경변수
+
+```properties
+SPRING_DATASOURCE_PASSWORD=로컬 MySQL 비밀번호
+AI_MODULE_MODE=http
+AI_MODULE_BASE_URL=http://localhost:8000
+GMAIL_CLIENT_ID=Google OAuth Client ID
+GMAIL_CLIENT_SECRET=Google OAuth Client Secret
+GMAIL_REDIRECT_URI=http://localhost:5173/settings/gmail/callback
+GMAIL_OAUTH_SCOPE=openid email profile https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/calendar.events
+GOOGLE_CALENDAR_ENABLED=true
+GOOGLE_CALENDAR_ID=primary
+```
+
+기본값상 AI 모듈은 `mock`으로도 실행 가능하지만, 최종 시연은 `AI_MODULE_MODE=http`로 FastAPI를 연결하는 것을 기준으로 합니다.
+
+## 주요 API
+
+| Method | URL | 설명 |
+| --- | --- | --- |
+| `POST` | `/api/auth/signup` | 회원가입 |
+| `POST` | `/api/auth/login` | 로그인 |
+| `GET` | `/api/auth/me` | 내 정보 조회 |
+| `GET` | `/api/integrations/gmail/authorize` | Gmail OAuth URL 발급 |
+| `GET` | `/api/integrations/gmail/callback` | Gmail OAuth callback 처리 |
+| `DELETE` | `/api/integrations/gmail` | Gmail 연결 해제 |
+| `POST` | `/api/integrations/gmail/collect` | Gmail 메일 수집 |
+| `GET` | `/api/sources` | 수집 메일 목록 |
+| `GET` | `/api/sources/{sourceId}` | 메일 상세 |
+| `POST` | `/api/analysis` | 단일 Source 분석 |
+| `POST` | `/api/analysis/group` | Gmail thread 그룹 분석 |
+| `PATCH` | `/api/analysis/{analysisId}` | 분석 결과 수동 수정 |
+| `GET` | `/api/analysis/source/{sourceId}` | Source 기준 분석 목록 |
+| `GET` | `/api/schedules` | 일정 목록 |
+| `POST` | `/api/schedules` | 일정 직접 생성 |
+| `PATCH` | `/api/schedules/{scheduleId}` | 일정 수정 |
+| `DELETE` | `/api/schedules/{scheduleId}` | 일정 삭제 |
+| `POST` | `/api/salesmap/register` | 분석 결과 승인 및 Salesmap 경유 등록 |
+| `GET` | `/api/salesmap/analysis/{analysisId}` | 등록 이력 조회 |
+
+## 검증 완료 기준
+
+- 로그인 후 JWT 발급
+- Gmail OAuth 연결 완료
+- Gmail 메일 수집 후 웹 목록 표시
+- Gmail thread 기반 AI 분석 성공
+- AI 분석 결과 화면 표시
+- 분석 결과 수동 수정 가능
+- `CREATE` 분석 결과 승인 시 Google Calendar와 Dashboard에 일정 생성
+- `UPDATE` 분석 결과 승인 시 기존 일정 수정
+- `CANCEL` 분석 결과 승인 시 기존 일정 삭제
+- Google Calendar 이벤트가 Salesmap TODO에 반영
+
+## 남은 작업
+
+- JANDI 실제 연동
+- 운영 환경 배포
+- Docker 구성
+- refresh token 장기 운영 정책
+- Gmail/Calendar 토큰 암호화 저장
+- Salesmap 동기화 지연 상태에 대한 UX 보강
+- 정식 발표 자료 제작 및 화면 캡처 정리

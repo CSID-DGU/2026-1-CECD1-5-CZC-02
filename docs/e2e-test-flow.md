@@ -1,438 +1,331 @@
 # E2E Test Flow
 
-SALESMAP 활동 자동화 AI Agent의 프론트-백엔드 통합 흐름을 로컬에서 테스트하기 위한 문서입니다.
-
-현재 테스트 범위는 로그인부터 Source 생성, Mock AI 분석, Mock SALESMAP 등록까지입니다. 실제 FastAPI/OpenAI/Salesmap 외부 API 호출은 아직 포함하지 않습니다.
+최종 시연 전 팀원이 직접 확인할 수 있는 로컬 통합 테스트 순서입니다.
 
 ## 1. 사전 준비
 
-### MySQL 실행
+### MySQL
 
-로컬 MySQL이 실행 중인지 확인합니다.
-
-필요한 DB:
+MySQL을 실행하고 DB가 없으면 생성합니다.
 
 ```sql
-CREATE DATABASE IF NOT EXISTS salesmap;
+CREATE DATABASE IF NOT EXISTS salesmap
+  DEFAULT CHARACTER SET utf8mb4
+  DEFAULT COLLATE utf8mb4_unicode_ci;
 ```
 
-백엔드 실행 전 `backend/src/main/resources/application.properties`의 MySQL 계정 정보를 로컬 환경에 맞게 확인합니다.
+### Google Cloud Console
 
-### Backend 실행
+OAuth Client의 Authorized redirect URI에 아래 값을 등록합니다.
+
+```text
+http://localhost:5173/settings/gmail/callback
+```
+
+Gmail/Calendar에 필요한 scope:
+
+```text
+openid
+email
+profile
+https://www.googleapis.com/auth/gmail.readonly
+https://www.googleapis.com/auth/calendar.events
+```
+
+### Salesmap 설정
+
+Salesmap 개인 설정에서 Google Calendar 양방향 연동을 완료합니다.
+
+```text
+개인 설정
+  -> 연동
+  -> 캘린더
+  -> Google 계정 연결
+  -> 양방향 연동 선택
+  -> 가져오기 유형: 미팅
+  -> 저장
+```
+
+## 2. 서버 실행
+
+### Backend
+
+필요 환경변수:
+
+```powershell
+$env:SPRING_DATASOURCE_PASSWORD="MySQL 비밀번호"
+$env:AI_MODULE_MODE="http"
+$env:AI_MODULE_BASE_URL="http://localhost:8000"
+$env:GMAIL_CLIENT_ID="Google OAuth Client ID"
+$env:GMAIL_CLIENT_SECRET="Google OAuth Client Secret"
+$env:GMAIL_REDIRECT_URI="http://localhost:5173/settings/gmail/callback"
+$env:GMAIL_OAUTH_SCOPE="openid email profile https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/calendar.events"
+$env:GOOGLE_CALENDAR_ENABLED="true"
+$env:GOOGLE_CALENDAR_ID="primary"
+```
+
+실행:
 
 ```powershell
 cd C:\salesmap-agent\backend
 .\gradlew.bat bootRun
 ```
 
-Backend 주소:
+### FastAPI AI Module
 
-```text
-http://localhost:8080
+```powershell
+cd C:\salesmap-agent\ai-module
+uvicorn app.main:app --reload --port 8000
 ```
 
-### Frontend 실행
+### Frontend
 
 ```powershell
 cd C:\salesmap-agent\frontend
 npm run dev
 ```
 
-Frontend 주소:
+접속:
 
 ```text
 http://localhost:5173
 ```
 
-## 2. 테스트 계정 준비
+## 3. 기본 로그인 테스트
 
-프론트 화면에서 회원가입하거나 기존 계정으로 로그인합니다.
+1. 회원가입 또는 로그인
+2. `/dashboard` 이동 확인
+3. 개발자 도구 Application 탭에서 `localStorage.accessToken` 확인
+4. Network 탭에서 보호 API에 `Authorization: Bearer {token}` 포함 여부 확인
 
-테스트 계정 예시:
+## 4. Gmail 연결 테스트
 
-```json
-{
-  "email": "test@test.com",
-  "password": "12345678",
-  "name": "test"
-}
-```
+1. 설정 화면으로 이동
+2. Gmail 연결 버튼 클릭
+3. Google OAuth 동의
+4. 설정 화면으로 복귀
+5. Gmail 연결 상태가 `연결됨`인지 확인
 
-로그인 성공 후 브라우저 개발자 도구에서 token 저장 여부를 확인합니다.
+확인 API:
 
-확인 위치:
+- `GET /api/integrations/gmail/authorize`
+- `GET /api/integrations/gmail/callback`
+- `GET /api/integrations`
+
+## 5. Gmail 수집 테스트
+
+1. Gmail 또는 JANDI/Gmail 메뉴 화면으로 이동
+2. `Gmail 새로고침` 클릭
+3. 수집된 메일 목록이 갱신되는지 확인
+
+확인 API:
+
+- `POST /api/integrations/gmail/collect`
+- `GET /api/sources`
+
+성공 기준:
+
+- 새 메일이 Source 목록에 표시
+- DB `sources`에 새 row 생성
+- Gmail thread가 있으면 `source_groups`에 그룹 저장
+
+## 6. CREATE 시나리오
+
+### 테스트 메일
+
+제목:
 
 ```text
-DevTools -> Application -> Local Storage -> http://localhost:5173 -> accessToken
+2026-06-12 Nimbus Tech 도입 상담 미팅 요청
 ```
 
-또는 Console:
+본문:
 
-```javascript
-localStorage.getItem("accessToken")
+```text
+안녕하세요.
+
+Nimbus Tech 김도윤입니다.
+
+2026년 6월 12일 오전 10시에 CRM Automation 서비스 도입 상담 미팅을 요청드립니다.
+참석자는 Nimbus Tech 김도윤, 영업팀 이민재입니다.
+
+가능하시면 일정 등록 부탁드립니다.
+
+감사합니다.
 ```
 
-값이 존재하면 보호 API 호출 시 axios interceptor가 자동으로 Authorization 헤더를 붙입니다.
+### 웹 테스트
 
-## 3. E2E 테스트 순서
+1. Gmail 새로고침
+2. 해당 메일 선택
+3. AI 분석 실행
+4. 분석 결과 확인
+5. 필요하면 분석 결과 수정
+6. `일정 등록` 클릭
+7. Dashboard 캘린더 확인
+8. Google Calendar 확인
+9. Salesmap TODO 확인
 
-1. 프론트 접속
+성공 기준:
 
-   ```text
-   http://localhost:5173
-   ```
+- actionType: `CREATE`
+- 고객사: `Nimbus Tech`
+- 제품: `CRM Automation`
+- 일정: `2026-06-12 10:00`
+- Dashboard에 일정 생성
+- Google Calendar에 이벤트 생성
+- Salesmap TODO에 미팅으로 반영
 
-2. 회원가입 또는 로그인
+## 7. UPDATE 시나리오
 
-   로그인 성공 후 `/dashboard`로 이동하는지 확인합니다.
+### 테스트 메일
 
-3. 대시보드 진입 확인
+제목:
 
-   accessToken이 없으면 `/login`으로 이동해야 합니다.
-
-4. Source 생성 테스트 실행
-
-   대시보드의 API 테스트 패널에서 Source 생성 버튼을 클릭합니다.
-
-   기대 결과:
-
-   - Source 생성 성공 메시지 표시
-   - Source API 상태 카드의 개수 증가
-
-5. Schedule 생성 테스트 실행
-
-   대시보드의 API 테스트 패널에서 Schedule 생성 버튼을 클릭합니다.
-
-   기대 결과:
-
-   - Schedule 생성 성공 메시지 표시
-   - Schedule API 상태 카드의 개수 증가
-
-6. Jandi 또는 Gmail 메뉴 이동
-
-   Source 목록을 확인할 수 있는 화면으로 이동합니다.
-
-7. 백엔드 Source 목록에서 Source 클릭
-
-   방금 생성한 Source 또는 기존 Source를 클릭합니다.
-
-8. Source 상세 확인
-
-   Source 제목, 타입, 내용이 표시되는지 확인합니다.
-
-9. AI 분석 테스트 클릭
-
-   Source 상세 화면에서 `AI 분석 테스트` 버튼을 클릭합니다.
-
-   현재 백엔드는 `MockAiClient`를 사용하므로 FastAPI 서버 없이도 분석 결과가 생성됩니다.
-
-10. Analysis 결과 확인
-
-    분석 결과 목록에 `summary`, `followUpAction`, `scheduleText`, `status` 등이 표시되는지 확인합니다.
-
-11. SALESMAP 등록 테스트 클릭
-
-    Analysis 결과 카드에서 `SALESMAP 등록 테스트` 버튼을 클릭합니다.
-
-    현재 백엔드는 `MockSalesmapClient`를 사용하므로 실제 외부 Salesmap API 호출 없이 등록 결과가 생성됩니다.
-
-12. SalesmapRecord 결과 확인
-
-    등록 결과에 `REGISTERED` 상태와 `mock-salesmap-{analysisId}` 형태의 `externalRecordId`가 표시되는지 확인합니다.
-
-## 4. Network 확인 항목
-
-브라우저 개발자 도구의 Network 탭을 열고 테스트합니다.
-
-보호 API에서는 공통으로 다음을 확인합니다.
-
-```http
-Authorization: Bearer {accessToken}
+```text
+Nimbus Tech 도입 상담 미팅 일정 변경 요청
 ```
 
-### Auth
+본문:
 
-#### POST /api/auth/signup
+```text
+안녕하세요.
 
-확인 항목:
+기존 2026년 6월 12일 오전 10시 Nimbus Tech CRM Automation 도입 상담 미팅을
+2026년 6월 12일 오후 2시로 변경 부탁드립니다.
 
-- Status Code: `200`
-- Request Body: `email`, `password`, `name`
-- Response Body:
-  - `success: true`
-  - `data.accessToken`
-  - `data.user.email`
+참석자는 동일합니다.
 
-#### POST /api/auth/login
-
-확인 항목:
-
-- Status Code: `200`
-- Request Body: `email`, `password`
-- Response Body:
-  - `success: true`
-  - `data.accessToken`
-  - `data.tokenType: "Bearer"`
-
-### Dashboard 조회
-
-#### GET /api/sources
-
-확인 항목:
-
-- Status Code: `200`
-- Authorization 헤더 포함
-- Response Body:
-  - `success: true`
-  - `data`가 배열
-
-#### GET /api/schedules
-
-확인 항목:
-
-- Status Code: `200`
-- Authorization 헤더 포함
-- Response Body:
-  - `success: true`
-  - `data`가 배열
-
-### Source 생성
-
-#### POST /api/sources
-
-확인 항목:
-
-- Status Code: `200`
-- Authorization 헤더 포함
-- Request Body:
-
-```json
-{
-  "integrationId": null,
-  "sourceType": "EMAIL",
-  "title": "테스트 이메일",
-  "content": "고객사 미팅 일정과 후속 조치가 포함된 테스트 내용입니다."
-}
+감사합니다.
 ```
 
-- Response Body:
-  - `data.sourceId`
-  - `data.sourceType`
-  - `data.status: "CREATED"`
+### 웹 테스트
 
-### Schedule 생성
+1. Gmail 새로고침
+2. 변경 요청 메일 선택
+3. AI 분석 실행
+4. targetScheduleId가 기존 일정으로 잡혔는지 확인
+5. 필요하면 수동으로 대상 일정 ID 또는 일정 정보를 수정
+6. `등록된 일정 변경` 클릭
+7. Dashboard 캘린더 시간이 바뀌었는지 확인
+8. Google Calendar와 Salesmap TODO 변경 확인
 
-#### POST /api/schedules
+성공 기준:
 
-확인 항목:
+- actionType: `UPDATE`
+- 기존 일정 시간이 변경됨
+- 새 일정이 중복 생성되지 않음
 
-- Status Code: `200`
-- Authorization 헤더 포함
-- Request Body:
+## 8. CANCEL 시나리오
 
-```json
-{
-  "analysisId": null,
-  "title": "테스트 일정",
-  "scheduleDateTime": "2026-05-29T14:00:00",
-  "memo": "프론트-백 통합 테스트 일정"
-}
+### 테스트 메일
+
+제목:
+
+```text
+Nimbus Tech 도입 상담 미팅 취소 요청
 ```
 
-- Response Body:
-  - `data.scheduleId`
-  - `data.status: "SCHEDULED"`
+본문:
 
-### Source 상세
+```text
+안녕하세요.
 
-#### GET /api/sources/{sourceId}
+2026년 6월 12일 오전 10시에 예정되어 있던 Nimbus Tech CRM Automation 서비스 도입 상담 미팅은 취소 부탁드립니다.
 
-확인 항목:
+내부 일정 조정으로 이번 미팅은 진행하지 않겠습니다.
+추후 다시 일정 요청드리겠습니다.
 
-- Status Code: `200`
-- Authorization 헤더 포함
-- Response Body:
-  - `data.sourceId`
-  - `data.title`
-  - `data.content`
-
-### Analysis
-
-#### POST /api/analysis
-
-확인 항목:
-
-- Status Code: `200`
-- Authorization 헤더 포함
-- Request Body:
-
-```json
-{
-  "sourceId": 1
-}
+감사합니다.
 ```
 
-- Response Body:
-  - `data.analysisId`
-  - `data.sourceId`
-  - `data.summary`
-  - `data.status: "ANALYZED"`
+### 웹 테스트
 
-#### GET /api/analysis/source/{sourceId}
+1. Gmail 새로고침
+2. 취소 요청 메일 선택
+3. AI 분석 실행
+4. targetScheduleId가 기존 일정으로 잡혔는지 확인
+5. `등록된 일정 삭제` 클릭
+6. Dashboard 캘린더에서 일정이 사라졌는지 확인
+7. Google Calendar에서 이벤트가 삭제되었는지 확인
+8. Salesmap TODO가 삭제 또는 동기화 해제되었는지 확인
 
-확인 항목:
+성공 기준:
 
-- Status Code: `200`
-- Authorization 헤더 포함
-- Response Body:
-  - `data`가 배열
-  - 분석 결과가 있으면 `summary`, `followUpAction`, `scheduleText`, `status` 포함
+- actionType: `CANCEL`
+- 내부 Schedule 삭제
+- Google Calendar 이벤트 삭제
+- Salesmap TODO도 사라짐
 
-### Salesmap 등록
+## 9. 일반 메일 UNKNOWN 시나리오
 
-#### POST /api/salesmap/register
+제목:
 
-확인 항목:
-
-- Status Code: `200`
-- Authorization 헤더 포함
-- Request Body:
-
-```json
-{
-  "analysisId": 1
-}
+```text
+견적서 전달드립니다
 ```
 
-- Response Body:
-  - `data.salesmapRecordId`
-  - `data.analysisId`
-  - `data.externalRecordId`
-  - `data.status: "REGISTERED"`
-  - `data.registeredAt`
+본문:
 
-#### GET /api/salesmap/analysis/{analysisId}
+```text
+안녕하세요.
 
-확인 항목:
+요청하신 견적서를 첨부드립니다.
+검토 후 문의사항 있으시면 연락 부탁드립니다.
 
-- Status Code: `200`
-- Authorization 헤더 포함
-- Response Body:
-  - `data`가 배열
-  - 등록 결과가 있으면 `status: "REGISTERED"` 포함
-
-## 5. 자주 발생하는 오류
-
-### 400 Bad Request
-
-원인:
-
-- request body 필드명이 백엔드 DTO와 다름
-- 필수값 누락
-- 날짜가 과거 시간
-- `sourceId`, `analysisId`가 1 미만
-
-확인:
-
-- Schedule은 `description`이 아니라 `memo`를 사용합니다.
-- Source 생성 request에는 현재 `externalSourceId`, `collectedAt`을 보내지 않습니다.
-
-### 401 Unauthorized
-
-원인:
-
-- accessToken 없음
-- accessToken 만료
-- Authorization 헤더 누락
-- 로그아웃 후 보호 API 호출
-
-대응:
-
-1. `localStorage.accessToken` 확인
-2. 재로그인
-3. Network Request Headers에서 Authorization 헤더 확인
-
-### 403 Forbidden
-
-원인:
-
-- 다른 사용자의 Source, Analysis, Schedule, SalesmapRecord에 접근
-- request body 또는 query parameter의 기존 호환용 `userId`가 로그인 사용자와 다름
-
-대응:
-
-- 같은 계정으로 생성한 데이터인지 확인합니다.
-
-### 404 Not Found
-
-원인:
-
-- API 경로 오타
-- 존재하지 않는 `sourceId` 또는 `analysisId`
-- 부모 리소스가 없음
-
-대응:
-
-- Network URL 확인
-- Source 생성 후 실제 `sourceId` 사용
-- Analysis 생성 후 실제 `analysisId` 사용
-
-### 500 Internal Server Error
-
-원인:
-
-- 서버 내부 오류
-- DB 저장 오류
-
-대응:
-
-- backend 콘솔 로그 확인
-- MySQL 실행 상태 확인
-- DB 스키마가 최신인지 확인
-
-### 502 Bad Gateway
-
-원인:
-
-- `ai.module.mode=http`에서 FastAPI 서버 호출 실패
-- `salesmap.api.mode=http`에서 외부 Salesmap API 호출 실패
-
-현재 기본 mock 모드에서는 일반적으로 발생하지 않습니다.
-
-## 6. 현재 Mock 동작
-
-현재 기본 설정:
-
-```properties
-ai.module.mode=mock
-salesmap.api.mode=mock
+감사합니다.
 ```
 
-의미:
+성공 기준:
 
-- AI Module은 실제 FastAPI/OpenAI를 호출하지 않습니다.
-- Analysis 생성 시 `MockAiClient`가 mock 분석 결과를 반환합니다.
-- Salesmap 등록 시 실제 외부 Salesmap API를 호출하지 않습니다.
-- Salesmap 등록 결과는 `MockSalesmapClient`가 반환합니다.
+- actionType: `UNKNOWN`
+- 일정 정보: 해당 없음
+- Dashboard에 일정이 생성되지 않음
 
-실제 연동 전환은 추후 다음 property로 진행합니다.
+## 10. DB 확인 SQL
 
-```properties
-ai.module.mode=http
-salesmap.api.mode=http
+```sql
+select * from users order by id desc;
+select * from integrations order by id desc;
+select * from source_groups order by id desc;
+select * from sources order by id desc;
+select * from analyses order by id desc;
+select * from schedules order by id desc;
+select * from salesmap_records order by id desc;
 ```
 
-## 7. 테스트 완료 기준
+특정 일정 확인:
 
-아래 항목이 모두 확인되면 현재 프론트-백엔드 통합 테스트는 성공입니다.
+```sql
+select id, title, schedule_date_time, status, google_calendar_event_id
+from schedules
+order by id desc;
+```
 
-- 로그인 또는 회원가입 성공
-- `localStorage.accessToken` 저장 확인
-- 보호 API 요청에 Authorization 헤더 포함
-- Source 생성 후 Source 개수 증가
-- Schedule 생성 후 Schedule 개수 증가
-- Source 상세 화면에서 Source 내용 표시
-- AI 분석 테스트 후 Analysis 결과 표시
-- Salesmap 등록 테스트 후 SalesmapRecord 표시
-- SalesmapRecord 상태가 `REGISTERED`
-- Network에서 `POST /api/salesmap/register` 이후 `GET /api/salesmap/analysis/{analysisId}` 재조회 확인
+## 11. 실패 시 확인 위치
+
+- Browser Console: 프론트 에러 메시지
+- Network: status code, request body, response body
+- Backend terminal: Spring Boot 로그
+- FastAPI terminal: `/analyze` 요청/응답 로그
+- MySQL: 저장 여부
+- Google Calendar: 이벤트 생성/수정/삭제 여부
+- Salesmap: TODO 동기화 여부
+
+## 12. 테스트 결과 전달 템플릿
+
+```text
+테스트 종류: CREATE / UPDATE / CANCEL / UNKNOWN
+사용한 메일 제목:
+사용한 메일 본문:
+Browser Console 에러:
+Network 요청/응답:
+Backend 로그:
+FastAPI 로그:
+DB analyses 결과:
+DB schedules 결과:
+Google Calendar 결과:
+Salesmap TODO 결과:
+프론트 화면 결과:
+성공/실패 판단:
+```

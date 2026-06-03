@@ -1,34 +1,47 @@
 # Frontend API Guide
 
-React + Vite 프론트엔드에서 SALESMAP 백엔드 API를 연동하는 방법을 정리한 문서입니다. 전체 API 필드 명세는 [api-spec.md](./api-spec.md)를 기준으로 확인합니다.
+이 문서는 React + Vite 프론트엔드가 현재 백엔드 API를 어떻게 사용하고 있는지 설명합니다.
 
-## Base URL
+## 기본 구조
 
-로컬 백엔드 기본 주소:
+Frontend:
+
+```text
+http://localhost:5173
+```
+
+Backend:
 
 ```text
 http://localhost:8080
 ```
 
-권장 Vite 환경 변수:
+공통 axios client:
 
-```env
-VITE_API_BASE_URL=http://localhost:8080
+```text
+frontend/src/api/client.js
 ```
 
-현재 프론트 API client는 기본적으로 `http://localhost:8080`을 사용합니다.
+API 함수 파일:
 
-## Authentication Flow
+```text
+frontend/src/api/auth.js
+frontend/src/api/integrations.js
+frontend/src/api/sources.js
+frontend/src/api/analyses.js
+frontend/src/api/schedules.js
+frontend/src/api/salesmapRecords.js
+frontend/src/api/errors.js
+```
 
-프론트 인증 흐름:
+## 인증 흐름
 
 ```text
 회원가입 또는 로그인
   -> 백엔드가 accessToken 반환
   -> localStorage.accessToken 저장
-  -> ProtectedRoute로 보호 화면 접근 제어
-  -> axios interceptor가 보호 API 요청마다 Authorization 헤더 자동 첨부
-  -> 로그아웃 시 localStorage.accessToken 삭제
+  -> ProtectedRoute가 로그인 상태 확인
+  -> axios interceptor가 Authorization 헤더 자동 첨부
 ```
 
 Authorization 헤더:
@@ -37,360 +50,200 @@ Authorization 헤더:
 Authorization: Bearer {accessToken}
 ```
 
-공개 API:
+로그아웃 시:
+
+```text
+localStorage.accessToken 삭제
+-> /login 이동
+```
+
+## 주요 화면별 API 흐름
+
+### LoginPage
 
 - `POST /api/auth/signup`
 - `POST /api/auth/login`
-- `GET /api/health`
 
-그 외 주요 API는 JWT가 필요합니다.
+성공 시:
 
-## Axios Client Pattern
+- `accessToken` 저장
+- `/dashboard` 이동
 
-현재 프론트 구조는 `frontend/src/api/client.js`의 공통 axios client를 사용합니다.
-
-예시:
-
-```javascript
-import axios from "axios";
-
-export const api = axios.create({
-  baseURL: "http://localhost:8080",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-});
-```
-
-개별 API 파일에서는 `axios`를 직접 import하지 말고 반드시 공통 `api` 인스턴스를 사용합니다.
-
-```javascript
-import { api } from "./client";
-
-export async function getSources() {
-  const response = await api.get("/api/sources");
-  return response.data.data;
-}
-```
-
-## Current API Files
-
-현재 프론트에서 분리된 API 함수 파일:
-
-- `frontend/src/api/sources.js`
-- `frontend/src/api/schedules.js`
-- `frontend/src/api/analyses.js`
-- `frontend/src/api/integrations.js`
-- `frontend/src/api/salesmapRecords.js`
-- `frontend/src/api/client.js`
+### Dashboard
 
 역할:
 
-- `client.js`: base URL, JSON header, Authorization interceptor
-- `sources.js`: Source 생성, 목록 조회, 상세 조회
-- `schedules.js`: Schedule 생성, 목록 조회
-- `analyses.js`: Analysis 생성, 상세 조회, Source 기준 목록 조회
-- `salesmapRecords.js`: Salesmap 등록, Analysis 기준 등록 이력 조회
+- 대시보드 캘린더 표시
+- 오늘/다가오는 일정 표시
+- 일정 직접 수정/삭제
+- 로그인 사용자 이름과 프로필 표시
+- Google Calendar/Salesmap 연동 상태 표시
 
-## Gmail Auto Sync
+사용 API:
 
-로그인 성공 후 프론트는 `localStorage.accessToken`을 저장한 다음 Gmail 자동 동기화를 시도합니다.
+- `GET /api/auth/me`
+- `GET /api/schedules`
+- `PATCH /api/schedules/{scheduleId}`
+- `DELETE /api/schedules/{scheduleId}`
+- `GET /api/integrations`
 
-흐름:
+중요 동작:
+
+- 일정 삭제는 내부 Schedule 삭제와 Google Calendar 이벤트 삭제를 같이 시도합니다.
+- Google Calendar에서 삭제되면 Salesmap 양방향 캘린더 연동으로 TODO도 사라질 수 있습니다.
+- 일정 수정은 내부 Schedule 수정과 Google Calendar 이벤트 수정을 같이 시도합니다.
+
+### SettingsPage
+
+역할:
+
+- 사용자 프로필 표시
+- Gmail 연결/해제
+- Gmail 연결 상태 표시
+- Salesmap 연동 상태 안내
+
+사용 API:
+
+- `GET /api/auth/me`
+- `GET /api/integrations`
+- `GET /api/integrations/gmail/authorize`
+- `DELETE /api/integrations/gmail`
+
+Gmail 연결 흐름:
 
 ```text
-POST /api/auth/login
-  -> localStorage.accessToken 저장
-  -> GET /api/integrations
-  -> GMAIL provider가 CONNECTED이면 POST /api/integrations/gmail/collect 호출
-  -> 대시보드로 이동
+Gmail 연결 버튼
+  -> GET /api/integrations/gmail/authorize
+  -> authorizationUrl 수신
+  -> Google OAuth 화면 이동
+  -> /settings/gmail/callback 복귀
 ```
 
-주의:
+### GmailOAuthCallbackPage
 
-- Gmail 연동 정보가 없으면 자동 수집을 건너뜁니다.
-- Gmail 수집 실패가 로그인 자체를 막지는 않습니다.
-- 자동 수집 API는 기존 JWT Authorization header를 사용합니다.
+사용 API:
 
-## Protected Routing
+- `GET /api/integrations/gmail/callback`
 
-`ProtectedRoute`는 `localStorage.accessToken`이 없으면 로그인 화면으로 이동시킵니다.
+성공 시:
 
-로그아웃 시 처리:
+- Integration이 `GMAIL`, `CONNECTED` 상태로 저장됩니다.
+- Settings 화면으로 이동합니다.
 
-```javascript
-localStorage.removeItem("accessToken");
-navigate("/login");
-```
+### MessageView
 
-## Dashboard Integration
+역할:
 
-현재 Dashboard에서는 기존 mock UI를 유지하면서 보호 API 연결 상태를 확인합니다.
+- 수집된 Gmail 메일 목록 표시
+- 메일 상세 표시
+- 같은 발신자의 최근 메일 표시
+- AI 분석 실행
+- 분석 결과 수동 수정
+- Salesmap 등록/변경/삭제 승인
 
-연결된 API:
+사용 API:
 
 - `GET /api/sources`
-- `GET /api/schedules`
-- `GET /api/analysis/source/{sourceId}` 또는 관련 조회 함수
-- `GET /api/salesmap/analysis/{analysisId}` 또는 관련 조회 함수
+- `GET /api/sources/{sourceId}`
+- `POST /api/integrations/gmail/collect`
+- `POST /api/analysis`
+- `POST /api/analysis/group`
+- `GET /api/analysis/source/{sourceId}`
+- `PATCH /api/analysis/{analysisId}`
+- `POST /api/salesmap/register`
+- `GET /api/salesmap/analysis/{analysisId}`
 
-통합 테스트 패널에서 가능한 작업:
-
-- Source 생성 테스트
-- Schedule 생성 테스트
-- 생성 후 목록 재조회
-- 성공/실패 상태 표시
-
-주의:
-
-- Source 생성 payload는 백엔드 DTO 기준으로 `sourceType`, `title`, `content`, 선택 `integrationId`만 사용합니다.
-- Schedule 생성 payload는 `title`, `scheduleDateTime`, `memo`, 선택 `analysisId`를 사용합니다.
-- `description` 필드는 현재 백엔드 Schedule DTO에 없습니다.
-
-## MessageView Flow
-
-현재 `MessageView`에서는 Source -> Analysis -> Salesmap 흐름을 테스트할 수 있습니다.
-
-흐름:
+분석 API 선택 기준:
 
 ```text
-Source 목록 조회
-  -> Source 클릭
-  -> GET /api/sources/{sourceId}
-  -> GET /api/analysis/source/{sourceId}
-  -> AI 분석 테스트 버튼
-  -> if sourceGroupId exists, call POST /api/analysis/group
-  -> otherwise, call POST /api/analysis
-  -> Analysis 목록 재조회
-  -> SALESMAP 등록 테스트 버튼
-  -> POST /api/salesmap/register
-  -> GET /api/salesmap/analysis/{analysisId}
+선택한 메일에 sourceGroupId가 있음
+  -> POST /api/analysis/group
+
+sourceGroupId가 없음
+  -> POST /api/analysis
 ```
 
-현재 AI는 실제 FastAPI가 아니라 백엔드 `MockAiClient` 결과를 사용합니다. Salesmap 등록도 실제 외부 API가 아니라 `MockSalesmapClient` 결과를 사용합니다.
+등록 버튼 표시:
 
-Gmail collected Sources have `sourceGroupId` based on the Gmail thread ID, so the UI calls the SourceGroup analysis API first.
-For manually created Sources without `sourceGroupId`, the UI keeps the existing single Source analysis API.
-
-## Main Request Examples
-
-### Signup
-
-```http
-POST /api/auth/signup
-Content-Type: application/json
-```
-
-```json
-{
-  "email": "test@example.com",
-  "password": "12345678",
-  "name": "test"
-}
-```
-
-성공 시 `data.accessToken`을 저장합니다.
-
-### Login
-
-```http
-POST /api/auth/login
-Content-Type: application/json
-```
-
-```json
-{
-  "email": "test@example.com",
-  "password": "12345678"
-}
-```
-
-### Create Source
-
-```http
-POST /api/sources
-Authorization: Bearer {accessToken}
-Content-Type: application/json
-```
-
-```json
-{
-  "integrationId": null,
-  "sourceType": "EMAIL",
-  "title": "테스트 이메일",
-  "content": "고객사 미팅 일정과 후속 조치가 포함된 테스트 내용입니다."
-}
-```
-
-### Get Sources
-
-```http
-GET /api/sources
-Authorization: Bearer {accessToken}
-```
-
-### Get Source Detail
-
-```http
-GET /api/sources/{sourceId}
-Authorization: Bearer {accessToken}
-```
-
-### Create Analysis
-
-```http
-POST /api/analysis
-Authorization: Bearer {accessToken}
-Content-Type: application/json
-```
-
-```json
-{
-  "sourceId": 1
-}
-```
-
-### Create Group Analysis
-
-Use this when the selected Source has `sourceGroupId`.
-
-```http
-POST /api/analysis/group
-Authorization: Bearer {accessToken}
-Content-Type: application/json
-```
-
-```json
-{
-  "sourceGroupId": 1
-}
-```
-
-### Get Analyses By Source
-
-```http
-GET /api/analysis/source/{sourceId}
-Authorization: Bearer {accessToken}
-```
-
-### Create Schedule
-
-```http
-POST /api/schedules
-Authorization: Bearer {accessToken}
-Content-Type: application/json
-```
-
-```json
-{
-  "analysisId": null,
-  "title": "테스트 일정",
-  "scheduleDateTime": "2026-05-29T14:00:00",
-  "memo": "프론트-백 통합 테스트 일정"
-}
-```
-
-### Get Schedules
-
-```http
-GET /api/schedules
-Authorization: Bearer {accessToken}
-```
-
-### Register Salesmap
-
-```http
-POST /api/salesmap/register
-Authorization: Bearer {accessToken}
-Content-Type: application/json
-```
-
-```json
-{
-  "analysisId": 1
-}
-```
-
-### Get Salesmap Records By Analysis
-
-```http
-GET /api/salesmap/analysis/{analysisId}
-Authorization: Bearer {accessToken}
-```
-
-## Error Handling
-
-### 400 Bad Request
-
-요청 DTO 검증 실패입니다. request body 필드명 또는 필수값을 확인합니다.
-
-### 401 Unauthorized
-
-토큰이 없거나 유효하지 않은 경우입니다.
-
-프론트 처리:
-
-- `localStorage.accessToken` 삭제
-- 로그인 화면으로 이동
-
-### 403 Forbidden
-
-로그인은 되었지만 다른 사용자의 리소스에 접근한 경우입니다.
-
-예:
-
-- 다른 사용자의 `sourceId`로 Analysis 생성
-- 다른 사용자의 `analysisId`로 Salesmap 등록
-
-### 404 Not Found
-
-요청한 부모 리소스가 없거나 API 경로가 맞지 않는 경우입니다.
-
-### 500 Internal Server Error
-
-백엔드 저장 오류 등 서버 내부 오류입니다. 현재 백엔드는 `DataIntegrityViolationException`도 JSON 형태로 응답합니다.
-
-### 502 Bad Gateway
-
-백엔드가 외부 AI Module 또는 Salesmap API 호출에 실패한 경우입니다. 현재 기본 mock 모드에서는 일반적으로 발생하지 않습니다.
-
-## Mock Mode vs HTTP Mode
-
-프론트 요청 방식은 mock/http 모드와 관계없이 동일합니다.
-
-| Target | Mock Mode | HTTP Mode |
+| actionType | 버튼 문구 | 의미 |
 | --- | --- | --- |
-| AI Module | `MockAiClient`가 mock 분석 결과 반환 | FastAPI `/analyze` 호출 |
-| Salesmap API | `MockSalesmapClient`가 mock 등록 결과 반환 | 실제 Salesmap API 호출 |
+| `CREATE` | 일정 등록 | 새 일정 생성 승인 |
+| `UPDATE` | 등록된 일정 변경 | 기존 일정 변경 승인 |
+| `CANCEL` | 등록된 일정 삭제 | 기존 일정 삭제 승인 |
+| `CONFIRM` | Salesmap 등록 | 확인성 분석 등록 |
+| `UNKNOWN` | Salesmap 등록 | 일반 메일 이력 등록 |
 
-프론트는 백엔드 API만 호출하고, 외부 서비스 호출 여부는 백엔드 property로 제어합니다.
+## Gmail 새로고침
 
-## CORS
+MessageView에서 Gmail 새로고침 버튼을 누르면:
 
-백엔드는 `cors.allowed-origins` 설정으로 허용 origin을 관리합니다.
-
-현재 기본값:
-
-```properties
-cors.allowed-origins=${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+```text
+POST /api/integrations/gmail/collect?mode=manual&recentDays=30&debug=true
 ```
 
-React + Vite 기본 개발 서버는 `http://localhost:5173`입니다.
+의미:
 
-## Frontend Notes
+- 최근 30일 Gmail 메일 재조회
+- 이미 저장된 messageId는 중복 제외
+- 새 메일만 Source로 저장
+- 수집 후 Source 목록 reload
 
-- 보호 API는 항상 공통 `api` 인스턴스를 사용합니다.
-- `userId`를 일반 화면에서 직접 보내지 않는 구조를 우선 사용합니다.
-- 날짜/시간은 ISO-8601 문자열을 사용합니다.
-- 목록 API는 데이터가 없으면 빈 배열 `[]`을 반환합니다.
-- 실제 AI/FastAPI/OpenAI 호출은 아직 프론트에서 직접 다루지 않습니다.
+## AI 분석 결과 수정
+
+분석 결과 카드에서 수정 버튼을 누르면 사용자가 다음 내용을 직접 고칠 수 있습니다.
+
+- 분석 요약
+- 다음 행동
+- 일정 정보
+- 참석자
+- 고객사
+- 제품
+- 금액
+- 처리 유형
+- 판단 근거
+- 대상 일정 ID
+- 대상 일정명
+
+저장 API:
+
+```http
+PATCH /api/analysis/{analysisId}
+```
+
+수정된 결과로 등록하면 Dashboard 캘린더와 Google Calendar에 반영됩니다.
+
+## Salesmap 등록의 실제 의미
+
+현재 Salesmap TODO 직접 생성 API가 없기 때문에 프론트에서 누르는 `Salesmap 등록`은 다음 흐름을 실행합니다.
+
+```text
+POST /api/salesmap/register
+  -> Analysis actionType 확인
+  -> 내부 Schedule 생성/수정/삭제
+  -> Google Calendar 이벤트 생성/수정/삭제
+  -> Salesmap 캘린더 양방향 연동으로 TODO 반영
+```
+
+프론트는 Salesmap API를 직접 호출하지 않습니다.
+
+## 오류 코드 의미
+
+| Status | 프론트에서 안내할 의미 |
+| --- | --- |
+| 400 | 요청값이 백엔드 DTO와 맞지 않음 |
+| 401 | 로그인 만료 또는 토큰 없음 |
+| 403 | 다른 사용자의 리소스 접근 |
+| 404 | 데이터 또는 API 경로 없음 |
+| 500 | 서버 내부 오류 |
+| 502 | FastAPI AI 모듈 또는 Google/Salesmap 외부 연동 실패 |
+
+## 발표 시 프론트에서 보여줄 화면
+
+1. 로그인 화면
+2. 설정 화면에서 Gmail 연결 상태
+3. Gmail 메일 목록
+4. 메일 상세 및 AI 분석
+5. AI 분석 결과 수정
+6. 일정 등록/변경/삭제 버튼
+7. Dashboard 캘린더 반영
+8. Salesmap TODO 반영 화면
