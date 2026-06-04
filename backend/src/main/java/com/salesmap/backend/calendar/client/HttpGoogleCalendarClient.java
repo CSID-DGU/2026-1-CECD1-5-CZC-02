@@ -93,7 +93,10 @@ public class HttpGoogleCalendarClient implements GoogleCalendarClient {
                     .headers(headers -> headers.setBearerAuth(accessToken))
                     .retrieve()
                     .onStatus(status -> status.isError(), (httpRequest, httpResponse) -> {
-                        throw toGoogleCalendarClientException(httpResponse);
+                        GoogleCalendarClientException exception = toGoogleCalendarDeleteException(httpResponse);
+                        if (exception != null) {
+                            throw exception;
+                        }
                     })
                     .toBodilessEntity();
         } catch (GoogleCalendarClientException exception) {
@@ -143,6 +146,23 @@ public class HttpGoogleCalendarClient implements GoogleCalendarClient {
             JsonNode errorResponse = objectMapper.readTree(response.getBody());
             String message = errorResponse.path("error").path("message").asText("Google Calendar API 오류가 발생했습니다.");
             return new GoogleCalendarClientException("Google Calendar API 오류: " + message, errorResponse);
+        } catch (IOException exception) {
+            return new GoogleCalendarClientException("Google Calendar API 오류 응답을 처리하지 못했습니다.", exception);
+        }
+    }
+
+    private GoogleCalendarClientException toGoogleCalendarDeleteException(ClientHttpResponse response) {
+        try {
+            JsonNode errorResponse = objectMapper.readTree(response.getBody());
+            String message = errorResponse.path("error").path("message").asText("");
+            int statusCode = response.getStatusCode().value();
+
+            if (statusCode == 404 || statusCode == 410 || message.toLowerCase().contains("deleted")) {
+                return null;
+            }
+
+            String errorMessage = message.isBlank() ? "Google Calendar API error occurred." : message;
+            return new GoogleCalendarClientException("Google Calendar API 오류: " + errorMessage, errorResponse);
         } catch (IOException exception) {
             return new GoogleCalendarClientException("Google Calendar API 오류 응답을 처리하지 못했습니다.", exception);
         }

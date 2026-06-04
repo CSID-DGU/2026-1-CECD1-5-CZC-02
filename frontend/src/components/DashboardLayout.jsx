@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Settings, Search, LayoutDashboard, ChevronDown, ChevronRight } from 'lucide-react';
 import nimbusTechLogo from '../assets/님버스테크 로고.png';
@@ -9,7 +9,6 @@ import { getIntegrations } from '../api/integrations';
 import { getSchedules } from '../api/schedules';
 import { ReminderModal } from './ReminderModal';
 
-const SUMMARY_STORAGE_PREFIX = 'schedule-summary-shown';
 const THIRTY_MINUTES_STORAGE_PREFIX = 'schedule-30m-shown';
 
 function formatDate(date) {
@@ -76,6 +75,7 @@ export function DashboardLayout({ children }) {
   const [showReminder, setShowReminder] = useState(false);
   const [currentReminder, setCurrentReminder] = useState(null);
   const [reminderQueue, setReminderQueue] = useState([]);
+  const loginSummaryShownRef = useRef(false);
 
   const enqueueReminder = useCallback((reminder) => {
     setReminderQueue((prev) => {
@@ -171,14 +171,13 @@ export function DashboardLayout({ children }) {
     let ignore = false;
 
     const showLoginSummary = async () => {
+      if (loginSummaryShownRef.current) {
+        return;
+      }
+
       const today = new Date();
       const tomorrow = new Date(today);
       tomorrow.setDate(today.getDate() + 1);
-      const storageKey = `${SUMMARY_STORAGE_PREFIX}:${today.toISOString().slice(0, 10)}`;
-
-      if (sessionStorage.getItem(storageKey)) {
-        return;
-      }
 
       const schedules = await fetchSchedulesForReminder();
       if (ignore) {
@@ -195,11 +194,10 @@ export function DashboardLayout({ children }) {
         })
         .sort((left, right) => new Date(left.dateTime) - new Date(right.dateTime));
 
-      sessionStorage.setItem(storageKey, 'true');
-
       if (items.length > 0) {
+        loginSummaryShownRef.current = true;
         enqueueReminder({
-          id: `${storageKey}:summary`,
+          id: `login-summary:${today.toISOString().slice(0, 10)}`,
           kind: 'SUMMARY',
           label: '오늘과 내일의 일정',
           title: `오늘과 내일 일정 ${items.length}건이 있습니다.`,
