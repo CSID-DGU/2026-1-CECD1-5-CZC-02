@@ -21,6 +21,8 @@ async def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
         request.messages,
         _requester_name(request),
         request.existingSchedules,
+        request.analysisMode,
+        request.recentSenderAnalyses,
     )
     schedule = analysis_result.schedule
 

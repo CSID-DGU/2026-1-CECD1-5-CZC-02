@@ -119,3 +119,33 @@ Response:
 -> 일정 JSON 생성
 -> Backend 반환
 ```
+
+## Optional Ollama LLM Enhancement
+
+The default AI engine is still rule-based for stable demos.
+Set `AI_ENGINE=ollama` to enhance the rule-based result with a local Ollama LLM.
+If Ollama is not running or the LLM returns invalid JSON, the module falls back to the rule-based result.
+
+```powershell
+# 1. Install Ollama, then pull a model
+ollama pull qwen2.5:3b
+
+# 2. Start Ollama if it is not already running
+ollama serve
+
+# 3. Run the AI module with LLM enhancement
+$env:AI_ENGINE="ollama"
+$env:OLLAMA_BASE_URL="http://localhost:11434"
+$env:OLLAMA_MODEL="qwen2.5:3b"
+python -m uvicorn app.main:app --reload --port 8000
+```
+
+Environment options:
+
+```text
+AI_ENGINE=rule | ollama
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=qwen2.5:3b
+OLLAMA_TIMEOUT_SECONDS=12
+OLLAMA_TEMPERATURE=0.1
+```

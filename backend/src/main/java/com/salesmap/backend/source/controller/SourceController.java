@@ -7,6 +7,7 @@ import com.salesmap.backend.source.service.SourceService;
 import com.salesmap.backend.global.security.CustomUserPrincipal;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,5 +52,14 @@ public class SourceController {
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         return ApiResponse.success(sourceService.getSource(sourceId, principal.getUserId()));
+    }
+
+    @DeleteMapping("/{sourceId}")
+    public ApiResponse<Long> deleteSource(
+            @PathVariable Long sourceId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        sourceService.deleteSource(sourceId, principal.getUserId());
+        return ApiResponse.success("수집된 메일이 삭제되었습니다.", sourceId);
     }
 }

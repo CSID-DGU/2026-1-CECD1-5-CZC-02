@@ -202,4 +202,8 @@ public class Source extends BaseEntity {
     public void markAnalyzed() {
         this.status = SourceStatus.ANALYZED;
     }
+
+    public void markDeleted() {
+        this.status = SourceStatus.DELETED;
+    }
 }

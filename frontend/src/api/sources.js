@@ -23,3 +23,9 @@ export async function createSource(payload) {
 
   return response.data.data;
 }
+
+export async function deleteSource(sourceId) {
+  const response = await api.delete(`/api/sources/${sourceId}`);
+
+  return response.data.data;
+}

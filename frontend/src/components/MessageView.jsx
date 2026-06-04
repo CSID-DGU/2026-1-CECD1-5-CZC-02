@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { createAnalysis, createGroupAnalysis, getAnalysesBySource, getAnalysisById, updateAnalysis } from '../api/analyses';
 import { getApiErrorMessage } from '../api/errors';
 import { getSalesmapRecordsByAnalysis, registerSalesmapRecord } from '../api/salesmapRecords';
-import { getSourceById, getSources } from '../api/sources';
+import { deleteSource, getSourceById, getSources } from '../api/sources';
 import { collectGmailMessages } from '../api/integrations';
 
 const EMPTY_TEXT = '해당 없음';
@@ -287,7 +287,9 @@ export function MessageView() {
   const [sourceDetailMessage, setSourceDetailMessage] = useState('');
   const [analysisActionMessage, setAnalysisActionMessage] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analyzingMode, setAnalyzingMode] = useState(null);
   const [isBulkAnalyzing, setIsBulkAnalyzing] = useState(false);
+  const [isDeletingSource, setIsDeletingSource] = useState(false);
   const [salesmapRecordsByAnalysisId, setSalesmapRecordsByAnalysisId] = useState({});
   const [salesmapActionByAnalysisId, setSalesmapActionByAnalysisId] = useState({});
   const [registeringAnalysisId, setRegisteringAnalysisId] = useState(null);
@@ -403,11 +405,11 @@ export function MessageView() {
 
     try {
       setIsBulkAnalyzing(true);
-      setSourceListMessage(`수집 메일 AI 분석 준비 중... 0/${uniqueTargets.length}`);
+      setSourceListMessage(`수집 메일 빠른 분석 준비 중... 0/${uniqueTargets.length}`);
 
       for (let index = 0; index < uniqueTargets.length; index += 1) {
         const item = uniqueTargets[index];
-        setSourceListMessage(`수집 메일 AI 분석 중... ${index + 1}/${uniqueTargets.length}`);
+        setSourceListMessage(`수집 메일 빠른 분석 중... ${index + 1}/${uniqueTargets.length}`);
 
         try {
           const existingAnalyses = await getAnalysesBySource(item.sourceId);
@@ -417,9 +419,9 @@ export function MessageView() {
           }
 
           if (item.sourceGroupId) {
-            await createGroupAnalysis({ sourceGroupId: item.sourceGroupId });
+            await createGroupAnalysis({ sourceGroupId: item.sourceGroupId, analysisMode: 'rule' });
           } else {
-            await createAnalysis({ sourceId: item.sourceId });
+            await createAnalysis({ sourceId: item.sourceId, analysisMode: 'rule' });
           }
 
           analyzedCount += 1;
@@ -454,7 +456,7 @@ export function MessageView() {
         }
       }
 
-      setSourceListMessage(`AI 분석 완료: ${analyzedCount}건 분석, ${skippedCount}건 이미 분석됨, ${failedCount}건 실패`);
+      setSourceListMessage(`빠른 분석 완료: ${analyzedCount}건 분석, ${skippedCount}건 이미 분석됨, ${failedCount}건 실패`);
     } finally {
       setIsBulkAnalyzing(false);
     }
@@ -504,18 +506,57 @@ export function MessageView() {
     navigate(`/messages/source-${sourceId}`);
   };
 
-  const handleCreateAnalysis = async () => {
+  const handleDeleteSource = async (sourceId = selectedSourceId) => {
+    if (!sourceId) {
+      return;
+    }
+
+    const confirmed = window.confirm('선택한 수집 메일을 목록에서 삭제할까요?');
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setIsDeletingSource(true);
+      await deleteSource(sourceId);
+      setBackendSources((prev) => prev.filter((item) => item.sourceId !== sourceId));
+      setSelectedSourceDetail(null);
+      setSourceAnalyses([]);
+      setSalesmapRecordsByAnalysisId({});
+      setSalesmapActionByAnalysisId({});
+      setAnalysisActionMessage('');
+      setSourceDetailMessage('');
+      await fetchSources();
+      setSourceListMessage('수집된 메일이 삭제되었습니다.');
+      navigate('/messages/gmail');
+    } catch (error) {
+      console.error('Failed to delete source:', {
+        sourceId,
+        status: error.response?.status,
+        message: error.response?.data?.message,
+        data: error.response?.data?.data,
+        responseBody: error.response?.data,
+        rawError: error,
+      });
+      setAnalysisActionMessage(`메일 삭제 실패: ${formatDetailedError(error)}`);
+    } finally {
+      setIsDeletingSource(false);
+    }
+  };
+
+  const handleCreateAnalysis = async (mode = 'rule') => {
     if (!selectedSourceId || !selectedSourceDetail) {
       return;
     }
 
     const isGroupAnalysis = Boolean(selectedSourceDetail.sourceGroupId);
     const payload = isGroupAnalysis
-      ? { sourceGroupId: selectedSourceDetail.sourceGroupId }
-      : { sourceId: selectedSourceId };
+      ? { sourceGroupId: selectedSourceDetail.sourceGroupId, analysisMode: mode }
+      : { sourceId: selectedSourceId, analysisMode: mode };
 
     try {
       setIsAnalyzing(true);
+      setAnalyzingMode(mode);
       setAnalysisActionMessage('');
 
       console.info('Creating analysis:', {
@@ -533,7 +574,7 @@ export function MessageView() {
       setSourceAnalyses([createdAnalysis]);
       setSalesmapRecordsByAnalysisId({});
       setSalesmapActionByAnalysisId({});
-      setAnalysisActionMessage('AI 분석이 완료되었습니다.');
+      setAnalysisActionMessage(`${mode === 'ollama' ? '정밀 분석' : '빠른 분석'}이 완료되었습니다.`);
     } catch (error) {
       console.error('Failed to create analysis:', {
         sourceId: selectedSourceId,
@@ -545,9 +586,10 @@ export function MessageView() {
         responseBody: error.response?.data,
         rawError: error,
       });
-      setAnalysisActionMessage(`AI 遺꾩꽍 ?ㅽ뙣: ${formatDetailedError(error)}`);
+      setAnalysisActionMessage(`AI 분석 실패: ${formatDetailedError(error)}`);
     } finally {
       setIsAnalyzing(false);
+      setAnalyzingMode(null);
     }
   };
 
@@ -626,7 +668,7 @@ export function MessageView() {
                 disabled={isBulkAnalyzing || isSyncingGmail || backendSources.length === 0}
                 className="px-2.5 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
               >
-                {isBulkAnalyzing ? '분석 중...' : '수집 메일 AI 분석'}
+                {isBulkAnalyzing ? '빠른 분석 중...' : '수집 메일 빠른 분석'}
               </button>
             </div>
           </div>
@@ -713,7 +755,16 @@ export function MessageView() {
               <div className="bg-gray-50 border border-gray-200 rounded-md p-3 min-w-0">
                 <div className="flex items-center justify-between mb-2 gap-2">
                   <span className="text-xs text-gray-500">{formatSourceType(selectedSourceDetail.sourceType)}</span>
-                  <span className="text-xs text-gray-500">{formatSourceStatus(selectedSourceDetail.status)}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500">{formatSourceStatus(selectedSourceDetail.status)}</span>
+                    <button
+                      onClick={() => handleDeleteSource(selectedSourceDetail.sourceId)}
+                      disabled={isDeletingSource}
+                      className="px-2 py-0.5 text-xs border border-red-200 text-red-600 rounded hover:bg-red-50 disabled:bg-gray-100 disabled:text-gray-400"
+                    >
+                      {isDeletingSource ? '삭제 중...' : '삭제'}
+                    </button>
+                  </div>
                 </div>
                 {isDev && (
                   <div className="mb-2 text-left text-xs text-gray-400">
@@ -739,13 +790,22 @@ export function MessageView() {
                 <div className="flex items-center justify-between gap-3 mb-3">
                   <h4 className="text-sm text-blue-700">AI 분석 결과</h4>
                   {isDev && (
-                    <button
-                      onClick={handleCreateAnalysis}
-                      disabled={isAnalyzing}
-                      className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded shrink-0"
-                    >
-                      {isAnalyzing ? '분석 중...' : 'AI 분석 실행'}
-                    </button>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        onClick={() => handleCreateAnalysis('rule')}
+                        disabled={isAnalyzing}
+                        className="px-3 py-1 text-xs border border-blue-300 text-blue-700 bg-white hover:bg-blue-50 disabled:bg-gray-100 disabled:text-gray-400 rounded"
+                      >
+                        {analyzingMode === 'rule' ? '빠른 분석 중...' : '빠른 분석'}
+                      </button>
+                      <button
+                        onClick={() => handleCreateAnalysis('ollama')}
+                        disabled={isAnalyzing}
+                        className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+                      >
+                        {analyzingMode === 'ollama' ? '정밀 분석 중...' : '정밀 분석'}
+                      </button>
+                    </div>
                   )}
                 </div>
 
@@ -771,6 +831,8 @@ export function MessageView() {
                         isRegistering={registeringAnalysisId === analysis.analysisId}
                         onRegister={() => handleRegisterSalesmap(analysis.analysisId)}
                         onSave={(payload) => handleUpdateAnalysis(analysis.analysisId, payload)}
+                        onDeleteSource={() => handleDeleteSource(selectedSourceId)}
+                        isDeletingSource={isDeletingSource}
                         isDev={isDev}
                       />
                     ))}
@@ -785,7 +847,7 @@ export function MessageView() {
   );
 }
 
-function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegister, onSave, isDev }) {
+function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegister, onSave, onDeleteSource, isDeletingSource, isDev }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [form, setForm] = useState(() => toAnalysisForm(analysis));
@@ -903,13 +965,23 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
             >
               수정
             </button>
-            <button
-              onClick={onRegister}
-              disabled={isRegistering || analysis.status === 'APPROVED' || analysis.status === 'DELETED'}
-              className="px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
-            >
-              {isRegistering ? formatRegisteringLabel(analysis.actionType) : formatRegisterButtonLabel(analysis.actionType)}
-            </button>
+            {analysis.businessType === 'NON_BUSINESS' ? (
+              <button
+                onClick={onDeleteSource}
+                disabled={isDeletingSource}
+                className="px-3 py-1.5 text-xs bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white rounded"
+              >
+                {isDeletingSource ? '삭제 중...' : '메일 삭제'}
+              </button>
+            ) : (
+              <button
+                onClick={onRegister}
+                disabled={isRegistering || analysis.status === 'APPROVED' || analysis.status === 'DELETED'}
+                className="px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+              >
+                {isRegistering ? formatRegisteringLabel(analysis.actionType) : formatRegisterButtonLabel(analysis.actionType)}
+              </button>
+            )}
           </div>
         )}
 
