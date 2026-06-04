@@ -22,6 +22,9 @@ class AnalyzeResponse(BaseModel):
     targetScheduleId: Optional[int] = None
     targetScheduleTitle: Optional[str] = None
     actionReason: Optional[str] = None
+    businessType: str = "UNKNOWN"
+    businessRelevanceScore: float = Field(default=0.5, ge=0.0, le=1.0)
+    businessReason: Optional[str] = None
     scheduleTitle: Optional[str] = None
     scheduleDateTime: Optional[datetime] = None
     todoContent: Optional[str] = None

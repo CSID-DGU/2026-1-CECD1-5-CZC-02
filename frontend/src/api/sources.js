@@ -4,7 +4,7 @@ export async function getSources(params = {}) {
   const response = await api.get('/api/sources', {
     params: {
       page: 0,
-      size: 20,
+      size: 30,
       ...params,
     },
   });

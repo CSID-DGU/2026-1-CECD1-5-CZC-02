@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Settings, Search, LayoutDashboard, ChevronDown, ChevronRight } from 'lucide-react';
+import { Settings, Search, LayoutDashboard, ClipboardList, ChevronDown, ChevronRight } from 'lucide-react';
 import nimbusTechLogo from '../assets/님버스테크 로고.png';
 import jandiLogo from '../assets/잔디 로고 이미지 .jpg';
 import gmailLogo from '../assets/gmail로고 이미지 spaced.png';
@@ -269,6 +269,7 @@ export function DashboardLayout({ children }) {
 
   const menuItems = [
     { path: '/dashboard', icon: LayoutDashboard, label: '대시보드' },
+    { path: '/history', icon: ClipboardList, label: '처리 이력' },
     { path: '/settings', icon: Settings, label: '설정' },
   ];
 
@@ -341,8 +342,8 @@ export function DashboardLayout({ children }) {
                     onClick={() => navigate(item.path)}
                     className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
                       isActive(item.path)
-                        ? 'bg-white text-gray-900 border-l-2 border-blue-500'
-                        : 'text-gray-600 hover:bg-white/50'
+                        ? 'bg-white text-gray-950 font-semibold border-l-2 border-blue-500'
+                        : 'text-gray-700 font-medium hover:bg-white/50'
                     }`}
                   >
                     <Icon className="w-4 h-4" />

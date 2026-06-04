@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ChevronDown, Search, Check, X, Edit2, Save } from 'lucide-react';
 import { createSchedule, deleteSchedule, getSchedules, updateSchedule } from '../api/schedules';
 import { createSource, getSources } from '../api/sources';
@@ -59,7 +60,95 @@ function normalizeScheduleStatus(status) {
   return status || 'SCHEDULED';
 }
 
+function isSameCalendarDate(left, right) {
+  return (
+    left.getFullYear() === right.getFullYear()
+    && left.getMonth() === right.getMonth()
+    && left.getDate() === right.getDate()
+  );
+}
+
+function getLatestAnalysis(analyses) {
+  if (!Array.isArray(analyses) || analyses.length === 0) {
+    return null;
+  }
+
+  return [...analyses].sort((left, right) => (right.analysisId || 0) - (left.analysisId || 0))[0];
+}
+
+function createBriefingFromData(schedules = [], sources = [], latestAnalyses = []) {
+  const now = new Date();
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+
+  const activeSchedules = schedules.filter((schedule) => (
+    schedule.scheduleDateTime && normalizeScheduleStatus(schedule.status) !== 'CANCELED'
+  ));
+
+  const todaySchedules = activeSchedules.filter((schedule) => (
+    isSameCalendarDate(new Date(schedule.scheduleDateTime), now)
+  ));
+  const tomorrowSchedules = activeSchedules.filter((schedule) => (
+    isSameCalendarDate(new Date(schedule.scheduleDateTime), tomorrow)
+  ));
+  const pendingAnalyses = latestAnalyses.filter((analysis) => analysis?.status === 'ANALYZED');
+  const salesMailCount = latestAnalyses.filter((analysis) => (
+    analysis?.businessType === 'SALES_ACTIVITY'
+    || ['CREATE', 'UPDATE', 'CANCEL', 'CONFIRM'].includes(analysis?.actionType)
+  )).length;
+  const urgentAnalyses = pendingAnalyses.filter((analysis) => ['UPDATE', 'CANCEL'].includes(analysis?.actionType));
+  const priorityAnalysis = [...urgentAnalyses].sort((left, right) => (
+    (right.analysisId || 0) - (left.analysisId || 0)
+  ))[0];
+  const firstTodaySchedule = [...todaySchedules].sort((left, right) => (
+    new Date(left.scheduleDateTime) - new Date(right.scheduleDateTime)
+  ))[0];
+
+  const messages = [];
+  if (todaySchedules.length > 0) {
+    const firstScheduleTime = firstTodaySchedule
+      ? new Date(firstTodaySchedule.scheduleDateTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+      : null;
+    messages.push(
+      firstTodaySchedule
+        ? `오늘 ${firstScheduleTime} ${firstTodaySchedule.title} 일정이 예정되어 있습니다.`
+        : `오늘 예정된 일정 ${todaySchedules.length}건이 있습니다.`
+    );
+  }
+
+  if (tomorrowSchedules.length > 0) {
+    messages.push(`내일 예정된 일정 ${tomorrowSchedules.length}건도 미리 확인해 주세요.`);
+  }
+
+  if (pendingAnalyses.length > 0) {
+    messages.push(`승인 대기 중인 AI 분석 결과가 ${pendingAnalyses.length}건 있습니다.`);
+  }
+
+  if (salesMailCount > 0) {
+    messages.push(`최근 수집 메일 ${sources.length}건 중 영업 관련 메일 ${salesMailCount}건이 감지되었습니다.`);
+  }
+
+  if (urgentAnalyses.length > 0) {
+    messages.push(`일정 변경/취소 요청 ${urgentAnalyses.length}건은 우선 확인하는 것을 권장합니다.`);
+  }
+
+  if (messages.length === 0) {
+    messages.push('오늘은 긴급하게 처리할 영업 활동이 없습니다.');
+  }
+
+  return {
+    isLoading: false,
+    errorMessage: '',
+    todayCount: todaySchedules.length,
+    pendingCount: pendingAnalyses.length,
+    urgentCount: urgentAnalyses.length,
+    prioritySourceId: priorityAnalysis?.sourceId || null,
+    messages,
+  };
+}
+
 export function Dashboard() {
+  const navigate = useNavigate();
   const isDev = import.meta.env.DEV;
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const [showUserFilter, setShowUserFilter] = useState(false);
@@ -79,6 +168,15 @@ export function Dashboard() {
   const [events, setEvents] = useState([]);
   const [todaySchedule, setTodaySchedule] = useState([]);
   const [upcomingSchedule, setUpcomingSchedule] = useState([]);
+  const [salesBriefing, setSalesBriefing] = useState({
+    isLoading: true,
+    errorMessage: '',
+    todayCount: 0,
+    pendingCount: 0,
+    urgentCount: 0,
+    prioritySourceId: null,
+    messages: ['브리핑을 준비하고 있습니다.'],
+  });
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
 
@@ -354,8 +452,16 @@ export function Dashboard() {
     };
 
     const fetchDashboardApiStatuses = async () => {
+      setSalesBriefing((prev) => ({
+        ...prev,
+        isLoading: true,
+        errorMessage: '',
+      }));
+
+      let schedules = [];
+
       try {
-        const schedules = await getSchedules({ size: 50 });
+        schedules = await getSchedules({ size: 50 });
         syncSchedulesToCalendar(schedules);
         updateApiStatus('schedules', {
           status: 'success',
@@ -369,7 +475,7 @@ export function Dashboard() {
       let sources = [];
 
       try {
-        sources = await getSources({ size: 20 });
+        sources = await getSources({ size: 30 });
         updateApiStatus('sources', {
           status: 'success',
           count: sources.length,
@@ -378,6 +484,18 @@ export function Dashboard() {
       } catch (error) {
         handleApiError('sources', error);
       }
+
+      const analysisResults = await Promise.allSettled(
+        sources.slice(0, 30).map(async (source) => {
+          const analyses = await getAnalysesBySource(source.sourceId);
+          return getLatestAnalysis(analyses);
+        })
+      );
+      const latestAnalyses = analysisResults
+        .filter((result) => result.status === 'fulfilled' && result.value)
+        .map((result) => result.value);
+
+      setSalesBriefing(createBriefingFromData(schedules, sources, latestAnalyses));
 
       const firstSourceId = sources[0]?.sourceId;
 
@@ -734,7 +852,12 @@ export function Dashboard() {
 
   return (
     <div className="p-6 flex gap-6 h-full">
-      <div className="w-72 space-y-5 flex flex-col shrink-0">
+      <div className="w-72 space-y-3 flex flex-col shrink-0">
+        <SalesBriefingCard
+          briefing={salesBriefing}
+          onOpenPriority={() => navigate('/history?filter=priority')}
+        />
+
         {false && isDev && (
           <details className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <summary className="text-sm text-gray-700 cursor-pointer">개발용 연동 확인</summary>
@@ -1088,6 +1211,59 @@ export function Dashboard() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function SalesBriefingCard({ briefing, onOpenPriority }) {
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-blue-100 p-4 text-left">
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <p className="text-[11px] font-semibold text-blue-600 mb-0.5">AI 브리핑</p>
+          <h3 className="text-sm font-bold text-gray-950">오늘의 영업 브리핑</h3>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-2 mb-3">
+        <BriefingMetric label="오늘 일정" value={briefing.todayCount} colorClass="text-blue-700 bg-blue-50" />
+        <BriefingMetric label="승인 대기" value={briefing.pendingCount} colorClass="text-amber-700 bg-amber-50" />
+        <BriefingMetric label="우선 확인" value={briefing.urgentCount} colorClass="text-red-700 bg-red-50" />
+      </div>
+
+      {briefing.isLoading ? (
+        <p className="text-sm text-gray-500">브리핑을 준비하고 있습니다.</p>
+      ) : briefing.errorMessage ? (
+        <p className="text-sm text-red-600">{briefing.errorMessage}</p>
+      ) : (
+        <ul className="space-y-1.5">
+          {briefing.messages.slice(0, 2).map((message) => (
+            <li key={message} className="flex gap-2 text-xs text-gray-700 leading-relaxed">
+              <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-blue-500 shrink-0" />
+              <span>{message}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {!briefing.isLoading && briefing.prioritySourceId && (
+        <button
+          type="button"
+          onClick={onOpenPriority}
+          className="mt-3 w-full rounded-md bg-red-50 border border-red-200 px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-100 transition-colors"
+        >
+          우선 확인 메일 보기
+        </button>
+      )}
+    </div>
+  );
+}
+
+function BriefingMetric({ label, value, colorClass }) {
+  return (
+    <div className={`rounded-lg px-2 py-1.5 text-center ${colorClass}`}>
+      <p className="text-base font-bold leading-none">{value}</p>
+      <p className="text-[10px] mt-0.5 font-medium">{label}</p>
     </div>
   );
 }

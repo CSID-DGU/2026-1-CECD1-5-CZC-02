@@ -59,6 +59,16 @@ public class Analysis extends BaseEntity {
     @Column(columnDefinition = "LONGTEXT")
     private String actionReason;
 
+    @Column(length = 50)
+    private String businessType;
+
+    @Column
+    private Double businessRelevanceScore;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String businessReason;
+
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String scheduleText;
@@ -95,6 +105,9 @@ public class Analysis extends BaseEntity {
             Long targetScheduleId,
             String targetScheduleTitle,
             String actionReason,
+            String businessType,
+            Double businessRelevanceScore,
+            String businessReason,
             String scheduleText,
             String followUpAction,
             String summary,
@@ -112,6 +125,9 @@ public class Analysis extends BaseEntity {
         this.targetScheduleId = targetScheduleId;
         this.targetScheduleTitle = targetScheduleTitle;
         this.actionReason = actionReason;
+        this.businessType = businessType;
+        this.businessRelevanceScore = businessRelevanceScore;
+        this.businessReason = businessReason;
         this.scheduleText = scheduleText;
         this.followUpAction = followUpAction;
         this.summary = summary;
@@ -162,6 +178,18 @@ public class Analysis extends BaseEntity {
 
     public String getActionReason() {
         return actionReason;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public Double getBusinessRelevanceScore() {
+        return businessRelevanceScore;
+    }
+
+    public String getBusinessReason() {
+        return businessReason;
     }
 
     public String getScheduleText() {

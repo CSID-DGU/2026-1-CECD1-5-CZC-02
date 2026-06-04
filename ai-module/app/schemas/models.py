@@ -28,6 +28,9 @@ class AnalysisResultSchema(BaseModel):
     target_schedule_id: Optional[int] = None
     target_schedule_title: Optional[str] = None
     action_reason: Optional[str] = None
+    business_type: str = "UNKNOWN"  # SALES_ACTIVITY, NON_BUSINESS, UNKNOWN
+    business_relevance_score: float = 0.5  # 0.0 ~ 1.0
+    business_reason: Optional[str] = None
     todo_required: bool
     todo_content: Optional[str] = None
     schedule: Optional[ScheduleSchema] = None

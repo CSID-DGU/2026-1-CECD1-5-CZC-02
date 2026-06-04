@@ -34,6 +34,9 @@ async def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
         targetScheduleId=analysis_result.target_schedule_id,
         targetScheduleTitle=analysis_result.target_schedule_title,
         actionReason=analysis_result.action_reason,
+        businessType=analysis_result.business_type,
+        businessRelevanceScore=analysis_result.business_relevance_score,
+        businessReason=analysis_result.business_reason,
         scheduleTitle=schedule.title if schedule else None,
         scheduleDateTime=to_backend_datetime(
             schedule.date if schedule else None,

@@ -25,6 +25,66 @@ UPDATE_WORDS = ("변경", "연기", "앞당", "시간을 바", "날짜를 바", 
 CANCEL_WORDS = ("취소", "진행하지 않습니다", "진행하지 않겠습니다")
 CONFIRM_WORDS = ("확정", "그대로 진행", "확인했습니다", "참석 가능", "예정대로 진행", "진행하겠습니다")
 GENERAL_WORDS = ("견적서", "첨부", "자료", "소개 자료", "기능 설명서", "검토 후", "문의사항")
+SALES_BUSINESS_WORDS = (
+    "고객사",
+    "고객",
+    "미팅",
+    "회의",
+    "상담",
+    "통화",
+    "일정",
+    "견적",
+    "견적서",
+    "제품",
+    "서비스",
+    "솔루션",
+    "도입",
+    "계약",
+    "제안서",
+    "자료",
+    "검토",
+    "금액",
+    "비용",
+    "참석자",
+    "후속",
+    "문의",
+    "sales",
+    "crm",
+    "platform",
+    "solution",
+    "automation",
+    "analytics",
+)
+NON_BUSINESS_WORDS = (
+    "facebook",
+    "youtube",
+    "릴스",
+    "추천:",
+    "상태 업데이트",
+    "뉴스레터",
+    "광고",
+    "프로모션",
+    "쿠폰",
+    "할인",
+    "구독",
+    "인증번호",
+    "보안 알림",
+    "자동 발송",
+    "수신 거부",
+    "unsubscribe",
+)
+NON_BUSINESS_SENDERS = (
+    "facebookmail.com",
+    "youtube.com",
+    "noreply",
+    "no-reply",
+    "notification",
+    "notifications",
+    "newsletter",
+    "marketing@",
+    "ad@",
+    "ads@",
+)
 
 
 def analyze_schedule(
@@ -57,6 +117,14 @@ async def analyze_message(
     product_name = extract_product(text)
     amount = extract_amount(text)
     attendees = select_participants(text, messages or [], requester_name)
+    business_type, business_score, business_reason = classify_business_email(
+        text,
+        messages or [],
+        action_type,
+        customer_name,
+        product_name,
+        amount,
+    )
 
     target_schedule = None
     if action_type in {"UPDATE", "CANCEL", "CONFIRM"}:
@@ -90,6 +158,9 @@ async def analyze_message(
         target_schedule_id=target_schedule.scheduleId if target_schedule else None,
         target_schedule_title=target_schedule.title if target_schedule else None,
         action_reason=action_reason,
+        business_type=business_type,
+        business_relevance_score=business_score,
+        business_reason=business_reason,
         todo_required=action_type in {"CREATE", "UPDATE", "CANCEL"} and schedule is not None,
         todo_content=build_todo_content(action_type, schedule_response, product_name),
         schedule=schedule,
@@ -105,6 +176,72 @@ def classify_activity_type(text: str) -> str:
     if any(word in text for word in ("메일", "이메일", "첨부", "견적서", "자료")):
         return "EMAIL"
     return "TASK"
+
+
+def classify_business_email(
+    text: str,
+    messages: List[MessageItem],
+    action_type: str,
+    customer_name: Optional[str],
+    product_name: Optional[str],
+    amount: Optional[int],
+) -> Tuple[str, float, str]:
+    lowered_text = text.lower()
+    sender_values = " ".join(
+        item.senderEmail or "" for item in messages if item.senderEmail
+    ).lower()
+
+    non_business_hit = next(
+        (word for word in NON_BUSINESS_SENDERS if word in sender_values),
+        None,
+    ) or next(
+        (word for word in NON_BUSINESS_WORDS if word.lower() in lowered_text),
+        None,
+    )
+    if non_business_hit:
+        return (
+            "NON_BUSINESS",
+            0.1,
+            f"업무와 직접 관련이 낮은 발신자 또는 알림성 표현({non_business_hit})이 포함되어 있습니다.",
+        )
+
+    if action_type in {"CREATE", "UPDATE", "CANCEL", "CONFIRM"}:
+        return (
+            "SALES_ACTIVITY",
+            0.95,
+            "일정 생성/변경/취소/확인 표현이 있어 영업 활동 메일로 판단했습니다.",
+        )
+
+    if customer_name or product_name or amount:
+        return (
+            "SALES_ACTIVITY",
+            0.9,
+            "고객사, 제품, 금액 중 하나 이상의 영업 정보가 추출되었습니다.",
+        )
+
+    matched_words = [
+        word for word in SALES_BUSINESS_WORDS
+        if word.lower() in lowered_text
+    ]
+    if len(matched_words) >= 2:
+        preview = ", ".join(matched_words[:3])
+        return (
+            "SALES_ACTIVITY",
+            0.75,
+            f"영업 관련 키워드({preview})가 포함되어 있습니다.",
+        )
+    if len(matched_words) == 1:
+        return (
+            "UNKNOWN",
+            0.55,
+            f"영업 관련 키워드({matched_words[0]})가 있으나 활동 여부는 추가 확인이 필요합니다.",
+        )
+
+    return (
+        "UNKNOWN",
+        0.4,
+        "영업 활동으로 판단할 고객사, 제품, 일정, 견적 정보가 명확하지 않습니다.",
+    )
 
 
 def classify_action_type(text: str) -> Tuple[str, str]:
