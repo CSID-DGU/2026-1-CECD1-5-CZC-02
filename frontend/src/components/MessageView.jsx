@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useState } from 'react';
+﻿import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createAnalysis, createGroupAnalysis, getAnalysesBySource, getAnalysisById, updateAnalysis } from '../api/analyses';
 import { getApiErrorMessage } from '../api/errors';
@@ -100,6 +100,38 @@ function getActionTypeClass(actionType) {
     default:
       return 'bg-gray-100 text-gray-700 border-gray-200';
   }
+}
+
+function formatBusinessType(type) {
+  switch (type) {
+    case 'SALES_ACTIVITY':
+      return '영업 메일';
+    case 'NON_BUSINESS':
+      return '업무 외 메일';
+    case 'UNKNOWN':
+      return '확인 필요';
+    default:
+      return '확인 필요';
+  }
+}
+
+function getBusinessTypeClass(type) {
+  switch (type) {
+    case 'SALES_ACTIVITY':
+      return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+    case 'NON_BUSINESS':
+      return 'bg-gray-100 text-gray-600 border-gray-200';
+    default:
+      return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+  }
+}
+
+function formatBusinessScore(score) {
+  if (score === null || score === undefined || score === '') {
+    return EMPTY_TEXT;
+  }
+
+  return `${Math.round(Number(score) * 100)}%`;
 }
 
 function getAnalysisStatusClass(status) {
@@ -255,9 +287,11 @@ export function MessageView() {
   const [sourceDetailMessage, setSourceDetailMessage] = useState('');
   const [analysisActionMessage, setAnalysisActionMessage] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isBulkAnalyzing, setIsBulkAnalyzing] = useState(false);
   const [salesmapRecordsByAnalysisId, setSalesmapRecordsByAnalysisId] = useState({});
   const [salesmapActionByAnalysisId, setSalesmapActionByAnalysisId] = useState({});
   const [registeringAnalysisId, setRegisteringAnalysisId] = useState(null);
+  const sourceItemRefs = useRef({});
 
   const selectedSourceId = source?.startsWith('source-')
     ? Number(source.replace('source-', ''))
@@ -301,6 +335,20 @@ export function MessageView() {
     fetchSources();
   }, [fetchSources]);
 
+  useEffect(() => {
+    if (!selectedSourceId || backendSources.length === 0) {
+      return;
+    }
+
+    const selectedItem = sourceItemRefs.current[selectedSourceId];
+    if (selectedItem) {
+      selectedItem.scrollIntoView({
+        block: 'center',
+        behavior: 'smooth',
+      });
+    }
+  }, [backendSources, selectedSourceId]);
+
   const handleSyncGmail = async () => {
     try {
       setIsSyncingGmail(true);
@@ -329,6 +377,86 @@ export function MessageView() {
       setSourceListMessage(`Gmail 동기화 실패: ${getApiErrorMessage(error)}`);
     } finally {
       setIsSyncingGmail(false);
+    }
+  };
+
+  const handleAnalyzeCollectedSources = async () => {
+    if (backendSources.length === 0) {
+      setSourceListMessage('분석할 수집 메일이 없습니다.');
+      return;
+    }
+
+    const uniqueTargets = [];
+    const seenKeys = new Set();
+
+    backendSources.slice(0, 30).forEach((item) => {
+      const key = item.sourceGroupId ? `group-${item.sourceGroupId}` : `source-${item.sourceId}`;
+      if (!seenKeys.has(key)) {
+        seenKeys.add(key);
+        uniqueTargets.push(item);
+      }
+    });
+
+    let analyzedCount = 0;
+    let skippedCount = 0;
+    let failedCount = 0;
+
+    try {
+      setIsBulkAnalyzing(true);
+      setSourceListMessage(`수집 메일 AI 분석 준비 중... 0/${uniqueTargets.length}`);
+
+      for (let index = 0; index < uniqueTargets.length; index += 1) {
+        const item = uniqueTargets[index];
+        setSourceListMessage(`수집 메일 AI 분석 중... ${index + 1}/${uniqueTargets.length}`);
+
+        try {
+          const existingAnalyses = await getAnalysesBySource(item.sourceId);
+          if (Array.isArray(existingAnalyses) && existingAnalyses.length > 0) {
+            skippedCount += 1;
+            continue;
+          }
+
+          if (item.sourceGroupId) {
+            await createGroupAnalysis({ sourceGroupId: item.sourceGroupId });
+          } else {
+            await createAnalysis({ sourceId: item.sourceId });
+          }
+
+          analyzedCount += 1;
+        } catch (error) {
+          failedCount += 1;
+          console.error('Failed to analyze collected source:', {
+            sourceId: item.sourceId,
+            sourceGroupId: item.sourceGroupId,
+            status: error.response?.status,
+            message: error.response?.data?.message,
+            data: error.response?.data?.data,
+            responseBody: error.response?.data,
+            rawError: error,
+          });
+        }
+      }
+
+      await fetchSources();
+
+      if (selectedSourceId) {
+        try {
+          const analyses = await getAnalysesBySource(selectedSourceId);
+          setSourceAnalyses(latestAnalysisOnly(analyses));
+        } catch (error) {
+          console.error('Failed to refresh selected source analyses after bulk analysis:', {
+            sourceId: selectedSourceId,
+            status: error.response?.status,
+            message: error.response?.data?.message,
+            data: error.response?.data?.data,
+            rawError: error,
+          });
+        }
+      }
+
+      setSourceListMessage(`AI 분석 완료: ${analyzedCount}건 분석, ${skippedCount}건 이미 분석됨, ${failedCount}건 실패`);
+    } finally {
+      setIsBulkAnalyzing(false);
     }
   };
 
@@ -488,10 +616,17 @@ export function MessageView() {
               <span className="text-xs text-gray-500">{sourceListMessage}</span>
               <button
                 onClick={handleSyncGmail}
-                disabled={isSyncingGmail}
+                disabled={isSyncingGmail || isBulkAnalyzing}
                 className="px-2.5 py-1 text-xs border border-gray-300 rounded hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400"
               >
                 {isSyncingGmail ? '동기화 중...' : 'Gmail 새로고침'}
+              </button>
+              <button
+                onClick={handleAnalyzeCollectedSources}
+                disabled={isBulkAnalyzing || isSyncingGmail || backendSources.length === 0}
+                className="px-2.5 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+              >
+                {isBulkAnalyzing ? '분석 중...' : '수집 메일 AI 분석'}
               </button>
             </div>
           </div>
@@ -501,6 +636,11 @@ export function MessageView() {
               {backendSources.map((item) => (
                 <button
                   key={item.sourceId}
+                  ref={(element) => {
+                    if (element) {
+                      sourceItemRefs.current[item.sourceId] = element;
+                    }
+                  }}
                   onClick={() => handleSourceClick(item.sourceId)}
                   className={`w-full text-left border rounded-md p-3 transition-colors ${
                     selectedSourceId === item.sourceId
@@ -677,6 +817,9 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
       <div className="flex items-center justify-between mb-3 gap-2">
         <span className="text-xs text-gray-500">분석 번호 #{analysis.analysisId}</span>
         <div className="flex items-center gap-2">
+          <span className={`border rounded-full px-2 py-0.5 text-xs ${getBusinessTypeClass(analysis.businessType)}`}>
+            {formatBusinessType(analysis.businessType)}
+          </span>
           <span className={`border rounded-full px-2 py-0.5 text-xs ${getActionTypeClass(analysis.actionType)}`}>
             {formatActionType(analysis.actionType)}
           </span>
@@ -721,6 +864,8 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
           <AnalysisField label="고객사" value={analysis.customerName} />
           <AnalysisField label="제품" value={analysis.productName} />
           <AnalysisField label="금액" value={formatMoney(analysis.amount)} alreadyFormatted />
+          <AnalysisField label="메일 분류" value={`${formatBusinessType(analysis.businessType)} (${formatBusinessScore(analysis.businessRelevanceScore)})`} alreadyFormatted />
+          <AnalysisField label="분류 근거" value={analysis.businessReason} />
           <AnalysisField label="처리 유형" value={formatActionType(analysis.actionType)} alreadyFormatted />
           <AnalysisField label="판단 근거" value={analysis.actionReason} />
           {isDev && <AnalysisField label="대상 일정 ID" value={analysis.targetScheduleId} />}
