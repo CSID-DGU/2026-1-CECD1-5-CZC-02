@@ -16,7 +16,9 @@ public record AiAnalysisRequest(
         RequesterInfo requester,
         SourceGroupInfo sourceGroup,
         List<MessageItem> messages,
-        List<ExistingScheduleInfo> existingSchedules
+        List<ExistingScheduleInfo> existingSchedules,
+        List<HistoricalAnalysisInfo> recentSenderAnalyses,
+        String analysisMode
 ) {
 
     public record RequesterInfo(
@@ -54,6 +56,20 @@ public record AiAnalysisRequest(
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
             LocalDateTime scheduleDateTime,
             List<String> participants
+    ) {
+    }
+
+    public record HistoricalAnalysisInfo(
+            Long analysisId,
+            Long sourceId,
+            String title,
+            String customerName,
+            String productName,
+            String attendees,
+            Long amount,
+            String actionType,
+            String scheduleText,
+            String summary
     ) {
     }
 }

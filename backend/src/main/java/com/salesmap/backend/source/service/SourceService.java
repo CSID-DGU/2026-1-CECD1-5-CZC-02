@@ -72,7 +72,23 @@ public class SourceService {
             throw new AccessDeniedException("해당 원본 데이터에 접근할 권한이 없습니다.");
         }
 
+        if (source.getStatus() == SourceStatus.DELETED) {
+            throw new NoSuchElementException("삭제된 메일입니다.");
+        }
+
         return SourceResponse.from(source);
+    }
+
+    @Transactional
+    public void deleteSource(Long sourceId, Long authenticatedUserId) {
+        Source source = sourceRepository.findById(sourceId)
+                .orElseThrow(() -> new NoSuchElementException("?먮낯 ?곗씠?곕? 李얠쓣 ???놁뒿?덈떎."));
+
+        if (!source.getUser().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("?대떦 ?먮낯 ?곗씠?곗뿉 ?묎렐??沅뚰븳???놁뒿?덈떎.");
+        }
+
+        source.markDeleted();
     }
 
     @Transactional(readOnly = true)
@@ -90,7 +106,7 @@ public class SourceService {
                         .and(Sort.by(Sort.Direction.DESC, "createdAt"))
         );
 
-        return sourceRepository.findByUserId(authenticatedUserId, pageRequest).stream()
+        return sourceRepository.findByUserIdAndStatusNot(authenticatedUserId, SourceStatus.DELETED, pageRequest).stream()
                 .map(SourceResponse::from)
                 .toList();
     }

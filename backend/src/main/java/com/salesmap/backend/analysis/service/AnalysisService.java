@@ -20,6 +20,7 @@ import com.salesmap.backend.source.repository.SourceGroupRepository;
 import com.salesmap.backend.source.repository.SourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +64,7 @@ public class AnalysisService {
                 .orElseThrow(() -> new NoSuchElementException("Source not found."));
         validateSourceOwnership(source, authenticatedUserId);
 
-        AiAnalysisResponse aiResult = aiClient.analyze(toAiAnalysisRequest(source));
+        AiAnalysisResponse aiResult = aiClient.analyze(toAiAnalysisRequest(source, request.analysisMode()));
         Analysis analysis = createAnalysisEntity(source, aiResult);
         source.markAnalyzed();
         Analysis savedAnalysis = analysisRepository.save(analysis);
@@ -82,7 +83,7 @@ public class AnalysisService {
             throw new NoSuchElementException("Source group has no messages.");
         }
 
-        AiAnalysisResponse aiResult = aiClient.analyzeGroup(toAiGroupAnalysisRequest(sourceGroup, sources));
+        AiAnalysisResponse aiResult = aiClient.analyzeGroup(toAiGroupAnalysisRequest(sourceGroup, sources, request.analysisMode()));
         Analysis analysis = createAnalysisEntity(sources.get(0), aiResult);
         sources.forEach(Source::markAnalyzed);
         Analysis savedAnalysis = analysisRepository.save(analysis);
@@ -174,7 +175,7 @@ public class AnalysisService {
         );
     }
 
-    private AiAnalysisRequest toAiAnalysisRequest(Source source) {
+    private AiAnalysisRequest toAiAnalysisRequest(Source source, String analysisMode) {
         AiAnalysisRequest.RequesterInfo requester = toRequesterInfo(source);
         AiAnalysisRequest.SourceGroupInfo sourceGroup = new AiAnalysisRequest.SourceGroupInfo(
                 "source-" + source.getId(),
@@ -194,11 +195,13 @@ public class AnalysisService {
                 requester,
                 sourceGroup,
                 List.of(message),
-                getExistingSchedules(source.getUser().getId())
+                getExistingSchedules(source.getUser().getId()),
+                getRecentSenderAnalyses(source),
+                normalizeAnalysisMode(analysisMode)
         );
     }
 
-    private AiGroupAnalysisRequest toAiGroupAnalysisRequest(SourceGroup sourceGroup, List<Source> sources) {
+    private AiGroupAnalysisRequest toAiGroupAnalysisRequest(SourceGroup sourceGroup, List<Source> sources, String analysisMode) {
         Source firstSource = sources.get(0);
 
         return new AiGroupAnalysisRequest(
@@ -212,8 +215,54 @@ public class AnalysisService {
                 sources.stream()
                         .map(this::toMessageItem)
                         .toList(),
-                getExistingSchedules(sourceGroup.getUser().getId())
+                getExistingSchedules(sourceGroup.getUser().getId()),
+                getRecentSenderAnalyses(firstSource),
+                normalizeAnalysisMode(analysisMode)
         );
+    }
+
+    private List<AiAnalysisRequest.HistoricalAnalysisInfo> getRecentSenderAnalyses(Source source) {
+        if (source.getSenderEmail() == null || source.getSenderEmail().isBlank()) {
+            return List.of();
+        }
+
+        return analysisRepository.findRecentSenderAnalyses(
+                        source.getUser().getId(),
+                        source.getSenderEmail(),
+                        source.getId(),
+                        PageRequest.of(0, 5)
+                )
+                .stream()
+                .map(this::toHistoricalAnalysisInfo)
+                .toList();
+    }
+
+    private AiAnalysisRequest.HistoricalAnalysisInfo toHistoricalAnalysisInfo(Analysis analysis) {
+        return new AiAnalysisRequest.HistoricalAnalysisInfo(
+                analysis.getId(),
+                analysis.getSource().getId(),
+                analysis.getSource().getTitle(),
+                analysis.getCustomerName(),
+                analysis.getProductName(),
+                analysis.getAttendees(),
+                analysis.getAmount(),
+                analysis.getActionType(),
+                analysis.getScheduleText(),
+                analysis.getSummary()
+        );
+    }
+
+    private String normalizeAnalysisMode(String analysisMode) {
+        if (analysisMode == null || analysisMode.isBlank()) {
+            return null;
+        }
+
+        String normalized = analysisMode.trim().toLowerCase();
+        if ("rule".equals(normalized) || "ollama".equals(normalized)) {
+            return normalized;
+        }
+
+        return null;
     }
 
     private AiAnalysisRequest.RequesterInfo toRequesterInfo(Source source) {

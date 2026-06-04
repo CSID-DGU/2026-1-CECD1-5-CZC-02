@@ -1,11 +1,13 @@
 """Rule-based analysis orchestration for sales activity emails."""
 import re
 from datetime import datetime, timedelta
-from typing import Iterable, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+from app.config import AI_ENGINE
 from app.schemas.models import AnalysisResultSchema, ScheduleSchema
-from app.schemas.request import ExistingScheduleInfo, MessageItem
+from app.schemas.request import ExistingScheduleInfo, HistoricalAnalysisInfo, MessageItem
 from app.schemas.response import ScheduleResponse
+from app.services.ollama_client import request_llm_analysis_patch
 
 
 SCHEDULE_WORDS = ("미팅", "회의", "상담", "통화", "일정")
@@ -109,12 +111,15 @@ async def analyze_message(
     messages: Optional[List[MessageItem]] = None,
     requester_name: Optional[str] = None,
     existing_schedules: Optional[List[ExistingScheduleInfo]] = None,
+    analysis_mode: Optional[str] = None,
+    recent_sender_analyses: Optional[List[HistoricalAnalysisInfo]] = None,
 ) -> AnalysisResultSchema:
     text = normalize(message)
     schedule_response = analyze_schedule(text, messages, requester_name)
     action_type, action_reason = classify_action_type(text)
-    customer_name = extract_customer(text)
-    product_name = extract_product(text)
+    recent_context = recent_sender_analyses or []
+    customer_name = extract_customer(text) or first_recent_value(recent_context, "customerName")
+    product_name = extract_product(text) or first_recent_value(recent_context, "productName")
     amount = extract_amount(text)
     attendees = select_participants(text, messages or [], requester_name)
     business_type, business_score, business_reason = classify_business_email(
@@ -146,7 +151,7 @@ async def analyze_message(
             location=None,
         )
 
-    return AnalysisResultSchema(
+    rule_result = AnalysisResultSchema(
         summary=build_summary(action_type, schedule_response, text, customer_name, product_name, amount, attendees),
         customer_name=customer_name,
         contact_person=first_contact(attendees),
@@ -167,6 +172,18 @@ async def analyze_message(
         confidence=0.85,
     )
 
+    effective_engine = (analysis_mode or AI_ENGINE).lower()
+    if effective_engine in {"ollama", "llm", "hybrid"}:
+        return enhance_with_ollama(
+            text,
+            messages or [],
+            existing_schedules or [],
+            recent_context,
+            rule_result,
+        )
+
+    return rule_result
+
 
 def classify_activity_type(text: str) -> str:
     if any(word in text for word in ("미팅", "회의", "상담", "만남")):
@@ -176,6 +193,194 @@ def classify_activity_type(text: str) -> str:
     if any(word in text for word in ("메일", "이메일", "첨부", "견적서", "자료")):
         return "EMAIL"
     return "TASK"
+
+
+def enhance_with_ollama(
+    text: str,
+    messages: List[MessageItem],
+    existing_schedules: List[ExistingScheduleInfo],
+    recent_sender_analyses: List[HistoricalAnalysisInfo],
+    rule_result: AnalysisResultSchema,
+) -> AnalysisResultSchema:
+    try:
+        patch = request_llm_analysis_patch(text, messages, existing_schedules, recent_sender_analyses, rule_result)
+    except Exception as exception:
+        print(f"[AI_ENGINE] Ollama enhancement skipped. reason={exception}")
+        return rule_result
+
+    try:
+        merged_result = merge_llm_patch(rule_result, patch.data)
+        return apply_precision_action_corrections(text, merged_result, rule_result)
+    except Exception as exception:
+        print(f"[AI_ENGINE] Ollama patch merge failed. reason={exception}")
+        return rule_result
+
+
+def merge_llm_patch(rule_result: AnalysisResultSchema, patch: Dict[str, Any]) -> AnalysisResultSchema:
+    action_type = patch.get("actionType") or rule_result.action_type
+    if action_type not in {"CREATE", "UPDATE", "CANCEL", "CONFIRM", "UNKNOWN"}:
+        action_type = rule_result.action_type
+
+    schedule = build_llm_schedule(patch.get("schedule"), rule_result, action_type)
+    if action_type == "UNKNOWN":
+        schedule = None
+
+    attendees = patch.get("attendees")
+    if not isinstance(attendees, list):
+        attendees = rule_result.attendees or []
+    attendees = dedupe([str(item) for item in attendees if item])
+
+    target_schedule_title = text_or_none(patch.get("targetScheduleTitle")) or rule_result.target_schedule_title
+    action_reason = text_or_none(patch.get("actionReason")) or rule_result.action_reason
+    business_type = text_or_none(patch.get("businessType")) or rule_result.business_type
+    business_score = patch.get("businessRelevanceScore")
+    if not isinstance(business_score, (int, float)):
+        business_score = rule_result.business_relevance_score
+
+    return AnalysisResultSchema(
+        summary=text_or_none(patch.get("summary")) or rule_result.summary,
+        customer_name=text_or_none(patch.get("customerName")) or rule_result.customer_name,
+        contact_person=text_or_none(patch.get("contactName")) or first_contact(attendees) or rule_result.contact_person,
+        product_name=text_or_none(patch.get("productName")) or rule_result.product_name,
+        attendees=attendees or rule_result.attendees,
+        amount=patch.get("amount") if isinstance(patch.get("amount"), int) else rule_result.amount,
+        activity_type=rule_result.activity_type,
+        action_type=action_type,
+        target_schedule_id=rule_result.target_schedule_id,
+        target_schedule_title=target_schedule_title,
+        action_reason=action_reason,
+        business_type=business_type,
+        business_relevance_score=max(0.0, min(1.0, float(business_score))),
+        business_reason=text_or_none(patch.get("businessReason")) or rule_result.business_reason,
+        todo_required=action_type in {"CREATE", "UPDATE", "CANCEL"} and schedule is not None,
+        todo_content=text_or_none(patch.get("todoContent")) or rule_result.todo_content,
+        schedule=schedule,
+        confidence=max(rule_result.confidence, 0.9),
+    )
+
+
+def build_llm_schedule(
+    raw_schedule: Any,
+    rule_result: AnalysisResultSchema,
+    action_type: str,
+) -> Optional[ScheduleSchema]:
+    if isinstance(raw_schedule, dict):
+        title = text_or_none(raw_schedule.get("title"))
+        date = text_or_none(raw_schedule.get("date"))
+        time = text_or_none(raw_schedule.get("time"))
+        participants = raw_schedule.get("participants")
+        if isinstance(participants, str):
+            participants = [item.strip() for item in participants.split(",") if item.strip()]
+        if not isinstance(participants, list):
+            participants = []
+
+        if title and date and time:
+            return ScheduleSchema(
+                title=title,
+                date=date,
+                time=time,
+                participants=dedupe([str(item) for item in participants if item]),
+                location=None,
+            )
+
+    if action_type in {"CREATE", "UPDATE", "CANCEL", "CONFIRM"}:
+        return rule_result.schedule
+    return None
+
+
+def text_or_none(value: Any) -> Optional[str]:
+    if isinstance(value, str) and value.strip():
+        return value.strip()
+    return None
+
+
+def apply_precision_action_corrections(
+    text: str,
+    result: AnalysisResultSchema,
+    rule_result: AnalysisResultSchema,
+) -> AnalysisResultSchema:
+    if result.action_type == "CANCEL":
+        return result
+
+    if looks_like_schedule_update(text):
+        schedule = result.schedule or rule_result.schedule
+        schedule_title = (
+            result.target_schedule_title
+            or (schedule.title if schedule else None)
+            or rule_result.target_schedule_title
+        )
+        reason = append_reason(
+            result.action_reason,
+            "정밀 분석: 기존 일정 조정/변경 문맥이 포함되어 일정 변경으로 판단했습니다.",
+        )
+        todo_content = f"{schedule_title} 일정 변경 확인" if schedule_title else "일정 변경 확인"
+
+        return copy_analysis_result(
+            result,
+            action_type="UPDATE",
+            target_schedule_title=schedule_title,
+            action_reason=reason,
+            todo_required=schedule is not None,
+            todo_content=todo_content,
+            schedule=schedule,
+            confidence=max(result.confidence, 0.92),
+        )
+
+    return result
+
+
+def looks_like_schedule_update(text: str) -> bool:
+    if "취소" in text:
+        return False
+
+    update_markers = (
+        "기존",
+        "잡아둔",
+        "예정된",
+        "대신",
+        "같은 날",
+        "조정",
+        "변경",
+        "바꿔",
+        "늦춰",
+        "앞당",
+        "겹치",
+        "시간을",
+        "날짜를",
+    )
+    schedule_markers = ("미팅", "회의", "상담", "통화", "일정")
+
+    return any(marker in text for marker in update_markers) and any(marker in text for marker in schedule_markers)
+
+
+def append_reason(current_reason: Optional[str], next_reason: str) -> str:
+    if not current_reason:
+        return next_reason
+    if next_reason in current_reason:
+        return current_reason
+    return f"{current_reason} / {next_reason}"
+
+
+def copy_analysis_result(result: AnalysisResultSchema, **updates: Any) -> AnalysisResultSchema:
+    if hasattr(result, "model_dump"):
+        data = result.model_dump()
+    else:
+        data = result.dict()
+    data.update(updates)
+    return AnalysisResultSchema(**data)
+
+
+def first_recent_value(
+    recent_sender_analyses: List[HistoricalAnalysisInfo],
+    field_name: str,
+) -> Optional[str]:
+    for analysis in recent_sender_analyses:
+        value = getattr(analysis, field_name, None)
+        if isinstance(value, str):
+            cleaned = clean_entity(value)
+            if cleaned and cleaned != "-":
+                return cleaned
+    return None
 
 
 def classify_business_email(

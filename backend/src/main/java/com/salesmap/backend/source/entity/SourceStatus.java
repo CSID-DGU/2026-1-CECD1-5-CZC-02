@@ -5,5 +5,6 @@ public enum SourceStatus {
     COLLECTED,
     ANALYSIS_REQUESTED,
     ANALYZED,
-    FAILED
+    FAILED,
+    DELETED
 }

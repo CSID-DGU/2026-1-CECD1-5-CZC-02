@@ -4,7 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from app.config import SERVER_HOST, SERVER_PORT, BACKEND_URL
+from app.config import AI_ENGINE, OLLAMA_BASE_URL, OLLAMA_MODEL, SERVER_HOST, SERVER_PORT, BACKEND_URL
 from app.routes.analyze import router as analyze_router
 from app.schemas.models import AiErrorResponse
 
@@ -68,6 +68,9 @@ async def startup_event():
     print(f"📌 서버: http://{SERVER_HOST}:{SERVER_PORT}")
     print(f"📌 문서: http://{SERVER_HOST}:{SERVER_PORT}/docs")
     print(f"📌 Backend: {BACKEND_URL}")
+    print(f"📌 AI Engine: {AI_ENGINE}")
+    if AI_ENGINE in {"ollama", "llm", "hybrid"}:
+        print(f"📌 Ollama: {OLLAMA_BASE_URL} / {OLLAMA_MODEL}")
 
 
 @app.on_event("shutdown")

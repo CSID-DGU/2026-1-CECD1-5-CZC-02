@@ -6,6 +6,8 @@ public record AiGroupAnalysisRequest(
         AiAnalysisRequest.RequesterInfo requester,
         AiAnalysisRequest.SourceGroupInfo sourceGroup,
         List<AiAnalysisRequest.MessageItem> messages,
-        List<AiAnalysisRequest.ExistingScheduleInfo> existingSchedules
+        List<AiAnalysisRequest.ExistingScheduleInfo> existingSchedules,
+        List<AiAnalysisRequest.HistoricalAnalysisInfo> recentSenderAnalyses,
+        String analysisMode
 ) {
 }
