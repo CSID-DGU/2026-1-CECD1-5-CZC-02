@@ -7,6 +7,8 @@ import com.salesmap.backend.ai.dto.AiAnalysisRequest;
 import com.salesmap.backend.ai.dto.AiAnalysisResponse;
 import com.salesmap.backend.ai.dto.AiErrorResponse;
 import com.salesmap.backend.ai.dto.AiGroupAnalysisRequest;
+import com.salesmap.backend.ai.dto.AiReplyDraftRequest;
+import com.salesmap.backend.ai.dto.AiReplyDraftResponse;
 import com.salesmap.backend.ai.exception.AiClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +50,32 @@ public class HttpAiClient implements AiClient {
     @Override
     public AiAnalysisResponse analyzeGroup(AiGroupAnalysisRequest request) {
         return postAnalyze(request);
+    }
+
+    @Override
+    public AiReplyDraftResponse generateReplyDraft(AiReplyDraftRequest request) {
+        try {
+            AiReplyDraftResponse response = restClient.post()
+                    .uri("/reply-draft")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .body(request)
+                    .retrieve()
+                    .onStatus(status -> status.isError(), (httpRequest, httpResponse) -> {
+                        throw toAiClientException(httpResponse);
+                    })
+                    .body(AiReplyDraftResponse.class);
+
+            if (response == null) {
+                throw new AiClientException("AI Module reply draft response is empty.");
+            }
+
+            return response;
+        } catch (AiClientException exception) {
+            throw exception;
+        } catch (RestClientException exception) {
+            throw new AiClientException("AI Module reply draft call failed.", exception);
+        }
     }
 
     private AiAnalysisResponse postAnalyze(Object request) {

@@ -3,6 +3,7 @@ package com.salesmap.backend.schedule.service;
 import com.salesmap.backend.analysis.entity.Analysis;
 import com.salesmap.backend.analysis.repository.AnalysisRepository;
 import com.salesmap.backend.calendar.service.GoogleCalendarEventService;
+import com.salesmap.backend.customer.service.CustomerTimelineService;
 import com.salesmap.backend.schedule.dto.ScheduleCreateRequest;
 import com.salesmap.backend.schedule.dto.ScheduleResponse;
 import com.salesmap.backend.schedule.dto.ScheduleUpdateRequest;
@@ -27,17 +28,20 @@ public class ScheduleService {
     private final UserRepository userRepository;
     private final AnalysisRepository analysisRepository;
     private final GoogleCalendarEventService googleCalendarEventService;
+    private final CustomerTimelineService customerTimelineService;
 
     public ScheduleService(
             ScheduleRepository scheduleRepository,
             UserRepository userRepository,
             AnalysisRepository analysisRepository,
-            GoogleCalendarEventService googleCalendarEventService
+            GoogleCalendarEventService googleCalendarEventService,
+            CustomerTimelineService customerTimelineService
     ) {
         this.scheduleRepository = scheduleRepository;
         this.userRepository = userRepository;
         this.analysisRepository = analysisRepository;
         this.googleCalendarEventService = googleCalendarEventService;
+        this.customerTimelineService = customerTimelineService;
     }
 
     @Transactional
@@ -106,6 +110,7 @@ public class ScheduleService {
         }
 
         googleCalendarEventService.deleteEventForSchedule(schedule, authenticatedUserId);
+        customerTimelineService.unlinkScheduleReferences(schedule.getId());
         scheduleRepository.delete(schedule);
     }
 

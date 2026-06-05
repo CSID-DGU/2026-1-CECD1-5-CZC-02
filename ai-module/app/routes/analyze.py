@@ -1,9 +1,10 @@
 """분석 요청 라우트"""
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.request import AnalyzeRequest
-from app.schemas.response import AnalyzeResponse, ScheduleAnalyzeResponse
+from app.schemas.request import AnalyzeRequest, ReplyDraftRequest
+from app.schemas.response import AnalyzeResponse, ReplyDraftResponse, ScheduleAnalyzeResponse
 from app.services.analyzer import analyze_message, analyze_schedule
+from app.services.reply_draft import generate_reply_draft
 from app.services.regex_parser import to_backend_datetime
 
 router = APIRouter(tags=["analyze"])
@@ -62,6 +63,14 @@ async def analyze_schedule_only(request: AnalyzeRequest) -> ScheduleAnalyzeRespo
         success=True,
         schedule=analyze_schedule(message, request.messages, _requester_name(request)),
     )
+
+
+@router.post("/reply-draft", response_model=ReplyDraftResponse)
+async def reply_draft(request: ReplyDraftRequest) -> ReplyDraftResponse:
+    if not request.emailContent.strip():
+        raise HTTPException(status_code=400, detail="emailContent is required.")
+
+    return generate_reply_draft(request)
 
 
 @router.post("/api/analyze", response_model=AnalyzeResponse, include_in_schema=False)

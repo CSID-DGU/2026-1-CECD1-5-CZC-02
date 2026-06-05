@@ -5,6 +5,7 @@ import com.salesmap.backend.analysis.dto.AnalysisGroupCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisResponse;
 import com.salesmap.backend.analysis.dto.AnalysisUpdateRequest;
 import com.salesmap.backend.analysis.service.AnalysisService;
+import com.salesmap.backend.ai.dto.AiReplyDraftResponse;
 import com.salesmap.backend.global.response.ApiResponse;
 import com.salesmap.backend.global.security.CustomUserPrincipal;
 import jakarta.validation.Valid;
@@ -51,6 +52,14 @@ public class AnalysisController {
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         return ApiResponse.success(analysisService.getAnalysis(analysisId, principal.getUserId()));
+    }
+
+    @PostMapping("/{analysisId}/reply-draft")
+    public ApiResponse<AiReplyDraftResponse> generateReplyDraft(
+            @PathVariable Long analysisId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success("답장 초안이 생성되었습니다.", analysisService.generateReplyDraft(analysisId, principal.getUserId()));
     }
 
     @PatchMapping("/{analysisId}")

@@ -4,6 +4,8 @@ import com.salesmap.backend.ai.config.AiModuleProperties;
 import com.salesmap.backend.ai.dto.AiAnalysisRequest;
 import com.salesmap.backend.ai.dto.AiAnalysisResponse;
 import com.salesmap.backend.ai.dto.AiGroupAnalysisRequest;
+import com.salesmap.backend.ai.dto.AiReplyDraftRequest;
+import com.salesmap.backend.ai.dto.AiReplyDraftResponse;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,25 @@ public class MockAiClient implements AiClient {
     @Override
     public AiAnalysisResponse analyzeGroup(AiGroupAnalysisRequest request) {
         return mockResponse();
+    }
+
+    @Override
+    public AiReplyDraftResponse generateReplyDraft(AiReplyDraftRequest request) {
+        String title = request.emailTitle() == null || request.emailTitle().isBlank()
+                ? "문의 주신 내용"
+                : request.emailTitle();
+        return new AiReplyDraftResponse(
+                title.startsWith("Re:") ? title : "Re: " + title,
+                """
+                안녕하세요.
+
+                보내주신 내용 확인했습니다.
+                공유해주신 일정과 요청 사항을 기준으로 내부 일정에 반영하고 준비하겠습니다.
+
+                감사합니다.
+                """.trim(),
+                "mock"
+        );
     }
 
     private AiAnalysisResponse mockResponse() {

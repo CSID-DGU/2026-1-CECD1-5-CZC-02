@@ -32,3 +32,9 @@ export async function updateAnalysis(analysisId, payload) {
 
   return response.data.data;
 }
+
+export async function generateReplyDraft(analysisId) {
+  const response = await api.post(`/api/analysis/${analysisId}/reply-draft`);
+
+  return response.data.data;
+}

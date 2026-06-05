@@ -19,6 +19,15 @@ public interface AnalysisRepository extends JpaRepository<Analysis, Long> {
             from Analysis a
             join fetch a.source s
             where s.user.id = :userId
+            order by a.id desc
+            """)
+    List<Analysis> findByUserId(@Param("userId") Long userId);
+
+    @Query("""
+            select a
+            from Analysis a
+            join fetch a.source s
+            where s.user.id = :userId
               and s.senderEmail = :senderEmail
               and s.id <> :sourceId
             order by a.id desc
