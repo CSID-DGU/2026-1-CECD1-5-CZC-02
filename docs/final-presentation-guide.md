@@ -37,6 +37,8 @@ AI가 일정/고객사/제품/후속조치 정보를 추출한 뒤,
 5. 승인 후 내부 Dashboard 캘린더에 반영된다.
 6. Google Calendar 이벤트를 생성/수정/삭제한다.
 7. Salesmap은 Google Calendar 양방향 연동을 통해 TODO가 자동 반영된다.
+8. 처리 이력과 고객 타임라인으로 자동화 결과를 추적한다.
+9. AI 분석 후 답장 초안까지 생성해 후속 커뮤니케이션을 돕는다.
 
 ## 3. 최종 아키텍처
 
@@ -56,6 +58,7 @@ React + Vite Frontend
 - Frontend: React, Vite, Axios
 - Backend: Spring Boot, Java 17, Gradle, JPA, MySQL, Spring Security, JWT
 - AI Module: Python, FastAPI
+- AI 보조 모델: BGE-M3, GLiNER, Ollama
 - External: Gmail API, Google Calendar API, Salesmap Calendar Sync
 
 ## 4. 구현된 사용자 흐름
@@ -68,10 +71,12 @@ React + Vite Frontend
 5. 메일 상세 확인
 6. AI 분석 실행
 7. 분석 결과 확인 및 수동 수정
-8. 일정 등록/변경/삭제 승인
-9. Dashboard 캘린더 반영
-10. Google Calendar 반영
-11. Salesmap TODO 반영
+8. 답장 초안 생성
+9. 일정 등록/변경/삭제 승인
+10. Dashboard 캘린더 반영
+11. Google Calendar 반영
+12. Salesmap TODO 반영
+13. 처리 이력/고객 타임라인 확인
 ```
 
 ## 5. 화면별 발표 포인트
@@ -93,6 +98,8 @@ React + Vite Frontend
 - 실제 Gmail에서 수집한 메일 목록 표시
 - 긴 메일도 카드 레이아웃이 깨지지 않도록 처리
 - 같은 발신자의 최근 메일 확인 가능
+- 수집 메일 일괄 AI 분석
+- 업무 외 메일 삭제/제외
 
 ### 메일 상세 및 AI 분석
 
@@ -100,15 +107,31 @@ React + Vite Frontend
 - AI 분석 실행
 - 분석 결과를 한글 라벨로 표시
 - actionType을 배지로 표시
+- 영업 메일/업무 외 메일 분류
 - 분석 결과 수동 수정 가능
+- 답장 초안 생성 및 복사
+- 일정 충돌 시 경고 표시
 
 ### Dashboard
 
 - 내부 일정 캘린더
+- 오늘의 영업 브리핑
 - 오늘 일정/다가오는 일정
 - 일정 유형별 색상
 - 일정 직접 수정/삭제
 - Google Calendar/Salesmap 연동 결과 확인
+
+### 처리 이력
+
+- 승인 대기/등록됨/삭제됨 상태 확인
+- 우선 확인 메일을 바로 열 수 있음
+- AI 분석과 Salesmap 반영 상태를 연결해서 확인
+
+### 고객 타임라인
+
+- 고객사별 Gmail, AI 분석, 일정 반영, Salesmap 등록 이력을 시간순으로 표시
+- 같은 고객사와 어떤 메일을 주고받았는지 빠르게 확인
+- 영업 외 메일은 타임라인에 포함하지 않음
 
 ### Salesmap
 
@@ -125,7 +148,30 @@ React + Vite Frontend
 | `CONFIRM` | 일정 확인 | 일정 확정/참석 가능 | 분석 이력 저장 중심 |
 | `UNKNOWN` | 확인 필요 | 일반 영업 메일 | 일정 자동 생성 없음 |
 
-## 7. 시연용 추천 메일
+## 7. AI 모듈 설명
+
+현재 AI 모듈은 시연 안정성과 확장성을 모두 고려해 하이브리드 구조로 구성했습니다.
+
+```text
+규칙 기반 분석
+  + BGE-M3 임베딩 기반 영업 메일/의도 보조 분류
+  + GLiNER 기반 고객사/제품/참석자 추출 보조
+  + Ollama 로컬 LLM 기반 답장 초안 생성/보정
+  + 시연 핵심 케이스 안정화 패턴
+```
+
+발표 멘트 예시:
+
+```text
+MVP 단계에서는 비용이 들지 않는 오픈소스/로컬 모델을 조합했습니다.
+BGE-M3는 메일이 영업 활동인지, 일정 생성/변경/취소에 가까운지 판단을 보조하고,
+GLiNER는 고객사나 제품명 같은 엔티티 추출을 보조합니다.
+답장 초안은 Ollama 기반 LLM을 사용할 수 있게 했고,
+시연 안정성을 위해 핵심 케이스는 템플릿 fallback을 둔 구조입니다.
+추후 OpenAI API나 더 큰 모델로 교체해도 FastAPI AI 모듈만 확장하면 됩니다.
+```
+
+## 8. 시연용 추천 메일
 
 ### 일정 생성
 
@@ -201,7 +247,7 @@ Nimbus Tech CRM Automation 서비스 도입 상담 미팅은 취소 부탁드립
 - 처리 유형: 확인 필요
 - 일정 생성 없음
 
-## 8. 발표 스토리 예시
+## 9. 발표 스토리 예시
 
 ```text
 기존 Salesmap은 영업 활동을 사람이 직접 기록해야 합니다.
@@ -215,7 +261,7 @@ Google Calendar 양방향 연동을 활용해 해결했습니다.
 Salesmap이 이를 자동으로 TODO로 가져오는 방식입니다.
 ```
 
-## 9. 팀원 Codex에게 줄 프롬프트
+## 10. 팀원 Codex에게 줄 프롬프트
 
 다른 팀원의 Codex에게 발표 자료 준비를 시킬 때 아래 프롬프트를 그대로 사용할 수 있습니다.
 
@@ -226,6 +272,7 @@ Salesmap이 이를 자동으로 TODO로 가져오는 방식입니다.
 레포 전체 파일을 읽고, 특히 docs 폴더의 다음 문서를 먼저 읽어주세요.
 
 - docs/final-presentation-guide.md
+- docs/latest-feature-summary.md
 - docs/backend-status.md
 - docs/e2e-test-flow.md
 - docs/frontend-api-guide.md
@@ -248,15 +295,17 @@ Salesmap은 Google Calendar 양방향 연동을 통해 TODO가 자동 생성/수
 5. Gmail 수집 흐름
 6. AI 분석 흐름
 7. 사용자 승인 및 수동 수정 흐름
-8. Google Calendar 경유 Salesmap 연동 방식
-9. 시연 순서
-10. 한계와 향후 개선점
+8. 답장 초안 생성 흐름
+9. 처리 이력과 고객 타임라인
+10. Google Calendar 경유 Salesmap 연동 방식
+11. 시연 순서
+12. 한계와 향후 개선점
 
 발표자는 개발자가 아닌 청중도 이해할 수 있게 설명해야 하므로,
 기술 설명과 사용자 가치 설명을 함께 정리해주세요.
 ```
 
-## 10. 발표 전 체크리스트
+## 11. 발표 전 체크리스트
 
 - [ ] MySQL 실행
 - [ ] Backend 실행
@@ -268,14 +317,20 @@ Salesmap은 Google Calendar 양방향 연동을 통해 TODO가 자동 생성/수
 - [ ] CREATE 메일 분석 성공
 - [ ] UPDATE 메일 분석 성공
 - [ ] CANCEL 메일 분석 성공
+- [ ] 업무 외 메일 분류 확인
+- [ ] 답장 초안 생성 확인
+- [ ] 일정 충돌 경고 확인
 - [ ] Dashboard 반영 확인
 - [ ] Google Calendar 반영 확인
 - [ ] Salesmap TODO 반영 확인
+- [ ] 처리 이력 확인
+- [ ] 고객 타임라인 확인
 
-## 11. 남은 한계
+## 12. 남은 한계
 
 - JANDI 실제 연동은 보류 상태
 - Salesmap TODO 직접 쓰기 API는 없음
 - Salesmap 반영은 Google Calendar 동기화 지연에 영향을 받을 수 있음
 - 운영 환경에서는 OAuth 토큰 암호화 저장과 refresh 정책 보강 필요
-- AI 분석은 규칙 기반 보정이 포함되어 있어 더 다양한 메일 패턴 학습이 필요
+- AI 분석은 규칙/오픈소스 모델/시연 보정이 결합된 MVP 구조라 더 다양한 메일 패턴 학습이 필요
+- 답장 초안은 실제 발송 API까지 연결하지 않고 복사 가능한 초안 제공 단계
