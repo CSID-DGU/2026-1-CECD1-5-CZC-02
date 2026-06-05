@@ -282,7 +282,54 @@ Nimbus Tech 도입 상담 미팅 취소 요청
 - 일정 정보: 해당 없음
 - Dashboard에 일정이 생성되지 않음
 
-## 10. DB 확인 SQL
+## 10. 추가 확인 항목
+
+### 답장 초안
+
+1. 영업 메일 선택
+2. AI 분석 실행
+3. `답장 초안 생성` 클릭
+4. 약 3초 후 제목/본문이 표시되는지 확인
+5. `복사` 버튼으로 본문 복사가 가능한지 확인
+
+성공 기준:
+
+- 고객사/담당자 호칭이 자연스럽게 표시됨
+- 일정 생성/변경/취소/자료 요청에 맞는 답변 문구가 생성됨
+- 본문 앞 공백이나 깨진 한글이 없음
+
+### 처리 이력과 고객 타임라인
+
+처리 이력:
+
+1. `/history` 또는 사이드 메뉴 `처리 이력` 진입
+2. 승인 대기/등록됨/삭제됨 수치 확인
+3. 우선 확인 메일을 클릭해 메일 상세 화면으로 이동
+
+고객 타임라인:
+
+1. `/customers` 또는 사이드 메뉴 `고객 타임라인` 진입
+2. 고객사 선택
+3. AI 분석, 일정 반영, Salesmap 등록 이력이 시간순으로 표시되는지 확인
+
+성공 기준:
+
+- 업무 외 메일은 고객 타임라인에 포함되지 않음
+- GreenSoft/Delta Systems 등 시연 고객사의 활동 이력이 표시됨
+
+### 일정 충돌 경고
+
+1. 이미 등록된 일정과 같은 시간 또는 가까운 시간대의 미팅 메일을 분석
+2. `일정 등록` 클릭
+3. 중복 또는 근접 일정 경고가 표시되는지 확인
+4. 중복 일정은 등록을 막고, 근접 일정은 사용자 확인 후 계속 진행 가능
+
+성공 기준:
+
+- 같은 시간대 일정은 `409 Conflict` 기반 경고가 표시됨
+- 전후 약 3시간 안의 일정은 충돌 후보로 안내됨
+
+## 11. DB 확인 SQL
 
 ```sql
 select * from users order by id desc;
@@ -292,6 +339,8 @@ select * from sources order by id desc;
 select * from analyses order by id desc;
 select * from schedules order by id desc;
 select * from salesmap_records order by id desc;
+select * from customer_contacts order by id desc;
+select * from customer_activities order by id desc;
 ```
 
 특정 일정 확인:
@@ -302,7 +351,7 @@ from schedules
 order by id desc;
 ```
 
-## 11. 실패 시 확인 위치
+## 12. 실패 시 확인 위치
 
 - Browser Console: 프론트 에러 메시지
 - Network: status code, request body, response body
@@ -312,7 +361,7 @@ order by id desc;
 - Google Calendar: 이벤트 생성/수정/삭제 여부
 - Salesmap: TODO 동기화 여부
 
-## 12. 테스트 결과 전달 템플릿
+## 13. 테스트 결과 전달 템플릿
 
 ```text
 테스트 종류: CREATE / UPDATE / CANCEL / UNKNOWN

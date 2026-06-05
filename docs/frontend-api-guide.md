@@ -31,6 +31,7 @@ frontend/src/api/sources.js
 frontend/src/api/analyses.js
 frontend/src/api/schedules.js
 frontend/src/api/salesmapRecords.js
+frontend/src/api/customers.js
 frontend/src/api/errors.js
 ```
 
@@ -75,6 +76,7 @@ localStorage.accessToken 삭제
 
 - 대시보드 캘린더 표시
 - 오늘/다가오는 일정 표시
+- 오늘의 영업 브리핑 표시
 - 일정 직접 수정/삭제
 - 로그인 사용자 이름과 프로필 표시
 - Google Calendar/Salesmap 연동 상태 표시
@@ -92,6 +94,8 @@ localStorage.accessToken 삭제
 - 일정 삭제는 내부 Schedule 삭제와 Google Calendar 이벤트 삭제를 같이 시도합니다.
 - Google Calendar에서 삭제되면 Salesmap 양방향 캘린더 연동으로 TODO도 사라질 수 있습니다.
 - 일정 수정은 내부 Schedule 수정과 Google Calendar 이벤트 수정을 같이 시도합니다.
+- 캘린더 등록 시 같은 시간대/근접 시간대 일정 충돌이 있으면 사용자에게 경고합니다.
+- 사용자 선택 드롭다운에는 시연용 부서/담당자 예시 일정도 함께 표시됩니다.
 
 ### SettingsPage
 
@@ -134,21 +138,26 @@ Gmail 연결 버튼
 
 역할:
 
-- 수집된 Gmail 메일 목록 표시
+- 수집된 Gmail 메일 목록 표시. 현재 프론트는 30건 요청
 - 메일 상세 표시
 - 같은 발신자의 최근 메일 표시
 - AI 분석 실행
+- 수집된 메일 일괄 AI 분석
 - 분석 결과 수동 수정
+- 답장 초안 생성 및 복사
 - Salesmap 등록/변경/삭제 승인
+- 수집 메일 삭제
 
 사용 API:
 
 - `GET /api/sources`
 - `GET /api/sources/{sourceId}`
+- `DELETE /api/sources/{sourceId}`
 - `POST /api/integrations/gmail/collect`
 - `POST /api/analysis`
 - `POST /api/analysis/group`
 - `GET /api/analysis/source/{sourceId}`
+- `POST /api/analysis/{analysisId}/reply-draft`
 - `PATCH /api/analysis/{analysisId}`
 - `POST /api/salesmap/register`
 - `GET /api/salesmap/analysis/{analysisId}`
@@ -172,6 +181,12 @@ sourceGroupId가 없음
 | `CANCEL` | 등록된 일정 삭제 | 기존 일정 삭제 승인 |
 | `CONFIRM` | Salesmap 등록 | 확인성 분석 등록 |
 | `UNKNOWN` | Salesmap 등록 | 일반 메일 이력 등록 |
+
+업무 외 메일:
+
+- `businessType=NON_BUSINESS`인 경우 등록 대상이 아닌 메일로 표시합니다.
+- 분석 결과 주요 필드는 `해당 없음`으로 표시합니다.
+- Salesmap 등록 대신 삭제/제외 흐름으로 처리합니다.
 
 ## Gmail 새로고침
 
@@ -212,6 +227,60 @@ PATCH /api/analysis/{analysisId}
 
 수정된 결과로 등록하면 Dashboard 캘린더와 Google Calendar에 반영됩니다.
 
+## 답장 초안 생성
+
+분석 결과 카드에서 `답장 초안 생성` 버튼을 누르면 다음 API를 호출합니다.
+
+```http
+POST /api/analysis/{analysisId}/reply-draft
+```
+
+동작:
+
+- 원본 메일 제목/본문, 분석 결과, 고객사/제품/일정 정보를 FastAPI AI 모듈로 전달합니다.
+- 시연 핵심 케이스는 안정적인 템플릿 기반 답장을 반환합니다.
+- 일반 케이스는 Ollama LLM 생성 결과를 시도하고, 실패하거나 품질이 낮으면 템플릿으로 fallback합니다.
+- 프론트는 생성된 제목/본문을 표시하고 복사 버튼을 제공합니다.
+
+## 처리 이력 화면
+
+Route:
+
+```text
+/history
+```
+
+역할:
+
+- 수집 메일이 승인 대기/등록됨/삭제됨 중 어떤 상태인지 확인
+- AI 분석 결과와 Salesmap 반영 상태를 한 화면에서 확인
+- 우선 확인할 메일에서 상세 화면으로 이동
+
+사용 API:
+
+- `GET /api/sources`
+- `GET /api/analysis/source/{sourceId}`
+- `GET /api/salesmap/analysis/{analysisId}`
+
+## 고객 타임라인 화면
+
+Route:
+
+```text
+/customers
+```
+
+역할:
+
+- 고객사/담당자별 메일, AI 분석, 일정 반영, Salesmap 등록 이력을 시간순으로 표시
+- 같은 발신자 또는 같은 고객사 맥락을 빠르게 확인
+- 업무 외 메일은 고객 타임라인에 포함하지 않음
+
+사용 API:
+
+- `GET /api/customers`
+- `GET /api/customers/{customerContactId}/timeline`
+
 ## Salesmap 등록의 실제 의미
 
 현재 Salesmap TODO 직접 생성 API가 없기 때문에 프론트에서 누르는 `Salesmap 등록`은 다음 흐름을 실행합니다.
@@ -244,6 +313,9 @@ POST /api/salesmap/register
 3. Gmail 메일 목록
 4. 메일 상세 및 AI 분석
 5. AI 분석 결과 수정
-6. 일정 등록/변경/삭제 버튼
-7. Dashboard 캘린더 반영
-8. Salesmap TODO 반영 화면
+6. 답장 초안 생성
+7. 일정 등록/변경/삭제 버튼
+8. Dashboard 캘린더 반영
+9. 처리 이력
+10. 고객 타임라인
+11. Salesmap TODO 반영 화면
