@@ -3,6 +3,7 @@ package com.salesmap.backend.global.exception;
 import com.salesmap.backend.ai.exception.AiClientException;
 import com.salesmap.backend.calendar.exception.GoogleCalendarClientException;
 import com.salesmap.backend.global.response.ApiResponse;
+import com.salesmap.backend.schedule.exception.ScheduleConflictException;
 import com.salesmap.backend.salesmap.exception.SalesmapClientException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -65,6 +66,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ApiResponse.fail(exception.getMessage()));
+    }
+
+    @ExceptionHandler(ScheduleConflictException.class)
+    public ResponseEntity<ApiResponse<Object>> handleScheduleConflictException(ScheduleConflictException exception) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ApiResponse.fail(exception.getMessage(), exception.getConflictResponse()));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)

@@ -1,6 +1,6 @@
 ﻿import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createAnalysis, createGroupAnalysis, getAnalysesBySource, getAnalysisById, updateAnalysis } from '../api/analyses';
+import { createAnalysis, createGroupAnalysis, generateReplyDraft, getAnalysesBySource, getAnalysisById, updateAnalysis } from '../api/analyses';
 import { getApiErrorMessage } from '../api/errors';
 import { getSalesmapRecordsByAnalysis, registerSalesmapRecord } from '../api/salesmapRecords';
 import { deleteSource, getSourceById, getSources } from '../api/sources';
@@ -100,6 +100,30 @@ function getActionTypeClass(actionType) {
     default:
       return 'bg-gray-100 text-gray-700 border-gray-200';
   }
+}
+
+function getDisplayActionType(analysis) {
+  if (analysis?.businessType === 'NON_BUSINESS') {
+    return 'UNKNOWN';
+  }
+
+  return analysis?.actionType || 'UNKNOWN';
+}
+
+function getDisplayAnalysisValue(analysis, field) {
+  if (analysis?.businessType === 'NON_BUSINESS') {
+    return EMPTY_TEXT;
+  }
+
+  return analysis?.[field];
+}
+
+function getDisplayAmount(analysis) {
+  if (analysis?.businessType === 'NON_BUSINESS') {
+    return EMPTY_TEXT;
+  }
+
+  return formatMoney(analysis?.amount);
 }
 
 function formatBusinessType(type) {
@@ -216,6 +240,47 @@ function formatSalesmapResultTitle(actionType) {
   }
 }
 
+function formatScheduleConflictType(type) {
+  switch (type) {
+    case 'DUPLICATE_SCHEDULE':
+      return '이미 같은 일정이 등록되어 있습니다.';
+    case 'SAME_TIME_SCHEDULE':
+      return '같은 시간대에 다른 일정이 있습니다.';
+    case 'NEARBY_SCHEDULE':
+      return '등록하려는 일정 전후 3시간 이내에 다른 일정이 있습니다.';
+    default:
+      return '일정 충돌이 감지되었습니다.';
+  }
+}
+
+function formatConflictDateTime(value) {
+  if (!value) {
+    return EMPTY_TEXT;
+  }
+
+  return String(value).replace('T', ' ');
+}
+
+function formatScheduleConflictMessage(conflict) {
+  if (!conflict) {
+    return '등록 전 일정 충돌을 확인해야 합니다.';
+  }
+
+  const candidate = conflict.newSchedule;
+  const conflictItems = Array.isArray(conflict.conflicts) ? conflict.conflicts : [];
+  const candidateText = candidate
+    ? `등록 예정: ${formatEmpty(candidate.title)} / ${formatConflictDateTime(candidate.scheduleDateTime)}`
+    : '';
+  const existingText = conflictItems
+    .slice(0, 3)
+    .map((item) => `기존 일정: ${formatEmpty(item.title)} / ${formatConflictDateTime(item.scheduleDateTime)}`)
+    .join('\n');
+
+  return [formatScheduleConflictType(conflict.type), candidateText, existingText]
+    .filter(Boolean)
+    .join('\n');
+}
+
 function getSalesmapResultClass(actionType) {
   switch (actionType) {
     case 'CANCEL':
@@ -287,7 +352,6 @@ export function MessageView() {
   const [sourceDetailMessage, setSourceDetailMessage] = useState('');
   const [analysisActionMessage, setAnalysisActionMessage] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analyzingMode, setAnalyzingMode] = useState(null);
   const [isBulkAnalyzing, setIsBulkAnalyzing] = useState(false);
   const [isDeletingSource, setIsDeletingSource] = useState(false);
   const [salesmapRecordsByAnalysisId, setSalesmapRecordsByAnalysisId] = useState({});
@@ -405,11 +469,11 @@ export function MessageView() {
 
     try {
       setIsBulkAnalyzing(true);
-      setSourceListMessage(`수집 메일 빠른 분석 준비 중... 0/${uniqueTargets.length}`);
+      setSourceListMessage(`수집 메일 AI 분석 준비 중... 0/${uniqueTargets.length}`);
 
       for (let index = 0; index < uniqueTargets.length; index += 1) {
         const item = uniqueTargets[index];
-        setSourceListMessage(`수집 메일 빠른 분석 중... ${index + 1}/${uniqueTargets.length}`);
+        setSourceListMessage(`수집 메일 AI 분석 중... ${index + 1}/${uniqueTargets.length}`);
 
         try {
           const existingAnalyses = await getAnalysesBySource(item.sourceId);
@@ -456,7 +520,7 @@ export function MessageView() {
         }
       }
 
-      setSourceListMessage(`빠른 분석 완료: ${analyzedCount}건 분석, ${skippedCount}건 이미 분석됨, ${failedCount}건 실패`);
+      setSourceListMessage(`AI 분석 완료: ${analyzedCount}건 분석, ${skippedCount}건 이미 분석됨, ${failedCount}건 실패`);
     } finally {
       setIsBulkAnalyzing(false);
     }
@@ -544,19 +608,18 @@ export function MessageView() {
     }
   };
 
-  const handleCreateAnalysis = async (mode = 'rule') => {
+  const handleCreateAnalysis = async () => {
     if (!selectedSourceId || !selectedSourceDetail) {
       return;
     }
 
     const isGroupAnalysis = Boolean(selectedSourceDetail.sourceGroupId);
     const payload = isGroupAnalysis
-      ? { sourceGroupId: selectedSourceDetail.sourceGroupId, analysisMode: mode }
-      : { sourceId: selectedSourceId, analysisMode: mode };
+      ? { sourceGroupId: selectedSourceDetail.sourceGroupId, analysisMode: 'rule' }
+      : { sourceId: selectedSourceId, analysisMode: 'rule' };
 
     try {
       setIsAnalyzing(true);
-      setAnalyzingMode(mode);
       setAnalysisActionMessage('');
 
       console.info('Creating analysis:', {
@@ -574,7 +637,7 @@ export function MessageView() {
       setSourceAnalyses([createdAnalysis]);
       setSalesmapRecordsByAnalysisId({});
       setSalesmapActionByAnalysisId({});
-      setAnalysisActionMessage(`${mode === 'ollama' ? '정밀 분석' : '빠른 분석'}이 완료되었습니다.`);
+      setAnalysisActionMessage('AI 분석이 완료되었습니다.');
     } catch (error) {
       console.error('Failed to create analysis:', {
         sourceId: selectedSourceId,
@@ -589,7 +652,6 @@ export function MessageView() {
       setAnalysisActionMessage(`AI 분석 실패: ${formatDetailedError(error)}`);
     } finally {
       setIsAnalyzing(false);
-      setAnalyzingMode(null);
     }
   };
 
@@ -597,11 +659,8 @@ export function MessageView() {
     const currentAnalysis = sourceAnalyses.find((analysis) => analysis.analysisId === analysisId);
     const actionType = currentAnalysis?.actionType;
 
-    try {
-      setRegisteringAnalysisId(analysisId);
-      setSalesmapActionByAnalysisId((prev) => ({ ...prev, [analysisId]: '' }));
-
-      await registerSalesmapRecord({ analysisId });
+    const completeRegistration = async (force = false) => {
+      await registerSalesmapRecord({ analysisId, force });
       const records = await getSalesmapRecordsByAnalysis(analysisId);
       const updatedAnalysis = await getAnalysisById(analysisId);
 
@@ -611,6 +670,13 @@ export function MessageView() {
         ...prev,
         [analysisId]: formatRegisterSuccessMessage(actionType),
       }));
+    };
+
+    try {
+      setRegisteringAnalysisId(analysisId);
+      setSalesmapActionByAnalysisId((prev) => ({ ...prev, [analysisId]: '' }));
+
+      await completeRegistration(false);
     } catch (error) {
       console.error('Failed to register salesmap record:', {
         analysisId,
@@ -620,6 +686,48 @@ export function MessageView() {
         responseBody: error.response?.data,
         rawError: error,
       });
+
+      if (error.response?.status === 409) {
+        const conflict = error.response?.data?.data;
+        const conflictMessage = formatScheduleConflictMessage(conflict);
+
+        if (conflict?.type !== 'DUPLICATE_SCHEDULE') {
+          const confirmed = window.confirm(`${conflictMessage}\n\n그래도 등록할까요?`);
+          if (confirmed) {
+            try {
+              await completeRegistration(true);
+              return;
+            } catch (retryError) {
+              console.error('Failed to force register salesmap record:', {
+                analysisId,
+                status: retryError.response?.status,
+                message: retryError.response?.data?.message,
+                data: retryError.response?.data?.data,
+                responseBody: retryError.response?.data,
+                rawError: retryError,
+              });
+              setSalesmapActionByAnalysisId((prev) => ({
+                ...prev,
+                [analysisId]: `${formatRegisterButtonLabel(actionType)} 실패: ${formatDetailedError(retryError)}`,
+              }));
+              return;
+            }
+          }
+
+          setSalesmapActionByAnalysisId((prev) => ({
+            ...prev,
+            [analysisId]: '일정 충돌 확인 후 등록을 취소했습니다.',
+          }));
+          return;
+        }
+
+        setSalesmapActionByAnalysisId((prev) => ({
+          ...prev,
+          [analysisId]: `${formatRegisterButtonLabel(actionType)} 실패: ${conflictMessage}`,
+        }));
+        return;
+      }
+
       setSalesmapActionByAnalysisId((prev) => ({
         ...prev,
         [analysisId]: `${formatRegisterButtonLabel(actionType)} 실패: ${formatDetailedError(error)}`,
@@ -668,7 +776,7 @@ export function MessageView() {
                 disabled={isBulkAnalyzing || isSyncingGmail || backendSources.length === 0}
                 className="px-2.5 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
               >
-                {isBulkAnalyzing ? '빠른 분석 중...' : '수집 메일 빠른 분석'}
+                {isBulkAnalyzing ? '분석 중...' : '수집 메일 AI 분석'}
               </button>
             </div>
           </div>
@@ -790,22 +898,13 @@ export function MessageView() {
                 <div className="flex items-center justify-between gap-3 mb-3">
                   <h4 className="text-sm text-blue-700">AI 분석 결과</h4>
                   {isDev && (
-                    <div className="flex items-center gap-2 shrink-0">
-                      <button
-                        onClick={() => handleCreateAnalysis('rule')}
-                        disabled={isAnalyzing}
-                        className="px-3 py-1 text-xs border border-blue-300 text-blue-700 bg-white hover:bg-blue-50 disabled:bg-gray-100 disabled:text-gray-400 rounded"
-                      >
-                        {analyzingMode === 'rule' ? '빠른 분석 중...' : '빠른 분석'}
-                      </button>
-                      <button
-                        onClick={() => handleCreateAnalysis('ollama')}
-                        disabled={isAnalyzing}
-                        className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
-                      >
-                        {analyzingMode === 'ollama' ? '정밀 분석 중...' : '정밀 분석'}
-                      </button>
-                    </div>
+                    <button
+                      onClick={handleCreateAnalysis}
+                      disabled={isAnalyzing}
+                      className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded shrink-0"
+                    >
+                      {isAnalyzing ? '분석 중...' : 'AI 분석 실행'}
+                    </button>
                   )}
                 </div>
 
@@ -850,11 +949,16 @@ export function MessageView() {
 function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegister, onSave, onDeleteSource, isDeletingSource, isDev }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDrafting, setIsDrafting] = useState(false);
+  const [replyDraft, setReplyDraft] = useState(null);
+  const [draftMessage, setDraftMessage] = useState('');
   const [form, setForm] = useState(() => toAnalysisForm(analysis));
 
   useEffect(() => {
     setForm(toAnalysisForm(analysis));
     setIsEditing(false);
+    setReplyDraft(null);
+    setDraftMessage('');
   }, [analysis]);
 
   const handleChange = (field, value) => {
@@ -874,6 +978,36 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
     }
   };
 
+  const handleGenerateReplyDraft = async () => {
+    try {
+      setIsDrafting(true);
+      setDraftMessage('');
+      const draft = await generateReplyDraft(analysis.analysisId);
+      setReplyDraft(draft);
+      setDraftMessage('답장 초안이 생성되었습니다.');
+    } catch (error) {
+      console.error('Failed to generate reply draft:', error);
+      setDraftMessage(`답장 초안 생성 실패: ${getApiErrorMessage(error)}`);
+    } finally {
+      setIsDrafting(false);
+    }
+  };
+
+  const handleCopyReplyDraft = async () => {
+    if (!replyDraft) {
+      return;
+    }
+
+    const text = `${replyDraft.subject}\n\n${replyDraft.body}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setDraftMessage('답장 초안이 복사되었습니다.');
+    } catch (error) {
+      console.error('Failed to copy reply draft:', error);
+      setDraftMessage('복사에 실패했습니다. 초안 내용을 직접 선택해 복사해주세요.');
+    }
+  };
+
   return (
     <div className="bg-white border border-blue-100 rounded p-3 min-w-0">
       <div className="flex items-center justify-between mb-3 gap-2">
@@ -882,8 +1016,8 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
           <span className={`border rounded-full px-2 py-0.5 text-xs ${getBusinessTypeClass(analysis.businessType)}`}>
             {formatBusinessType(analysis.businessType)}
           </span>
-          <span className={`border rounded-full px-2 py-0.5 text-xs ${getActionTypeClass(analysis.actionType)}`}>
-            {formatActionType(analysis.actionType)}
+          <span className={`border rounded-full px-2 py-0.5 text-xs ${getActionTypeClass(getDisplayActionType(analysis))}`}>
+            {formatActionType(getDisplayActionType(analysis))}
           </span>
           <span className={`border rounded-full px-2 py-0.5 text-xs ${getAnalysisStatusClass(analysis.status)}`}>
             {formatAnalysisStatus(analysis.status)}
@@ -919,19 +1053,19 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
         </div>
       ) : (
         <>
-          <AnalysisField label="분석 요약" value={analysis.summary} strong />
-          <AnalysisField label="다음 행동" value={analysis.followUpAction} />
-          <AnalysisField label="일정 정보" value={analysis.scheduleText} />
-          <AnalysisField label="참석자" value={analysis.attendees} />
-          <AnalysisField label="고객사" value={analysis.customerName} />
-          <AnalysisField label="제품" value={analysis.productName} />
-          <AnalysisField label="금액" value={formatMoney(analysis.amount)} alreadyFormatted />
+          <AnalysisField label="분석 요약" value={getDisplayAnalysisValue(analysis, 'summary')} strong />
+          <AnalysisField label="다음 행동" value={getDisplayAnalysisValue(analysis, 'followUpAction')} />
+          <AnalysisField label="일정 정보" value={getDisplayAnalysisValue(analysis, 'scheduleText')} />
+          <AnalysisField label="참석자" value={getDisplayAnalysisValue(analysis, 'attendees')} />
+          <AnalysisField label="고객사" value={getDisplayAnalysisValue(analysis, 'customerName')} />
+          <AnalysisField label="제품" value={getDisplayAnalysisValue(analysis, 'productName')} />
+          <AnalysisField label="금액" value={getDisplayAmount(analysis)} alreadyFormatted />
           <AnalysisField label="메일 분류" value={`${formatBusinessType(analysis.businessType)} (${formatBusinessScore(analysis.businessRelevanceScore)})`} alreadyFormatted />
           <AnalysisField label="분류 근거" value={analysis.businessReason} />
-          <AnalysisField label="처리 유형" value={formatActionType(analysis.actionType)} alreadyFormatted />
-          <AnalysisField label="판단 근거" value={analysis.actionReason} />
+          <AnalysisField label="처리 유형" value={formatActionType(getDisplayActionType(analysis))} alreadyFormatted />
+          <AnalysisField label="판단 근거" value={getDisplayAnalysisValue(analysis, 'actionReason')} />
           {isDev && <AnalysisField label="대상 일정 ID" value={analysis.targetScheduleId} />}
-          <AnalysisField label="대상 일정명" value={analysis.targetScheduleTitle} />
+          <AnalysisField label="대상 일정명" value={getDisplayAnalysisValue(analysis, 'targetScheduleTitle')} />
         </>
       )}
 
@@ -982,6 +1116,43 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
                 {isRegistering ? formatRegisteringLabel(analysis.actionType) : formatRegisterButtonLabel(analysis.actionType)}
               </button>
             )}
+          </div>
+        )}
+
+        {!isEditing && analysis.businessType !== 'NON_BUSINESS' && (
+          <div className="mt-2">
+            <button
+              onClick={handleGenerateReplyDraft}
+              disabled={isDrafting}
+              className="w-full px-3 py-1.5 text-xs border border-blue-200 text-blue-700 rounded hover:bg-blue-50 disabled:bg-gray-100 disabled:text-gray-400"
+            >
+              {isDrafting ? '답장 초안 생성 중...' : '답장 초안 생성'}
+            </button>
+          </div>
+        )}
+
+        {draftMessage && (
+          <p className="text-xs text-blue-700 mt-2 text-left">{draftMessage}</p>
+        )}
+
+        {replyDraft && (
+          <div className="mt-3 rounded-lg border border-sky-100 bg-sky-50 p-3 text-left">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold text-sky-800">답장 초안</p>
+                <p className="mt-1 text-sm font-medium text-gray-900 break-words">{replyDraft.subject}</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleCopyReplyDraft}
+                className="shrink-0 rounded border border-sky-200 bg-white px-2 py-1 text-xs text-sky-700 hover:bg-sky-50"
+              >
+                복사
+              </button>
+            </div>
+            <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-gray-700">
+              {replyDraft.body}
+            </p>
           </div>
         )}
 

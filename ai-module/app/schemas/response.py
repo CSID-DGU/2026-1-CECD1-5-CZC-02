@@ -39,6 +39,12 @@ class ScheduleAnalyzeResponse(BaseModel):
     schedule: ScheduleResponse
 
 
+class ReplyDraftResponse(BaseModel):
+    subject: str
+    body: str
+    generatedBy: str = "template"
+
+
 class AiErrorResponse(BaseModel):
     errorCode: str
     message: str

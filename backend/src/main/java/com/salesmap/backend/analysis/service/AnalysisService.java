@@ -4,6 +4,8 @@ import com.salesmap.backend.ai.client.AiClient;
 import com.salesmap.backend.ai.dto.AiAnalysisRequest;
 import com.salesmap.backend.ai.dto.AiAnalysisResponse;
 import com.salesmap.backend.ai.dto.AiGroupAnalysisRequest;
+import com.salesmap.backend.ai.dto.AiReplyDraftRequest;
+import com.salesmap.backend.ai.dto.AiReplyDraftResponse;
 import com.salesmap.backend.analysis.dto.AnalysisCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisGroupCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisResponse;
@@ -11,6 +13,7 @@ import com.salesmap.backend.analysis.dto.AnalysisUpdateRequest;
 import com.salesmap.backend.analysis.entity.Analysis;
 import com.salesmap.backend.analysis.entity.AnalysisStatus;
 import com.salesmap.backend.analysis.repository.AnalysisRepository;
+import com.salesmap.backend.customer.service.CustomerTimelineService;
 import com.salesmap.backend.schedule.entity.Schedule;
 import com.salesmap.backend.schedule.entity.ScheduleStatus;
 import com.salesmap.backend.schedule.repository.ScheduleRepository;
@@ -43,19 +46,22 @@ public class AnalysisService {
     private final SourceGroupRepository sourceGroupRepository;
     private final ScheduleRepository scheduleRepository;
     private final AiClient aiClient;
+    private final CustomerTimelineService customerTimelineService;
 
     public AnalysisService(
             AnalysisRepository analysisRepository,
             SourceRepository sourceRepository,
             SourceGroupRepository sourceGroupRepository,
             ScheduleRepository scheduleRepository,
-            AiClient aiClient
+            AiClient aiClient,
+            CustomerTimelineService customerTimelineService
     ) {
         this.analysisRepository = analysisRepository;
         this.sourceRepository = sourceRepository;
         this.sourceGroupRepository = sourceGroupRepository;
         this.scheduleRepository = scheduleRepository;
         this.aiClient = aiClient;
+        this.customerTimelineService = customerTimelineService;
     }
 
     @Transactional
@@ -68,6 +74,7 @@ public class AnalysisService {
         Analysis analysis = createAnalysisEntity(source, aiResult);
         source.markAnalyzed();
         Analysis savedAnalysis = analysisRepository.save(analysis);
+        customerTimelineService.recordAnalysis(savedAnalysis);
 
         return AnalysisResponse.from(savedAnalysis);
     }
@@ -87,6 +94,7 @@ public class AnalysisService {
         Analysis analysis = createAnalysisEntity(sources.get(0), aiResult);
         sources.forEach(Source::markAnalyzed);
         Analysis savedAnalysis = analysisRepository.save(analysis);
+        customerTimelineService.recordAnalysis(savedAnalysis);
 
         return AnalysisResponse.from(savedAnalysis);
     }
@@ -98,6 +106,28 @@ public class AnalysisService {
         validateAnalysisOwnership(analysis, authenticatedUserId);
 
         return AnalysisResponse.from(analysis);
+    }
+
+    @Transactional(readOnly = true)
+    public AiReplyDraftResponse generateReplyDraft(Long analysisId, Long authenticatedUserId) {
+        Analysis analysis = analysisRepository.findById(analysisId)
+                .orElseThrow(() -> new NoSuchElementException("Analysis not found."));
+        validateAnalysisOwnership(analysis, authenticatedUserId);
+
+        Source source = analysis.getSource();
+        return aiClient.generateReplyDraft(new AiReplyDraftRequest(
+                source.getTitle(),
+                source.getContent(),
+                source.getSenderEmail(),
+                analysis.getCustomerName(),
+                analysis.getContactName(),
+                analysis.getProductName(),
+                analysis.getAttendees(),
+                normalizeActionType(toAiAnalysisResponse(analysis)),
+                analysis.getScheduleText(),
+                analysis.getSummary(),
+                analysis.getFollowUpAction()
+        ));
     }
 
     @Transactional
@@ -119,6 +149,7 @@ public class AnalysisService {
                 truncate(request.followUpAction(), 2000),
                 truncate(request.summary(), 4000)
         );
+        customerTimelineService.recordAnalysis(analysis);
 
         return AnalysisResponse.from(analysis);
     }
@@ -159,7 +190,7 @@ public class AnalysisService {
                 truncate(aiResult.productName(), 255),
                 aiResult.amount(),
                 truncate(aiResult.attendees(), 2000),
-                truncate(aiResult.actionType(), 50),
+                truncate(normalizeActionType(aiResult), 50),
                 aiResult.targetScheduleId(),
                 truncate(aiResult.targetScheduleTitle(), 2000),
                 truncate(aiResult.actionReason(), 2000),
@@ -173,6 +204,18 @@ public class AnalysisService {
                 LocalDateTime.now(),
                 null
         );
+    }
+
+    private String normalizeActionType(AiAnalysisResponse aiResult) {
+        if (aiResult == null) {
+            return "UNKNOWN";
+        }
+        if ("NON_BUSINESS".equals(aiResult.businessType())) {
+            return "UNKNOWN";
+        }
+        return aiResult.actionType() == null || aiResult.actionType().isBlank()
+                ? "UNKNOWN"
+                : aiResult.actionType();
     }
 
     private AiAnalysisRequest toAiAnalysisRequest(Source source, String analysisMode) {

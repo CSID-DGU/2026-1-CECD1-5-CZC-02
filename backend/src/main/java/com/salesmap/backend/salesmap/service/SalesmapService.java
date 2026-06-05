@@ -5,8 +5,10 @@ import com.salesmap.backend.analysis.repository.AnalysisRepository;
 import com.salesmap.backend.analysis.service.AnalysisService;
 import com.salesmap.backend.calendar.dto.GoogleCalendarEventResponse;
 import com.salesmap.backend.calendar.service.GoogleCalendarEventService;
+import com.salesmap.backend.customer.service.CustomerTimelineService;
 import com.salesmap.backend.schedule.entity.Schedule;
 import com.salesmap.backend.schedule.repository.ScheduleRepository;
+import com.salesmap.backend.schedule.service.ScheduleConflictService;
 import com.salesmap.backend.salesmap.client.SalesmapClient;
 import com.salesmap.backend.salesmap.client.dto.SalesmapApiRegisterRequest;
 import com.salesmap.backend.salesmap.client.dto.SalesmapApiRegisterResponse;
@@ -32,6 +34,8 @@ public class SalesmapService {
     private final SalesmapClient salesmapClient;
     private final GoogleCalendarEventService googleCalendarEventService;
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleConflictService scheduleConflictService;
+    private final CustomerTimelineService customerTimelineService;
 
     public SalesmapService(
             SalesmapRecordRepository salesmapRecordRepository,
@@ -39,7 +43,9 @@ public class SalesmapService {
             AnalysisService analysisService,
             SalesmapClient salesmapClient,
             GoogleCalendarEventService googleCalendarEventService,
-            ScheduleRepository scheduleRepository
+            ScheduleRepository scheduleRepository,
+            ScheduleConflictService scheduleConflictService,
+            CustomerTimelineService customerTimelineService
     ) {
         this.salesmapRecordRepository = salesmapRecordRepository;
         this.analysisRepository = analysisRepository;
@@ -47,6 +53,8 @@ public class SalesmapService {
         this.salesmapClient = salesmapClient;
         this.googleCalendarEventService = googleCalendarEventService;
         this.scheduleRepository = scheduleRepository;
+        this.scheduleConflictService = scheduleConflictService;
+        this.customerTimelineService = customerTimelineService;
     }
 
     @Transactional
@@ -54,6 +62,8 @@ public class SalesmapService {
         Analysis analysis = analysisRepository.findById(request.analysisId())
                 .orElseThrow(() -> new NoSuchElementException("분석 결과를 찾을 수 없습니다."));
         validateAnalysisOwnership(analysis, authenticatedUserId);
+
+        scheduleConflictService.validateBeforeRegister(analysis, authenticatedUserId, request.forceEnabled());
 
         SalesmapApiRegisterResponse salesmapResult = salesmapClient.register(toSalesmapApiRegisterRequest(analysis));
 
@@ -70,7 +80,11 @@ public class SalesmapService {
                 salesmapResult.registeredAt() == null ? LocalDateTime.now() : salesmapResult.registeredAt()
         );
 
-        return SalesmapRegisterResponse.from(salesmapRecordRepository.save(record));
+        SalesmapRecord savedRecord = salesmapRecordRepository.save(record);
+        Schedule timelineSchedule = "CANCEL".equals(analysis.getActionType()) ? null : approvedSchedule;
+        customerTimelineService.recordSalesmapRegistered(savedRecord, timelineSchedule);
+
+        return SalesmapRegisterResponse.from(savedRecord);
     }
 
     @Transactional(readOnly = true)
@@ -115,6 +129,7 @@ public class SalesmapService {
 
         if ("CANCEL".equals(analysis.getActionType())) {
             googleCalendarEventService.deleteEventForSchedule(approvedSchedule, authenticatedUserId);
+            customerTimelineService.unlinkScheduleReferences(approvedSchedule.getId());
             scheduleRepository.delete(approvedSchedule);
             return null;
         }

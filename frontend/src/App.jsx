@@ -7,6 +7,7 @@ import { SalesmapLoginPage } from './components/SalesmapLoginPage';
 import { MessageView } from './components/MessageView';
 import { GmailOAuthCallbackPage } from './components/GmailOAuthCallbackPage';
 import { ProcessingHistoryPage } from './components/ProcessingHistoryPage';
+import { CustomerTimelinePage } from './components/CustomerTimelinePage';
 
 function ProtectedRoute({ children }) {
   const accessToken = localStorage.getItem('accessToken');
@@ -55,6 +56,13 @@ export default function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <ProcessingHistoryPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/customers" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <CustomerTimelinePage />
               </DashboardLayout>
             </ProtectedRoute>
           } />

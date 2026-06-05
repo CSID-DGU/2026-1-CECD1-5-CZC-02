@@ -77,3 +77,17 @@ class AnalyzeRequest(BaseModel):
         if self.sourceGroup and self.sourceGroup.title:
             return self.sourceGroup.title
         return self.title or ""
+
+
+class ReplyDraftRequest(BaseModel):
+    emailTitle: Optional[str] = None
+    emailContent: str = Field(min_length=1)
+    senderEmail: Optional[str] = None
+    customerName: Optional[str] = None
+    contactName: Optional[str] = None
+    productName: Optional[str] = None
+    attendees: Optional[str] = None
+    actionType: Optional[str] = None
+    scheduleInfo: Optional[str] = None
+    summary: Optional[str] = None
+    nextAction: Optional[str] = None
