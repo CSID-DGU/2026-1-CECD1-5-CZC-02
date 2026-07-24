@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { CalendarCheck, CheckCircle2, Link2, Settings as SettingsIcon, UserRound } from 'lucide-react';
+import { CalendarCheck, CheckCircle2, Link2, Settings as SettingsIcon, Zap } from 'lucide-react';
 import { getApiErrorMessage } from '../api/errors';
 import { disconnectGmailIntegration, getGmailAuthorizationUrl, getIntegrations } from '../api/integrations';
+import { disableAutoPipeline, enableAutoPipeline, getAutoPipelineStatus } from '../api/autoPipeline';
 import jandiIcon from '../assets/image-8.png';
 import jandiText from '../assets/image-9.png';
 import gmailIcon from '../assets/image-10.png';
@@ -46,11 +47,14 @@ export function SettingsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [integrations, setIntegrations] = useState([]);
   const [jandiConnected, setJandiConnected] = useState(() => localStorage.getItem('jandiConnected') === 'true');
+  const [companyName, setCompanyName] = useState(() => localStorage.getItem('salesmapCompany') || '');
   const [isLoading, setIsLoading] = useState(true);
   const [isConnectingGmail, setIsConnectingGmail] = useState(false);
   const [isDisconnectingGmail, setIsDisconnectingGmail] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [autoEnabled, setAutoEnabled] = useState(false);
+  const [isTogglingAuto, setIsTogglingAuto] = useState(false);
 
   const gmailIntegration = useMemo(
     () => integrations.find((integration) => integration.provider === 'GMAIL'),
@@ -82,6 +86,40 @@ export function SettingsPage() {
   useEffect(() => {
     loadIntegrations();
   }, [loadIntegrations]);
+
+  useEffect(() => {
+    let ignore = false;
+    getAutoPipelineStatus()
+      .then((result) => {
+        if (!ignore) {
+          setAutoEnabled(Boolean(result?.enabled));
+          localStorage.setItem('autoPipelineEnabled', String(Boolean(result?.enabled)));
+        }
+      })
+      .catch((error) => console.error('Failed to load auto-pipeline status:', error));
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  const handleToggleAuto = async () => {
+    try {
+      setIsTogglingAuto(true);
+      const result = autoEnabled ? await disableAutoPipeline() : await enableAutoPipeline();
+      const next = Boolean(result?.enabled);
+      setAutoEnabled(next);
+      localStorage.setItem('autoPipelineEnabled', String(next));
+      setStatusMessage(next
+        ? '자동 수집·분석을 켰습니다. 새 메일을 주기적으로 자동 수집하고 분석합니다.'
+        : '자동 수집·분석을 껐습니다.');
+      setErrorMessage('');
+    } catch (error) {
+      console.error('Failed to toggle auto-pipeline:', error);
+      setErrorMessage(`자동 모드 전환 실패: ${getApiErrorMessage(error)}`);
+    } finally {
+      setIsTogglingAuto(false);
+    }
+  };
 
   useEffect(() => {
     const gmailResult = searchParams.get('gmail');
@@ -167,20 +205,27 @@ export function SettingsPage() {
   };
 
   return (
-    <div className="h-full overflow-y-auto bg-[#F8F9FA] px-6 py-7">
+    <div className="h-full overflow-y-auto bg-gradient-to-b from-[#F6F8FC] to-[#EEF2F9] px-6 py-7">
       <div className="mx-auto max-w-5xl space-y-6">
-        <div className="relative flex items-center justify-center gap-4">
-          <div className="text-center">
-            <h2 className="text-2xl !font-bold !text-blue-800">계정 설정</h2>
-            <p className="mt-2 text-sm !font-semibold !text-gray-800">
-              Gmail 수집, Google Calendar 경유 Salesmap 등록, 사용자 정보를 관리합니다.
-            </p>
+        <div className="relative overflow-hidden rounded-2xl border border-white/60 bg-white/80 shadow-[0_10px_40px_-18px_rgba(37,99,235,0.35)] backdrop-blur p-6">
+          <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gradient-to-br from-blue-400/20 to-violet-400/10 blur-2xl" />
+          <div className="relative flex items-start justify-between gap-4">
+            <div className="text-left">
+              <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600">
+                <SettingsIcon className="h-3.5 w-3.5" /> 계정 관리
+              </p>
+              <h2 className="mt-1 text-[26px] leading-tight tracking-tight text-slate-900" style={{ fontFamily: 'var(--display)', fontWeight: 700 }}>
+                계정 설정
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm text-slate-500">
+                Gmail 수집, Google Calendar 경유 Salesmap 등록, 연동 회사명을 관리합니다.
+              </p>
+            </div>
           </div>
-          <SettingsIcon className="absolute right-0 top-1 h-5 w-5 text-blue-500" />
         </div>
 
         {(statusMessage || errorMessage) && (
-          <div className={`rounded-lg border px-4 py-3 text-sm ${
+          <div className={`rounded-xl border px-4 py-3 text-sm ${
             errorMessage
               ? 'border-red-200 bg-red-50 text-red-700'
               : 'border-blue-200 bg-blue-50 text-blue-700'
@@ -189,7 +234,52 @@ export function SettingsPage() {
           </div>
         )}
 
-        <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <section className={`relative overflow-hidden rounded-2xl border p-5 shadow-sm transition ${
+          autoEnabled ? 'border-blue-200 bg-gradient-to-br from-blue-50/80 to-violet-50/50' : 'border-slate-200 bg-white'
+        }`}>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-start gap-3 text-left">
+              <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
+                autoEnabled ? 'bg-gradient-to-br from-sky-500 to-indigo-500 shadow-lg shadow-blue-500/20' : 'bg-slate-100'
+              }`}>
+                <Zap className={`h-5 w-5 ${autoEnabled ? 'text-white' : 'text-slate-400'}`} />
+              </span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-bold text-slate-900" style={{ fontFamily: 'var(--display)' }}>
+                    자동 수집·분석 모드
+                  </h3>
+                  <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                    autoEnabled ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-500'
+                  }`}>
+                    {autoEnabled ? '켜짐' : '꺼짐'}
+                  </span>
+                </div>
+                <p className="mt-1 max-w-xl text-sm text-slate-500">
+                  켜두면 서버가 주기적으로 새 메일을 <b>자동 수집</b>하고 <b>AI 분석</b>까지 마쳐 "승인 대기"로 쌓아둡니다.
+                  담당자는 결과를 확인하고 <b>승인만</b> 하면 됩니다. (수동으로 눌러 기다릴 필요 없음)
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleToggleAuto}
+              disabled={isTogglingAuto}
+              role="switch"
+              aria-checked={autoEnabled}
+              className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition disabled:opacity-60 ${
+                autoEnabled ? 'bg-gradient-to-r from-sky-500 to-indigo-500' : 'bg-slate-300'
+              }`}
+            >
+              <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
+                autoEnabled ? 'translate-x-6' : 'translate-x-1'
+              }`} />
+            </button>
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="relative mb-5 flex items-center justify-center">
             <div className="mx-auto text-center">
               <h3 className="text-base font-semibold text-gray-900">계정 연결</h3>
@@ -227,7 +317,7 @@ export function SettingsPage() {
                 <button
                   onClick={handleGmailConnect}
                   disabled={isConnectingGmail || isDisconnectingGmail || isLoading}
-                  className="flex-1 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:bg-gray-100 disabled:text-gray-400"
+                  className="flex-1 rounded-lg bg-gradient-to-r from-sky-500 to-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:from-sky-600 hover:to-indigo-600 disabled:opacity-50"
                 >
                   {gmailConnected ? '다시 연결' : isConnectingGmail ? '연결 중...' : '연결'}
                 </button>
@@ -277,45 +367,7 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <div className="mb-5 flex items-center gap-2">
-            <UserRound className="h-5 w-5 text-gray-400" />
-            <h3 className="text-base font-semibold text-gray-900">프로필 설정</h3>
-          </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">이름</label>
-              <input
-                type="text"
-                defaultValue="김영업"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">이메일</label>
-              <input
-                type="email"
-                defaultValue="sales@nimbustech.com"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">부서</label>
-              <input
-                type="text"
-                defaultValue="영업팀"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-          <div className="mt-5 flex justify-end">
-            <button className="rounded-md bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-700">
-              저장
-            </button>
-          </div>
-        </section>
-
-        <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="relative mb-5 flex items-center justify-center">
             <div className="mx-auto text-center">
               <h3 className="text-base font-semibold text-gray-900">Salesmap 연동 상태</h3>
@@ -326,6 +378,20 @@ export function SettingsPage() {
             <div className="absolute right-0 top-0">
               <StatusBadge connected={gmailConnected} pending={!gmailConnected} />
             </div>
+          </div>
+          <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
+            <label className="mb-2 block text-sm font-medium text-gray-900">연동 회사명</label>
+            <input
+              type="text"
+              value={companyName}
+              onChange={(e) => {
+                setCompanyName(e.target.value);
+                localStorage.setItem('salesmapCompany', e.target.value.trim());
+              }}
+              className="w-full max-w-sm rounded border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500"
+              placeholder="예: 대성물류"
+            />
+            <p className="mt-1.5 text-xs text-gray-500">상단 바에 표시되는 회사명입니다.</p>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             <div className="rounded-lg bg-gray-50 p-4">

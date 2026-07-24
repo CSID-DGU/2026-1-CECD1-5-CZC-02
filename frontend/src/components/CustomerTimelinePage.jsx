@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Building2, Mail, RefreshCcw, UserRound } from 'lucide-react';
+import { Building2, Mail, RefreshCcw, UserRound, Sparkles } from 'lucide-react';
 import { getCustomers, getCustomerTimeline } from '../api/customers';
 import { getApiErrorMessage } from '../api/errors';
 
@@ -33,6 +33,7 @@ function formatActivityType(type) {
     SCHEDULE_UPDATED: '일정 변경',
     SCHEDULE_CANCELED: '일정 삭제',
     SALESMAP_REGISTERED: 'Salesmap 반영',
+    REPLY_SENT: '답장 전송',
   };
 
   return labels[type] || '활동 기록';
@@ -45,6 +46,7 @@ function getActivityClass(type) {
     SCHEDULE_UPDATED: 'bg-purple-50 text-purple-700 border-purple-200',
     SCHEDULE_CANCELED: 'bg-red-50 text-red-700 border-red-200',
     SALESMAP_REGISTERED: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    REPLY_SENT: 'bg-teal-50 text-teal-700 border-teal-200',
   };
 
   return classes[type] || 'bg-gray-50 text-gray-700 border-gray-200';
@@ -130,19 +132,22 @@ export function CustomerTimelinePage() {
   }, [selectedCustomerId]);
 
   return (
-    <div className="h-full overflow-auto bg-[#F8F9FA] p-6">
+    <div className="h-full overflow-auto bg-gradient-to-b from-[#F6F8FC] to-[#EEF2F9] p-6">
       <div className="max-w-7xl mx-auto space-y-5">
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-          <div className="flex items-start justify-between gap-4">
+        <div className="relative overflow-hidden rounded-2xl border border-white/60 bg-white/80 shadow-[0_10px_40px_-18px_rgba(37,99,235,0.35)] backdrop-blur p-6">
+          <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gradient-to-br from-blue-400/20 to-violet-400/10 blur-2xl" />
+          <div className="relative flex flex-wrap items-start justify-between gap-4">
             <div className="text-left">
-              <p className="text-sm font-semibold text-blue-600">고객 활동 관리</p>
+              <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600">
+                <Sparkles className="w-3.5 h-3.5" /> 고객 활동 관리
+              </p>
               <h2
-                className="text-2xl mt-1 leading-tight"
-                style={{ color: '#0f172a', fontWeight: 800, opacity: 1 }}
+                className="mt-1 text-[26px] leading-tight tracking-tight text-slate-900"
+                style={{ fontFamily: 'var(--display)', fontWeight: 700 }}
               >
                 고객사별 타임라인
               </h2>
-              <p className="text-sm text-gray-700 mt-2">
+              <p className="mt-2 max-w-2xl text-sm text-slate-500">
                 수집된 메일, AI 분석 결과, 일정 반영, Salesmap 등록 이력을 고객사 기준으로 정리합니다.
               </p>
             </div>
@@ -150,7 +155,7 @@ export function CustomerTimelinePage() {
               type="button"
               onClick={loadCustomers}
               disabled={isLoading}
-              className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:bg-gray-100"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-600 disabled:opacity-60"
             >
               <RefreshCcw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
               새로고침
@@ -165,7 +170,7 @@ export function CustomerTimelinePage() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-[360px_minmax(0,1fr)] gap-5">
-          <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 text-left">
               <h3 className="text-sm font-semibold text-gray-900">고객사 목록</h3>
               <p className="text-xs text-gray-500 mt-1">{customers.length}개 고객사 확인됨</p>
@@ -211,7 +216,7 @@ export function CustomerTimelinePage() {
             </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
             <div className="px-6 py-5 border-b border-gray-100 text-left">
               <div className="flex items-start justify-between gap-4">
                 <div>

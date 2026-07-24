@@ -11,3 +11,9 @@ export async function getCustomerTimeline(customerContactId) {
 
   return response.data.data;
 }
+
+export async function getPipeline() {
+  const response = await api.get('/api/customers/pipeline');
+
+  return response.data.data;
+}

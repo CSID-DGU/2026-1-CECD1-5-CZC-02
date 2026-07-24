@@ -5,6 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 export function SalesmapLoginPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    company: '',
     accountId: '',
     password: ''
   });
@@ -13,7 +14,7 @@ export function SalesmapLoginPage() {
     e.preventDefault();
 
     localStorage.setItem('salesmapConnected', 'true');
-    localStorage.setItem('salesmapCompany', '(주)님버스테크');
+    localStorage.setItem('salesmapCompany', formData.company.trim() || '연동된 회사');
 
     navigate('/dashboard');
   };
@@ -36,6 +37,18 @@ export function SalesmapLoginPage() {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-sm text-gray-700 mb-2">회사명</label>
+              <input
+                type="text"
+                value={formData.company}
+                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded outline-none focus:border-blue-500 text-sm"
+                placeholder="회사명을 입력하세요 (예: 대성물류)"
+                required
+              />
+            </div>
+
             <div>
               <label className="block text-sm text-gray-700 mb-2">계정 ID</label>
               <input

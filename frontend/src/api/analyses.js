@@ -38,3 +38,9 @@ export async function generateReplyDraft(analysisId) {
 
   return response.data.data;
 }
+
+export async function sendReplyDraft(analysisId, payload) {
+  const response = await api.post(`/api/analysis/${analysisId}/send-reply`, payload);
+
+  return response.data.data;
+}

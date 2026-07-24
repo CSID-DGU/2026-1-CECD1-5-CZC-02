@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Settings, Search, LayoutDashboard, ClipboardList, UsersRound, ChevronDown, ChevronRight } from 'lucide-react';
-import nimbusTechLogo from '../assets/님버스테크 로고.png';
+import { Settings, Search, LayoutDashboard, ClipboardList, UsersRound, ChevronDown, ChevronRight, Wind, KanbanSquare } from 'lucide-react';
 import jandiLogo from '../assets/잔디 로고 이미지 .jpg';
 import gmailLogo from '../assets/gmail로고 이미지 spaced.png';
 import { getMe } from '../api/auth';
@@ -268,6 +267,7 @@ export function DashboardLayout({ children }) {
   };
 
   const menuItems = [
+    { path: '/pipeline', icon: KanbanSquare, label: '딜 파이프라인' },
     { path: '/customers', icon: UsersRound, label: '고객 타임라인' },
     { path: '/dashboard', icon: LayoutDashboard, label: '대시보드' },
     { path: '/history', icon: ClipboardList, label: '처리 이력' },
@@ -288,19 +288,19 @@ export function DashboardLayout({ children }) {
   const displayName = currentUser?.name || currentUser?.email || '사용자';
   const avatarText = userInitial(currentUser?.name, currentUser?.email);
   const topSalesmapConnected = gmailCalendarConnected || salesmapConnected;
-  const topCompanyName = topSalesmapConnected ? (companyName || '(주)님버스테크') : 'Salesmap 연동';
+  const topCompanyName = topSalesmapConnected ? (companyName || '연동된 회사') : 'Salesmap 연동';
 
   return (
     <>
-      <div className="h-screen flex bg-[#F8F9FA] overflow-hidden">
-        <div className="w-56 shrink-0 bg-[#F3F4F6] border-r border-gray-200 flex flex-col">
-          <div className="p-5 border-b border-gray-200 bg-[#F3F4F6]">
-            <img
-              src={nimbusTechLogo}
-              alt="NIMBUS TECH"
-              className="block w-44 h-auto object-contain"
-              style={{ mixBlendMode: 'multiply' }}
-            />
+      <div className="h-screen flex bg-gradient-to-b from-[#F6F8FC] to-[#EEF2F9] overflow-hidden">
+        <div className="w-56 shrink-0 bg-white/70 backdrop-blur border-r border-slate-200/70 flex flex-col">
+          <div className="p-5 border-b border-slate-200/70">
+            <div className="flex items-center gap-1.5">
+              <Wind className="w-6 h-6 text-blue-500" strokeWidth={2.5} />
+              <span className="text-xl font-extrabold tracking-tight text-gray-900" style={{ fontFamily: 'var(--display)' }}>
+                Sales<span className="text-blue-600">Breeze</span>
+              </span>
+            </div>
           </div>
 
           <nav className="flex-1 py-2">
@@ -343,8 +343,8 @@ export function DashboardLayout({ children }) {
                     onClick={() => navigate(item.path)}
                     className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
                       isActive(item.path)
-                        ? 'bg-white text-gray-950 font-semibold border-l-2 border-blue-500'
-                        : 'text-gray-700 font-medium hover:bg-white/50'
+                        ? 'bg-gradient-to-r from-blue-50 to-transparent text-blue-700 font-semibold border-l-2 border-blue-500'
+                        : 'text-slate-600 font-medium hover:bg-slate-50 border-l-2 border-transparent'
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -355,17 +355,17 @@ export function DashboardLayout({ children }) {
             </div>
           </nav>
 
-          <div className="p-4 border-t border-gray-200">
-            <div className="text-xs text-gray-500 text-left">
+          <div className="p-4 border-t border-slate-200/70">
+            <div className="text-xs text-slate-400 text-left">
               Salesmap 연동 시스템
             </div>
           </div>
         </div>
 
         <div className="flex-1 min-w-0 flex flex-col">
-          <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
+          <div className="bg-white/80 backdrop-blur border-b border-slate-200/70 px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <h2 className="text-base !font-semibold !text-black">
+              <h2 className="text-base font-bold text-slate-900" style={{ fontFamily: 'var(--display)' }}>
                 {pageTitle}
               </h2>
             </div>

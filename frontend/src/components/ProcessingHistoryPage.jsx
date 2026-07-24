@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCcw, Sparkles } from 'lucide-react';
 import { getSources } from '../api/sources';
 import { getAnalysesBySource } from '../api/analyses';
 import { getSalesmapRecordsByAnalysis } from '../api/salesmapRecords';
@@ -161,21 +161,22 @@ export function ProcessingHistoryPage() {
   const visibleItems = isPriorityFilter ? priorityItems : items;
 
   return (
-    <div className="h-full overflow-auto p-6 bg-[#F8F9FA]">
+    <div className="h-full overflow-auto p-6 bg-gradient-to-b from-[#F6F8FC] to-[#EEF2F9]">
       <div className="max-w-6xl mx-auto space-y-5">
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
-          <div className="flex items-start justify-between gap-4">
+        <div className="relative overflow-hidden rounded-2xl border border-white/60 bg-white/80 shadow-[0_10px_40px_-18px_rgba(37,99,235,0.35)] backdrop-blur p-6">
+          <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gradient-to-br from-blue-400/20 to-violet-400/10 blur-2xl" />
+          <div className="relative flex flex-wrap items-start justify-between gap-4">
             <div className="text-left">
+              <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600">
+                <Sparkles className="w-3.5 h-3.5" /> 처리 현황
+              </p>
               <h2
-                className="text-2xl font-bold"
-                style={{ color: '#0f172a', fontWeight: 800 }}
+                className="mt-1 text-[26px] leading-tight tracking-tight text-slate-900"
+                style={{ fontFamily: 'var(--display)', fontWeight: 700 }}
               >
                 처리 이력
               </h2>
-              <p
-                className="text-sm font-medium mt-1"
-                style={{ color: '#334155' }}
-              >
+              <p className="mt-2 max-w-2xl text-sm text-slate-500">
                 {isPriorityFilter
                   ? '일정 변경·취소처럼 먼저 확인해야 하는 메일만 모아 보여줍니다.'
                   : '수집된 메일이 AI 분석과 Salesmap 반영까지 어떤 상태인지 확인합니다.'}
@@ -185,18 +186,18 @@ export function ProcessingHistoryPage() {
               type="button"
               onClick={loadHistory}
               disabled={isLoading}
-              className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:bg-gray-100"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-600 disabled:opacity-60"
             >
               <RefreshCcw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
               새로고침
             </button>
           </div>
 
-          <div className="grid grid-cols-4 gap-3 mt-5">
+          <div className="relative grid grid-cols-4 gap-3 mt-5">
             {['승인 대기', '등록됨', '삭제됨', '분석 전'].map((status) => (
-              <div key={status} className="border border-gray-100 rounded-lg bg-gray-50 px-4 py-3 text-left">
-                <p className="text-xs text-gray-500">{status}</p>
-                <p className="text-xl font-semibold text-gray-900 mt-1">{counts[status] || 0}</p>
+              <div key={status} className="rounded-xl border border-slate-100 bg-white/70 px-4 py-3 text-left">
+                <p className="text-xs font-medium text-slate-400">{status}</p>
+                <p className="mt-1 text-xl font-bold text-slate-800" style={{ fontFamily: 'var(--display)' }}>{counts[status] || 0}</p>
               </div>
             ))}
           </div>
@@ -224,8 +225,8 @@ export function ProcessingHistoryPage() {
           </div>
         )}
 
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-          <div className="grid grid-cols-[1.6fr_0.8fr_0.8fr_1fr_0.9fr] gap-3 px-5 py-3 text-xs text-gray-500 border-b border-gray-100 bg-gray-50 text-left">
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+          <div className="grid grid-cols-[1.6fr_0.8fr_0.8fr_1fr_0.9fr] gap-3 px-5 py-3 text-xs font-medium text-slate-400 border-b border-slate-100 bg-slate-50/70 text-left">
             <span>메일</span>
             <span>처리 유형</span>
             <span>상태</span>

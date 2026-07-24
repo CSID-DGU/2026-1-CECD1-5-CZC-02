@@ -56,6 +56,69 @@ function extractAttendees(memo = '') {
   return found?.[1]?.trim() || '';
 }
 
+// 일정 memo를 구/신 포맷 모두 지원해 사람이 읽기 좋은 필드로 분해한다.
+// 구 포맷: "summary: ...", "nextAction: ...", "actionReason: ..."
+// 신 포맷: "보낸 사람: ...", "참석자: ...", "<요약>", "다음 행동: ..."
+function parseScheduleMemo(memo = '') {
+  const result = { sender: '', attendees: '', type: '', summary: '', nextAction: '' };
+
+  memo.split('\n').forEach((raw) => {
+    const line = raw.trim();
+    if (!line) {
+      return;
+    }
+
+    const matched = line.match(/^([^:：]{1,12})[:：]\s*(.*)$/);
+    const label = matched?.[1]?.trim();
+    const value = matched?.[2]?.trim() ?? '';
+
+    switch (label) {
+      case '보낸 사람':
+        result.sender = value;
+        break;
+      case '고객사':
+        if (!result.sender) result.sender = value;
+        break;
+      case '참석자':
+        result.attendees = value;
+        break;
+      case '업무 유형':
+        result.type = value;
+        break;
+      case 'summary':
+      case '요약':
+        result.summary = value;
+        break;
+      case 'nextAction':
+      case '다음 행동':
+        result.nextAction = value;
+        break;
+      case 'actionReason':
+      case '판단 근거':
+        break; // 내부 판단 근거는 사용자에게 노출하지 않음
+      default:
+        if (!result.summary) {
+          result.summary = line;
+        }
+    }
+  });
+
+  // 요약 끝에 "/ 참석자: ..." 꼬리가 붙어 있으면 분리한다.
+  const tailAttendees = result.summary.match(/\/\s*참석자[:：]\s*([^/\n]+)$/);
+  if (tailAttendees) {
+    if (!result.attendees) {
+      result.attendees = tailAttendees[1].trim();
+    }
+    result.summary = result.summary.replace(/\/\s*참석자[:：]\s*[^/\n]+$/, '').trim();
+  }
+
+  result.summarySegments = result.summary
+    ? result.summary.split('/').map((part) => part.trim()).filter(Boolean)
+    : [];
+
+  return result;
+}
+
 function normalizeScheduleStatus(status) {
   return status || 'SCHEDULED';
 }
@@ -404,9 +467,8 @@ export function Dashboard() {
       .map((schedule) => {
         const scheduleDate = new Date(schedule.scheduleDateTime);
         const memo = schedule.memo || '';
-        const attendees = extractAttendees(memo);
-        const sender = extractMemoValue(memo, '보낸 사람') || 'AI 분석';
-        const type = extractMemoValue(memo, '업무 유형') || 'meeting';
+        const parsed = parseScheduleMemo(memo);
+        const type = parsed.type || 'meeting';
 
         return {
           id: `schedule-${schedule.scheduleId}`,
@@ -421,9 +483,11 @@ export function Dashboard() {
           time: formatDisplayTime(scheduleDate),
           userId: CURRENT_USER_ID,
           userName: '나',
-          sender,
-          attendees,
-          description: stripScheduleMeta(memo),
+          sender: parsed.sender,
+          attendees: parsed.attendees,
+          description: parsed.summary,
+          summarySegments: parsed.summarySegments,
+          nextAction: parsed.nextAction,
           status: normalizeScheduleStatus(schedule.status),
         };
       });
@@ -917,14 +981,14 @@ export function Dashboard() {
       </div>
 
       <div className="flex-1 min-w-0">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 h-full flex flex-col">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 h-full flex flex-col">
           <div className="mb-5 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <button onClick={handlePreviousMonth} className="p-1.5 hover:bg-gray-100 rounded">
-                  <ChevronLeft className="w-4 h-4 text-gray-600" />
+                <button onClick={handlePreviousMonth} className="p-1.5 hover:bg-slate-100 rounded-lg">
+                  <ChevronLeft className="w-4 h-4 text-slate-600" />
                 </button>
-                <h3 className="text-base text-gray-800 min-w-[120px] text-center">{monthName}</h3>
+                <h3 className="text-base font-bold text-slate-800 min-w-[120px] text-center" style={{ fontFamily: 'var(--display)' }}>{monthName}</h3>
                 <button onClick={handleNextMonth} className="p-1.5 hover:bg-gray-100 rounded">
                   <ChevronRight className="w-4 h-4 text-gray-600" />
                 </button>
@@ -1043,9 +1107,9 @@ export function Dashboard() {
 
       {showScheduleModal && selectedDate && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div ref={modalRef} className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] overflow-auto border border-gray-200 shadow-xl text-left">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-              <h3 className="text-base text-gray-800">
+          <div ref={modalRef} className="bg-white rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-auto border border-slate-200 shadow-2xl text-left">
+            <div className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+              <h3 className="text-base font-bold text-slate-900" style={{ fontFamily: 'var(--display)' }}>
                 {currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월 {selectedDate}일 일정
               </h3>
               <button
@@ -1054,15 +1118,15 @@ export function Dashboard() {
                   setSelectedDate(null);
                   setEditingSchedule(null);
                 }}
-                className="p-1 hover:bg-gray-100 rounded"
+                className="p-1.5 rounded-lg hover:bg-slate-100"
               >
-                <X className="w-5 h-5 text-gray-600" />
+                <X className="w-5 h-5 text-slate-500" />
               </button>
             </div>
 
             <div className="p-6 space-y-4">
               {getEventsForDate(selectedDate).map((event) => (
-                <div key={event.id} className="border border-gray-200 rounded-lg p-4">
+                <div key={event.id} className="border border-slate-200 rounded-xl p-4 shadow-sm">
                   {editingSchedule?.id === event.id ? (
                     <div className="space-y-4">
                       <div>
@@ -1157,50 +1221,76 @@ export function Dashboard() {
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <span className={`px-2 py-0.5 text-xs rounded border ${getTypeColor(event.type)}`}>
+                            <span className={`px-2 py-0.5 text-xs rounded-md border ${getTypeColor(event.type)}`}>
                               {getTypeLabel(event.type)}
                             </span>
-                            <span className="text-sm text-gray-600">{event.time}</span>
+                            <span className="text-sm font-medium text-slate-500">{event.time}</span>
                           </div>
-                          <h4 className="text-base text-gray-800 mb-1">{event.title}</h4>
-                          <p className="text-xs text-gray-500">담당자: {event.userName}</p>
+                          <h4 className="text-base font-bold text-slate-900 mb-1" style={{ fontFamily: 'var(--display)' }}>{event.title}</h4>
+                          <p className="text-xs text-slate-400">담당자: {event.userName}</p>
                         </div>
                         {event.userId === CURRENT_USER_ID && (
                           <div className="flex items-center gap-1">
                             {event.scheduleId && event.status !== 'CANCELED' && (
                               <button
                                 onClick={() => handleDeleteSchedule(event.scheduleId)}
-                                className="px-2 py-1 text-xs border border-red-200 text-red-600 rounded hover:bg-red-50"
+                                className="px-2 py-1 text-xs border border-red-200 text-red-600 rounded-lg hover:bg-red-50"
                               >
                                 삭제
                               </button>
                             )}
                             <button
                               onClick={() => handleEditSchedule(event)}
-                              className="p-2 hover:bg-gray-100 rounded"
+                              className="p-2 rounded-lg hover:bg-slate-100"
                             >
-                              <Edit2 className="w-4 h-4 text-gray-600" />
+                              <Edit2 className="w-4 h-4 text-slate-500" />
                             </button>
                           </div>
                         )}
                       </div>
-                      <div className="space-y-2 text-sm">
-                        <div>
-                          <span className="text-xs text-gray-500">보낸 사람</span>
-                          <p className="text-gray-700">{event.sender || '해당 없음'}</p>
+
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-3">
+                          {event.sender && (
+                            <DetailField label="보낸 사람" value={event.sender} />
+                          )}
+                          <DetailField label="참석자" value={event.attendees || '해당 없음'} />
                         </div>
-                        <div>
-                          <span className="text-xs text-gray-500">참석자</span>
-                          <p className="text-gray-700">{event.attendees || '해당 없음'}</p>
-                        </div>
-                        <div>
-                          <span className="text-xs text-gray-500">설명</span>
-                          <p className="text-gray-700 whitespace-pre-wrap break-words">{event.description || '해당 없음'}</p>
-                        </div>
+
+                        {event.summarySegments && event.summarySegments.length > 0 ? (
+                          <div>
+                            <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">요약</p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {event.summarySegments.map((segment, index) => (
+                                <span
+                                  key={`${event.id}-seg-${index}`}
+                                  className="rounded-lg border border-slate-100 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-600"
+                                >
+                                  {segment}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ) : event.description ? (
+                          <div>
+                            <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1">설명</p>
+                            <p className="text-sm text-slate-600 whitespace-pre-wrap break-words">{event.description}</p>
+                          </div>
+                        ) : null}
+
+                        {event.nextAction && (
+                          <div className="rounded-xl bg-gradient-to-br from-blue-50/80 to-violet-50/50 px-3 py-2.5">
+                            <p className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-blue-500">
+                              → 다음 행동
+                            </p>
+                            <p className="mt-0.5 text-sm text-slate-600">{event.nextAction}</p>
+                          </div>
+                        )}
                       </div>
+
                       {event.userId !== CURRENT_USER_ID && (
-                        <div className="mt-3 pt-3 border-t border-gray-200">
-                          <span className="text-xs text-gray-500 italic">다른 사용자의 일정입니다. 보기만 가능합니다.</span>
+                        <div className="mt-3 pt-3 border-t border-slate-100">
+                          <span className="text-xs text-slate-400 italic">다른 사용자의 일정입니다. 보기만 가능합니다.</span>
                         </div>
                       )}
                     </div>
@@ -1217,11 +1307,12 @@ export function Dashboard() {
 
 function SalesBriefingCard({ briefing, onOpenPriority }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-blue-100 p-4 text-left">
-      <div className="flex items-start justify-between gap-3 mb-3">
+    <div className="relative overflow-hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-4 text-left">
+      <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-gradient-to-br from-blue-400/15 to-violet-400/10 blur-2xl" />
+      <div className="relative flex items-start justify-between gap-3 mb-3">
         <div>
-          <p className="text-[11px] font-semibold text-blue-600 mb-0.5">AI 브리핑</p>
-          <h3 className="text-sm font-bold text-gray-950">오늘의 영업 브리핑</h3>
+          <p className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 mb-0.5">✨ AI 브리핑</p>
+          <h3 className="text-sm font-bold text-slate-900" style={{ fontFamily: 'var(--display)' }}>오늘의 영업 브리핑</h3>
         </div>
       </div>
 
@@ -1279,8 +1370,8 @@ function SchedulePanel({
 }) {
   return (
     <div className="flex-1 min-h-0">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 h-full flex flex-col">
-        <h3 className="text-sm text-gray-700 mb-4">{title}</h3>
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 h-full flex flex-col">
+        <h3 className="text-sm font-bold text-slate-800 mb-4" style={{ fontFamily: 'var(--display)' }}>{title}</h3>
         <div className="space-y-2.5 overflow-y-auto flex-1">
           {items.length === 0 ? (
             <p className="text-xs text-gray-500">표시할 일정이 없습니다.</p>
@@ -1327,6 +1418,15 @@ function ScheduleListItem({ item, getTypeColor, getTypeDot, getScheduleStatusCol
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function DetailField({ label, value }) {
+  return (
+    <div className="rounded-xl border border-slate-100 bg-slate-50/60 px-3 py-2">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">{label}</p>
+      <p className="mt-0.5 text-sm font-medium text-slate-700 break-words">{value}</p>
     </div>
   );
 }

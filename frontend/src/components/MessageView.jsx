@@ -1,10 +1,11 @@
 ﻿import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createAnalysis, createGroupAnalysis, generateReplyDraft, getAnalysesBySource, getAnalysisById, updateAnalysis } from '../api/analyses';
+import { createAnalysis, createGroupAnalysis, generateReplyDraft, sendReplyDraft, getAnalysesBySource, getAnalysisById, updateAnalysis } from '../api/analyses';
 import { getApiErrorMessage } from '../api/errors';
 import { getSalesmapRecordsByAnalysis, registerSalesmapRecord } from '../api/salesmapRecords';
 import { deleteSource, getSourceById, getSources } from '../api/sources';
 import { collectGmailMessages } from '../api/integrations';
+import { getAutoPipelineStatus } from '../api/autoPipeline';
 
 const EMPTY_TEXT = '해당 없음';
 
@@ -345,6 +346,7 @@ export function MessageView() {
   const { source } = useParams();
   const navigate = useNavigate();
   const [backendSources, setBackendSources] = useState([]);
+  const [isAutoMode, setIsAutoMode] = useState(false);
   const [sourceListMessage, setSourceListMessage] = useState('메일 조회 중');
   const [isSyncingGmail, setIsSyncingGmail] = useState(false);
   const [selectedSourceDetail, setSelectedSourceDetail] = useState(null);
@@ -401,6 +403,46 @@ export function MessageView() {
     fetchSources();
   }, [fetchSources]);
 
+  // 자동 수집·분석 모드가 켜져 있으면, 서버가 백그라운드로 처리한 새 결과를 주기적으로 가져와 목록을 갱신한다.
+  useEffect(() => {
+    let ignore = false;
+
+    getAutoPipelineStatus()
+      .then((result) => {
+        if (!ignore) {
+          setIsAutoMode(Boolean(result?.enabled));
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isAutoMode) {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(async () => {
+      await fetchSources();
+      // 자동 분석이 방금 끝났을 수 있으니, 열어둔 메일의 분석 결과도 함께 갱신한다.
+      if (selectedSourceId) {
+        try {
+          const analyses = await getAnalysesBySource(selectedSourceId);
+          if (Array.isArray(analyses) && analyses.length > 0) {
+            setSourceAnalyses(latestAnalysisOnly(analyses));
+          }
+        } catch (error) {
+          // 조용히 무시 (다음 주기에 다시 시도)
+        }
+      }
+    }, 15000);
+
+    return () => window.clearInterval(intervalId);
+  }, [isAutoMode, fetchSources, selectedSourceId]);
+
   useEffect(() => {
     if (!selectedSourceId || backendSources.length === 0) {
       return;
@@ -452,16 +494,31 @@ export function MessageView() {
       return;
     }
 
+    // 기억(memory)은 "같은 발신자의 이미 분석된 이전 메일"을 참조하므로,
+    // 먼저 온 메일이 먼저 분석되어야 고객사/제품 등이 다음 메일로 이어진다.
+    // 따라서 최신순 목록을 보낸 시각 오름차순(오래된 순)으로 정렬한 뒤 분석한다.
+    // 분석(정보 추출)은 "받은 메일"만 대상. 내가 보낸 답장(SENT)은 대화 맥락일 뿐 분석하지 않는다.
+    const chronologicalSources = [...backendSources]
+      .filter((item) => item.direction !== 'SENT')
+      .sort((left, right) => {
+        const leftTime = left.sentAt ? new Date(left.sentAt).getTime() : 0;
+        const rightTime = right.sentAt ? new Date(right.sentAt).getTime() : 0;
+        return leftTime - rightTime;
+      });
+
     const uniqueTargets = [];
     const seenKeys = new Set();
 
-    backendSources.slice(0, 30).forEach((item) => {
+    chronologicalSources.forEach((item) => {
       const key = item.sourceGroupId ? `group-${item.sourceGroupId}` : `source-${item.sourceId}`;
       if (!seenKeys.has(key)) {
         seenKeys.add(key);
         uniqueTargets.push(item);
       }
     });
+
+    // 분석 대상은 최대 30건까지만 (오래된 순 기준).
+    uniqueTargets.splice(30);
 
     let analyzedCount = 0;
     let skippedCount = 0;
@@ -483,9 +540,9 @@ export function MessageView() {
           }
 
           if (item.sourceGroupId) {
-            await createGroupAnalysis({ sourceGroupId: item.sourceGroupId, analysisMode: 'rule' });
+            await createGroupAnalysis({ sourceGroupId: item.sourceGroupId, analysisMode: 'ollama' });
           } else {
-            await createAnalysis({ sourceId: item.sourceId, analysisMode: 'rule' });
+            await createAnalysis({ sourceId: item.sourceId, analysisMode: 'ollama' });
           }
 
           analyzedCount += 1;
@@ -615,8 +672,8 @@ export function MessageView() {
 
     const isGroupAnalysis = Boolean(selectedSourceDetail.sourceGroupId);
     const payload = isGroupAnalysis
-      ? { sourceGroupId: selectedSourceDetail.sourceGroupId, analysisMode: 'rule' }
-      : { sourceId: selectedSourceId, analysisMode: 'rule' };
+      ? { sourceGroupId: selectedSourceDetail.sourceGroupId, analysisMode: 'ollama' }
+      : { sourceId: selectedSourceId, analysisMode: 'ollama' };
 
     try {
       setIsAnalyzing(true);
@@ -759,22 +816,29 @@ export function MessageView() {
   return (
     <div className="p-6 h-full w-full min-w-0 overflow-hidden grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(380px,2fr)] gap-5">
       <div className="min-w-0 space-y-4 overflow-auto">
-        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm text-gray-700">수집된 메일</h3>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500">{sourceListMessage}</span>
+              <h3 className="text-sm font-bold text-slate-800" style={{ fontFamily: 'var(--display)' }}>수집된 메일</h3>
+              {isAutoMode && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-sky-500/10 to-indigo-500/10 px-2 py-0.5 text-[11px] font-semibold text-blue-600">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500" /> 자동 처리 켜짐
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-400">{sourceListMessage}</span>
               <button
                 onClick={handleSyncGmail}
                 disabled={isSyncingGmail || isBulkAnalyzing}
-                className="px-2.5 py-1 text-xs border border-gray-300 rounded hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400"
+                className="px-2.5 py-1 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-600 disabled:opacity-50"
               >
                 {isSyncingGmail ? '동기화 중...' : 'Gmail 새로고침'}
               </button>
               <button
                 onClick={handleAnalyzeCollectedSources}
                 disabled={isBulkAnalyzing || isSyncingGmail || backendSources.length === 0}
-                className="px-2.5 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+                className="px-2.5 py-1 text-xs rounded-lg bg-gradient-to-r from-sky-500 to-indigo-500 text-white font-semibold shadow-sm hover:from-sky-600 hover:to-indigo-600 disabled:opacity-50"
               >
                 {isBulkAnalyzing ? '분석 중...' : '수집 메일 AI 분석'}
               </button>
@@ -795,12 +859,25 @@ export function MessageView() {
                   className={`w-full text-left border rounded-md p-3 transition-colors ${
                     selectedSourceId === item.sourceId
                       ? 'border-blue-400 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      : item.direction === 'SENT'
+                        ? 'border-slate-100 bg-slate-50 opacity-55 hover:opacity-100 hover:border-slate-200'
+                        : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-sm text-gray-800 truncate">{item.title}</p>
-                    <span className="text-xs text-gray-500 shrink-0">{formatSourceType(item.sourceType)}</span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span
+                        className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full border ${
+                          item.direction === 'SENT'
+                            ? 'bg-slate-100 text-slate-500 border-slate-200'
+                            : 'bg-teal-50 text-teal-700 border-teal-200'
+                        }`}
+                      >
+                        {item.direction === 'SENT' ? '보낸' : '받은'}
+                      </span>
+                      <span className="text-xs text-gray-500">{formatSourceType(item.sourceType)}</span>
+                    </div>
                   </div>
                   <p className="text-xs text-gray-500 mt-1 line-clamp-2 break-words">
                     {item.senderEmail ? `${item.senderEmail} - ` : ''}
@@ -842,9 +919,9 @@ export function MessageView() {
         )}
       </div>
 
-      <div className="w-full max-w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col min-w-0 overflow-hidden">
-        <div className="border-b border-gray-200 px-5 py-4">
-          <h3 className="text-sm text-gray-800">메일 상세 및 AI 분석</h3>
+      <div className="w-full max-w-full bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col min-w-0 overflow-hidden">
+        <div className="border-b border-slate-200 px-5 py-4">
+          <h3 className="text-sm font-bold text-slate-800" style={{ fontFamily: 'var(--display)' }}>메일 상세 및 AI 분석</h3>
         </div>
 
         <div className="flex-1 overflow-auto p-5 space-y-4">
@@ -860,9 +937,9 @@ export function MessageView() {
 
           {selectedSourceDetail && (
             <>
-              <div className="bg-gray-50 border border-gray-200 rounded-md p-3 min-w-0">
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 min-w-0">
                 <div className="flex items-center justify-between mb-2 gap-2">
-                  <span className="text-xs text-gray-500">{formatSourceType(selectedSourceDetail.sourceType)}</span>
+                  <span className="text-xs text-slate-500">{formatSourceType(selectedSourceDetail.sourceType)}</span>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-gray-500">{formatSourceStatus(selectedSourceDetail.status)}</span>
                     <button
@@ -894,18 +971,27 @@ export function MessageView() {
                 </p>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-md p-3 min-w-0">
+              {selectedSourceDetail.direction === 'SENT' ? (
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0 text-center">
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    내가 보낸 메일은 AI 분석 대상이 아닙니다.
+                    <br />
+                    <span className="text-xs text-slate-400">
+                      받은 메일만 분석하며, 이 답장은 해당 고객 타임라인에 소통 기록으로 남습니다.
+                    </span>
+                  </p>
+                </div>
+              ) : (
+              <div className="bg-gradient-to-br from-blue-50 to-violet-50/40 border border-blue-100 rounded-xl p-3 min-w-0">
                 <div className="flex items-center justify-between gap-3 mb-3">
-                  <h4 className="text-sm text-blue-700">AI 분석 결과</h4>
-                  {isDev && (
-                    <button
-                      onClick={handleCreateAnalysis}
-                      disabled={isAnalyzing}
-                      className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded shrink-0"
-                    >
-                      {isAnalyzing ? '분석 중...' : 'AI 분석 실행'}
-                    </button>
-                  )}
+                  <h4 className="text-sm font-bold text-blue-700" style={{ fontFamily: 'var(--display)' }}>AI 분석 결과</h4>
+                  <button
+                    onClick={handleCreateAnalysis}
+                    disabled={isAnalyzing}
+                    className="px-3 py-1 text-xs rounded-lg bg-gradient-to-r from-sky-500 to-indigo-500 text-white font-semibold shadow-sm hover:from-sky-600 hover:to-indigo-600 disabled:opacity-50 shrink-0"
+                  >
+                    {isAnalyzing ? '분석 중...' : 'AI 분석 실행'}
+                  </button>
                 </div>
 
                 {analysisActionMessage && (
@@ -938,6 +1024,7 @@ export function MessageView() {
                   </div>
                 )}
               </div>
+              )}
             </>
           )}
         </div>
@@ -952,6 +1039,10 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
   const [isDrafting, setIsDrafting] = useState(false);
   const [replyDraft, setReplyDraft] = useState(null);
   const [draftMessage, setDraftMessage] = useState('');
+  const [draftSubject, setDraftSubject] = useState('');
+  const [draftBody, setDraftBody] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [sentInfo, setSentInfo] = useState(null);
   const [form, setForm] = useState(() => toAnalysisForm(analysis));
 
   useEffect(() => {
@@ -959,6 +1050,9 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
     setIsEditing(false);
     setReplyDraft(null);
     setDraftMessage('');
+    setDraftSubject('');
+    setDraftBody('');
+    setSentInfo(null);
   }, [analysis]);
 
   const handleChange = (field, value) => {
@@ -982,9 +1076,12 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
     try {
       setIsDrafting(true);
       setDraftMessage('');
+      setSentInfo(null);
       const draft = await generateReplyDraft(analysis.analysisId);
       setReplyDraft(draft);
-      setDraftMessage('답장 초안이 생성되었습니다.');
+      setDraftSubject(draft.subject || '');
+      setDraftBody(draft.body || '');
+      setDraftMessage('답장 초안이 생성되었습니다. 내용을 다듬고 바로 전송할 수 있어요.');
     } catch (error) {
       console.error('Failed to generate reply draft:', error);
       setDraftMessage(`답장 초안 생성 실패: ${getApiErrorMessage(error)}`);
@@ -998,7 +1095,7 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
       return;
     }
 
-    const text = `${replyDraft.subject}\n\n${replyDraft.body}`;
+    const text = `${draftSubject}\n\n${draftBody}`;
     try {
       await navigator.clipboard.writeText(text);
       setDraftMessage('답장 초안이 복사되었습니다.');
@@ -1008,10 +1105,32 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
     }
   };
 
+  const handleSendReply = async () => {
+    if (!draftBody.trim()) {
+      setDraftMessage('보낼 본문이 비어 있습니다.');
+      return;
+    }
+    try {
+      setIsSending(true);
+      setDraftMessage('');
+      const result = await sendReplyDraft(analysis.analysisId, {
+        subject: draftSubject,
+        body: draftBody,
+      });
+      setSentInfo(result);
+      setDraftMessage(`${result.sentTo} 로 답장을 전송했습니다.`);
+    } catch (error) {
+      console.error('Failed to send reply:', error);
+      setDraftMessage(`답장 전송 실패: ${getApiErrorMessage(error)}`);
+    } finally {
+      setIsSending(false);
+    }
+  };
+
   return (
-    <div className="bg-white border border-blue-100 rounded p-3 min-w-0">
+    <div className="bg-white border border-slate-200 rounded-xl p-3 min-w-0 shadow-sm">
       <div className="flex items-center justify-between mb-3 gap-2">
-        <span className="text-xs text-gray-500">분석 번호 #{analysis.analysisId}</span>
+        <span className="text-xs text-slate-400">분석 번호 #{analysis.analysisId}</span>
         <div className="flex items-center gap-2">
           <span className={`border rounded-full px-2 py-0.5 text-xs ${getBusinessTypeClass(analysis.businessType)}`}>
             {formatBusinessType(analysis.businessType)}
@@ -1136,23 +1255,59 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
         )}
 
         {replyDraft && (
-          <div className="mt-3 rounded-lg border border-sky-100 bg-sky-50 p-3 text-left">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <p className="text-xs font-semibold text-sky-800">답장 초안</p>
-                <p className="mt-1 text-sm font-medium text-gray-900 break-words">{replyDraft.subject}</p>
-              </div>
+          <div className="mt-3 overflow-hidden rounded-xl border border-sky-100 bg-gradient-to-br from-sky-50 to-indigo-50/40 p-3.5 text-left shadow-sm">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <p className="flex items-center gap-1.5 text-xs font-bold text-sky-800">
+                <span aria-hidden>✉️</span> AI 답장 초안
+                <span className="rounded-full bg-white/70 px-1.5 py-0.5 text-[10px] font-medium text-sky-600">
+                  수정 후 전송 가능
+                </span>
+              </p>
               <button
                 type="button"
                 onClick={handleCopyReplyDraft}
-                className="shrink-0 rounded border border-sky-200 bg-white px-2 py-1 text-xs text-sky-700 hover:bg-sky-50"
+                className="shrink-0 rounded-md border border-sky-200 bg-white px-2 py-1 text-xs text-sky-700 hover:bg-sky-50"
               >
                 복사
               </button>
             </div>
-            <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-gray-700">
-              {replyDraft.body}
-            </p>
+
+            <label className="block text-[11px] font-semibold text-slate-500">제목</label>
+            <input
+              type="text"
+              value={draftSubject}
+              onChange={(event) => setDraftSubject(event.target.value)}
+              disabled={isSending || Boolean(sentInfo)}
+              className="mt-1 w-full rounded-lg border border-sky-200 bg-white px-2.5 py-1.5 text-sm text-gray-900 outline-none focus:border-sky-400 disabled:bg-slate-50 disabled:text-slate-500"
+            />
+
+            <label className="mt-2.5 block text-[11px] font-semibold text-slate-500">본문</label>
+            <textarea
+              value={draftBody}
+              onChange={(event) => setDraftBody(event.target.value)}
+              disabled={isSending || Boolean(sentInfo)}
+              rows={7}
+              className="mt-1 w-full resize-y rounded-lg border border-sky-200 bg-white px-2.5 py-2 text-sm leading-6 text-gray-800 outline-none focus:border-sky-400 disabled:bg-slate-50 disabled:text-slate-500"
+            />
+
+            {sentInfo ? (
+              <div className="mt-2.5 flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700">
+                <span aria-hidden>✅</span> {sentInfo.sentTo} 로 전송 완료
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSendReply}
+                disabled={isSending}
+                className="mt-2.5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-sky-500 to-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:from-sky-600 hover:to-indigo-600 disabled:opacity-60"
+              >
+                {isSending ? '전송 중...' : (
+                  <>
+                    <span aria-hidden>📮</span> Gmail로 답장 전송
+                  </>
+                )}
+              </button>
+            )}
           </div>
         )}
 
