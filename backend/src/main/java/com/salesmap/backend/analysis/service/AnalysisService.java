@@ -10,14 +10,18 @@ import com.salesmap.backend.analysis.dto.AnalysisCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisGroupCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisResponse;
 import com.salesmap.backend.analysis.dto.AnalysisUpdateRequest;
+import com.salesmap.backend.analysis.dto.ReplySendRequest;
+import com.salesmap.backend.analysis.dto.ReplySendResponse;
 import com.salesmap.backend.analysis.entity.Analysis;
 import com.salesmap.backend.analysis.entity.AnalysisStatus;
 import com.salesmap.backend.analysis.repository.AnalysisRepository;
 import com.salesmap.backend.customer.service.CustomerTimelineService;
+import com.salesmap.backend.gmail.service.GmailIntegrationService;
 import com.salesmap.backend.schedule.entity.Schedule;
 import com.salesmap.backend.schedule.entity.ScheduleStatus;
 import com.salesmap.backend.schedule.repository.ScheduleRepository;
 import com.salesmap.backend.source.entity.Source;
+import com.salesmap.backend.source.entity.SourceDirection;
 import com.salesmap.backend.source.entity.SourceGroup;
 import com.salesmap.backend.source.repository.SourceGroupRepository;
 import com.salesmap.backend.source.repository.SourceRepository;
@@ -30,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
@@ -47,6 +52,7 @@ public class AnalysisService {
     private final ScheduleRepository scheduleRepository;
     private final AiClient aiClient;
     private final CustomerTimelineService customerTimelineService;
+    private final GmailIntegrationService gmailIntegrationService;
 
     public AnalysisService(
             AnalysisRepository analysisRepository,
@@ -54,7 +60,8 @@ public class AnalysisService {
             SourceGroupRepository sourceGroupRepository,
             ScheduleRepository scheduleRepository,
             AiClient aiClient,
-            CustomerTimelineService customerTimelineService
+            CustomerTimelineService customerTimelineService,
+            GmailIntegrationService gmailIntegrationService
     ) {
         this.analysisRepository = analysisRepository;
         this.sourceRepository = sourceRepository;
@@ -62,6 +69,7 @@ public class AnalysisService {
         this.scheduleRepository = scheduleRepository;
         this.aiClient = aiClient;
         this.customerTimelineService = customerTimelineService;
+        this.gmailIntegrationService = gmailIntegrationService;
     }
 
     @Transactional
@@ -69,6 +77,10 @@ public class AnalysisService {
         Source source = sourceRepository.findById(request.sourceId())
                 .orElseThrow(() -> new NoSuchElementException("Source not found."));
         validateSourceOwnership(source, authenticatedUserId);
+        // 분석(정보 추출)은 받은 메일만. 내가 보낸 답장은 분석하지 않는다.
+        if (source.getDirection() == SourceDirection.SENT) {
+            throw new IllegalArgumentException("보낸 메일은 AI 분석 대상이 아닙니다.");
+        }
 
         AiAnalysisResponse aiResult = aiClient.analyze(toAiAnalysisRequest(source, request.analysisMode()));
         Analysis analysis = createAnalysisEntity(source, aiResult);
@@ -128,6 +140,39 @@ public class AnalysisService {
                 analysis.getSummary(),
                 analysis.getFollowUpAction()
         ));
+    }
+
+    @Transactional
+    public ReplySendResponse sendReply(Long analysisId, ReplySendRequest request, Long authenticatedUserId) {
+        Analysis analysis = analysisRepository.findById(analysisId)
+                .orElseThrow(() -> new NoSuchElementException("Analysis not found."));
+        validateAnalysisOwnership(analysis, authenticatedUserId);
+
+        Source source = analysis.getSource();
+        String recipient = source.getSenderEmail();
+        if (recipient == null || recipient.isBlank()) {
+            throw new IllegalArgumentException("원본 메일에 발신자 주소가 없어 답장을 보낼 수 없습니다.");
+        }
+
+        String subject = normalizeReplySubject(request.subject(), source.getTitle());
+        String body = request.body() == null ? "" : request.body();
+        String threadId = source.getSourceGroup() == null ? null : source.getSourceGroup().getExternalGroupId();
+
+        String messageId = gmailIntegrationService.sendReplyEmail(authenticatedUserId, recipient, subject, body, threadId);
+
+        // 보낸 답장을 고객 타임라인에 소통 이벤트로 남긴다(분석 대상은 아니지만 대화 흐름엔 포함).
+        customerTimelineService.recordReplySent(analysis, subject, body);
+
+        return new ReplySendResponse(recipient, subject, messageId);
+    }
+
+    private String normalizeReplySubject(String subject, String originalTitle) {
+        String base = subject != null && !subject.isBlank() ? subject.trim()
+                : (originalTitle != null && !originalTitle.isBlank() ? originalTitle.trim() : "회신 드립니다");
+        if (base.regionMatches(true, 0, "re:", 0, 3)) {
+            return base;
+        }
+        return "Re: " + base;
     }
 
     @Transactional
@@ -428,7 +473,7 @@ public class AnalysisService {
             return createScheduleFromAnalysis(analysis, aiResult);
         }
 
-        Schedule schedule = findTargetSchedule(aiResult, authenticatedUserId);
+        Schedule schedule = findTargetSchedule(analysis, aiResult, authenticatedUserId);
         if (schedule == null) {
             log.info(
                     "[SCHEDULE_ACTION] target schedule not found. actionType={}, analysisId={}, targetScheduleId={}, targetScheduleTitle={}, scheduleTitle={}",
@@ -474,7 +519,7 @@ public class AnalysisService {
         return null;
     }
 
-    private Schedule findTargetSchedule(AiAnalysisResponse aiResult, Long authenticatedUserId) {
+    private Schedule findTargetSchedule(Analysis analysis, AiAnalysisResponse aiResult, Long authenticatedUserId) {
         if (aiResult.targetScheduleId() != null) {
             Schedule schedule = scheduleRepository.findById(aiResult.targetScheduleId())
                     .orElse(null);
@@ -484,14 +529,37 @@ public class AnalysisService {
             return schedule;
         }
 
+        List<Schedule> activeSchedules = scheduleRepository.findByUserId(authenticatedUserId).stream()
+                .filter(schedule -> schedule.getStatus() != ScheduleStatus.CANCELED)
+                .sorted(Comparator.comparing(Schedule::getId).reversed())
+                .toList();
+
+        // 1) 같은 고객(발신 이메일 또는 고객사명)이 만든 일정을 우선 매칭한다.
+        //    제목 문구는 CREATE와 UPDATE/CANCEL 사이에 미묘하게 달라질 수 있어 발신자 기준이 훨씬 안정적이다.
+        String senderEmail = analysis.getSource() == null ? null : analysis.getSource().getSenderEmail();
+        String customerName = analysis.getCustomerName();
+        for (Schedule schedule : activeSchedules) {
+            Analysis origin = schedule.getAnalysis();
+            if (origin == null) {
+                continue;
+            }
+            String originSender = origin.getSource() == null ? null : origin.getSource().getSenderEmail();
+            boolean sameSender = senderEmail != null && senderEmail.equalsIgnoreCase(originSender);
+            boolean sameCustomer = customerName != null && !customerName.isBlank()
+                    && customerName.equalsIgnoreCase(origin.getCustomerName());
+            if (sameSender || sameCustomer) {
+                return schedule;
+            }
+        }
+
+        // 2) 발신자 매칭 실패 시 제목 부분 일치로 폴백한다.
         String titleHint = firstNotBlankOrNull(aiResult.targetScheduleTitle(), aiResult.scheduleTitle());
         if (titleHint == null || titleHint.isBlank()) {
             return null;
         }
 
         String normalizedHint = titleHint.toLowerCase();
-        return scheduleRepository.findByUserId(authenticatedUserId).stream()
-                .filter(schedule -> schedule.getStatus() != ScheduleStatus.CANCELED)
+        return activeSchedules.stream()
                 .filter(schedule -> {
                     String title = schedule.getTitle() == null ? "" : schedule.getTitle().toLowerCase();
                     return title.contains(normalizedHint) || normalizedHint.contains(title);
@@ -616,11 +684,29 @@ public class AnalysisService {
     }
 
     private String buildScheduleMemo(AiAnalysisResponse aiResult) {
-        return truncate(String.join("\n", List.of(
-                        "summary: " + nullToDash(aiResult.summary()),
-                        "nextAction: " + nullToDash(aiResult.todoContent()),
-                        "actionReason: " + nullToDash(aiResult.actionReason())
-                )), 200);
+        // 캘린더 설명·대시보드 모달에 그대로 노출되므로 사람이 읽기 좋은 라벨 형식으로 구성한다.
+        List<String> lines = new java.util.ArrayList<>();
+
+        String customer = firstNotBlankOrNull(aiResult.customerName(), aiResult.contactName());
+        if (customer != null) {
+            String contact = aiResult.contactName();
+            boolean hasSeparateContact = contact != null && !contact.isBlank() && !contact.equals(customer);
+            lines.add("보낸 사람: " + (hasSeparateContact ? customer + " (" + contact + ")" : customer));
+        }
+        if (aiResult.attendees() != null && !aiResult.attendees().isBlank()) {
+            lines.add("참석자: " + aiResult.attendees());
+        }
+        if (aiResult.summary() != null && !aiResult.summary().isBlank()) {
+            lines.add(aiResult.summary());
+        }
+        if (aiResult.todoContent() != null && !aiResult.todoContent().isBlank()) {
+            lines.add("다음 행동: " + aiResult.todoContent());
+        }
+        if (lines.isEmpty()) {
+            lines.add("AI 분석 일정");
+        }
+
+        return truncate(String.join("\n", lines), 200);
     }
 
     private String firstNotBlank(String... values) {

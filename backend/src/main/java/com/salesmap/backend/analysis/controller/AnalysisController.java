@@ -4,6 +4,8 @@ import com.salesmap.backend.analysis.dto.AnalysisCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisGroupCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisResponse;
 import com.salesmap.backend.analysis.dto.AnalysisUpdateRequest;
+import com.salesmap.backend.analysis.dto.ReplySendRequest;
+import com.salesmap.backend.analysis.dto.ReplySendResponse;
 import com.salesmap.backend.analysis.service.AnalysisService;
 import com.salesmap.backend.ai.dto.AiReplyDraftResponse;
 import com.salesmap.backend.global.response.ApiResponse;
@@ -60,6 +62,15 @@ public class AnalysisController {
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         return ApiResponse.success("답장 초안이 생성되었습니다.", analysisService.generateReplyDraft(analysisId, principal.getUserId()));
+    }
+
+    @PostMapping("/{analysisId}/send-reply")
+    public ApiResponse<ReplySendResponse> sendReply(
+            @PathVariable Long analysisId,
+            @RequestBody ReplySendRequest request,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success("답장을 전송했습니다.", analysisService.sendReply(analysisId, request, principal.getUserId()));
     }
 
     @PatchMapping("/{analysisId}")

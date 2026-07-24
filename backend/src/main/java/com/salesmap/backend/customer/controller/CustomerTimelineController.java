@@ -1,8 +1,10 @@
 package com.salesmap.backend.customer.controller;
 
+import com.salesmap.backend.customer.dto.CustomerPipelineResponse;
 import com.salesmap.backend.customer.dto.CustomerSummaryResponse;
 import com.salesmap.backend.customer.dto.CustomerTimelineResponse;
 import com.salesmap.backend.customer.service.CustomerTimelineService;
+import com.salesmap.backend.customer.service.PipelineService;
 import com.salesmap.backend.global.response.ApiResponse;
 import com.salesmap.backend.global.security.CustomUserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,9 +20,14 @@ import java.util.List;
 public class CustomerTimelineController {
 
     private final CustomerTimelineService customerTimelineService;
+    private final PipelineService pipelineService;
 
-    public CustomerTimelineController(CustomerTimelineService customerTimelineService) {
+    public CustomerTimelineController(
+            CustomerTimelineService customerTimelineService,
+            PipelineService pipelineService
+    ) {
         this.customerTimelineService = customerTimelineService;
+        this.pipelineService = pipelineService;
     }
 
     @GetMapping
@@ -28,6 +35,13 @@ public class CustomerTimelineController {
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         return ApiResponse.success(customerTimelineService.getCustomers(principal.getUserId()));
+    }
+
+    @GetMapping("/pipeline")
+    public ApiResponse<List<CustomerPipelineResponse>> getPipeline(
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success(pipelineService.getPipeline(principal.getUserId()));
     }
 
     @GetMapping("/{customerContactId}/timeline")

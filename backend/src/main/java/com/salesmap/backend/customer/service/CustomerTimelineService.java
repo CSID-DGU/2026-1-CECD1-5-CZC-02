@@ -115,6 +115,41 @@ public class CustomerTimelineService {
         }
     }
 
+    /**
+     * 담당자가 고객에게 보낸 답장을 해당 고객 타임라인에 "소통 이벤트"로 남긴다.
+     * 분석(정보 추출)은 받은 메일만 대상이지만, 소통 흐름에는 내가 보낸 답장도 시간순으로 함께 보여야
+     * 실제 대화 맥락(받음 → 답장 → 받음)이 한 화면에 이어진다.
+     */
+    @Transactional
+    public void recordReplySent(Analysis analysis, String subject, String body) {
+        if (!shouldRecordTimeline(analysis)) {
+            return;
+        }
+
+        CustomerContact contact = upsertContact(analysis);
+        if (contact == null) {
+            return;
+        }
+
+        String safeSubject = firstNotBlankOrNull(subject, "회신");
+        String title = truncate("답장 전송: " + safeSubject, 255);
+        String description = firstNotBlankOrNull(body, "(내용 없음)");
+
+        customerActivityRepository.save(new CustomerActivity(
+                analysis.getSource().getUser(),
+                contact,
+                contact.getCustomerName(),
+                CustomerActivityType.REPLY_SENT,
+                title,
+                description,
+                analysis.getSource(),
+                analysis,
+                null,
+                null,
+                LocalDateTime.now()
+        ));
+    }
+
     @Transactional
     public List<CustomerSummaryResponse> getCustomers(Long authenticatedUserId) {
         backfillExistingAnalyses(authenticatedUserId);
@@ -312,5 +347,12 @@ public class CustomerTimelineService {
 
     private String nullToDash(String value) {
         return value == null || value.isBlank() ? "-" : value;
+    }
+
+    private String truncate(String value, int maxLength) {
+        if (value == null) {
+            return null;
+        }
+        return value.length() <= maxLength ? value : value.substring(0, maxLength);
     }
 }

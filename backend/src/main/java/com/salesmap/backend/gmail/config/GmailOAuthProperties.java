@@ -10,7 +10,7 @@ public class GmailOAuthProperties {
     private String clientId;
     private String clientSecret;
     private String redirectUri;
-    private String scope = "openid email profile https://www.googleapis.com/auth/gmail.readonly";
+    private String scope = "openid email profile https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send";
     private int collectPageSize = 500;
 
     public String getClientId() {

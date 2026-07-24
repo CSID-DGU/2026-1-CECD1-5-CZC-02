@@ -2,6 +2,7 @@ package com.salesmap.backend.gmail.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salesmap.backend.gmail.config.GmailOAuthProperties;
 import com.salesmap.backend.gmail.dto.GmailAuthorizeResponse;
 import com.salesmap.backend.gmail.dto.GmailCollectResponse;
@@ -55,6 +56,7 @@ public class GmailIntegrationService {
     private static final String GOOGLE_TOKEN_INFO_URL = "https://oauth2.googleapis.com/tokeninfo";
     private static final String GOOGLE_USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo";
     private static final String GMAIL_MESSAGES_URL = "https://gmail.googleapis.com/gmail/v1/users/me/messages";
+    private static final String GMAIL_SEND_URL = "https://gmail.googleapis.com/gmail/v1/users/me/messages/send";
     private static final ZoneId DEFAULT_ZONE = ZoneId.of("Asia/Seoul");
     private static final int DEFAULT_MANUAL_RECENT_DAYS = 30;
     private static final int MAX_MANUAL_RECENT_DAYS = 90;
@@ -421,6 +423,65 @@ public class GmailIntegrationService {
         }
 
         return getValidAccessToken(integration);
+    }
+
+    /**
+     * AI가 만든(그리고 사용자가 다듬은) 답장 초안을 원래 발신자에게 Gmail로 보낸다.
+     * 원본 메일의 스레드(threadId)에 이어 붙여 실제 대화처럼 보이게 한다.
+     *
+     * @return 전송된 Gmail 메시지 ID
+     */
+    @Transactional
+    public String sendReplyEmail(Long authenticatedUserId, String toEmail, String subject, String body, String threadId) {
+        if (toEmail == null || toEmail.isBlank()) {
+            throw new IllegalArgumentException("받는 사람 이메일이 없어 답장을 보낼 수 없습니다.");
+        }
+
+        String accessToken = getValidAccessTokenForUser(authenticatedUserId);
+        String rawMessage = buildRawReplyMessage(toEmail.trim(), safeText(subject), safeText(body));
+
+        ObjectNode payload = objectMapper.createObjectNode();
+        payload.put("raw", rawMessage);
+        if (threadId != null && !threadId.isBlank()) {
+            payload.put("threadId", threadId.trim());
+        }
+
+        try {
+            String response = restClient.post()
+                    .uri(GMAIL_SEND_URL)
+                    .headers(headers -> headers.setBearerAuth(accessToken))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(payload.toString())
+                    .retrieve()
+                    .body(String.class);
+            String messageId = optionalText(parseJson(response), "id");
+            log.info("Sent Gmail reply. userId={}, to={}, threadId={}, messageId={}",
+                    authenticatedUserId, toEmail, threadId, messageId);
+            return messageId;
+        } catch (RestClientResponseException exception) {
+            log.warn("Gmail send failed. userId={}, to={}, status={}, responseBody={}",
+                    authenticatedUserId, toEmail, exception.getStatusCode(), exception.getResponseBodyAsString());
+            throw new IllegalArgumentException(
+                    "Gmail 답장 전송에 실패했습니다. Gmail 전송 권한(gmail.send)이 있는지 확인하고 설정에서 다시 연결해주세요.");
+        }
+    }
+
+    private String buildRawReplyMessage(String to, String subject, String body) {
+        String encodedSubject = "=?UTF-8?B?"
+                + Base64.getEncoder().encodeToString(subject.getBytes(StandardCharsets.UTF_8)) + "?=";
+        String encodedBody = Base64.getMimeEncoder().encodeToString(body.getBytes(StandardCharsets.UTF_8));
+        String mime = "To: " + to + "\r\n"
+                + "Subject: " + encodedSubject + "\r\n"
+                + "MIME-Version: 1.0\r\n"
+                + "Content-Type: text/plain; charset=\"UTF-8\"\r\n"
+                + "Content-Transfer-Encoding: base64\r\n"
+                + "\r\n"
+                + encodedBody;
+        return Base64.getUrlEncoder().encodeToString(mime.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private String safeText(String value) {
+        return value == null ? "" : value;
     }
 
     private String getValidAccessToken(Integration integration) {
