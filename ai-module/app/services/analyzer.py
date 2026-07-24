@@ -23,11 +23,23 @@ CREATE_WORDS = (
     "일정을 잡",
     "가능하실까요",
     "진행하면 좋겠습니다",
-    "요청드립니다",
 )
 UPDATE_WORDS = ("변경", "연기", "앞당", "시간을 바", "날짜를 바", "조율")
 CANCEL_WORDS = ("취소", "진행하지 않습니다", "진행하지 않겠습니다")
-CONFIRM_WORDS = ("확정", "그대로 진행", "확인했습니다", "참석 가능", "예정대로 진행", "진행하겠습니다")
+# 바 '확정'은 "확정된 단계는 아니라"처럼 부정 문맥에 오매칭되므로 확약형 표현만 인정한다.
+CONFIRM_WORDS = (
+    "확정하겠습니다",
+    "확정합니다",
+    "확정할게요",
+    "확정했습니다",
+    "확정입니다",
+    "확정으로 진행",
+    "그대로 진행",
+    "확인했습니다",
+    "참석 가능",
+    "예정대로 진행",
+    "진행하겠습니다",
+)
 GENERAL_WORDS = ("견적서", "첨부", "자료", "소개 자료", "기능 설명서", "검토 후", "문의사항")
 SALES_BUSINESS_WORDS = (
     "고객사",
@@ -198,10 +210,11 @@ async def analyze_message(
         confidence=0.85,
     )
     rule_result = apply_final_safety_guards(rule_result, text)
-    rule_result = apply_demo_case_overrides(rule_result, raw_text)
 
     effective_engine = (analysis_mode or AI_ENGINE).lower()
-    if effective_engine in {"ollama", "llm", "hybrid"}:
+    # 비영업(NON_BUSINESS)으로 규칙 판정된 메일은 LLM이 뽑을 의미 정보(고객사/제품 등)가 없고,
+    # LLM은 영업/비영업 판정을 바꾸지도 않으므로 무거운 LLM 단계를 건너뛴다(노이즈 메일 처리 대폭 가속).
+    if effective_engine in {"ollama", "llm", "hybrid"} and rule_result.business_type != "NON_BUSINESS":
         return enhance_with_ollama(
             text,
             messages or [],
@@ -237,51 +250,115 @@ def enhance_with_ollama(
         return rule_result
 
     try:
-        merged_result = merge_llm_patch(rule_result, patch.data)
+        merged_result = merge_llm_patch(rule_result, patch.data, text)
         return apply_precision_action_corrections(text, merged_result, rule_result)
     except Exception as exception:
         print(f"[AI_ENGINE] Ollama patch merge failed. reason={exception}")
         return rule_result
 
 
-def merge_llm_patch(rule_result: AnalysisResultSchema, patch: Dict[str, Any]) -> AnalysisResultSchema:
-    action_type = patch.get("actionType") or rule_result.action_type
-    if action_type not in {"CREATE", "UPDATE", "CANCEL", "CONFIRM", "UNKNOWN"}:
-        action_type = rule_result.action_type
+def resolve_schedule_title(
+    llm_title: Optional[str],
+    product_name: Optional[str],
+    text: str,
+    fallback: Optional[str],
+) -> Optional[str]:
+    """LLM 제목에 날짜/시간이 섞이면 제품명 기반으로 깔끔하게 재구성한다."""
+    date_markers = (
+        "다음 주", "이번 주", "오늘", "내일", "모레", "오전", "오후",
+        "월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일",
+    )
 
-    schedule = build_llm_schedule(patch.get("schedule"), rule_result, action_type)
-    if action_type == "UNKNOWN":
-        schedule = None
+    def has_date(value: Optional[str]) -> bool:
+        if not value:
+            return False
+        return (
+            any(marker in value for marker in date_markers)
+            or bool(re.search(r"\d+\s*시", value))
+            or bool(re.search(r"\d{1,2}\s*월", value))
+        )
 
+    if llm_title and not has_date(llm_title):
+        return llm_title
+
+    if product_name:
+        if "데모" in text:
+            kind = "데모 미팅"
+        elif "상담" in text:
+            kind = "상담"
+        elif "회의" in text:
+            kind = "회의"
+        else:
+            kind = "관련 미팅"
+        return f"{product_name} {kind}"
+
+    return fallback
+
+
+def merge_llm_patch(rule_result: AnalysisResultSchema, patch: Dict[str, Any], text: str = "") -> AnalysisResultSchema:
+    """LLM은 의미 필드(고객사/제품/담당자/참석자/제목/요약)만 보정한다.
+
+    액션 분류, 날짜/시간, 금액, businessType 같은 구조적 필드는 규칙이 더 안정적이므로
+    규칙 결과를 그대로 유지하고 LLM이 덮어쓰지 못하게 한다.
+    """
     attendees = patch.get("attendees")
     if not isinstance(attendees, list):
         attendees = rule_result.attendees or []
-    attendees = dedupe([str(item) for item in attendees if item])
+    attendees = dedupe([str(item).strip() for item in attendees if item and str(item).strip()])
+    if not attendees:
+        attendees = rule_result.attendees or []
 
-    target_schedule_title = text_or_none(patch.get("targetScheduleTitle")) or rule_result.target_schedule_title
-    action_reason = text_or_none(patch.get("actionReason")) or rule_result.action_reason
-    business_type = text_or_none(patch.get("businessType")) or rule_result.business_type
-    business_score = patch.get("businessRelevanceScore")
-    if not isinstance(business_score, (int, float)):
-        business_score = rule_result.business_relevance_score
+    customer_name = text_or_none(patch.get("customerName")) or rule_result.customer_name
+    product_name = text_or_none(patch.get("productName")) or rule_result.product_name
+    contact_person = text_or_none(patch.get("contactName")) or first_contact(attendees) or rule_result.contact_person
+
+    # 일정: 규칙이 뽑은 날짜/시간은 유지하고, LLM이 뽑은 제목·참석자만 반영한다.
+    schedule = rule_result.schedule
+    if schedule is not None:
+        schedule = ScheduleSchema(
+            title=resolve_schedule_title(
+                text_or_none(patch.get("scheduleTitle")), product_name, text, schedule.title
+            ),
+            date=schedule.date,
+            time=schedule.time,
+            participants=attendees or schedule.participants,
+            location=schedule.location,
+        )
+
+    # 요약은 보정된 최종 필드로 다시 구성해 화면 표시값과 항상 일치시킨다.
+    schedule_for_summary = ScheduleResponse(
+        title=(schedule.title if schedule else ""),
+        date=(schedule.date if schedule else None),
+        time=(schedule.time if schedule else None),
+        participants=attendees,
+    )
+    summary = build_summary(
+        rule_result.action_type,
+        schedule_for_summary,
+        text,
+        customer_name,
+        product_name,
+        rule_result.amount,
+        attendees,
+    )
 
     return AnalysisResultSchema(
-        summary=text_or_none(patch.get("summary")) or rule_result.summary,
-        customer_name=text_or_none(patch.get("customerName")) or rule_result.customer_name,
-        contact_person=text_or_none(patch.get("contactName")) or first_contact(attendees) or rule_result.contact_person,
-        product_name=text_or_none(patch.get("productName")) or rule_result.product_name,
-        attendees=attendees or rule_result.attendees,
-        amount=patch.get("amount") if isinstance(patch.get("amount"), int) else rule_result.amount,
+        summary=summary,
+        customer_name=customer_name,
+        contact_person=contact_person,
+        product_name=product_name,
+        attendees=attendees,
+        amount=rule_result.amount,
         activity_type=rule_result.activity_type,
-        action_type=action_type,
+        action_type=rule_result.action_type,
         target_schedule_id=rule_result.target_schedule_id,
-        target_schedule_title=target_schedule_title,
-        action_reason=action_reason,
-        business_type=business_type,
-        business_relevance_score=max(0.0, min(1.0, float(business_score))),
-        business_reason=text_or_none(patch.get("businessReason")) or rule_result.business_reason,
-        todo_required=action_type in {"CREATE", "UPDATE", "CANCEL"} and schedule is not None,
-        todo_content=text_or_none(patch.get("todoContent")) or rule_result.todo_content,
+        target_schedule_title=rule_result.target_schedule_title,
+        action_reason=rule_result.action_reason,
+        business_type=rule_result.business_type,
+        business_relevance_score=rule_result.business_relevance_score,
+        business_reason=rule_result.business_reason,
+        todo_required=rule_result.todo_required,
+        todo_content=rule_result.todo_content,
         schedule=schedule,
         confidence=max(rule_result.confidence, 0.9),
     )
@@ -316,9 +393,16 @@ def build_llm_schedule(
     return None
 
 
+# LLM(특히 소형 모델)이 값 대신 문자열로 뱉는 무효 토큰. 이런 값은 기억 fallback이 동작하도록 None 처리한다.
+_NULL_TOKENS = {"null", "none", "n/a", "na", "nil", "undefined", "-", "없음", "해당 없음"}
+
+
 def text_or_none(value: Any) -> Optional[str]:
     if isinstance(value, str) and value.strip():
-        return value.strip()
+        cleaned = value.strip()
+        if cleaned.lower() in _NULL_TOKENS:
+            return None
+        return cleaned
     return None
 
 
@@ -361,24 +445,43 @@ def looks_like_schedule_update(text: str) -> bool:
     if "취소" in text:
         return False
 
-    update_markers = (
-        "기존",
-        "잡아둔",
-        "예정된",
-        "대신",
-        "같은 날",
-        "조정",
-        "변경",
-        "바꿔",
-        "늦춰",
+    # 이미 잡힌 일정을 '옮기려는' 재조정 의도가 분명한 표현만 인정한다.
+    # (단순히 '기존 WMS 연동'처럼 '기존'이 들어갔다고 일정 변경으로 보지 않는다.)
+    reschedule_phrases = (
+        "일정 변경",
+        "일정을 변경",
+        "일정 조정",
+        "일정을 조정",
+        "시간 변경",
+        "시간을 변경",
+        "시간 조정",
+        "시간을 조정",
+        "날짜 변경",
+        "날짜를 변경",
+        "날짜 조정",
+        "미팅 변경",
+        "미팅을 변경",
+        "회의 변경",
+        "상담 변경",
+        "변경 가능",
+        "조정 가능",
+        "변경 부탁",
+        "조정 부탁",
+        "변경할 수 있",
+        "조정할 수 있",
+        "변경해도",
+        "변경 요청",
+        "연기",
         "앞당",
-        "겹치",
-        "시간을",
-        "날짜를",
+        "미뤄",
+        "리스케줄",
+        "다른 시간",
+        "다른 날짜",
+        "시간을 바",
+        "날짜를 바",
     )
-    schedule_markers = ("미팅", "회의", "상담", "통화", "일정")
 
-    return any(marker in text for marker in update_markers) and any(marker in text for marker in schedule_markers)
+    return any(phrase in text for phrase in reschedule_phrases)
 
 
 def append_reason(current_reason: Optional[str], next_reason: str) -> str:
@@ -697,330 +800,6 @@ def is_strong_non_business_email(text: str) -> bool:
     return False
 
 
-def apply_demo_case_overrides(
-    result: AnalysisResultSchema,
-    text: str,
-) -> AnalysisResultSchema:
-    """Presentation fixtures for known demo emails.
-
-    These run after the generic rule/BGE/GLiNER pipeline so the normal analyzer
-    still handles unseen mail, while the fixed demonstration cases stay stable.
-    """
-    if is_abc_sales_analytics_premeeting_demo(text):
-        return copy_analysis_result(
-            result,
-            summary="ABC 고객사 / Sales Analytics / 미팅 전 확인 사항 공유 메일",
-            customer_name="ABC 고객사",
-            contact_person="ABC 고객사 김민수",
-            product_name="Sales Analytics",
-            attendees=[],
-            amount=None,
-            activity_type="EMAIL",
-            action_type="UNKNOWN",
-            target_schedule_id=None,
-            target_schedule_title=None,
-            action_reason="미팅 전 확인 사항을 공유한 메일로, 새 일정 생성 요청은 아닙니다.",
-            business_type="SALES_ACTIVITY",
-            business_relevance_score=0.90,
-            business_reason="제품 관심사와 미팅 준비 요청이 포함된 영업 메일입니다.",
-            todo_required=False,
-            todo_content="Sales Analytics 미팅 전 관심사 확인 및 자료 준비",
-            schedule=None,
-            confidence=max(result.confidence, 0.94),
-        )
-
-    if is_abc_product_update_demo(text):
-        return copy_analysis_result(
-            result,
-            summary="ABC 고객사 / 제품 소개 / 제품 소개 미팅 / 2026-06-18 / 오후 4시 / 참석자: 기존과 동일",
-            customer_name="ABC 고객사",
-            contact_person="ABC 고객사 김민수",
-            product_name="제품 소개",
-            attendees=["기존과 동일"],
-            amount=None,
-            activity_type="MEETING",
-            action_type="UPDATE",
-            target_schedule_id=None,
-            target_schedule_title="제품 소개 미팅",
-            action_reason="기존 미팅 시간을 같은 날 오후 4시로 변경할 수 있는지 문의한 일정 변경 메일입니다.",
-            business_type="SALES_ACTIVITY",
-            business_relevance_score=0.95,
-            business_reason="일정 변경 표현과 미팅 시간이 포함된 영업 메일입니다.",
-            todo_required=True,
-            todo_content="제품 소개 미팅 일정 변경 확인",
-            schedule=ScheduleSchema(
-                title="제품 소개 미팅",
-                date="2026-06-18",
-                time="16:00",
-                participants=["기존과 동일"],
-                location=None,
-            ),
-            confidence=max(result.confidence, 0.96),
-        )
-
-    if is_abc_sales_analytics_create_demo(text):
-        return copy_analysis_result(
-            result,
-            summary="ABC 고객사 / Sales Analytics / 12,000,000원 / Sales Analytics 관련 미팅 / 2026-06-18 / 오후 2시 / 참석자: ABC 고객사 김민수, 재무팀 박소연, 영업팀 이민재",
-            customer_name="ABC 고객사",
-            contact_person="ABC 고객사 김민수",
-            product_name="Sales Analytics",
-            attendees=["ABC 고객사 김민수", "재무팀 박소연", "영업팀 이민재"],
-            amount=12000000,
-            activity_type="MEETING",
-            action_type="CREATE",
-            target_schedule_id=None,
-            target_schedule_title=None,
-            action_reason="일정 생성 요청 표현과 날짜/시간 정보가 포함되어 있습니다.",
-            business_type="SALES_ACTIVITY",
-            business_relevance_score=0.95,
-            business_reason="일정 생성 표현과 고객사/제품/예산 정보가 포함된 영업 메일입니다.",
-            todo_required=True,
-            todo_content="미팅 일정 등록 및 미팅 준비",
-            schedule=ScheduleSchema(
-                title="Sales Analytics 관련 미팅",
-                date="2026-06-18",
-                time="14:00",
-                participants=["ABC 고객사 김민수", "재무팀 박소연", "영업팀 이민재"],
-                location=None,
-            ),
-            confidence=max(result.confidence, 0.97),
-        )
-
-    if is_greensoft_material_demo(text):
-        return copy_analysis_result(
-            result,
-            summary="GreenSoft / 고객관리 솔루션 / 기능 자료 문의 메일",
-            customer_name="GreenSoft",
-            contact_person="GreenSoft 박서준",
-            product_name="고객관리 솔루션",
-            attendees=[],
-            amount=None,
-            activity_type="EMAIL",
-            action_type="UNKNOWN",
-            target_schedule_id=None,
-            target_schedule_title=None,
-            action_reason="상담 전 자료 요청 성격이며 새 일정 생성 요청은 아닙니다.",
-            business_type="SALES_ACTIVITY",
-            business_relevance_score=0.90,
-            business_reason="고객사와 제품 기능 문의가 포함된 영업 메일입니다.",
-            todo_required=False,
-            todo_content="고객관리 솔루션 기능 자료 준비",
-            schedule=None,
-            confidence=max(result.confidence, 0.94),
-        )
-
-    if is_greensoft_create_demo(text):
-        return copy_analysis_result(
-            result,
-            summary=(
-                "GreenSoft / \uace0\uac1d\uad00\ub9ac \uc194\ub8e8\uc158 / "
-                "GreenSoft \uace0\uac1d\uad00\ub9ac \uc194\ub8e8\uc158 \uc0c1\ub2f4 / "
-                "2026-06-24 / \uc624\uc804 11\uc2dc / \ucc38\uc11d\uc790: "
-                "\ucd94\ud6c4 \ud655\uc815\ud574\uc11c \uacf5\uc720\ub4dc\ub9ac\uaca0\uc2b5\ub2c8\ub2e4."
-            ),
-            customer_name="GreenSoft",
-            contact_person=None,
-            product_name="\uace0\uac1d\uad00\ub9ac \uc194\ub8e8\uc158",
-            attendees=["\ucd94\ud6c4 \ud655\uc815\ud574\uc11c \uacf5\uc720\ub4dc\ub9ac\uaca0\uc2b5\ub2c8\ub2e4."],
-            amount=None,
-            activity_type="MEETING",
-            action_type="CREATE",
-            target_schedule_id=None,
-            target_schedule_title=None,
-            action_reason="\uc77c\uc815 \uc0dd\uc131 \uc694\uccad \ud45c\ud604\uacfc \ub0a0\uc9dc/\uc2dc\uac04 \uc815\ubcf4\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.",
-            business_type="SALES_ACTIVITY",
-            business_relevance_score=0.95,
-            business_reason="\uc77c\uc815 \uc0dd\uc131 \ud45c\ud604\uacfc \uace0\uac1d\uc0ac/\uc81c\ud488 \uc815\ubcf4\uac00 \ud3ec\ud568\ub41c \uc601\uc5c5 \uba54\uc77c\uc785\ub2c8\ub2e4.",
-            todo_required=True,
-            todo_content="\ubbf8\ud305 \uc77c\uc815 \ub4f1\ub85d \ubc0f \ubbf8\ud305 \uc900\ube44",
-            schedule=ScheduleSchema(
-                title="GreenSoft \uace0\uac1d\uad00\ub9ac \uc194\ub8e8\uc158 \uc0c1\ub2f4",
-                date="2026-06-24",
-                time="11:00",
-                participants=["\ucd94\ud6c4 \ud655\uc815\ud574\uc11c \uacf5\uc720\ub4dc\ub9ac\uaca0\uc2b5\ub2c8\ub2e4."],
-                location=None,
-            ),
-            confidence=max(result.confidence, 0.96),
-        )
-
-    if is_greensoft_confirm_demo(text):
-        return copy_analysis_result(
-            result,
-            summary=(
-                "GreenSoft / \uace0\uac1d\uad00\ub9ac \uc194\ub8e8\uc158 / "
-                "GreenSoft \uace0\uac1d\uad00\ub9ac \uc194\ub8e8\uc158 \uc0c1\ub2f4 / "
-                "2026-06-24 / \uc624\uc804 11\uc2dc / \ucc38\uc11d\uc790: "
-                "GreenSoft \ubc15\uc11c\uc900, \uc6b4\uc601\ud300 \ud55c\uc720\uc9c4, \uc601\uc5c5\ud300 \uc774\ubbfc\uc7ac"
-            ),
-            customer_name="GreenSoft",
-            contact_person="GreenSoft \ubc15\uc11c\uc900",
-            product_name="\uace0\uac1d\uad00\ub9ac \uc194\ub8e8\uc158",
-            attendees=["GreenSoft \ubc15\uc11c\uc900", "\uc6b4\uc601\ud300 \ud55c\uc720\uc9c4", "\uc601\uc5c5\ud300 \uc774\ubbfc\uc7ac"],
-            amount=None,
-            activity_type="MEETING",
-            action_type="CONFIRM",
-            target_schedule_id=None,
-            target_schedule_title="GreenSoft \uace0\uac1d\uad00\ub9ac \uc194\ub8e8\uc158 \uc0c1\ub2f4",
-            action_reason="\uc77c\uc815\uc744 \uadf8\ub300\ub85c \uc9c4\ud589\ud558\uaca0\ub2e4\ub294 \ud655\uc815 \ud45c\ud604\uc774 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.",
-            business_type="SALES_ACTIVITY",
-            business_relevance_score=0.95,
-            business_reason="\ucc38\uc11d\uc790 \uacf5\uc720\uc640 \uc77c\uc815 \ud655\uc815 \ud45c\ud604\uc774 \ud3ec\ud568\ub41c \uc601\uc5c5 \uba54\uc77c\uc785\ub2c8\ub2e4.",
-            todo_required=False,
-            todo_content="GreenSoft \uc0c1\ub2f4 \uc77c\uc815 \ud655\uc778",
-            schedule=ScheduleSchema(
-                title="GreenSoft \uace0\uac1d\uad00\ub9ac \uc194\ub8e8\uc158 \uc0c1\ub2f4",
-                date="2026-06-24",
-                time="11:00",
-                participants=["GreenSoft \ubc15\uc11c\uc900", "\uc6b4\uc601\ud300 \ud55c\uc720\uc9c4", "\uc601\uc5c5\ud300 \uc774\ubbfc\uc7ac"],
-                location=None,
-            ),
-            confidence=max(result.confidence, 0.95),
-        )
-
-    if is_delta_sales_platform_demo(text):
-        return copy_analysis_result(
-            result,
-            summary=(
-                "Delta Systems / Sales Platform / Sales Platform \uad00\ub828 \ubbf8\ud305 / "
-                "2026-06-25 / \uc624\ud6c4 2\uc2dc / \ucc38\uc11d\uc790: "
-                "Delta Systems \ucd5c\uc720\uc9c4, \uae30\uc220\ud300 \uc624\uc138\ud6c8, \uc601\uc5c5\ud300 \uc774\ubbfc\uc7ac"
-            ),
-            customer_name="Delta Systems",
-            contact_person="Delta Systems \ucd5c\uc720\uc9c4",
-            product_name="Sales Platform",
-            attendees=["Delta Systems \ucd5c\uc720\uc9c4", "\uae30\uc220\ud300 \uc624\uc138\ud6c8", "\uc601\uc5c5\ud300 \uc774\ubbfc\uc7ac"],
-            amount=None,
-            activity_type="MEETING",
-            action_type="CREATE",
-            target_schedule_id=None,
-            target_schedule_title=None,
-            action_reason="\uc77c\uc815 \uc0dd\uc131 \uc694\uccad \ud45c\ud604\uacfc \ub0a0\uc9dc/\uc2dc\uac04 \uc815\ubcf4\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.",
-            business_type="SALES_ACTIVITY",
-            business_relevance_score=0.95,
-            business_reason="\uc77c\uc815 \uc0dd\uc131 \ud45c\ud604\uacfc \uace0\uac1d\uc0ac/\uc81c\ud488 \uc815\ubcf4\uac00 \ud3ec\ud568\ub41c \uc601\uc5c5 \uba54\uc77c\uc785\ub2c8\ub2e4.",
-            todo_required=True,
-            todo_content="\ubbf8\ud305 \uc77c\uc815 \ub4f1\ub85d \ubc0f \ubbf8\ud305 \uc900\ube44",
-            schedule=ScheduleSchema(
-                title="Sales Platform \uad00\ub828 \ubbf8\ud305",
-                date="2026-06-25",
-                time="14:00",
-                participants=["Delta Systems \ucd5c\uc720\uc9c4", "\uae30\uc220\ud300 \uc624\uc138\ud6c8", "\uc601\uc5c5\ud300 \uc774\ubbfc\uc7ac"],
-                location=None,
-            ),
-            confidence=max(result.confidence, 0.96),
-        )
-
-    if is_delta_sales_platform_material_demo(text):
-        return copy_analysis_result(
-            result,
-            summary="Delta Systems / Sales Platform / 추가 자료 요청 메일",
-            customer_name="Delta Systems",
-            contact_person="Delta Systems 최유진",
-            product_name="Sales Platform",
-            attendees=[],
-            amount=None,
-            activity_type="EMAIL",
-            action_type="UNKNOWN",
-            target_schedule_id=None,
-            target_schedule_title=None,
-            action_reason="API 연동 방식과 보안 정책 자료 요청 메일로, 새 일정 생성 요청은 아닙니다.",
-            business_type="SALES_ACTIVITY",
-            business_relevance_score=0.90,
-            business_reason="제품 추가 자료 요청이 포함된 영업 메일입니다.",
-            todo_required=False,
-            todo_content="Sales Platform 추가 자료 준비",
-            schedule=None,
-            confidence=max(result.confidence, 0.94),
-        )
-
-    if is_delta_quote_review_demo(text):
-        return copy_analysis_result(
-            result,
-            summary="Delta Systems / Sales Platform / 25,000,000원 / 견적서 검토 및 추가 자료 요청 메일",
-            customer_name="Delta Systems",
-            contact_person="Delta Systems 최유진",
-            product_name="Sales Platform",
-            attendees=[],
-            amount=25000000,
-            activity_type="EMAIL",
-            action_type="UNKNOWN",
-            target_schedule_id=None,
-            target_schedule_title=None,
-            action_reason="견적서 검토와 추가 자료 요청 성격이며 명확한 일정 생성 요청은 아닙니다.",
-            business_type="SALES_ACTIVITY",
-            business_relevance_score=0.95,
-            business_reason="견적 금액과 제품 도입 검토 내용이 포함된 영업 메일입니다.",
-            todo_required=False,
-            todo_content="견적서 검토 관련 추가 자료 준비",
-            schedule=None,
-            confidence=max(result.confidence, 0.95),
-        )
-
-    return result
-
-
-def is_greensoft_create_demo(text: str) -> bool:
-    return all(
-        marker in text
-        for marker in (
-            "GreenSoft",
-            "\uace0\uac1d\uad00\ub9ac \uc194\ub8e8\uc158",
-            "2026\ub144 6\uc6d4 24\uc77c \uc624\uc804 11\uc2dc",
-            "\uc0c1\ub2f4 \ubbf8\ud305",
-            "\uc77c\uc815 \ub4f1\ub85d \ubd80\ud0c1\ub4dc\ub9bd\ub2c8\ub2e4",
-        )
-    )
-
-
-def is_abc_sales_analytics_premeeting_demo(text: str) -> bool:
-    return all(marker in text for marker in ("Sales Analytics", "미팅 전에", "주요 관심사"))
-
-
-def is_abc_product_update_demo(text: str) -> bool:
-    return all(marker in text for marker in ("제품 소개 미팅 시간 변경", "오후 4시"))
-
-
-def is_abc_sales_analytics_create_demo(text: str) -> bool:
-    return all(marker in text for marker in ("ABC 고객사", "Sales Analytics", "제품 소개 미팅", "1,200만원"))
-
-
-def is_greensoft_material_demo(text: str) -> bool:
-    return all(marker in text for marker in ("GreenSoft", "고객관리 솔루션", "자료를 받아볼 수"))
-
-
-def is_greensoft_confirm_demo(text: str) -> bool:
-    return all(
-        marker in text
-        for marker in (
-            "GreenSoft",
-            "\ucc38\uc11d\uc790\ub97c \uacf5\uc720",
-            "2026\ub144 6\uc6d4 24\uc77c \uc624\uc804 11\uc2dc",
-            "\uadf8\ub300\ub85c \uc9c4\ud589\ud558\uaca0\uc2b5\ub2c8\ub2e4",
-        )
-    )
-
-
-def is_delta_sales_platform_demo(text: str) -> bool:
-    return all(
-        marker in text
-        for marker in (
-            "Delta Systems",
-            "Sales Platform",
-            "2026\ub144 6\uc6d4 25\uc77c \uc624\ud6c4 2\uc2dc",
-            "\uc628\ub77c\uc778 \ubbf8\ud305 \uac00\ub2a5\ud558\uc2e4\uae4c\uc694",
-        )
-    )
-
-
-def is_delta_sales_platform_material_demo(text: str) -> bool:
-    return all(marker in text for marker in ("Sales Platform", "API 연동 방식", "보안 정책"))
-
-
-def is_delta_quote_review_demo(text: str) -> bool:
-    return all(marker in text for marker in ("Delta Systems", "Sales Platform", "견적서", "2,500만원"))
-
-
 def classify_business_email(
     text: str,
     messages: List[MessageItem],
@@ -1093,6 +872,11 @@ def classify_action_type(text: str) -> Tuple[str, str]:
 
     if contains_any(text, CANCEL_WORDS):
         return "CANCEL", "일정 취소 표현이 포함되어 있습니다."
+    # 확약형 확정("확정하겠습니다" 등)은 "변경된 일정으로 확정합니다"처럼
+    # '변경' 단어가 섞여 있어도 일정 확인(CONFIRM)으로 우선 판단한다.
+    strong_confirm_words = ("확정하겠습니다", "확정합니다", "확정했습니다", "그대로 진행", "예정대로 진행")
+    if contains_any(text, strong_confirm_words) and has_schedule_word:
+        return "CONFIRM", "일정 확인 또는 확정 표현이 포함되어 있습니다."
     if contains_any(text, UPDATE_WORDS):
         return "UPDATE", "일정 변경 표현이 포함되어 있습니다."
     if contains_any(text, CONFIRM_WORDS) and has_schedule_word:
@@ -1251,6 +1035,14 @@ def extract_date(text: str) -> Optional[str]:
         for weekday, index in weekdays.items():
             if f"{prefix} {weekday}" in text:
                 return next_weekday(index, offset)
+
+    # 요일만 따로 언급된 경우("다음 주 미팅을 ... 화요일 오후 2시로"):
+    # 본문에 '다음 주'가 있으면 다음 주로, 아니면 가장 가까운 다가오는 요일로 해석한다.
+    # '지난/저번 화요일' 같은 과거 표현은 제외한다.
+    week_offset = 7 if "다음 주" in text else 0
+    for weekday, index in weekdays.items():
+        if weekday in text and not re.search(r"(지난|저번|지지난)\s*" + weekday, text):
+            return next_weekday(index, week_offset)
     return None
 
 

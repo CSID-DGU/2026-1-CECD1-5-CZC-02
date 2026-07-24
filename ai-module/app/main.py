@@ -1,4 +1,13 @@
 """FastAPI 메인 앱"""
+import sys
+
+# Windows 콘솔(cp949)에서 한글/이모지 로그 출력 시 UnicodeEncodeError로 죽는 것을 방지
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.encoders import jsonable_encoder

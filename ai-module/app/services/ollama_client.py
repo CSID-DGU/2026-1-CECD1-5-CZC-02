@@ -78,107 +78,43 @@ def build_analysis_prompt(
     recent_sender_analyses: list[HistoricalAnalysisInfo],
     rule_result: AnalysisResultSchema,
 ) -> str:
-    metadata = {
-        "messages": [
-            {
-                "direction": message.direction,
-                "senderName": message.senderName,
-                "senderEmail": message.senderEmail,
-                "receiverNames": message.receiverNames,
-                "receiverEmails": message.receiverEmails,
-                "sentAt": message.sentAt.isoformat() if message.sentAt else None,
-            }
-            for message in messages[:8]
-        ],
-        "existingSchedules": [
-            {
-                "scheduleId": schedule.scheduleId,
-                "title": schedule.title,
-                "scheduleDateTime": schedule.scheduleDateTime.isoformat()
-                if schedule.scheduleDateTime else None,
-            }
-            for schedule in existing_schedules[:20]
-        ],
-        "recentSenderAnalyses": [
-            {
-                "analysisId": analysis.analysisId,
-                "sourceId": analysis.sourceId,
-                "title": analysis.title,
-                "customerName": analysis.customerName,
-                "productName": analysis.productName,
-                "attendees": analysis.attendees,
-                "amount": analysis.amount,
-                "actionType": analysis.actionType,
-                "scheduleText": analysis.scheduleText,
-                "summary": analysis.summary,
-            }
-            for analysis in recent_sender_analyses[:5]
-        ],
-        "ruleResult": {
-            "customerName": rule_result.customer_name,
-            "productName": rule_result.product_name,
-            "attendees": rule_result.attendees,
-            "amount": rule_result.amount,
-            "actionType": rule_result.action_type,
-            "targetScheduleId": rule_result.target_schedule_id,
-            "targetScheduleTitle": rule_result.target_schedule_title,
-            "actionReason": rule_result.action_reason,
-            "businessType": rule_result.business_type,
-            "businessRelevanceScore": rule_result.business_relevance_score,
-            "businessReason": rule_result.business_reason,
-            "summary": rule_result.summary,
-            "todoContent": rule_result.todo_content,
-            "schedule": dump_model(rule_result.schedule) if rule_result.schedule else None,
-        },
+    # 규칙이 이미 뽑은 힌트(틀릴 수 있음)와 최근 동일 발신자 기억만 최소로 전달한다.
+    hints = {
+        "customerName": rule_result.customer_name,
+        "productName": rule_result.product_name,
+        "attendees": rule_result.attendees,
     }
+    recent = [
+        {"customerName": analysis.customerName, "productName": analysis.productName}
+        for analysis in recent_sender_analyses[:3]
+        if analysis.customerName or analysis.productName
+    ]
 
-    return f"""
-Current-email-first rules:
-- recentSenderAnalyses is only a memory hint for customerName/productName/context.
-- Do not copy actionType from recentSenderAnalyses. Decide actionType from the current email first.
-- If the current email says an existing, previous, or scheduled meeting should be moved, adjusted, delayed, changed, or replaced with another time, return actionType UPDATE.
+    return f"""너는 한국어 B2B 영업 메일에서 핵심 정보를 뽑는 CRM 보조자다.
+아래 메일을 읽고 지정된 6개 필드만 JSON으로 반환해라. (일정 액션·날짜·금액은 다른 모듈이 처리하므로 뽑지 않는다.)
 
-너는 한국어 B2B 영업 메일을 분석하는 CRM AI 보조자다.
-아래 메일과 규칙 기반 분석 결과를 보고, 더 자연스럽고 정확한 JSON 보정값만 반환해라.
+규칙:
+- JSON 객체만 출력한다. 설명/마크다운/코드블록 금지.
+- 없는 정보는 null. 추측으로 만들지 않는다.
+- customerName: 발신자 서명·인사말의 회사명. 예: "한빛소프트 정우성 팀장입니다" -> "한빛소프트". 접미사(고객사/기업/Systems) 없어도 회사명이면 추출.
+- contactName: 상대 담당자(발신자) 한 명의 이름. 예: "정우성".
+- attendees: 메일에 명시된 실제 사람 이름 배열. "저/제가/저희" 같은 본인 지칭은 이름이 아니므로 넣지 않되, 발신자 본인 이름이 서명에 있으면 포함. 예: "저와 이서연 과장" -> ["정우성","이서연"].
+- productName: 논의되는 제품/서비스명. 날짜·조사·인사말 제거.
+- scheduleTitle: 제품·주제 기반의 짧은 미팅 제목. 날짜·시간·요일은 넣지 않는다. 예: "재고관리 자동화 솔루션 데모 미팅". 일정 얘기가 없으면 null.
+- summary: 고객사·제품·일정 중심의 한 줄 요약.
 
-중요 규칙:
-- JSON 객체만 출력한다. 설명 문장, 마크다운, 코드블록은 금지한다.
-- 없는 정보는 null로 둔다. 추측으로 고객사/제품/금액을 만들지 않는다.
-- actionType은 CREATE, UPDATE, CANCEL, CONFIRM, UNKNOWN 중 하나만 사용한다.
-- businessType은 SALES_ACTIVITY, NON_BUSINESS, UNKNOWN 중 하나만 사용한다.
-- scheduleDateTime은 "YYYY-MM-DDTHH:mm:ss" 또는 null이다.
-- 일정 의도가 없는 견적/자료/첨부 메일은 actionType UNKNOWN, schedule null로 둔다.
-- UPDATE/CANCEL은 기존 일정에 영향을 주므로 targetScheduleTitle을 가능한 한 채운다.
-- 고객사와 제품명에서 날짜, 시간, 인사말, "고객사와" 같은 조사, 긴 문장을 제거한다.
+반환 JSON:
+{{"customerName": string|null, "contactName": string|null, "productName": string|null, "attendees": [string], "scheduleTitle": string|null, "summary": string}}
 
-반환 JSON 필드:
-{{
-  "summary": string,
-  "customerName": string|null,
-  "contactName": string|null,
-  "productName": string|null,
-  "attendees": [string],
-  "amount": number|null,
-  "actionType": "CREATE"|"UPDATE"|"CANCEL"|"CONFIRM"|"UNKNOWN",
-  "targetScheduleTitle": string|null,
-  "actionReason": string,
-  "businessType": "SALES_ACTIVITY"|"NON_BUSINESS"|"UNKNOWN",
-  "businessRelevanceScore": number,
-  "businessReason": string,
-  "todoContent": string|null,
-  "schedule": {{
-    "title": string,
-    "date": "YYYY-MM-DD",
-    "time": "HH:mm",
-    "participants": [string]
-  }}|null
-}}
+예시)
+메일: 안녕하세요, 마루상사 김도윤 부장입니다. 스마트 물류 관제 시스템 도입 상담을 6월 30일 오후 2시에 진행하고 싶습니다. 참석자는 저와 기술팀 박민수 대리입니다.
+출력: {{"customerName": "마루상사", "contactName": "김도윤", "productName": "스마트 물류 관제 시스템", "attendees": ["김도윤", "박민수"], "scheduleTitle": "스마트 물류 관제 시스템 도입 상담", "summary": "마루상사 / 스마트 물류 관제 시스템 / 도입 상담"}}
+
+규칙 추출 힌트(참고용, 틀릴 수 있음): {json.dumps(hints, ensure_ascii=False)}
+최근 동일 발신자 기억: {json.dumps(recent, ensure_ascii=False)}
 
 메일:
-{text[:6000]}
-
-컨텍스트:
-{json.dumps(metadata, ensure_ascii=False)}
+{text[:4000]}
 """.strip()
 
 
