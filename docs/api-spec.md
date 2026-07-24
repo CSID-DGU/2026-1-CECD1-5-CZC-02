@@ -8,7 +8,7 @@
 Authorization: Bearer {accessToken}
 Content-Type: application/json
 ```
-
+다음 행동, 판단 근
 공통 응답:
 
 ```json

@@ -19,3 +19,8 @@ out/
 __pycache__/
 *.pyc
 venv/
+
+# 로컬 작업물 (레포 미포함)
+project-docs/
+demo/
+frontend_backup/
