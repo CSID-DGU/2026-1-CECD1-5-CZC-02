@@ -1048,12 +1048,46 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
   useEffect(() => {
     setForm(toAnalysisForm(analysis));
     setIsEditing(false);
+    setSentInfo(null);
+
+    // 미리 생성해 둔 답장 초안이 있으면 복원한다.
+    // (로컬 상태만 쓰면 다른 메일을 봤다 돌아올 때 초안이 사라져 미리 만들어둘 수 없다)
+    try {
+      const cached = analysis.analysisId
+        ? localStorage.getItem(`salesmap:replyDraft:${analysis.analysisId}`)
+        : null;
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        setReplyDraft(parsed);
+        setDraftSubject(parsed.subject || '');
+        setDraftBody(parsed.body || '');
+        setDraftMessage('미리 생성해 둔 답장 초안을 불러왔습니다.');
+        return;
+      }
+    } catch (error) {
+      console.error('Failed to restore cached reply draft:', error);
+    }
+
     setReplyDraft(null);
     setDraftMessage('');
     setDraftSubject('');
     setDraftBody('');
-    setSentInfo(null);
   }, [analysis]);
+
+  // 초안 생성/수정 시 localStorage에 저장해 내비게이션에도 유지되게 한다.
+  useEffect(() => {
+    if (!replyDraft || !analysis.analysisId) {
+      return;
+    }
+    try {
+      localStorage.setItem(
+        `salesmap:replyDraft:${analysis.analysisId}`,
+        JSON.stringify({ subject: draftSubject, body: draftBody })
+      );
+    } catch (error) {
+      console.error('Failed to cache reply draft:', error);
+    }
+  }, [replyDraft, draftSubject, draftBody, analysis.analysisId]);
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -1078,6 +1112,16 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
       setDraftMessage('');
       setSentInfo(null);
       const draft = await generateReplyDraft(analysis.analysisId);
+      // 생성이 끝나는 즉시 저장한다. 생성 도중(40초) 다른 메일로 이동해 컴포넌트가 사라져도
+      // 이 콜백은 계속 실행되므로, setState는 무시돼도 localStorage 저장은 남아 나중에 복원된다.
+      try {
+        localStorage.setItem(
+          `salesmap:replyDraft:${analysis.analysisId}`,
+          JSON.stringify({ subject: draft.subject || '', body: draft.body || '' })
+        );
+      } catch (error) {
+        console.error('Failed to cache reply draft:', error);
+      }
       setReplyDraft(draft);
       setDraftSubject(draft.subject || '');
       setDraftBody(draft.body || '');
@@ -1119,6 +1163,12 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
       });
       setSentInfo(result);
       setDraftMessage(`${result.sentTo} 로 답장을 전송했습니다.`);
+      // 전송 완료된 초안은 캐시에서 제거 (다시 열어도 재등장하지 않게)
+      try {
+        localStorage.removeItem(`salesmap:replyDraft:${analysis.analysisId}`);
+      } catch (error) {
+        console.error('Failed to clear cached reply draft:', error);
+      }
     } catch (error) {
       console.error('Failed to send reply:', error);
       setDraftMessage(`답장 전송 실패: ${getApiErrorMessage(error)}`);

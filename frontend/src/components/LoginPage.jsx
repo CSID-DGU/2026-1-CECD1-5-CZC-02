@@ -91,7 +91,7 @@ export function LoginPage() {
         <div className="flex-1 bg-white/60 flex items-center justify-center p-12">
           <div className="w-full max-w-md">
             <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-8">
-              <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center" style={{ fontFamily: 'var(--display)' }}>
+              <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center" style={{ fontFamily: 'var(--display)', color: '#0f172a', fontWeight: 700 }}>
                 {isSignup ? '회원가입' : '로그인'}
               </h2>
 

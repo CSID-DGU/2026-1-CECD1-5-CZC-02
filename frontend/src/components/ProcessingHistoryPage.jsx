@@ -52,6 +52,22 @@ function getActionClass(actionType) {
   return classes[actionType] || classes.UNKNOWN;
 }
 
+// 영업/비영업 1차 분류 (처리 유형보다 먼저 갈리는 상위 구분)
+function getBusinessLabel(businessType) {
+  switch (businessType) {
+    case 'SALES_ACTIVITY':
+      return { label: '영업', className: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
+    case 'NON_BUSINESS':
+      return { label: '비영업', className: 'bg-slate-100 text-slate-500 border-slate-200' };
+    default:
+      return { label: '확인 필요', className: 'bg-yellow-50 text-yellow-700 border-yellow-200' };
+  }
+}
+
+function isSalesActivity(item) {
+  return item.analysis?.businessType === 'SALES_ACTIVITY';
+}
+
 function formatProcessingStatus(item) {
   if (item.latestRecord?.status === 'REGISTERED') {
     if (item.actionType === 'CANCEL') {
@@ -99,8 +115,11 @@ export function ProcessingHistoryPage() {
 
     try {
       const sources = await getSources({ size: 30 });
+      // 처리 이력은 "받은 메일의 처리 현황"이다. 내가 보낸 답장(SENT)은 분석 대상이 아니고,
+      // 같은 스레드의 분석을 물려받아 받은 메일처럼 보이므로 제외한다.
+      const receivedSources = sources.filter((source) => source.direction !== 'SENT');
       const rows = await Promise.all(
-        sources.map(async (source) => {
+        receivedSources.map(async (source) => {
           try {
             const analyses = await getAnalysesBySource(source.sourceId);
             const latestAnalysis = Array.isArray(analyses) && analyses.length > 0
@@ -226,8 +245,9 @@ export function ProcessingHistoryPage() {
         )}
 
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-          <div className="grid grid-cols-[1.6fr_0.8fr_0.8fr_1fr_0.9fr] gap-3 px-5 py-3 text-xs font-medium text-slate-400 border-b border-slate-100 bg-slate-50/70 text-left">
+          <div className="grid grid-cols-[1.5fr_0.6fr_0.8fr_0.8fr_1fr_0.9fr] gap-3 px-5 py-3 text-xs font-medium text-slate-400 border-b border-slate-100 bg-slate-50/70 text-left">
             <span>메일</span>
+            <span>분류</span>
             <span>처리 유형</span>
             <span>상태</span>
             <span>고객사 / 제품</span>
@@ -250,7 +270,7 @@ export function ProcessingHistoryPage() {
                     type="button"
                     key={`${item.source.sourceId}-${item.analysisId || 'none'}`}
                     onClick={() => navigate(`/messages/source-${item.source.sourceId}`)}
-                    className={`w-full grid grid-cols-[1.6fr_0.8fr_0.8fr_1fr_0.9fr] gap-3 px-5 py-4 text-left transition-colors ${
+                    className={`w-full grid grid-cols-[1.5fr_0.6fr_0.8fr_0.8fr_1fr_0.9fr] gap-3 px-5 py-4 text-left transition-colors ${
                       isPriority ? 'bg-red-50/60 hover:bg-red-50' : 'hover:bg-blue-50/40'
                     }`}
                   >
@@ -266,11 +286,26 @@ export function ProcessingHistoryPage() {
 
                     <div>
                       {item.analysisId ? (
+                        (() => {
+                          const business = getBusinessLabel(item.analysis?.businessType);
+                          return (
+                            <span className={`inline-flex px-2.5 py-1 text-xs rounded-full border ${business.className}`}>
+                              {business.label}
+                            </span>
+                          );
+                        })()
+                      ) : (
+                        <span className="text-xs text-gray-400">분석 전</span>
+                      )}
+                    </div>
+
+                    <div>
+                      {item.analysisId && isSalesActivity(item) ? (
                         <span className={`inline-flex px-2.5 py-1 text-xs rounded-full border ${getActionClass(item.actionType)}`}>
                           {formatActionType(item.actionType)}
                         </span>
                       ) : (
-                        <span className="text-xs text-gray-400">분석 전</span>
+                        <span className="text-xs text-slate-300">—</span>
                       )}
                     </div>
 
