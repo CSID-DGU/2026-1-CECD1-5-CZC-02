@@ -1,87 +1,28 @@
 """Reply draft generation for analyzed sales emails.
 
-규칙 기반 템플릿을 기본값(fallback)으로 두고, Ollama LLM이 더 자연스러운 초안을
-만들면 그 결과로 대체하는 하이브리드 전략을 쓴다.
+규칙 기반 템플릿을 기본값(fallback)으로 두고, LLM(OpenAI 또는 Ollama)이 더 자연스러운 초안을
+만들면 그 결과로 대체하는 하이브리드 전략을 쓴다. 어떤 LLM을 쓸지는 app.llm.router가 정한다.
 """
 import json
 import re
-import urllib.error
-import urllib.request
+from typing import Any, Dict
 
-from app.config import OLLAMA_BASE_URL, OLLAMA_MODEL, OLLAMA_TEMPERATURE, OLLAMA_TIMEOUT_SECONDS
+from app.config import OLLAMA_TEMPERATURE
+from app.llm import LLMRequest, generate
 from app.schemas.request import ReplyDraftRequest
 from app.schemas.response import ReplyDraftResponse
 
+REPLY_SCHEMA: Dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["subject", "body"],
+    "properties": {
+        "subject": {"type": "string"},
+        "body": {"type": "string"},
+    },
+}
 
-def generate_reply_draft(request: ReplyDraftRequest) -> ReplyDraftResponse:
-    # 규칙 기반 템플릿을 기본값으로 두고, Ollama가 더 자연스러운 초안을 만들면 그것으로 대체한다.
-    template = build_template_reply(request)
-
-    try:
-        return generate_with_ollama(request, template)
-    except Exception:
-        return template
-
-
-def generate_with_ollama(request: ReplyDraftRequest, fallback: ReplyDraftResponse) -> ReplyDraftResponse:
-    prompt = build_prompt(request, fallback)
-    payload = {
-        "model": OLLAMA_MODEL,
-        "prompt": prompt,
-        "stream": False,
-        "format": "json",
-        "options": {
-            "temperature": OLLAMA_TEMPERATURE,
-            "num_predict": 500,
-        },
-    }
-
-    http_request = urllib.request.Request(
-        f"{OLLAMA_BASE_URL.rstrip('/')}/api/generate",
-        data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-
-    try:
-        with urllib.request.urlopen(http_request, timeout=OLLAMA_TIMEOUT_SECONDS) as response:
-            raw_body = response.read().decode("utf-8")
-    except (urllib.error.URLError, TimeoutError) as exception:
-        raise RuntimeError(f"Ollama reply draft request failed: {exception}") from exception
-
-    envelope = json.loads(raw_body)
-    response_text = envelope.get("response")
-    if not isinstance(response_text, str) or not response_text.strip():
-        raise RuntimeError("Ollama reply draft response is empty.")
-
-    data = parse_json_object(response_text)
-    subject = clean_subject(clean_text(data.get("subject")) or fallback.subject)
-    body = clean_text(data.get("body"), multiline=True) or fallback.body
-
-    if is_low_quality_draft(subject, body):
-        return fallback
-
-    return ReplyDraftResponse(subject=subject, body=body, generatedBy=f"ollama:{OLLAMA_MODEL}")
-
-
-def build_prompt(request: ReplyDraftRequest, fallback: ReplyDraftResponse) -> str:
-    context = {
-        "emailTitle": request.emailTitle,
-        "emailContent": request.emailContent[:4000],
-        "senderEmail": request.senderEmail,
-        "customerName": request.customerName,
-        "contactName": request.contactName,
-        "productName": request.productName,
-        "attendees": request.attendees,
-        "actionType": request.actionType,
-        "scheduleInfo": request.scheduleInfo,
-        "summary": request.summary,
-        "nextAction": request.nextAction,
-        "fallback": fallback.model_dump(),
-    }
-
-    return f"""
-You are a Korean B2B sales assistant.
+REPLY_SYSTEM_PROMPT = """You are a Korean B2B sales assistant.
 Write a polite Korean email reply draft based on the original customer email and AI analysis.
 
 Rules:
@@ -100,11 +41,59 @@ Rules:
 - Express dates and times in natural Korean like "7월 29일 오후 3시". Never copy machine formats such as "2026-07-29 15:00" into the body.
 - Use grammatically correct, natural Korean. Avoid awkward particles or phrases (e.g. do not write "계신 말씀대로"; prefer "말씀해주신 대로" or "주신 일정대로").
 - Write ONLY in Korean (Hangul). Never output Chinese characters or Chinese/English sentences in the subject or body.
-- Use a natural Korean business tone.
+- Use a natural Korean business tone."""
 
-Context:
-{json.dumps(context, ensure_ascii=False)}
-""".strip()
+
+def generate_reply_draft(request: ReplyDraftRequest) -> ReplyDraftResponse:
+    # 규칙 기반 템플릿을 기본값으로 두고, LLM이 더 자연스러운 초안을 만들면 그것으로 대체한다.
+    template = build_template_reply(request)
+
+    try:
+        return generate_with_llm(request, template)
+    except Exception as exception:
+        print(f"[REPLY_DRAFT] LLM draft skipped, using template. reason={exception}")
+        return template
+
+
+def generate_with_llm(request: ReplyDraftRequest, fallback: ReplyDraftResponse) -> ReplyDraftResponse:
+    response = generate(LLMRequest(
+        task="reply",
+        system=REPLY_SYSTEM_PROMPT,
+        user=build_prompt(request, fallback),
+        json_schema=REPLY_SCHEMA,
+        schema_name="reply_draft",
+        max_output_tokens=500,
+        temperature=OLLAMA_TEMPERATURE,
+    ))
+
+    data = response.data if isinstance(response.data, dict) else {}
+    subject = clean_subject(clean_text(data.get("subject")) or fallback.subject)
+    body = clean_text(data.get("body"), multiline=True) or fallback.body
+
+    if is_low_quality_draft(subject, body):
+        return fallback
+
+    return ReplyDraftResponse(subject=subject, body=body, generatedBy=f"{response.provider}:{response.model}")
+
+
+def build_prompt(request: ReplyDraftRequest, fallback: ReplyDraftResponse) -> str:
+    context = {
+        "emailTitle": request.emailTitle,
+        "emailContent": request.emailContent[:4000],
+        "senderEmail": request.senderEmail,
+        "customerName": request.customerName,
+        "contactName": request.contactName,
+        "productName": request.productName,
+        "attendees": request.attendees,
+        "actionType": request.actionType,
+        "scheduleInfo": request.scheduleInfo,
+        "summary": request.summary,
+        "nextAction": request.nextAction,
+        "fallback": fallback.model_dump(),
+    }
+
+    return f"""Context:
+{json.dumps(context, ensure_ascii=False)}"""
 
 
 def build_template_reply(request: ReplyDraftRequest) -> ReplyDraftResponse:
@@ -251,19 +240,6 @@ def clean_subject(subject: str) -> str:
     subject = re.sub(r"\s+", " ", subject or "").strip()
     subject = subject.replace("온라 meeting", "온라인 미팅")
     return subject or "Re: 문의 주신 내용"
-
-
-def parse_json_object(value: str) -> dict:
-    try:
-        parsed = json.loads(value)
-    except json.JSONDecodeError:
-        match = re.search(r"\{.*\}", value, re.DOTALL)
-        if not match:
-            raise RuntimeError("Reply draft response does not contain JSON.")
-        parsed = json.loads(match.group(0))
-    if not isinstance(parsed, dict):
-        raise RuntimeError("Reply draft response is not JSON object.")
-    return parsed
 
 
 def clean_text(value, multiline: bool = False) -> str | None:

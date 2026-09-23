@@ -53,6 +53,9 @@ async def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
         keyIssues=None,
         summary=analysis_result.summary,
         confidenceScore=analysis_result.confidence,
+        llmProvider=analysis_result.llm_provider,
+        llmModel=analysis_result.llm_model,
+        llmFallbackReason=analysis_result.llm_fallback_reason,
     )
 
 

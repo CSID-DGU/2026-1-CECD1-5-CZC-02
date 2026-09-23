@@ -31,6 +31,9 @@ class AnalyzeResponse(BaseModel):
     keyIssues: Optional[str] = None
     summary: str
     confidenceScore: float = Field(ge=0.0, le=1.0)
+    llmProvider: str = "rule"
+    llmModel: Optional[str] = None
+    llmFallbackReason: Optional[str] = None
 
 
 class ScheduleAnalyzeResponse(BaseModel):

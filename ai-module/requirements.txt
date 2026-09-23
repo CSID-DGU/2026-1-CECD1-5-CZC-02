@@ -5,3 +5,5 @@ pydantic
 python-dotenv
 sentence-transformers
 gliner
+openai
+pytest

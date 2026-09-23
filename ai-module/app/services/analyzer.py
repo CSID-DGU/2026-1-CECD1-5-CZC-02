@@ -10,7 +10,7 @@ from app.schemas.request import ExistingScheduleInfo, HistoricalAnalysisInfo, Me
 from app.schemas.response import ScheduleResponse
 from app.services.entity_extractor import extract_entities_with_gliner
 from app.services.embedding_classifier import EmbeddingClassification, classify_with_embeddings
-from app.services.ollama_client import request_llm_analysis_patch
+from app.services.llm_analysis import request_llm_analysis_patch
 
 
 SCHEDULE_WORDS = ("미팅", "회의", "상담", "통화", "일정")
@@ -218,7 +218,7 @@ async def analyze_message(
     # 비영업(NON_BUSINESS)으로 규칙 판정된 메일은 LLM이 뽑을 의미 정보(고객사/제품 등)가 없고,
     # LLM은 영업/비영업 판정을 바꾸지도 않으므로 무거운 LLM 단계를 건너뛴다(노이즈 메일 처리 대폭 가속).
     if effective_engine in {"ollama", "llm", "hybrid"} and rule_result.business_type != "NON_BUSINESS":
-        return enhance_with_ollama(
+        return enhance_with_llm(
             text,
             messages or [],
             existing_schedules or [],
@@ -239,7 +239,7 @@ def classify_activity_type(text: str) -> str:
     return "TASK"
 
 
-def enhance_with_ollama(
+def enhance_with_llm(
     text: str,
     messages: List[MessageItem],
     existing_schedules: List[ExistingScheduleInfo],
@@ -249,15 +249,22 @@ def enhance_with_ollama(
     try:
         patch = request_llm_analysis_patch(text, messages, existing_schedules, recent_sender_analyses, rule_result)
     except Exception as exception:
-        print(f"[AI_ENGINE] Ollama enhancement skipped. reason={exception}")
-        return rule_result
+        print(f"[AI_ENGINE] LLM enhancement skipped. reason={exception}")
+        return copy_analysis_result(rule_result, llm_provider="rule", llm_fallback_reason=str(exception))
 
     try:
         merged_result = merge_llm_patch(rule_result, patch.data, text)
-        return apply_precision_action_corrections(text, merged_result, rule_result)
+        corrected = apply_precision_action_corrections(text, merged_result, rule_result)
     except Exception as exception:
-        print(f"[AI_ENGINE] Ollama patch merge failed. reason={exception}")
-        return rule_result
+        print(f"[AI_ENGINE] LLM patch merge failed. reason={exception}")
+        return copy_analysis_result(rule_result, llm_provider="rule", llm_fallback_reason=f"merge failed: {exception}")
+
+    return copy_analysis_result(
+        corrected,
+        llm_provider=patch.provider,
+        llm_model=patch.model,
+        llm_fallback_reason=patch.fallback_reason,
+    )
 
 
 def resolve_schedule_title(

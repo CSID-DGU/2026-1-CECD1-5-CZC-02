@@ -35,6 +35,10 @@ class AnalysisResultSchema(BaseModel):
     todo_content: Optional[str] = None
     schedule: Optional[ScheduleSchema] = None
     confidence: float  # 0.0 ~ 1.0
+    # 어떤 엔진이 의미 필드를 보정했는지 (rule / ollama / openai)
+    llm_provider: str = "rule"
+    llm_model: Optional[str] = None
+    llm_fallback_reason: Optional[str] = None
 
 
 __all__ = [
