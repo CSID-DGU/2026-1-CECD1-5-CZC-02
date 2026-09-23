@@ -44,3 +44,16 @@ export async function sendReplyDraft(analysisId, payload) {
 
   return response.data.data;
 }
+
+export async function rejectAnalysis(analysisId) {
+  const response = await api.post(`/api/analysis/${analysisId}/reject`);
+
+  return response.data.data;
+}
+
+// AI 원본값 → 사용자 수정값 기록
+export async function getAnalysisRevisions(analysisId) {
+  const response = await api.get(`/api/analysis/${analysisId}/revisions`);
+
+  return response.data.data;
+}

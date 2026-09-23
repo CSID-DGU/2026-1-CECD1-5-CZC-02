@@ -3,7 +3,6 @@ import { LoginPage } from './components/LoginPage';
 import { DashboardLayout } from './components/DashboardLayout';
 import { Dashboard } from './components/Dashboard';
 import { SettingsPage } from './components/SettingsPage';
-import { SalesmapLoginPage } from './components/SalesmapLoginPage';
 import { MessageView } from './components/MessageView';
 import { JandiComingSoon } from './components/JandiComingSoon';
 import { GmailOAuthCallbackPage } from './components/GmailOAuthCallbackPage';
@@ -28,11 +27,6 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/salesmap-login" element={
-            <ProtectedRoute>
-              <SalesmapLoginPage />
-            </ProtectedRoute>
-          } />
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <DashboardLayout>

@@ -1,6 +1,6 @@
 ﻿import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createAnalysis, createGroupAnalysis, generateReplyDraft, sendReplyDraft, getAnalysesBySource, getAnalysisById, updateAnalysis } from '../api/analyses';
+import { createAnalysis, createGroupAnalysis, generateReplyDraft, sendReplyDraft, getAnalysesBySource, getAnalysisById, rejectAnalysis, updateAnalysis } from '../api/analyses';
 import { getApiErrorMessage } from '../api/errors';
 import { getSalesmapRecordsByAnalysis, registerSalesmapRecord } from '../api/salesmapRecords';
 import { deleteSource, getSourceById, getSources } from '../api/sources';
@@ -329,7 +329,20 @@ function toAnalysisForm(analysis) {
     actionType: analysis.actionType || 'UNKNOWN',
     actionReason: analysis.actionReason || '',
     targetScheduleTitle: analysis.targetScheduleTitle || '',
+    businessType: analysis.businessType || 'UNKNOWN',
   };
+}
+
+// 어떤 엔진이 분석했는지 표시 (규칙 / 로컬 LLM / OpenAI)
+function formatAnalysisEngine(analysis) {
+  const model = analysis?.llmModel ? ` (${analysis.llmModel})` : '';
+  switch (analysis?.llmProvider) {
+    case 'openai': return `OpenAI${model}`;
+    case 'ollama': return `로컬 LLM${model}`;
+    case 'mock': return '가짜 응답(mock 모드)';
+    case 'rule': return analysis?.llmFallbackReason ? '규칙 기반 (LLM 실패로 대체)' : '규칙 기반';
+    default: return EMPTY_TEXT;
+  }
 }
 
 function shouldHideSourceFromList(source) {
@@ -794,6 +807,20 @@ export function MessageView() {
     }
   };
 
+  const handleRejectAnalysis = async (analysisId) => {
+    if (!window.confirm('이 분석 결과를 거절할까요? 거절한 결과는 딜 파이프라인과 고객 타임라인에서 빠집니다.')) {
+      return;
+    }
+    try {
+      const rejected = await rejectAnalysis(analysisId);
+      setSourceAnalyses([rejected]);
+      setAnalysisActionMessage('AI 분석 결과를 거절했습니다.');
+    } catch (error) {
+      console.error('Failed to reject analysis:', error);
+      setAnalysisActionMessage(`AI 분석 결과 거절 실패: ${formatDetailedError(error)}`);
+    }
+  };
+
   const handleUpdateAnalysis = async (analysisId, payload) => {
     try {
       const updatedAnalysis = await updateAnalysis(analysisId, payload);
@@ -1016,6 +1043,7 @@ export function MessageView() {
                         isRegistering={registeringAnalysisId === analysis.analysisId}
                         onRegister={() => handleRegisterSalesmap(analysis.analysisId)}
                         onSave={(payload) => handleUpdateAnalysis(analysis.analysisId, payload)}
+                        onReject={() => handleRejectAnalysis(analysis.analysisId)}
                         onDeleteSource={() => handleDeleteSource(selectedSourceId)}
                         isDeletingSource={isDeletingSource}
                         isDev={isDev}
@@ -1033,7 +1061,8 @@ export function MessageView() {
   );
 }
 
-function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegister, onSave, onDeleteSource, isDeletingSource, isDev }) {
+function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegister, onSave, onReject, onDeleteSource, isDeletingSource, isDev }) {
+  const isClosed = ['APPROVED', 'REJECTED', 'DELETED'].includes(analysis.status);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDrafting, setIsDrafting] = useState(false);
@@ -1196,6 +1225,18 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
 
       {isEditing ? (
         <div className="space-y-2">
+          <div className="mb-2 grid grid-cols-[88px_1fr] gap-2">
+            <p className="text-xs text-gray-500">메일 분류</p>
+            <select
+              value={form.businessType}
+              onChange={(event) => handleChange('businessType', event.target.value)}
+              className="text-sm border border-gray-300 rounded px-2 py-1 outline-none focus:border-blue-500"
+            >
+              <option value="SALES_ACTIVITY">영업 메일</option>
+              <option value="NON_BUSINESS">비영업 메일</option>
+              <option value="UNKNOWN">확인 필요</option>
+            </select>
+          </div>
           <AnalysisEditField label="분석 요약" value={form.summary} onChange={(value) => handleChange('summary', value)} textarea />
           <AnalysisEditField label="다음 행동" value={form.followUpAction} onChange={(value) => handleChange('followUpAction', value)} />
           <AnalysisEditField label="일정 정보" value={form.scheduleText} onChange={(value) => handleChange('scheduleText', value)} />
@@ -1235,6 +1276,7 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
           <AnalysisField label="판단 근거" value={getDisplayAnalysisValue(analysis, 'actionReason')} />
           {isDev && <AnalysisField label="대상 일정 ID" value={analysis.targetScheduleId} />}
           <AnalysisField label="대상 일정명" value={getDisplayAnalysisValue(analysis, 'targetScheduleTitle')} />
+          <AnalysisField label="분석 엔진" value={formatAnalysisEngine(analysis)} alreadyFormatted />
         </>
       )}
 
@@ -1263,7 +1305,7 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => setIsEditing(true)}
-              disabled={analysis.status === 'APPROVED' || analysis.status === 'DELETED'}
+              disabled={isClosed}
               className="px-3 py-1.5 text-xs border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400"
             >
               수정
@@ -1279,13 +1321,22 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
             ) : (
               <button
                 onClick={onRegister}
-                disabled={isRegistering || analysis.status === 'APPROVED' || analysis.status === 'DELETED'}
+                disabled={isRegistering || isClosed}
                 className="px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
               >
                 {isRegistering ? formatRegisteringLabel(analysis.actionType) : formatRegisterButtonLabel(analysis.actionType)}
               </button>
             )}
           </div>
+        )}
+
+        {!isEditing && !isClosed && (
+          <button
+            onClick={onReject}
+            className="mt-2 w-full px-3 py-1.5 text-xs text-slate-500 hover:text-red-600 hover:bg-red-50 rounded"
+          >
+            분석 결과가 틀렸어요 (거절)
+          </button>
         )}
 
         {!isEditing && analysis.businessType !== 'NON_BUSINESS' && (

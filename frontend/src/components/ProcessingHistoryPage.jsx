@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RefreshCcw, Sparkles } from 'lucide-react';
-import { getSources } from '../api/sources';
+import { getSources, getUnansweredSources } from '../api/sources';
 import { getAnalysesBySource } from '../api/analyses';
 import { getSalesmapRecordsByAnalysis } from '../api/salesmapRecords';
 import { getApiErrorMessage } from '../api/errors';
@@ -104,14 +104,21 @@ function isPriorityItem(item) {
 export function ProcessingHistoryPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const isPriorityFilter = new URLSearchParams(location.search).get('filter') === 'priority';
+  const filter = new URLSearchParams(location.search).get('filter');
+  const isPriorityFilter = filter === 'priority';
+  const isUnansweredFilter = filter === 'unanswered';
   const [items, setItems] = useState([]);
+  const [unanswered, setUnanswered] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const loadHistory = useCallback(async () => {
     setIsLoading(true);
     setErrorMessage('');
+
+    getUnansweredSources()
+      .then(setUnanswered)
+      .catch((error) => console.error('Failed to load unanswered mails:', error));
 
     try {
       const sources = await getSources({ size: 30 });
@@ -221,6 +228,27 @@ export function ProcessingHistoryPage() {
             ))}
           </div>
 
+          <div className="relative mt-4 flex flex-wrap gap-2">
+            {[
+              { key: null, label: '전체', path: '/history' },
+              { key: 'priority', label: `우선 확인 ${priorityItems.length}`, path: '/history?filter=priority' },
+              { key: 'unanswered', label: `미답장 ${unanswered.length}`, path: '/history?filter=unanswered' },
+            ].map((option) => (
+              <button
+                key={option.label}
+                type="button"
+                onClick={() => navigate(option.path)}
+                className={`rounded-full border px-3 py-1 text-xs font-semibold transition ${
+                  filter === option.key
+                    ? 'border-blue-500 bg-blue-500 text-white'
+                    : 'border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-600'
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+
           {isPriorityFilter && (
             <div className="mt-4 flex items-center justify-between rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-left">
               <div>
@@ -244,6 +272,9 @@ export function ProcessingHistoryPage() {
           </div>
         )}
 
+        {isUnansweredFilter ? (
+          <UnansweredList items={unanswered} onOpen={(sourceId) => navigate(`/messages/source-${sourceId}`)} />
+        ) : (
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
           <div className="grid grid-cols-[1.5fr_0.6fr_0.8fr_0.8fr_1fr_0.9fr] gap-3 px-5 py-3 text-xs font-medium text-slate-400 border-b border-slate-100 bg-slate-50/70 text-left">
             <span>메일</span>
@@ -329,7 +360,50 @@ export function ProcessingHistoryPage() {
             </div>
           )}
         </div>
+        )}
       </div>
+    </div>
+  );
+}
+
+// 고객이 보낸 영업 메일 중 아직 답장하지 않은 대화 (오래 기다린 순)
+function UnansweredList({ items, onOpen }) {
+  return (
+    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+      <div className="grid grid-cols-[1.6fr_1fr_1fr_0.7fr] gap-3 px-5 py-3 text-xs font-medium text-slate-400 border-b border-slate-100 bg-slate-50/70 text-left">
+        <span>메일</span>
+        <span>고객사</span>
+        <span>받은 시각</span>
+        <span>대기</span>
+      </div>
+      {items.length === 0 ? (
+        <div className="px-5 py-10 text-sm text-gray-500">답장하지 않은 영업 메일이 없습니다.</div>
+      ) : (
+        <div className="divide-y divide-gray-100">
+          {items.map((item) => (
+            <button
+              type="button"
+              key={item.sourceId}
+              onClick={() => onOpen(item.sourceId)}
+              className="w-full grid grid-cols-[1.6fr_1fr_1fr_0.7fr] gap-3 px-5 py-4 text-left hover:bg-blue-50/40"
+            >
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-slate-800 truncate">{formatEmpty(item.title)}</p>
+                <p className="text-xs text-slate-500 mt-1 truncate">{formatEmpty(item.senderName || item.senderEmail)}</p>
+              </div>
+              <p className="text-sm text-gray-700 truncate">{formatEmpty(item.customerName)}</p>
+              <p className="text-sm text-gray-600">{formatDateTime(item.receivedAt)}</p>
+              <span className={`inline-flex h-fit w-fit px-2.5 py-1 text-xs rounded-full border ${
+                item.waitingBusinessDays >= 3
+                  ? 'bg-red-50 text-red-700 border-red-200'
+                  : 'bg-slate-50 text-slate-600 border-slate-200'
+              }`}>
+                {item.waitingBusinessDays === 0 ? '오늘' : `${item.waitingBusinessDays}영업일`}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

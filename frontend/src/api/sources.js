@@ -29,3 +29,10 @@ export async function deleteSource(sourceId) {
 
   return response.data.data;
 }
+
+// 고객이 보낸 영업 메일 중 아직 답장하지 않은 대화
+export async function getUnansweredSources() {
+  const response = await api.get('/api/sources/unanswered');
+
+  return response.data.data;
+}

@@ -23,3 +23,10 @@ export async function deleteSchedule(scheduleId) {
 
   return response.data.data;
 }
+
+// 미팅이 끝난 뒤 결과 기록: outcome = SUCCESS(잘됨) | ON_HOLD(보류) | LOST(무산)
+export async function recordScheduleOutcome(scheduleId, outcome) {
+  const response = await api.patch(`/api/schedules/${scheduleId}/outcome`, { outcome });
+
+  return response.data.data;
+}

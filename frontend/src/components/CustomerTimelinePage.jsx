@@ -57,14 +57,6 @@ function displayContactName(customer) {
     return '해당 없음';
   }
 
-  if (customer.customerName === 'GreenSoft') {
-    return '박서준';
-  }
-
-  if (customer.customerName === 'Delta Systems') {
-    return '최유진';
-  }
-
   return formatEmpty(customer.contactName);
 }
 

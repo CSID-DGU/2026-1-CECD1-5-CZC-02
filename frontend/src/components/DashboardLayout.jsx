@@ -67,7 +67,6 @@ function userInitial(name, email) {
 export function DashboardLayout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [salesmapConnected, setSalesmapConnected] = useState(() => localStorage.getItem('salesmapConnected') === 'true');
   const [companyName, setCompanyName] = useState(() => localStorage.getItem('salesmapCompany') || '');
   const [gmailCalendarConnected, setGmailCalendarConnected] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -98,10 +97,7 @@ export function DashboardLayout({ children }) {
 
   useEffect(() => {
     const timerId = window.setTimeout(() => {
-      const connected = localStorage.getItem('salesmapConnected') === 'true';
-      const company = localStorage.getItem('salesmapCompany') || '';
-      setSalesmapConnected(connected);
-      setCompanyName(company);
+      setCompanyName(localStorage.getItem('salesmapCompany') || '');
     }, 0);
 
     return () => window.clearTimeout(timerId);
@@ -256,7 +252,7 @@ export function DashboardLayout({ children }) {
   }, [enqueueReminder, fetchSchedulesForReminder]);
 
   const handleSalesmapClick = () => {
-    if (!gmailCalendarConnected && !salesmapConnected) {
+    if (!gmailCalendarConnected) {
       navigate('/settings');
     }
   };
@@ -287,7 +283,8 @@ export function DashboardLayout({ children }) {
   const isActive = (path) => location.pathname === path;
   const displayName = currentUser?.name || currentUser?.email || '사용자';
   const avatarText = userInitial(currentUser?.name, currentUser?.email);
-  const topSalesmapConnected = gmailCalendarConnected || salesmapConnected;
+  // Salesmap 반영은 Google Calendar 양방향 연동으로 이루어지므로 Gmail·Calendar 연결 여부가 곧 연동 상태다.
+  const topSalesmapConnected = gmailCalendarConnected;
   const topCompanyName = topSalesmapConnected ? (companyName || '연동된 회사') : 'Salesmap 연동';
 
   return (

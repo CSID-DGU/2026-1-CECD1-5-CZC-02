@@ -1,13 +1,16 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, ChevronDown, Search, Check, X, Edit2, Save } from 'lucide-react';
-import { createSchedule, deleteSchedule, getSchedules, updateSchedule } from '../api/schedules';
-import { createSource, getSources } from '../api/sources';
+import { ChevronLeft, ChevronRight, X, Edit2, Save } from 'lucide-react';
+import { deleteSchedule, getSchedules, recordScheduleOutcome, updateSchedule } from '../api/schedules';
+import { getSources } from '../api/sources';
 import { getAnalysesBySource } from '../api/analyses';
-import { getSalesmapRecordsByAnalysis } from '../api/salesmapRecords';
 import { getApiErrorMessage } from '../api/errors';
 
-const CURRENT_USER_ID = 'user1';
+const MEETING_OUTCOMES = [
+  { value: 'SUCCESS', label: '잘됨', className: 'border-emerald-200 text-emerald-700 hover:bg-emerald-50', activeClassName: 'bg-emerald-500 border-emerald-500 text-white' },
+  { value: 'ON_HOLD', label: '보류', className: 'border-amber-200 text-amber-700 hover:bg-amber-50', activeClassName: 'bg-amber-500 border-amber-500 text-white' },
+  { value: 'LOST', label: '무산', className: 'border-rose-200 text-rose-700 hover:bg-rose-50', activeClassName: 'bg-rose-500 border-rose-500 text-white' },
+];
 
 function pad(value) {
   return String(value).padStart(2, '0');
@@ -27,33 +30,6 @@ function formatDateTimeForApi(dateValue, timeValue) {
 
 function formatDisplayTime(date) {
   return date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-}
-
-function stripScheduleMeta(value = '') {
-  return value
-    .split('\n')
-    .filter((line) => (
-      !line.startsWith('업무 유형:')
-      && !line.startsWith('보낸 사람:')
-      && !line.startsWith('참석자:')
-    ))
-    .join('\n')
-    .trim();
-}
-
-function extractMemoValue(memo = '', label) {
-  const found = memo.match(new RegExp(`${label}:\\s*([^\\n]+)`));
-  return found?.[1]?.trim() || '';
-}
-
-function extractAttendees(memo = '') {
-  const explicit = extractMemoValue(memo, '참석자');
-  if (explicit) {
-    return explicit;
-  }
-
-  const found = memo.match(/참석자[:：]\s*([^/\n]+)/);
-  return found?.[1]?.trim() || '';
 }
 
 // 일정 memo를 구/신 포맷 모두 지원해 사람이 읽기 좋은 필드로 분해한다.
@@ -121,6 +97,41 @@ function parseScheduleMemo(memo = '') {
 
 function normalizeScheduleStatus(status) {
   return status || 'SCHEDULED';
+}
+
+function formatMonthDay(dateValue = '') {
+  const [, month, day] = dateValue.split('-');
+  return month && day ? `${Number(month)}/${Number(day)}` : '';
+}
+
+function isPastEvent(event) {
+  const startsAt = new Date(`${event.dateValue}T${event.timeValue || '00:00'}:00`);
+  return !Number.isNaN(startsAt.getTime()) && startsAt <= new Date();
+}
+
+// 미팅이 끝난 뒤 결과를 남긴다. 쌓인 결과는 나중에 딜 성사 예측의 정답 데이터가 된다.
+function MeetingOutcomePicker({ outcome, saving, onSelect }) {
+  return (
+    <div className="mt-3 pt-3 border-t border-slate-100">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">미팅 결과</p>
+      <div className="flex gap-2">
+        {MEETING_OUTCOMES.map((option) => (
+          <button
+            key={option.value}
+            type="button"
+            disabled={saving}
+            onClick={() => onSelect(option.value)}
+            className={`flex-1 rounded-lg border px-3 py-1.5 text-xs font-semibold transition disabled:opacity-60 ${
+              outcome === option.value ? option.activeClassName : option.className
+            }`}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+      {!outcome && <p className="mt-1.5 text-[11px] text-slate-400">미팅이 어떻게 됐는지 기록해 주세요.</p>}
+    </div>
+  );
 }
 
 function isSameCalendarDate(left, right) {
@@ -212,21 +223,12 @@ function createBriefingFromData(schedules = [], sources = [], latestAnalyses = [
 
 export function Dashboard() {
   const navigate = useNavigate();
-  const isDev = import.meta.env.DEV;
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
-  const [showUserFilter, setShowUserFilter] = useState(false);
-  const [userSearch, setUserSearch] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState(null);
-  const [apiStatuses, setApiStatuses] = useState({
-    schedules: { label: '일정 조회', status: 'loading', count: null, message: '조회 중' },
-    sources: { label: '메일 조회', status: 'loading', count: null, message: '조회 중' },
-    analyses: { label: 'AI 분석 조회', status: 'idle', count: null, message: '메일 조회 후 확인' },
-    salesmapRecords: { label: 'Salesmap 등록 조회', status: 'idle', count: null, message: '분석 조회 후 확인' },
-  });
-  const [testPanelMessage, setTestPanelMessage] = useState('');
-  const [isCreatingTestData, setIsCreatingTestData] = useState(false);
+  const [calendarError, setCalendarError] = useState('');
+  const [outcomeSavingId, setOutcomeSavingId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [events, setEvents] = useState([]);
   const [todaySchedule, setTodaySchedule] = useState([]);
@@ -240,178 +242,7 @@ export function Dashboard() {
     prioritySourceId: null,
     messages: ['브리핑을 준비하고 있습니다.'],
   });
-  const dropdownRef = useRef(null);
   const modalRef = useRef(null);
-
-  const [users, setUsers] = useState([
-    { id: 'user1', name: '나', selected: true },
-    { id: 'user2', name: '김영업', selected: true },
-    { id: 'user3', name: '마케팅팀', selected: false },
-    { id: 'user4', name: '고객지원팀', selected: false },
-  ]);
-
-  const getDemoEvents = useCallback(() => ([
-    {
-      id: 'demo-call-1',
-      date: 5,
-      type: 'call',
-      title: '신규 고객 전화 상담',
-      time: '오전 10:00',
-      timeValue: '10:00',
-      dateValue: `${currentMonth.getFullYear()}-${pad(currentMonth.getMonth() + 1)}-05`,
-      userId: 'user2',
-      userName: '김영업',
-      sender: 'ABC 기업',
-      attendees: '김담당',
-      description: '신규 제품 문의와 도입 가능성을 전화로 확인합니다.',
-      status: 'SCHEDULED',
-      isDemo: true,
-    },
-    {
-      id: 'demo-email-1',
-      date: 9,
-      type: 'email',
-      title: '제안서 발송',
-      time: '오전 11:00',
-      timeValue: '11:00',
-      dateValue: `${currentMonth.getFullYear()}-${pad(currentMonth.getMonth() + 1)}-09`,
-      userId: 'user3',
-      userName: '마케팅팀',
-      sender: 'GHI 기업',
-      attendees: '구매팀',
-      description: '제품 소개 자료와 제안서를 이메일로 발송합니다.',
-      status: 'SCHEDULED',
-      isDemo: true,
-    },
-    {
-      id: 'demo-meeting-1',
-      date: 11,
-      type: 'meeting',
-      title: 'Delta Systems 도입 미팅',
-      time: '오후 02:00',
-      timeValue: '14:00',
-      dateValue: `${currentMonth.getFullYear()}-${pad(currentMonth.getMonth() + 1)}-11`,
-      userId: 'user2',
-      userName: '김영업',
-      sender: 'Delta Systems',
-      attendees: '최유진, 김영업',
-      description: 'Sales Analytics Platform 도입 범위와 예상 비용을 논의합니다.',
-      status: 'SCHEDULED',
-      isDemo: true,
-    },
-    {
-      id: 'demo-task-sales-1',
-      date: 18,
-      type: 'task',
-      title: 'ABC 고객사 견적서 정리',
-      time: '오전 09:30',
-      timeValue: '09:30',
-      dateValue: `${currentMonth.getFullYear()}-${pad(currentMonth.getMonth() + 1)}-18`,
-      userId: 'user2',
-      userName: '김영업',
-      sender: 'ABC 고객사',
-      attendees: '박지훈',
-      description: '미팅 후 전달할 견적서와 제안 조건을 정리합니다.',
-      status: 'SCHEDULED',
-      isDemo: true,
-    },
-    {
-      id: 'demo-call-marketing-1',
-      date: 12,
-      type: 'call',
-      title: '캠페인 리드 확인 전화',
-      time: '오후 03:30',
-      timeValue: '15:30',
-      dateValue: `${currentMonth.getFullYear()}-${pad(currentMonth.getMonth() + 1)}-12`,
-      userId: 'user3',
-      userName: '마케팅팀',
-      sender: '마케팅 리드',
-      attendees: '이수진',
-      description: '캠페인 유입 고객의 관심 제품과 미팅 가능 여부를 확인합니다.',
-      status: 'SCHEDULED',
-      isDemo: true,
-    },
-    {
-      id: 'demo-email-marketing-1',
-      date: 19,
-      type: 'email',
-      title: '제품 소개 자료 업데이트',
-      time: '오전 10:30',
-      timeValue: '10:30',
-      dateValue: `${currentMonth.getFullYear()}-${pad(currentMonth.getMonth() + 1)}-19`,
-      userId: 'user3',
-      userName: '마케팅팀',
-      sender: '내부 협업',
-      attendees: '영업팀',
-      description: '신규 기능 설명과 데모 이미지를 포함한 소개 자료를 업데이트합니다.',
-      status: 'SCHEDULED',
-      isDemo: true,
-    },
-    {
-      id: 'demo-call-support-1',
-      date: 6,
-      type: 'call',
-      title: '고객 문의 응대',
-      time: '오후 01:30',
-      timeValue: '13:30',
-      dateValue: `${currentMonth.getFullYear()}-${pad(currentMonth.getMonth() + 1)}-06`,
-      userId: 'user4',
-      userName: '고객지원팀',
-      sender: '기존 고객',
-      attendees: '지원 담당자',
-      description: '사용 중 발생한 문의사항을 확인하고 후속 안내를 진행합니다.',
-      status: 'SCHEDULED',
-      isDemo: true,
-    },
-    {
-      id: 'demo-email-support-1',
-      date: 16,
-      type: 'email',
-      title: '사용 가이드 발송',
-      time: '오후 05:00',
-      timeValue: '17:00',
-      dateValue: `${currentMonth.getFullYear()}-${pad(currentMonth.getMonth() + 1)}-16`,
-      userId: 'user4',
-      userName: '고객지원팀',
-      sender: '신규 고객',
-      attendees: '온보딩 담당자',
-      description: '계정 설정과 캘린더 연동 방법을 이메일로 안내합니다.',
-      status: 'SCHEDULED',
-      isDemo: true,
-    },
-    {
-      id: 'demo-task-support-1',
-      date: 24,
-      type: 'task',
-      title: 'FAQ 문서 보완',
-      time: '오전 11:00',
-      timeValue: '11:00',
-      dateValue: `${currentMonth.getFullYear()}-${pad(currentMonth.getMonth() + 1)}-24`,
-      userId: 'user4',
-      userName: '고객지원팀',
-      sender: '내부 업무',
-      attendees: '고객지원팀',
-      description: '반복 문의가 많은 Gmail 연동과 일정 등록 항목을 보완합니다.',
-      status: 'SCHEDULED',
-      isDemo: true,
-    },
-    {
-      id: 'demo-task-1',
-      date: 14,
-      type: 'task',
-      title: '월간 영업 보고서 작성',
-      time: '오후 04:00',
-      timeValue: '16:00',
-      dateValue: `${currentMonth.getFullYear()}-${pad(currentMonth.getMonth() + 1)}-14`,
-      userId: 'user1',
-      userName: '나',
-      sender: '내부 업무',
-      attendees: '영업팀',
-      description: '이번 달 영업 활동과 후속 조치 현황을 정리합니다.',
-      status: 'SCHEDULED',
-      isDemo: true,
-    },
-  ]), [currentMonth]);
 
   const toSchedulePanelItem = useCallback((event) => ({
     id: event.id,
@@ -419,45 +250,31 @@ export function Dashboard() {
     time: event.time,
     title: event.title,
     type: event.type,
-    date: `${currentMonth.getMonth() + 1}/${event.date}`,
-    userId: event.userId,
-    userName: event.userName,
+    date: formatMonthDay(event.dateValue),
     status: normalizeScheduleStatus(event.status),
-  }), [currentMonth]);
+  }), []);
 
   const updateCalendarState = useCallback((nextEvents) => {
-    const sortedEvents = [...nextEvents].sort((a, b) => {
-      const dateDiff = a.date - b.date;
-      if (dateDiff !== 0) {
-        return dateDiff;
-      }
-      return (a.timeValue || '').localeCompare(b.timeValue || '');
-    });
+    const sortedEvents = [...nextEvents].sort((a, b) => (
+      `${a.dateValue}T${a.timeValue}`.localeCompare(`${b.dateValue}T${b.timeValue}`)
+    ));
 
     setEvents(sortedEvents);
 
-    const today = new Date();
-    const isCurrentVisibleMonth =
-      today.getFullYear() === currentMonth.getFullYear()
-      && today.getMonth() === currentMonth.getMonth();
-
+    const todayValue = toDateInput(new Date());
     const activeEvents = sortedEvents.filter((event) => event.status !== 'CANCELED');
-    const todayItems = isCurrentVisibleMonth
-      ? activeEvents.filter((event) => event.date === today.getDate()).map(toSchedulePanelItem)
-      : [];
-
-    const upcomingItems = activeEvents
-      .filter((event) => !isCurrentVisibleMonth || event.date !== today.getDate())
-      .slice(0, 8)
-      .map(toSchedulePanelItem);
-
-    setTodaySchedule(todayItems);
-    setUpcomingSchedule(upcomingItems);
-  }, [currentMonth, toSchedulePanelItem]);
+    setTodaySchedule(activeEvents.filter((event) => event.dateValue === todayValue).map(toSchedulePanelItem));
+    setUpcomingSchedule(
+      activeEvents
+        .filter((event) => event.dateValue > todayValue)
+        .slice(0, 8)
+        .map(toSchedulePanelItem)
+    );
+  }, [toSchedulePanelItem]);
 
   const syncSchedulesToCalendar = useCallback((schedules) => {
     if (!Array.isArray(schedules)) {
-      updateCalendarState(getDemoEvents());
+      updateCalendarState([]);
       return;
     }
 
@@ -481,41 +298,21 @@ export function Dashboard() {
           type,
           title: schedule.title || '일정',
           time: formatDisplayTime(scheduleDate),
-          userId: CURRENT_USER_ID,
-          userName: '나',
           sender: parsed.sender,
           attendees: parsed.attendees,
           description: parsed.summary,
           summarySegments: parsed.summarySegments,
           nextAction: parsed.nextAction,
           status: normalizeScheduleStatus(schedule.status),
+          outcome: schedule.outcome,
         };
       });
 
-    updateCalendarState([...getDemoEvents(), ...backendEvents]);
-  }, [getDemoEvents, updateCalendarState]);
+    updateCalendarState(backendEvents);
+  }, [updateCalendarState]);
 
   useEffect(() => {
-    const updateApiStatus = (key, nextStatus) => {
-      setApiStatuses((prev) => ({
-        ...prev,
-        [key]: {
-          ...prev[key],
-          ...nextStatus,
-        },
-      }));
-    };
-
-    const handleApiError = (key, error) => {
-      console.error(`Failed to fetch ${key}:`, error);
-      updateApiStatus(key, {
-        status: 'error',
-        count: null,
-        message: getApiErrorMessage(error),
-      });
-    };
-
-    const fetchDashboardApiStatuses = async () => {
+    const fetchDashboardData = async () => {
       setSalesBriefing((prev) => ({
         ...prev,
         isLoading: true,
@@ -523,30 +320,21 @@ export function Dashboard() {
       }));
 
       let schedules = [];
-
       try {
-        schedules = await getSchedules({ size: 50 });
+        schedules = await getSchedules({ size: 100 });
+        setCalendarError('');
         syncSchedulesToCalendar(schedules);
-        updateApiStatus('schedules', {
-          status: 'success',
-          count: schedules.length,
-          message: '확인됨',
-        });
       } catch (error) {
-        handleApiError('schedules', error);
+        console.error('Failed to fetch schedules:', error);
+        setCalendarError(`일정을 불러오지 못했습니다: ${getApiErrorMessage(error)}`);
+        syncSchedulesToCalendar([]);
       }
 
       let sources = [];
-
       try {
         sources = await getSources({ size: 30 });
-        updateApiStatus('sources', {
-          status: 'success',
-          count: sources.length,
-          message: '확인됨',
-        });
       } catch (error) {
-        handleApiError('sources', error);
+        console.error('Failed to fetch sources:', error);
       }
 
       const analysisResults = await Promise.allSettled(
@@ -560,67 +348,13 @@ export function Dashboard() {
         .map((result) => result.value);
 
       setSalesBriefing(createBriefingFromData(schedules, sources, latestAnalyses));
-
-      const firstSourceId = sources[0]?.sourceId;
-
-      if (!firstSourceId) {
-        updateApiStatus('analyses', {
-          status: 'idle',
-          count: 0,
-          message: '조회할 메일 없음',
-        });
-        updateApiStatus('salesmapRecords', {
-          status: 'idle',
-          count: 0,
-          message: '조회할 분석 없음',
-        });
-        return;
-      }
-
-      let analyses = [];
-
-      try {
-        analyses = await getAnalysesBySource(firstSourceId);
-        updateApiStatus('analyses', {
-          status: 'success',
-          count: analyses.length,
-          message: '확인됨',
-        });
-      } catch (error) {
-        handleApiError('analyses', error);
-      }
-
-      const firstAnalysisId = analyses[0]?.analysisId;
-
-      if (!firstAnalysisId) {
-        updateApiStatus('salesmapRecords', {
-          status: 'idle',
-          count: 0,
-          message: '조회할 분석 없음',
-        });
-        return;
-      }
-
-      try {
-        const records = await getSalesmapRecordsByAnalysis(firstAnalysisId);
-        updateApiStatus('salesmapRecords', {
-          status: 'success',
-          count: records.length,
-          message: '확인됨',
-        });
-      } catch (error) {
-        handleApiError('salesmapRecords', error);
-      }
     };
 
-    fetchDashboardApiStatuses();
+    fetchDashboardData();
   }, [refreshKey, syncSchedulesToCalendar]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowUserFilter(false);
-      }
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         if (showScheduleModal && !editingSchedule) {
           setShowScheduleModal(false);
@@ -633,12 +367,6 @@ export function Dashboard() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showScheduleModal, editingSchedule]);
 
-  useEffect(() => {
-    updateCalendarState(events);
-    // currentMonth changes should refresh side lists without refetching.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentMonth]);
-
   const handlePreviousMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
   };
@@ -647,27 +375,9 @@ export function Dashboard() {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
   };
 
-  const toggleUser = (userId) => {
-    setUsers(users.map(user =>
-      user.id === userId ? { ...user, selected: !user.selected } : user
-    ));
-  };
-
-  const toggleSelectAll = () => {
-    const allSelected = users.every(u => u.selected);
-    setUsers(users.map(user => ({ ...user, selected: !allSelected })));
-  };
-
-  const selectedUserIds = users.filter(u => u.selected).map(u => u.id);
-  const selectedCount = selectedUserIds.length;
-
-  const filteredEvents = events.filter(event => selectedUserIds.includes(event.userId));
-  const filteredTodaySchedule = todaySchedule.filter(item => selectedUserIds.includes(item.userId));
-  const filteredUpcomingSchedule = upcomingSchedule.filter(item => selectedUserIds.includes(item.userId));
-
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(userSearch.toLowerCase())
-  );
+  // 달력에는 보고 있는 달의 일정만 표시한다(다른 달의 같은 날짜 일정이 섞이지 않게).
+  const visibleMonthPrefix = `${currentMonth.getFullYear()}-${pad(currentMonth.getMonth() + 1)}-`;
+  const monthEvents = events.filter((event) => event.dateValue?.startsWith(visibleMonthPrefix));
 
   const getDaysInMonth = () => {
     const year = currentMonth.getFullYear();
@@ -685,7 +395,7 @@ export function Dashboard() {
     return days;
   };
 
-  const getEventsForDate = (date) => filteredEvents.filter(e => e.date === date);
+  const getEventsForDate = (date) => monthEvents.filter(e => e.date === date);
 
   const handleDateClick = (date) => {
     const dayEvents = getEventsForDate(date);
@@ -696,10 +406,6 @@ export function Dashboard() {
   };
 
   const handleEditSchedule = (schedule) => {
-    if (schedule.userId !== CURRENT_USER_ID) {
-      return;
-    }
-
     setEditingSchedule({
       ...schedule,
       dateValue: schedule.dateValue || `${currentMonth.getFullYear()}-${pad(currentMonth.getMonth() + 1)}-${pad(schedule.date)}`,
@@ -842,75 +548,16 @@ export function Dashboard() {
 
   const monthName = currentMonth.toLocaleString('ko-KR', { year: 'numeric', month: 'long' });
 
-  const getApiStatusText = (status) => {
-    if (status.status === 'success') {
-      return `${status.count}건 확인됨`;
-    }
-
-    if (status.status === 'error') {
-      return status.message;
-    }
-
-    return status.message;
-  };
-
-  const getApiStatusColor = (status) => {
-    if (status.status === 'success') {
-      return 'text-green-700 bg-green-50 border-green-200';
-    }
-
-    if (status.status === 'error') {
-      return 'text-red-700 bg-red-50 border-red-200';
-    }
-
-    return 'text-gray-600 bg-gray-50 border-gray-200';
-  };
-
-  const formatLocalDateTime = (date) => {
-    return `${toDateInput(date)}T${toTimeInput(date)}:${pad(date.getSeconds())}`;
-  };
-
-  const handleCreateTestSource = async () => {
+  const handleRecordOutcome = async (scheduleId, outcome) => {
     try {
-      setIsCreatingTestData(true);
-      setTestPanelMessage('');
-
-      await createSource({
-        sourceType: 'EMAIL',
-        title: '예시 이메일',
-        content: '고객사 미팅 일정과 후속 조치가 포함된 예시 내용입니다.',
-      });
-
-      setTestPanelMessage('메일 예시 데이터가 생성되었습니다.');
+      setOutcomeSavingId(scheduleId);
+      await recordScheduleOutcome(scheduleId, outcome);
       setRefreshKey((prev) => prev + 1);
     } catch (error) {
-      console.error('Failed to create sample source.', error);
-      setTestPanelMessage(`메일 예시 데이터 생성 실패: ${getApiErrorMessage(error)}`);
+      console.error('Failed to record meeting outcome:', error);
+      alert(`미팅 결과 저장 실패: ${getApiErrorMessage(error)}`);
     } finally {
-      setIsCreatingTestData(false);
-    }
-  };
-
-  const handleCreateTestSchedule = async () => {
-    const oneHourLater = new Date(Date.now() + 60 * 60 * 1000);
-
-    try {
-      setIsCreatingTestData(true);
-      setTestPanelMessage('');
-
-      await createSchedule({
-        title: '예시 일정',
-        scheduleDateTime: formatLocalDateTime(oneHourLater),
-        memo: '프론트와 백엔드 연동 확인용 일정',
-      });
-
-      setTestPanelMessage('일정 예시 데이터가 생성되었습니다.');
-      setRefreshKey((prev) => prev + 1);
-    } catch (error) {
-      console.error('Failed to create sample schedule.', error);
-      setTestPanelMessage(`일정 예시 데이터 생성 실패: ${getApiErrorMessage(error)}`);
-    } finally {
-      setIsCreatingTestData(false);
+      setOutcomeSavingId(null);
     }
   };
 
@@ -922,46 +569,9 @@ export function Dashboard() {
           onOpenPriority={() => navigate('/history?filter=priority')}
         />
 
-        {false && isDev && (
-          <details className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <summary className="text-sm text-gray-700 cursor-pointer">개발용 연동 확인</summary>
-            <div className="space-y-2 mt-3">
-              {Object.entries(apiStatuses).map(([key, status]) => (
-                <div
-                  key={key}
-                  className={`border rounded px-3 py-2 ${getApiStatusColor(status)}`}
-                >
-                  <div className="text-xs font-medium">{status.label}</div>
-                  <div className="text-xs mt-0.5">{getApiStatusText(status)}</div>
-                </div>
-              ))}
-
-              <div className="pt-2 space-y-2">
-                <button
-                  onClick={handleCreateTestSource}
-                  disabled={isCreatingTestData}
-                  className="w-full px-3 py-2 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
-                >
-                  메일 예시 생성
-                </button>
-                <button
-                  onClick={handleCreateTestSchedule}
-                  disabled={isCreatingTestData}
-                  className="w-full px-3 py-2 text-xs border border-gray-300 hover:bg-gray-50 disabled:bg-gray-100 text-gray-700 rounded"
-                >
-                  일정 예시 생성
-                </button>
-                {testPanelMessage && (
-                  <p className="text-xs text-gray-600">{testPanelMessage}</p>
-                )}
-              </div>
-            </div>
-          </details>
-        )}
-
         <SchedulePanel
           title="오늘의 일정"
-          items={filteredTodaySchedule}
+          items={todaySchedule}
           getTypeColor={getTypeColor}
           getTypeDot={getTypeDot}
           getScheduleStatusColor={getScheduleStatusColor}
@@ -971,7 +581,7 @@ export function Dashboard() {
 
         <SchedulePanel
           title="다가오는 일정"
-          items={filteredUpcomingSchedule}
+          items={upcomingSchedule}
           getTypeColor={getTypeColor}
           getTypeDot={getTypeDot}
           getScheduleStatusColor={getScheduleStatusColor}
@@ -994,63 +604,9 @@ export function Dashboard() {
                 </button>
               </div>
 
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setShowUserFilter(!showUserFilter)}
-                  className="flex items-center gap-2 px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50"
-                >
-                  <span className="text-gray-700">사용자 {selectedCount}명</span>
-                  <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
-                </button>
-
-                {showUserFilter && (
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                    <div className="p-3 border-b border-gray-200">
-                      <div className="relative">
-                        <Search className="absolute left-2.5 top-2 w-3.5 h-3.5 text-gray-400" />
-                        <input
-                          type="text"
-                          value={userSearch}
-                          onChange={(event) => setUserSearch(event.target.value)}
-                          placeholder="사용자 검색"
-                          className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded outline-none focus:border-blue-500"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="p-2 border-b border-gray-200">
-                      <button
-                        onClick={toggleSelectAll}
-                        className="w-full flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 rounded text-sm"
-                      >
-                        <div className={`w-4 h-4 border rounded flex items-center justify-center ${
-                          users.every(user => user.selected) ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
-                        }`}>
-                          {users.every(user => user.selected) && <Check className="w-3 h-3 text-white" />}
-                        </div>
-                        <span className="text-gray-700">전체 선택</span>
-                      </button>
-                    </div>
-
-                    <div className="max-h-48 overflow-y-auto p-2">
-                      {filteredUsers.map(user => (
-                        <button
-                          key={user.id}
-                          onClick={() => toggleUser(user.id)}
-                          className="w-full flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 rounded text-sm"
-                        >
-                          <div className={`w-4 h-4 border rounded flex items-center justify-center ${
-                            user.selected ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
-                          }`}>
-                            {user.selected && <Check className="w-3 h-3 text-white" />}
-                          </div>
-                          <span className="text-gray-700">{user.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              {calendarError && (
+                <span className="text-xs text-red-600">{calendarError}</span>
+              )}
             </div>
           </div>
 
@@ -1227,26 +783,23 @@ export function Dashboard() {
                             <span className="text-sm font-medium text-slate-500">{event.time}</span>
                           </div>
                           <h4 className="text-base font-bold text-slate-900 mb-1" style={{ fontFamily: 'var(--display)' }}>{event.title}</h4>
-                          <p className="text-xs text-slate-400">담당자: {event.userName}</p>
                         </div>
-                        {event.userId === CURRENT_USER_ID && (
-                          <div className="flex items-center gap-1">
-                            {event.scheduleId && event.status !== 'CANCELED' && (
-                              <button
-                                onClick={() => handleDeleteSchedule(event.scheduleId)}
-                                className="px-2 py-1 text-xs border border-red-200 text-red-600 rounded-lg hover:bg-red-50"
-                              >
-                                삭제
-                              </button>
-                            )}
+                        <div className="flex items-center gap-1">
+                          {event.scheduleId && event.status !== 'CANCELED' && (
                             <button
-                              onClick={() => handleEditSchedule(event)}
-                              className="p-2 rounded-lg hover:bg-slate-100"
+                              onClick={() => handleDeleteSchedule(event.scheduleId)}
+                              className="px-2 py-1 text-xs border border-red-200 text-red-600 rounded-lg hover:bg-red-50"
                             >
-                              <Edit2 className="w-4 h-4 text-slate-500" />
+                              삭제
                             </button>
-                          </div>
-                        )}
+                          )}
+                          <button
+                            onClick={() => handleEditSchedule(event)}
+                            className="p-2 rounded-lg hover:bg-slate-100"
+                          >
+                            <Edit2 className="w-4 h-4 text-slate-500" />
+                          </button>
+                        </div>
                       </div>
 
                       <div className="space-y-3">
@@ -1288,10 +841,12 @@ export function Dashboard() {
                         )}
                       </div>
 
-                      {event.userId !== CURRENT_USER_ID && (
-                        <div className="mt-3 pt-3 border-t border-slate-100">
-                          <span className="text-xs text-slate-400 italic">다른 사용자의 일정입니다. 보기만 가능합니다.</span>
-                        </div>
+                      {event.scheduleId && event.status !== 'CANCELED' && isPastEvent(event) && (
+                        <MeetingOutcomePicker
+                          outcome={event.outcome}
+                          saving={outcomeSavingId === event.scheduleId}
+                          onSelect={(outcome) => handleRecordOutcome(event.scheduleId, outcome)}
+                        />
                       )}
                     </div>
                   )}
@@ -1404,7 +959,6 @@ function ScheduleListItem({ item, getTypeColor, getTypeDot, getScheduleStatusCol
           {item.time} - {item.title}
         </div>
         <div className="flex items-center gap-2 mt-1">
-          <div className="text-xs text-gray-500">{item.userName}</div>
           <span className={`px-2 py-0.5 text-[11px] rounded-full border ${getScheduleStatusColor(item.status)}`}>
             {getScheduleStatusLabel(item.status)}
           </span>

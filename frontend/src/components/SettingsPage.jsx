@@ -46,7 +46,6 @@ function InfoRow({ label, value }) {
 export function SettingsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [integrations, setIntegrations] = useState([]);
-  const [jandiConnected, setJandiConnected] = useState(() => localStorage.getItem('jandiConnected') === 'true');
   const [companyName, setCompanyName] = useState(() => localStorage.getItem('salesmapCompany') || '');
   const [isLoading, setIsLoading] = useState(true);
   const [isConnectingGmail, setIsConnectingGmail] = useState(false);
@@ -198,12 +197,6 @@ export function SettingsPage() {
     }
   };
 
-  const handleJandiToggle = () => {
-    const nextValue = !jandiConnected;
-    localStorage.setItem('jandiConnected', String(nextValue));
-    setJandiConnected(nextValue);
-  };
-
   return (
     <div className="h-full overflow-y-auto bg-gradient-to-b from-[#F6F8FC] to-[#EEF2F9] px-6 py-7">
       <div className="mx-auto max-w-5xl space-y-6">
@@ -330,22 +323,16 @@ export function SettingsPage() {
                   <img src={jandiIcon} alt="Jandi Icon" className="h-6 w-6 object-contain" />
                   <img src={jandiText} alt="JANDI" className="h-4 object-contain" style={{ mixBlendMode: 'darken' }} />
                 </div>
-                <StatusBadge connected={jandiConnected} pending={!jandiConnected} />
+                <StatusBadge connected={false} pending />
               </div>
               <p className="mb-4 text-sm leading-6 text-gray-600">
-                JANDI 메시지 기반 영업 활동 수집은 추후 연결 예정입니다.
+                JANDI는 메시지 수집 API를 제공하지 않아 영업 활동 수집 소스로는 연결할 수 없습니다.
+                Incoming Webhook을 이용한 알림 발송은 검토 중입니다.
               </p>
               <div className="space-y-2 border-t border-gray-100 pt-3">
-                <InfoRow label="연결 계정" value={jandiConnected ? 'JANDI workspace' : '준비 중'} />
-                <InfoRow label="상태" value={jandiConnected ? '연결됨' : '연동 준비 중'} />
+                <InfoRow label="연결 계정" value="연결 안 됨" />
+                <InfoRow label="상태" value="연동 준비 중" />
               </div>
-              <button
-                onClick={handleJandiToggle}
-                disabled={!jandiConnected}
-                className="mt-4 w-full rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-400"
-              >
-                연동 준비 중
-              </button>
             </div>
 
             <div className={`rounded-lg border p-4 ${gmailConnected ? 'border-green-200 bg-green-50/40' : 'border-gray-200 bg-white'}`}>
