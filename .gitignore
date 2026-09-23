@@ -24,3 +24,9 @@ venv/
 project-docs/
 demo/
 frontend_backup/
+# JVM 크래시 로그
+hs_err_pid*.log
+replay_pid*.log
+
+# Python 가상환경
+.venv/
