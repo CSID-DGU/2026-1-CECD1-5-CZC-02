@@ -345,15 +345,6 @@ function formatAnalysisEngine(analysis) {
   }
 }
 
-function shouldHideSourceFromList(source) {
-  const title = source.title || '';
-
-  return (
-    title.includes('David Shin님이 새로운 릴스를 추가했습니다')
-    || title.includes("추천: '26년 5월' 이경준님의 상태 업데이트")
-  );
-}
-
 export function MessageView() {
   const isDev = import.meta.env.DEV;
   const { source } = useParams();
@@ -395,10 +386,9 @@ export function MessageView() {
   const fetchSources = useCallback(async () => {
     try {
       const sources = await getSources();
-      const visibleSources = sources.filter((item) => !shouldHideSourceFromList(item));
-      setBackendSources(visibleSources);
-      setSourceListMessage(`${visibleSources.length}건 확인됨`);
-      return visibleSources;
+      setBackendSources(sources);
+      setSourceListMessage(`${sources.length}건 확인됨`);
+      return sources;
     } catch (error) {
       console.error('Failed to fetch sources:', {
         status: error.response?.status,
