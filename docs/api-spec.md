@@ -168,8 +168,38 @@ Request:
   "integrationId": null,
   "sourceType": "EMAIL",
   "title": "고객 미팅 관련 이메일",
-  "content": "원본 이메일 내용"
+  "content": "원본 이메일 내용",
+  "senderName": "김현우",
+  "senderEmail": "kim@example.com",
+  "sentAt": "2026-09-22T10:00:00"
 }
+```
+
+- `senderName`, `senderEmail`, `sentAt`은 선택입니다. `senderEmail`이 있으면 받은 메일(`RECEIVED`)로 저장되어 고객 타임라인·파이프라인·미답장 목록에 포함됩니다.
+
+### GET /api/sources/unanswered
+
+고객이 보낸 영업 메일 중 아직 답장하지 않은 대화를 오래 기다린 순으로 조회합니다.
+대화의 마지막 메일이 받은 메일이고, 영업 메일(SALES_ACTIVITY)로 분석됐으며(거절·삭제 제외), 이후 답장을 보낸 기록이 없으면 포함됩니다.
+
+Authorization: 필요
+
+Response data 예시:
+
+```json
+[
+  {
+    "sourceId": 12,
+    "sourceGroupId": 5,
+    "analysisId": 20,
+    "title": "스마트 배차 관제 시스템 도입 상담 미팅 요청드립니다",
+    "senderName": "김현우",
+    "senderEmail": "kim@example.com",
+    "customerName": "대성물류",
+    "receivedAt": "2026-09-22T10:00:00",
+    "waitingBusinessDays": 1
+  }
+]
 ```
 
 ## Analysis
@@ -271,18 +301,58 @@ Request 예시:
 ```json
 {
   "summary": "수정된 분석 요약",
-  "nextAction": "수정된 다음 행동",
-  "scheduleInfo": "2026-06-12 오전 10시 미팅",
+  "followUpAction": "수정된 다음 행동",
+  "scheduleText": "CRM Automation 도입 상담 (2026-06-12T10:00)",
   "customerName": "Nimbus Tech",
+  "contactName": "김도윤",
   "productName": "CRM Automation",
   "amount": null,
-  "attendees": "Nimbus Tech 김도윤, 영업팀 이민재",
+  "attendees": "김도윤, 이민재",
   "actionType": "CREATE",
   "actionReason": "사용자 수정",
-  "targetScheduleId": null,
-  "targetScheduleTitle": "CRM Automation 관련 미팅"
+  "targetScheduleTitle": "CRM Automation 관련 미팅",
+  "businessType": "SALES_ACTIVITY"
 }
 ```
+
+- `businessType`(SALES_ACTIVITY / NON_BUSINESS / UNKNOWN)은 선택입니다. 없으면 기존 값을 유지합니다.
+- 바뀐 필드마다 `analysis_revisions`에 AI 원본값·직전값·사용자값이 기록됩니다(학습 데이터).
+
+### POST /api/analysis/{analysisId}/reject
+
+분석 결과를 거절합니다. 상태가 `REJECTED`가 되고 딜 파이프라인·고객 타임라인·미답장 목록에서 제외됩니다. 이미 승인(`APPROVED`)된 분석은 거절할 수 없습니다(400).
+
+Authorization: 필요
+
+### GET /api/analysis/{analysisId}/revisions
+
+분석 결과의 수정 기록을 조회합니다.
+
+Authorization: 필요
+
+Response data 예시:
+
+```json
+[
+  {
+    "revisionId": 1,
+    "fieldName": "customerName",
+    "aiValue": "한빛소프트",
+    "previousValue": "한빛소프트",
+    "userValue": "한빛소프트(주)",
+    "revisedAt": "2026-09-23T12:00:00"
+  }
+]
+```
+
+분석 응답(`AnalysisResponse`)에는 다음 필드가 추가되었습니다.
+
+| 필드 | 설명 |
+| --- | --- |
+| `llmProvider` | 의미 필드를 보정한 엔진: `rule` / `ollama` / `openai` / `mock` |
+| `llmModel` | 사용한 모델명 (예: `qwen2.5:7b`) |
+| `llmFallbackReason` | 상위 엔진을 못 쓰고 대체된 이유 |
+| `approvedWithoutEdit` | 수정 없이 승인했으면 `true` |
 
 ### GET /api/analysis/source/{sourceId}
 
@@ -366,6 +436,23 @@ Request 예시:
   "scheduleType": "MEETING"
 }
 ```
+
+### PATCH /api/schedules/{scheduleId}/outcome
+
+미팅이 끝난 뒤 결과를 기록합니다. 일정 상태는 `COMPLETED`가 됩니다. 시작 전이거나 취소된 일정에는 기록할 수 없습니다(400).
+
+Authorization: 필요
+
+Request:
+
+```json
+{
+  "outcome": "SUCCESS"
+}
+```
+
+- `outcome`: `SUCCESS`(잘됨) / `ON_HOLD`(보류) / `LOST`(무산)
+- 일정 응답(`ScheduleResponse`)에 `outcome`, `outcomeRecordedAt`이 추가되었습니다.
 
 ### DELETE /api/schedules/{scheduleId}
 

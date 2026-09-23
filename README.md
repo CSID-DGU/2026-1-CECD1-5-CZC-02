@@ -54,6 +54,8 @@ uvicorn app.main:app --port 8000
 
 로컬 LLM은 [Ollama](https://ollama.com)(`qwen2.5`)를 사용합니다. 사전에 `ollama pull qwen2.5` 후 Ollama가 실행 중이어야 합니다.
 
+OpenAI API로 전환하는 구조도 들어 있지만 기본값은 꺼져 있습니다(`LLM_PROVIDER=ollama`). 설정 방법은 [docs/openai-setup.md](docs/openai-setup.md)를 참고하세요.
+
 ### frontend
 
 ```bash
@@ -61,6 +63,24 @@ cd frontend
 npm install
 npm run dev
 ```
+
+## 테스트와 평가
+
+```bash
+# AI 모듈 단위 테스트 (네트워크·유료 API 호출 없음)
+cd ai-module
+python -m pytest tests
+
+# 정답 라벨 평가셋(eval/dataset.jsonl, 21통)으로 분석 정확도 측정
+python -m eval.run_eval                  # 규칙 엔진
+python -m eval.run_eval --engine ollama  # 규칙 + LLM
+
+# 백엔드 단위 테스트 (JDK 17)
+cd backend
+./gradlew test --tests "*BusinessDayCalculatorTest" --tests "*AnalysisRevisionRecordingTest"
+```
+
+`BackendApplicationTests`는 실제 MySQL 연결이 필요합니다.
 
 ## 디렉터리
 
