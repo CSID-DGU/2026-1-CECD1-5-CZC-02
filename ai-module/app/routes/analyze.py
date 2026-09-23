@@ -1,4 +1,7 @@
 """분석 요청 라우트"""
+from datetime import datetime
+from typing import Optional
+
 from fastapi import APIRouter, HTTPException
 
 from app.schemas.request import AnalyzeRequest, ReplyDraftRequest
@@ -24,6 +27,7 @@ async def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
         request.existingSchedules,
         request.analysisMode,
         request.recentSenderAnalyses,
+        reference_time=_reference_time(request),
     )
     schedule = analysis_result.schedule
 
@@ -61,7 +65,7 @@ async def analyze_schedule_only(request: AnalyzeRequest) -> ScheduleAnalyzeRespo
 
     return ScheduleAnalyzeResponse(
         success=True,
-        schedule=analyze_schedule(message, request.messages, _requester_name(request)),
+        schedule=analyze_schedule(message, request.messages, _requester_name(request), _reference_time(request)),
     )
 
 
@@ -94,3 +98,11 @@ def _build_analysis_text(request: AnalyzeRequest) -> str:
 
 def _requester_name(request: AnalyzeRequest) -> str | None:
     return request.requester.name if request.requester else None
+
+
+def _reference_time(request: AnalyzeRequest) -> Optional[datetime]:
+    """상대 날짜 해석 기준: 가장 최근 메일의 발송 시각 → 수집 시각 → (없으면) 현재."""
+    sent_times = [message.sentAt for message in request.messages if message.sentAt]
+    if sent_times:
+        return max(sent_times)
+    return request.collectedAt

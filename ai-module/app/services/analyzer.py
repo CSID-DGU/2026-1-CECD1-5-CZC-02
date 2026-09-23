@@ -1,9 +1,10 @@
 """Rule-based analysis orchestration for sales activity emails."""
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Iterable, List, Optional, Tuple
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from app.config import AI_ENGINE
+from app.config import AI_ENGINE, TIMEZONE
 from app.schemas.models import AnalysisResultSchema, ScheduleSchema
 from app.schemas.request import ExistingScheduleInfo, HistoricalAnalysisInfo, MessageItem
 from app.schemas.response import ScheduleResponse
@@ -107,9 +108,10 @@ def analyze_schedule(
     message: str,
     messages: Optional[List[MessageItem]] = None,
     requester_name: Optional[str] = None,
+    reference_time: Optional[datetime] = None,
 ) -> ScheduleResponse:
     text = normalize(message)
-    date, time = extract_date_and_time(text)
+    date, time = extract_date_and_time(text, reference_time)
     attendees = select_participants(text, messages or [], requester_name)
 
     return ScheduleResponse(
@@ -127,12 +129,13 @@ async def analyze_message(
     existing_schedules: Optional[List[ExistingScheduleInfo]] = None,
     analysis_mode: Optional[str] = None,
     recent_sender_analyses: Optional[List[HistoricalAnalysisInfo]] = None,
+    reference_time: Optional[datetime] = None,
 ) -> AnalysisResultSchema:
-    raw_text = message or ""
+    """reference_time: 상대 날짜("다음 주 화요일")를 해석할 기준 시각. 보통 메일 발송 시각."""
     text = normalize(message)
     embedding_result = classify_with_embeddings(text)
     entity_result = extract_entities_with_gliner(text)
-    schedule_response = analyze_schedule(text, messages, requester_name)
+    schedule_response = analyze_schedule(text, messages, requester_name, reference_time)
     action_type, action_reason = classify_action_type(text)
     action_type, action_reason = apply_rule_action_corrections(action_type, action_reason, text)
     action_type, action_reason = merge_embedding_action(action_type, action_reason, embedding_result, text)
@@ -847,11 +850,32 @@ def extract_schedule_title(text: str) -> Optional[str]:
     return None
 
 
-def extract_date_and_time(text: str) -> Tuple[Optional[str], Optional[str]]:
-    return extract_date(text), extract_time(text)
+def extract_date_and_time(
+    text: str,
+    reference_time: Optional[datetime] = None,
+) -> Tuple[Optional[str], Optional[str]]:
+    return extract_date(text, reference_time), extract_time(text)
 
 
-def extract_date(text: str) -> Optional[str]:
+def resolve_reference_time(reference_time: Optional[datetime] = None) -> datetime:
+    """기준 시각을 서울 시간대의 naive datetime으로 맞춘다. 없으면 현재 시각."""
+    if reference_time is None:
+        return datetime.now()
+    if reference_time.tzinfo is not None:
+        return reference_time.astimezone(local_timezone()).replace(tzinfo=None)
+    return reference_time
+
+
+def local_timezone():
+    try:
+        return ZoneInfo(TIMEZONE)
+    except ZoneInfoNotFoundError:
+        # Windows에는 tzdata가 기본 포함되지 않는다. 한국은 서머타임이 없어 고정 오프셋으로 충분하다.
+        return timezone(timedelta(hours=9))
+
+
+def extract_date(text: str, reference_time: Optional[datetime] = None) -> Optional[str]:
+    base = resolve_reference_time(reference_time)
     iso = re.findall(r"(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})", text)
     if iso:
         year, month, day = iso[-1]
@@ -860,7 +884,7 @@ def extract_date(text: str) -> Optional[str]:
     korean = re.findall(r"(?:(\d{4})년\s*)?(\d{1,2})월\s*(\d{1,2})일", text)
     if korean:
         year, month, day = korean[-1]
-        return f"{int(year) if year else datetime.now().year}-{int(month):02d}-{int(day):02d}"
+        return f"{int(year) if year else base.year}-{int(month):02d}-{int(day):02d}"
 
     weekdays = {
         "월요일": 0,
@@ -874,7 +898,7 @@ def extract_date(text: str) -> Optional[str]:
     for prefix, offset in (("이번 주", 0), ("다음 주", 7)):
         for weekday, index in weekdays.items():
             if f"{prefix} {weekday}" in text:
-                return next_weekday(index, offset)
+                return next_weekday(index, offset, base)
 
     # 요일만 따로 언급된 경우("다음 주 미팅을 ... 화요일 오후 2시로"):
     # 본문에 '다음 주'가 있으면 다음 주로, 아니면 가장 가까운 다가오는 요일로 해석한다.
@@ -882,7 +906,7 @@ def extract_date(text: str) -> Optional[str]:
     week_offset = 7 if "다음 주" in text else 0
     for weekday, index in weekdays.items():
         if weekday in text and not re.search(r"(지난|저번|지지난)\s*" + weekday, text):
-            return next_weekday(index, week_offset)
+            return next_weekday(index, week_offset, base)
     return None
 
 
@@ -904,8 +928,8 @@ def extract_time(text: str) -> Optional[str]:
     return None
 
 
-def next_weekday(target_weekday: int, base_offset: int = 0) -> str:
-    today = datetime.now()
+def next_weekday(target_weekday: int, base_offset: int = 0, reference_time: Optional[datetime] = None) -> str:
+    today = resolve_reference_time(reference_time)
     days_ahead = target_weekday - today.weekday() + base_offset
     if days_ahead <= 0:
         days_ahead += 7
