@@ -67,7 +67,7 @@ public class SalesmapService {
 
         SalesmapApiRegisterResponse salesmapResult = salesmapClient.register(toSalesmapApiRegisterRequest(analysis));
 
-        analysis.markApproved();
+        analysisService.approve(analysis);
         Schedule approvedSchedule = analysisService.applyApprovedScheduleAction(analysis, authenticatedUserId);
         GoogleCalendarEventResponse calendarEvent = syncCalendarByAction(analysis, approvedSchedule, authenticatedUserId);
 

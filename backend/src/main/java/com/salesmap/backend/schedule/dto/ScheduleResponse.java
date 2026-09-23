@@ -1,6 +1,7 @@
 package com.salesmap.backend.schedule.dto;
 
 import com.salesmap.backend.schedule.entity.Schedule;
+import com.salesmap.backend.schedule.entity.ScheduleOutcome;
 import com.salesmap.backend.schedule.entity.ScheduleStatus;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,9 @@ public record ScheduleResponse(
         String googleCalendarEventId,
         ScheduleStatus status,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        ScheduleOutcome outcome,
+        LocalDateTime outcomeRecordedAt
 ) {
 
     public static ScheduleResponse from(Schedule schedule) {
@@ -39,7 +42,9 @@ public record ScheduleResponse(
                 schedule.getGoogleCalendarEventId(),
                 schedule.getStatus(),
                 schedule.getCreatedAt(),
-                schedule.getUpdatedAt()
+                schedule.getUpdatedAt(),
+                schedule.getOutcome(),
+                schedule.getOutcomeRecordedAt()
         );
     }
 }

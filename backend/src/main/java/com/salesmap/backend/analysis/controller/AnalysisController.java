@@ -3,6 +3,7 @@ package com.salesmap.backend.analysis.controller;
 import com.salesmap.backend.analysis.dto.AnalysisCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisGroupCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisResponse;
+import com.salesmap.backend.analysis.dto.AnalysisRevisionResponse;
 import com.salesmap.backend.analysis.dto.AnalysisUpdateRequest;
 import com.salesmap.backend.analysis.dto.ReplySendRequest;
 import com.salesmap.backend.analysis.dto.ReplySendResponse;
@@ -80,6 +81,22 @@ public class AnalysisController {
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         return ApiResponse.success("AI 분석 결과가 수정되었습니다.", analysisService.updateAnalysis(analysisId, request, principal.getUserId()));
+    }
+
+    @PostMapping("/{analysisId}/reject")
+    public ApiResponse<AnalysisResponse> rejectAnalysis(
+            @PathVariable Long analysisId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success("AI 분석 결과를 거절했습니다.", analysisService.rejectAnalysis(analysisId, principal.getUserId()));
+    }
+
+    @GetMapping("/{analysisId}/revisions")
+    public ApiResponse<List<AnalysisRevisionResponse>> getRevisions(
+            @PathVariable Long analysisId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success(analysisService.getRevisions(analysisId, principal.getUserId()));
     }
 
     @GetMapping("/source/{sourceId}")

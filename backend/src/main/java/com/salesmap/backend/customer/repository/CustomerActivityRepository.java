@@ -17,6 +17,9 @@ public interface CustomerActivityRepository extends JpaRepository<CustomerActivi
             where ca.customerContact.id = :customerContactId
               and ca.user.id = :userId
               and (a is null or a.businessType is null or a.businessType <> 'NON_BUSINESS')
+              and (a is null or a.status not in (
+                    com.salesmap.backend.analysis.entity.AnalysisStatus.REJECTED,
+                    com.salesmap.backend.analysis.entity.AnalysisStatus.DELETED))
             order by ca.occurredAt desc, ca.id desc
             """)
     List<CustomerActivity> findVisibleTimeline(
@@ -37,6 +40,9 @@ public interface CustomerActivityRepository extends JpaRepository<CustomerActivi
             where ca.customerContact.id = :customerContactId
               and ca.user.id = :userId
               and (a is null or a.businessType is null or a.businessType <> 'NON_BUSINESS')
+              and (a is null or a.status not in (
+                    com.salesmap.backend.analysis.entity.AnalysisStatus.REJECTED,
+                    com.salesmap.backend.analysis.entity.AnalysisStatus.DELETED))
             """)
     long countVisibleTimeline(
             @Param("customerContactId") Long customerContactId,

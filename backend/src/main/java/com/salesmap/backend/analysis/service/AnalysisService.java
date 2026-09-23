@@ -8,13 +8,21 @@ import com.salesmap.backend.ai.dto.AiReplyDraftRequest;
 import com.salesmap.backend.ai.dto.AiReplyDraftResponse;
 import com.salesmap.backend.analysis.dto.AnalysisCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisGroupCreateRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmap.backend.analysis.dto.AnalysisResponse;
+import com.salesmap.backend.analysis.dto.AnalysisRevisionResponse;
 import com.salesmap.backend.analysis.dto.AnalysisUpdateRequest;
 import com.salesmap.backend.analysis.dto.ReplySendRequest;
 import com.salesmap.backend.analysis.dto.ReplySendResponse;
 import com.salesmap.backend.analysis.entity.Analysis;
+import com.salesmap.backend.analysis.entity.AnalysisRevision;
 import com.salesmap.backend.analysis.entity.AnalysisStatus;
+import com.salesmap.backend.analysis.entity.ReplyDraft;
 import com.salesmap.backend.analysis.repository.AnalysisRepository;
+import com.salesmap.backend.analysis.repository.AnalysisRevisionRepository;
+import com.salesmap.backend.analysis.repository.ReplyDraftRepository;
 import com.salesmap.backend.customer.service.CustomerTimelineService;
 import com.salesmap.backend.gmail.service.GmailIntegrationService;
 import com.salesmap.backend.schedule.entity.Schedule;
@@ -36,7 +44,10 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,31 +56,41 @@ public class AnalysisService {
 
     private static final Logger log = LoggerFactory.getLogger(AnalysisService.class);
     private static final Pattern ISO_LOCAL_DATE_TIME_PATTERN = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(?::\\d{2})?");
+    private static final Set<String> BUSINESS_TYPES = Set.of("SALES_ACTIVITY", "NON_BUSINESS", "UNKNOWN");
 
     private final AnalysisRepository analysisRepository;
+    private final AnalysisRevisionRepository analysisRevisionRepository;
+    private final ReplyDraftRepository replyDraftRepository;
     private final SourceRepository sourceRepository;
     private final SourceGroupRepository sourceGroupRepository;
     private final ScheduleRepository scheduleRepository;
     private final AiClient aiClient;
     private final CustomerTimelineService customerTimelineService;
     private final GmailIntegrationService gmailIntegrationService;
+    private final ObjectMapper objectMapper;
 
     public AnalysisService(
             AnalysisRepository analysisRepository,
+            AnalysisRevisionRepository analysisRevisionRepository,
+            ReplyDraftRepository replyDraftRepository,
             SourceRepository sourceRepository,
             SourceGroupRepository sourceGroupRepository,
             ScheduleRepository scheduleRepository,
             AiClient aiClient,
             CustomerTimelineService customerTimelineService,
-            GmailIntegrationService gmailIntegrationService
+            GmailIntegrationService gmailIntegrationService,
+            ObjectMapper objectMapper
     ) {
         this.analysisRepository = analysisRepository;
+        this.analysisRevisionRepository = analysisRevisionRepository;
+        this.replyDraftRepository = replyDraftRepository;
         this.sourceRepository = sourceRepository;
         this.sourceGroupRepository = sourceGroupRepository;
         this.scheduleRepository = scheduleRepository;
         this.aiClient = aiClient;
         this.customerTimelineService = customerTimelineService;
         this.gmailIntegrationService = gmailIntegrationService;
+        this.objectMapper = objectMapper;
     }
 
     @Transactional
@@ -120,14 +141,14 @@ public class AnalysisService {
         return AnalysisResponse.from(analysis);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public AiReplyDraftResponse generateReplyDraft(Long analysisId, Long authenticatedUserId) {
         Analysis analysis = analysisRepository.findById(analysisId)
                 .orElseThrow(() -> new NoSuchElementException("Analysis not found."));
         validateAnalysisOwnership(analysis, authenticatedUserId);
 
         Source source = analysis.getSource();
-        return aiClient.generateReplyDraft(new AiReplyDraftRequest(
+        AiReplyDraftResponse draft = aiClient.generateReplyDraft(new AiReplyDraftRequest(
                 source.getTitle(),
                 source.getContent(),
                 source.getSenderEmail(),
@@ -140,6 +161,10 @@ public class AnalysisService {
                 analysis.getSummary(),
                 analysis.getFollowUpAction()
         ));
+
+        // AI 초안을 보관해 두고, 실제 전송 시 보낸 본문과 짝지어 비교할 수 있게 한다.
+        replyDraftRepository.save(new ReplyDraft(analysis, draft.subject(), draft.body(), draft.generatedBy()));
+        return draft;
     }
 
     @Transactional
@@ -159,6 +184,11 @@ public class AnalysisService {
         String threadId = source.getSourceGroup() == null ? null : source.getSourceGroup().getExternalGroupId();
 
         String messageId = gmailIntegrationService.sendReplyEmail(authenticatedUserId, recipient, subject, body, threadId);
+
+        // 가장 최근의 미전송 AI 초안에 실제 보낸 내용을 기록한다. 초안 없이 직접 쓴 답장이면 발송본만 남긴다.
+        ReplyDraft replyDraft = replyDraftRepository.findFirstByAnalysisIdAndSentAtIsNullOrderByIdDesc(analysisId)
+                .orElseGet(() -> replyDraftRepository.save(new ReplyDraft(analysis, null, null, "manual")));
+        replyDraft.markSent(subject, body);
 
         // 보낸 답장을 고객 타임라인에 소통 이벤트로 남긴다(분석 대상은 아니지만 대화 흐름엔 포함).
         customerTimelineService.recordReplySent(analysis, subject, body);
@@ -180,7 +210,12 @@ public class AnalysisService {
         Analysis analysis = analysisRepository.findById(analysisId)
                 .orElseThrow(() -> new NoSuchElementException("Analysis not found."));
         validateAnalysisOwnership(analysis, authenticatedUserId);
+        String businessType = request.businessType();
+        if (businessType != null && !businessType.isBlank() && !BUSINESS_TYPES.contains(businessType)) {
+            throw new IllegalArgumentException("businessType은 SALES_ACTIVITY, NON_BUSINESS, UNKNOWN 중 하나여야 합니다.");
+        }
 
+        Map<String, String> before = AnalysisEditableFields.valuesOf(analysis);
         analysis.updateEditableFields(
                 truncate(request.customerName(), 255),
                 truncate(request.contactName(), 100),
@@ -192,11 +227,82 @@ public class AnalysisService {
                 truncate(request.actionReason(), 2000),
                 truncate(request.scheduleText(), 2000),
                 truncate(request.followUpAction(), 2000),
-                truncate(request.summary(), 4000)
+                truncate(request.summary(), 4000),
+                businessType
         );
+        recordRevisions(analysis, before, AnalysisEditableFields.valuesOf(analysis));
         customerTimelineService.recordAnalysis(analysis);
 
         return AnalysisResponse.from(analysis);
+    }
+
+    /** 승인 처리. 한 번도 수정하지 않았으면 AI 결과가 그대로 정답이었다는 기록을 남긴다. */
+    @Transactional
+    public void approve(Analysis analysis) {
+        analysis.markApproved(!analysisRevisionRepository.existsByAnalysisId(analysis.getId()));
+    }
+
+    @Transactional
+    public AnalysisResponse rejectAnalysis(Long analysisId, Long authenticatedUserId) {
+        Analysis analysis = analysisRepository.findById(analysisId)
+                .orElseThrow(() -> new NoSuchElementException("Analysis not found."));
+        validateAnalysisOwnership(analysis, authenticatedUserId);
+        if (analysis.getStatus() == AnalysisStatus.APPROVED) {
+            throw new IllegalArgumentException("이미 등록(승인)된 분석은 거절할 수 없습니다.");
+        }
+
+        analysis.markRejected();
+        return AnalysisResponse.from(analysis);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AnalysisRevisionResponse> getRevisions(Long analysisId, Long authenticatedUserId) {
+        Analysis analysis = analysisRepository.findById(analysisId)
+                .orElseThrow(() -> new NoSuchElementException("Analysis not found."));
+        validateAnalysisOwnership(analysis, authenticatedUserId);
+
+        return analysisRevisionRepository.findByAnalysisIdOrderByIdAsc(analysisId).stream()
+                .map(AnalysisRevisionResponse::from)
+                .toList();
+    }
+
+    private void recordRevisions(Analysis analysis, Map<String, String> before, Map<String, String> after) {
+        Map<String, String> aiValues = readAiSnapshot(analysis);
+        after.forEach((field, userValue) -> {
+            String previousValue = before.get(field);
+            if (Objects.equals(previousValue, userValue)) {
+                return;
+            }
+            analysisRevisionRepository.save(new AnalysisRevision(
+                    analysis,
+                    field,
+                    aiValues.get(field),
+                    previousValue,
+                    userValue
+            ));
+        });
+    }
+
+    private Map<String, String> readAiSnapshot(Analysis analysis) {
+        if (analysis.getAiSnapshot() == null || analysis.getAiSnapshot().isBlank()) {
+            return Map.of();
+        }
+        try {
+            return objectMapper.readValue(analysis.getAiSnapshot(), new TypeReference<Map<String, String>>() {
+            });
+        } catch (JsonProcessingException exception) {
+            log.warn("Failed to read AI snapshot. analysisId={}", analysis.getId());
+            return Map.of();
+        }
+    }
+
+    private String writeAiSnapshot(Analysis analysis) {
+        try {
+            return objectMapper.writeValueAsString(AnalysisEditableFields.valuesOf(analysis));
+        } catch (JsonProcessingException exception) {
+            log.warn("Failed to write AI snapshot. sourceId={}", analysis.getSource().getId());
+            return null;
+        }
     }
 
     @Transactional
@@ -228,7 +334,7 @@ public class AnalysisService {
     }
 
     private Analysis createAnalysisEntity(Source source, AiAnalysisResponse aiResult) {
-        return new Analysis(
+        Analysis analysis = new Analysis(
                 source,
                 truncate(aiResult.customerName(), 255),
                 truncate(aiResult.contactName(), 100),
@@ -249,6 +355,13 @@ public class AnalysisService {
                 LocalDateTime.now(),
                 null
         );
+        analysis.recordAiOrigin(
+                writeAiSnapshot(analysis),
+                truncate(aiResult.llmProvider(), 50),
+                truncate(aiResult.llmModel(), 100),
+                truncate(aiResult.llmFallbackReason(), 1000)
+        );
+        return analysis;
     }
 
     private String normalizeActionType(AiAnalysisResponse aiResult) {
@@ -438,6 +551,9 @@ public class AnalysisService {
                 analysis.getFollowUpAction(),
                 null,
                 analysis.getSummary(),
+                null,
+                null,
+                null,
                 null
         );
     }

@@ -6,6 +6,8 @@ import com.salesmap.backend.ai.dto.AiAnalysisResponse;
 import com.salesmap.backend.ai.dto.AiGroupAnalysisRequest;
 import com.salesmap.backend.ai.dto.AiReplyDraftRequest;
 import com.salesmap.backend.ai.dto.AiReplyDraftResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +15,14 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "ai.module.mode", havingValue = "mock", matchIfMissing = true)
 public class MockAiClient implements AiClient {
 
+    private static final Logger log = LoggerFactory.getLogger(MockAiClient.class);
+
     private final AiModuleProperties aiModuleProperties;
 
     public MockAiClient(AiModuleProperties aiModuleProperties) {
         this.aiModuleProperties = aiModuleProperties;
+        log.warn("[AI_MODULE] ai.module.mode=mock — AI 모듈을 호출하지 않고 고정된 가짜 분석 결과를 반환합니다. "
+                + "실제 분석을 쓰려면 AI_MODULE_MODE=http 로 실행하세요.");
     }
 
     @Override
@@ -67,7 +73,10 @@ public class MockAiClient implements AiClient {
                 "견적서 발송",
                 "예산 검토 및 도입 일정 확인 필요",
                 "고객이 제품 도입을 검토 중이며 후속 미팅이 필요합니다.",
-                0.95
+                0.95,
+                "mock",
+                null,
+                "ai.module.mode=mock: AI 모듈을 호출하지 않은 고정 응답입니다."
         );
     }
 

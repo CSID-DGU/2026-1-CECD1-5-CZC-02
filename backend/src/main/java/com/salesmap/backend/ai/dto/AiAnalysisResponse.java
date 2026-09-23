@@ -20,6 +20,10 @@ public record AiAnalysisResponse(
         String todoContent,
         String keyIssues,
         String summary,
-        Double confidenceScore
+        Double confidenceScore,
+        // 의미 필드를 보정한 엔진 (rule / ollama / openai / mock)
+        String llmProvider,
+        String llmModel,
+        String llmFallbackReason
 ) {
 }

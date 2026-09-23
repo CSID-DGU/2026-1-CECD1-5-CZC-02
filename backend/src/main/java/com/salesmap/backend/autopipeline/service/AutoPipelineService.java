@@ -12,15 +12,21 @@ import com.salesmap.backend.integration.repository.IntegrationRepository;
 import com.salesmap.backend.source.entity.Source;
 import com.salesmap.backend.source.entity.SourceDirection;
 import com.salesmap.backend.source.repository.SourceRepository;
+import com.salesmap.backend.user.entity.User;
+import com.salesmap.backend.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,7 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 사용자가 켜두면 서버가 주기적으로 (1) Gmail 새 메일을 증분 수집하고 (2) 아직 분석되지 않은 메일을
  * AI로 자동 분석해 "승인 대기" 상태로 쌓아둔다. 담당자는 웹에서 결과를 확인하고 승인(등록)만 하면 된다.
  * <p>
- * on/off 상태는 데모 편의를 위해 인메모리로만 관리한다(서버 재시작 시 초기화).
+ * on/off 상태는 users.auto_pipeline_enabled에 저장하고, 서버 기동 시 다시 읽어 메모리에 올린다.
  * 로컬 LLM은 건당 수십 초가 걸리므로 한 틱에 처리하는 건수를 제한해 CPU를 보호한다.
  */
 @Service
@@ -52,33 +58,53 @@ public class AutoPipelineService {
     private final SourceRepository sourceRepository;
     private final AnalysisRepository analysisRepository;
     private final AnalysisService analysisService;
+    private final UserRepository userRepository;
 
     public AutoPipelineService(
             GmailIntegrationService gmailIntegrationService,
             IntegrationRepository integrationRepository,
             SourceRepository sourceRepository,
             AnalysisRepository analysisRepository,
-            AnalysisService analysisService
+            AnalysisService analysisService,
+            UserRepository userRepository
     ) {
         this.gmailIntegrationService = gmailIntegrationService;
         this.integrationRepository = integrationRepository;
         this.sourceRepository = sourceRepository;
         this.analysisRepository = analysisRepository;
         this.analysisService = analysisService;
+        this.userRepository = userRepository;
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void restoreEnabledUsers() {
+        userRepository.findByAutoPipelineEnabledTrue()
+                .forEach(user -> enabledUserIds.add(user.getId()));
+        log.info("[AUTO_PIPELINE] restored enabled users={}", enabledUserIds);
     }
 
     public boolean isEnabled(Long userId) {
         return enabledUserIds.contains(userId);
     }
 
+    @Transactional
     public void enable(Long userId) {
+        saveEnabled(userId, true);
         enabledUserIds.add(userId);
         log.info("[AUTO_PIPELINE] enabled for userId={}", userId);
     }
 
+    @Transactional
     public void disable(Long userId) {
+        saveEnabled(userId, false);
         enabledUserIds.remove(userId);
         log.info("[AUTO_PIPELINE] disabled for userId={}", userId);
+    }
+
+    private void saveEnabled(Long userId, boolean enabled) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
+        user.changeAutoPipelineEnabled(enabled);
     }
 
     @Scheduled(fixedDelayString = "${auto.pipeline.interval-ms:45000}", initialDelay = 15000)

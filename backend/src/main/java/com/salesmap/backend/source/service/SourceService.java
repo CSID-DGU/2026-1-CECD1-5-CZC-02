@@ -5,6 +5,7 @@ import com.salesmap.backend.integration.repository.IntegrationRepository;
 import com.salesmap.backend.source.dto.SourceCreateRequest;
 import com.salesmap.backend.source.dto.SourceResponse;
 import com.salesmap.backend.source.entity.Source;
+import com.salesmap.backend.source.entity.SourceDirection;
 import com.salesmap.backend.source.entity.SourceStatus;
 import com.salesmap.backend.source.entity.SourceType;
 import com.salesmap.backend.source.repository.SourceRepository;
@@ -49,16 +50,35 @@ public class SourceService {
 
         SourceStatus status = isCollectedSource(request, externalSourceId) ? SourceStatus.COLLECTED : SourceStatus.CREATED;
 
-        Source source = new Source(
-                user,
-                integration,
-                sourceType,
-                externalSourceId,
-                request.title(),
-                request.content(),
-                status,
-                request.collectedAt()
-        );
+        boolean hasSender = request.senderEmail() != null && !request.senderEmail().isBlank();
+        Source source = hasSender
+                ? new Source(
+                        user,
+                        integration,
+                        null,
+                        sourceType,
+                        externalSourceId,
+                        request.title(),
+                        request.content(),
+                        status,
+                        request.collectedAt(),
+                        SourceDirection.RECEIVED,
+                        request.senderName(),
+                        request.senderEmail().trim(),
+                        user.getName(),
+                        user.getEmail(),
+                        request.sentAt()
+                )
+                : new Source(
+                        user,
+                        integration,
+                        sourceType,
+                        externalSourceId,
+                        request.title(),
+                        request.content(),
+                        status,
+                        request.collectedAt()
+                );
 
         return SourceResponse.from(sourceRepository.save(source));
     }

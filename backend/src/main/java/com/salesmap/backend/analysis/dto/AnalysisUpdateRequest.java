@@ -11,6 +11,8 @@ public record AnalysisUpdateRequest(
         String actionReason,
         String scheduleText,
         String followUpAction,
-        String summary
+        String summary,
+        // SALES_ACTIVITY / NON_BUSINESS / UNKNOWN. 없으면 기존 값 유지
+        String businessType
 ) {
 }

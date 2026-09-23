@@ -8,6 +8,9 @@ import com.salesmap.backend.customer.dto.CustomerSummaryResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.salesmap.backend.global.util.BusinessDayCalculator;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,7 +27,8 @@ import java.util.Map;
 @Service
 public class PipelineService {
 
-    private static final int STALE_DAYS = 3;
+    // 주말·공휴일을 뺀 영업일 기준. 금요일 메일은 다음 주 수요일에 무응답으로 본다.
+    private static final int STALE_BUSINESS_DAYS = 3;
 
     private final CustomerTimelineService customerTimelineService;
     private final AnalysisRepository analysisRepository;
@@ -64,7 +68,7 @@ public class PipelineService {
         // findByUserId는 id 내림차순(최신 우선)으로 반환한다. 그 순서를 그대로 유지한다.
         Map<String, List<Analysis>> grouped = new LinkedHashMap<>();
         for (Analysis analysis : analysisRepository.findByUserId(userId)) {
-            if (analysis.getStatus() == AnalysisStatus.DELETED) {
+            if (analysis.getStatus() == AnalysisStatus.DELETED || analysis.getStatus() == AnalysisStatus.REJECTED) {
                 continue;
             }
             if ("NON_BUSINESS".equals(analysis.getBusinessType())) {
@@ -125,7 +129,7 @@ public class PipelineService {
             return aiFollowUp.trim();
         }
         if (stale && (stage == Stage.LEAD || stage == Stage.MEETING || stage == Stage.ADJUSTING)) {
-            return "응답이 " + STALE_DAYS + "일 이상 없어요. 진행 상황을 확인하는 팔로업 메일을 보내세요.";
+            return "응답이 " + STALE_BUSINESS_DAYS + "영업일 이상 없어요. 진행 상황을 확인하는 팔로업 메일을 보내세요.";
         }
         return stage.defaultNextAction;
     }
@@ -137,7 +141,7 @@ public class PipelineService {
         if (stage == Stage.CONFIRMED || stage == Stage.CANCELED) {
             return false;
         }
-        return lastActivityAt.isBefore(LocalDateTime.now().minusDays(STALE_DAYS));
+        return BusinessDayCalculator.businessDaysBetween(lastActivityAt.toLocalDate(), LocalDate.now()) >= STALE_BUSINESS_DAYS;
     }
 
     private String firstNonBlank(List<Analysis> analyses, java.util.function.Function<Analysis, String> getter) {

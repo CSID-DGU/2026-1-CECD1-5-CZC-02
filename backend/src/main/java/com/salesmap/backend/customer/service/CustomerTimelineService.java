@@ -218,10 +218,7 @@ public class CustomerTimelineService {
             return null;
         }
 
-        String contactName = normalizeDemoContactName(
-                customerName,
-                firstNotBlankOrNull(analysis.getContactName(), source.getSenderName())
-        );
+        String contactName = firstNotBlankOrNull(analysis.getContactName(), source.getSenderName());
         LocalDateTime lastSeenAt = firstNotNull(source.getSentAt(), source.getCollectedAt(), LocalDateTime.now());
 
         if (existing != null) {
@@ -323,16 +320,6 @@ public class CustomerTimelineService {
             }
         }
         return null;
-    }
-
-    private String normalizeDemoContactName(String customerName, String contactName) {
-        if ("GreenSoft".equals(customerName)) {
-            return "박서준";
-        }
-        if ("Delta Systems".equals(customerName)) {
-            return "최유진";
-        }
-        return contactName;
     }
 
     @SafeVarargs
