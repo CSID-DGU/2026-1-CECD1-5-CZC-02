@@ -170,14 +170,6 @@ def extract_contact_label(request: ReplyDraftRequest) -> str:
         return f"{strip_company_prefix(contact)}님"
 
     customer = clean_text(request.customerName)
-    if customer == "GreenSoft":
-        return "박서준님"
-    if customer == "Delta Systems":
-        return "최유진님"
-    if customer == "Nimbus Tech":
-        return "김도윤님"
-    if customer == "ABC 고객사":
-        return "김민수님"
     if customer:
         return f"{customer} 담당자님"
 
@@ -246,7 +238,7 @@ def combined_text(request: ReplyDraftRequest) -> str:
 
 def is_low_quality_draft(subject: str, body: str) -> bool:
     text = f"{subject} {body}"
-    bad_markers = ("meeting", "??", "컴퓨터·AI학부님", "기존과 동일합니다", "조현우님")
+    bad_markers = ("meeting", "??", "기존과 동일합니다")
     if any(marker in text for marker in bad_markers):
         return True
     # 로컬 모델이 간혹 중국어(한자)로 새는 경우를 차단하고 한국어 템플릿으로 폴백한다.

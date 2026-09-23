@@ -640,166 +640,6 @@ def merge_embedding_business(
     return rule_business_type, rule_business_score, rule_business_reason
 
 
-def apply_reschedule_request_guard(
-    action_type: str,
-    action_reason: str,
-    text: str,
-) -> Tuple[str, str]:
-    """Correct cases like 'previously canceled meeting, please schedule again'."""
-    if looks_like_new_request_after_past_cancel(text):
-        return (
-            "CREATE",
-            "이전 취소 이력은 과거 맥락이며, 다시 진행/재요청 표현이 있어 일정 생성으로 판단했습니다.",
-        )
-
-    return action_type, action_reason
-
-
-def apply_final_safety_guards(
-    result: AnalysisResultSchema,
-    text: str,
-) -> AnalysisResultSchema:
-    if is_strong_non_business_email(text):
-        return copy_analysis_result(
-            result,
-            summary="영업 활동과 관련 없는 일반 메일",
-            customer_name=None,
-            contact_person="GreenSoft \ubc15\uc11c\uc900",
-            product_name=None,
-            attendees=[],
-            amount=None,
-            activity_type="EMAIL",
-            action_type="UNKNOWN",
-            target_schedule_id=None,
-            target_schedule_title=None,
-            action_reason="영업 고객사/제품/일정 요청과 관련 없는 안내성 메일로 판단했습니다.",
-            business_type="NON_BUSINESS",
-            business_relevance_score=0.05,
-            business_reason="학교 행사, 택배, 개인 알림, 프로모션 등 영업 활동과 무관한 표현이 포함되어 있습니다.",
-            todo_required=False,
-            todo_content="등록 대상이 아닌 메일입니다.",
-            schedule=None,
-            confidence=max(result.confidence, 0.95),
-        )
-
-    if looks_like_new_request_after_past_cancel(text):
-        return copy_analysis_result(
-            result,
-            action_type="CREATE",
-            target_schedule_id=None,
-            target_schedule_title=None,
-            action_reason="이전 취소 이력은 과거 맥락이며, 다시 진행/재요청 표현이 있어 일정 생성으로 판단했습니다.",
-            todo_required=result.schedule is not None,
-            todo_content="미팅 일정 등록 및 미팅 준비",
-            confidence=max(result.confidence, 0.92),
-        )
-
-    if result.action_type in {"CANCEL", "CONFIRM"} and is_weak_embedding_only_action(text):
-        return copy_analysis_result(
-            result,
-            action_type="UNKNOWN",
-            target_schedule_id=None,
-            target_schedule_title=None,
-            action_reason="명확한 일정 취소/확정 요청 표현이 없어 확인 필요로 보정했습니다.",
-            todo_required=False,
-            schedule=None,
-            confidence=max(result.confidence, 0.88),
-        )
-
-    return result
-
-
-def looks_like_new_request_after_past_cancel(text: str) -> bool:
-    past_cancel_markers = (
-        "취소했던",
-        "취소했었던",
-        "지난번 취소",
-        "이전에 취소",
-        "취소된",
-    )
-    new_request_markers = (
-        "다시 진행",
-        "다시 일정",
-        "재요청",
-        "다시 요청",
-        "가능하실까요",
-        "진행하고 싶습니다",
-        "미팅 가능",
-    )
-
-    return any(marker in text for marker in past_cancel_markers) and any(
-        marker in text for marker in new_request_markers
-    )
-
-
-def is_weak_embedding_only_action(text: str) -> bool:
-    strong_cancel_markers = (
-        "취소 부탁",
-        "취소 요청",
-        "취소해야",
-        "취소합니다",
-        "진행하지 않겠습니다",
-        "진행하지 않습니다",
-        "미팅 취소",
-        "일정 취소",
-    )
-    strong_confirm_markers = (
-        "확정합니다",
-        "그대로 진행",
-        "예정대로 진행",
-        "참석 가능합니다",
-        "일정으로 진행하겠습니다",
-    )
-
-    return not any(marker in text for marker in strong_cancel_markers + strong_confirm_markers)
-
-
-def is_strong_non_business_email(text: str) -> bool:
-    lowered = text.lower()
-    non_business_markers = (
-        "동아리",
-        "학교 행사",
-        "교내 행사",
-        "강의실",
-        "학교 포털",
-        "학생",
-        "택배",
-        "배송 완료",
-        "배송 내역",
-        "택배사",
-        "주문하신 상품",
-        "뉴스레터",
-        "구독",
-        "무료 이용",
-        "요금제",
-        "업그레이드",
-        "프로모션",
-        "할인",
-        "광고",
-        "facebook",
-        "youtube",
-        "gamma imagine",
-    )
-    business_markers = (
-        "고객사",
-        "도입",
-        "견적",
-        "계약",
-        "제품 소개",
-        "상담 미팅",
-        "데모",
-        "crm",
-        "sales analytics",
-        "sales platform",
-        "automation",
-    )
-
-    if any(marker in lowered for marker in non_business_markers):
-        return not any(marker in lowered for marker in business_markers)
-
-    return False
-
-
 def classify_business_email(
     text: str,
     messages: List[MessageItem],
@@ -1232,7 +1072,7 @@ def is_valid_customer(value: str) -> bool:
 def is_valid_product(value: str) -> bool:
     if not value or len(value) < 2:
         return False
-    blocked = {"제품", "고객", "신규 고객", "안녕하세요", "Delta Systems 최유진입니다"}
+    blocked = {"제품", "고객", "신규 고객", "안녕하세요"}
     return value not in blocked
 
 
@@ -1271,8 +1111,7 @@ def dedupe(values: Iterable[str]) -> List[str]:
     return result
 
 
-# Encoding-safe final guards. These duplicate names intentionally override the
-# earlier definitions that may contain mojibake literals on Windows checkouts.
+# 액션 판정 최종 보정 가드
 def apply_reschedule_request_guard(
     action_type: str,
     action_reason: str,
@@ -1281,7 +1120,7 @@ def apply_reschedule_request_guard(
     if looks_like_new_request_after_past_cancel(text):
         return (
             "CREATE",
-            "\uc774\uc804 \ucde8\uc18c \uc774\ub825\uc740 \uacfc\uac70 \ub9e5\ub77d\uc774\uba70, \ub2e4\uc2dc \uc9c4\ud589/\uc7ac\uc694\uccad \ud45c\ud604\uc774 \uc788\uc5b4 \uc77c\uc815 \uc0dd\uc131\uc73c\ub85c \ud310\ub2e8\ud588\uc2b5\ub2c8\ub2e4.",
+            "이전 취소 이력은 과거 맥락이며, 다시 진행/재요청 표현이 있어 일정 생성으로 판단했습니다.",
         )
 
     return action_type, action_reason
@@ -1294,7 +1133,7 @@ def apply_final_safety_guards(
     if is_strong_non_business_email(text):
         return copy_analysis_result(
             result,
-            summary="\uc601\uc5c5 \ud65c\ub3d9\uacfc \uad00\ub828 \uc5c6\ub294 \uc77c\ubc18 \uba54\uc77c",
+            summary="영업 활동과 관련 없는 일반 메일",
             customer_name=None,
             contact_person=None,
             product_name=None,
@@ -1304,12 +1143,12 @@ def apply_final_safety_guards(
             action_type="UNKNOWN",
             target_schedule_id=None,
             target_schedule_title=None,
-            action_reason="\uc601\uc5c5 \uace0\uac1d\uc0ac/\uc81c\ud488/\uc77c\uc815 \uc694\uccad\uacfc \uad00\ub828 \uc5c6\ub294 \uc548\ub0b4\uc131 \uba54\uc77c\ub85c \ud310\ub2e8\ud588\uc2b5\ub2c8\ub2e4.",
+            action_reason="영업 고객사/제품/일정 요청과 관련 없는 안내성 메일로 판단했습니다.",
             business_type="NON_BUSINESS",
             business_relevance_score=0.05,
-            business_reason="\ud559\uad50 \ud589\uc0ac, \ud0dd\ubc30, \uac1c\uc778 \uc54c\ub9bc, \ud504\ub85c\ubaa8\uc158 \ub4f1 \uc601\uc5c5 \ud65c\ub3d9\uacfc \ubb34\uad00\ud55c \ud45c\ud604\uc774 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.",
+            business_reason="학교 행사, 택배, 개인 알림, 프로모션 등 영업 활동과 무관한 표현이 포함되어 있습니다.",
             todo_required=False,
-            todo_content="\ub4f1\ub85d \ub300\uc0c1\uc774 \uc544\ub2cc \uba54\uc77c\uc785\ub2c8\ub2e4.",
+            todo_content="등록 대상이 아닌 메일입니다.",
             schedule=None,
             confidence=max(result.confidence, 0.95),
         )
@@ -1320,9 +1159,9 @@ def apply_final_safety_guards(
             action_type="CREATE",
             target_schedule_id=None,
             target_schedule_title=None,
-            action_reason="\uc774\uc804 \ucde8\uc18c \uc774\ub825\uc740 \uacfc\uac70 \ub9e5\ub77d\uc774\uba70, \ub2e4\uc2dc \uc9c4\ud589/\uc7ac\uc694\uccad \ud45c\ud604\uc774 \uc788\uc5b4 \uc77c\uc815 \uc0dd\uc131\uc73c\ub85c \ud310\ub2e8\ud588\uc2b5\ub2c8\ub2e4.",
+            action_reason="이전 취소 이력은 과거 맥락이며, 다시 진행/재요청 표현이 있어 일정 생성으로 판단했습니다.",
             todo_required=result.schedule is not None,
-            todo_content="\ubbf8\ud305 \uc77c\uc815 \ub4f1\ub85d \ubc0f \ubbf8\ud305 \uc900\ube44",
+            todo_content="미팅 일정 등록 및 미팅 준비",
             confidence=max(result.confidence, 0.92),
         )
 
@@ -1332,7 +1171,7 @@ def apply_final_safety_guards(
             action_type="UNKNOWN",
             target_schedule_id=None,
             target_schedule_title=None,
-            action_reason="\uba85\ud655\ud55c \uc77c\uc815 \ucde8\uc18c/\ud655\uc815 \uc694\uccad \ud45c\ud604\uc774 \uc5c6\uc5b4 \ud655\uc778 \ud544\uc694\ub85c \ubcf4\uc815\ud588\uc2b5\ub2c8\ub2e4.",
+            action_reason="명확한 일정 취소/확정 요청 표현이 없어 확인 필요로 보정했습니다.",
             todo_required=False,
             schedule=None,
             confidence=max(result.confidence, 0.88),
@@ -1343,20 +1182,20 @@ def apply_final_safety_guards(
 
 def looks_like_new_request_after_past_cancel(text: str) -> bool:
     past_cancel_markers = (
-        "\ucde8\uc18c\ud588\ub358",
-        "\ucde8\uc18c\ud588\uc5c8\ub358",
-        "\uc9c0\ub09c\ubc88 \ucde8\uc18c",
-        "\uc774\uc804\uc5d0 \ucde8\uc18c",
-        "\ucde8\uc18c\ub41c",
+        "취소했던",
+        "취소했었던",
+        "지난번 취소",
+        "이전에 취소",
+        "취소된",
     )
     new_request_markers = (
-        "\ub2e4\uc2dc \uc9c4\ud589",
-        "\ub2e4\uc2dc \uc77c\uc815",
-        "\uc7ac\uc694\uccad",
-        "\ub2e4\uc2dc \uc694\uccad",
-        "\uac00\ub2a5\ud558\uc2e4\uae4c\uc694",
-        "\uc9c4\ud589\ud558\uace0 \uc2f6\uc2b5\ub2c8\ub2e4",
-        "\ubbf8\ud305 \uac00\ub2a5",
+        "다시 진행",
+        "다시 일정",
+        "재요청",
+        "다시 요청",
+        "가능하실까요",
+        "진행하고 싶습니다",
+        "미팅 가능",
     )
 
     return any(marker in text for marker in past_cancel_markers) and any(
@@ -1366,21 +1205,21 @@ def looks_like_new_request_after_past_cancel(text: str) -> bool:
 
 def is_weak_embedding_only_action(text: str) -> bool:
     strong_cancel_markers = (
-        "\ucde8\uc18c \ubd80\ud0c1",
-        "\ucde8\uc18c \uc694\uccad",
-        "\ucde8\uc18c\ud574\uc57c",
-        "\ucde8\uc18c\ud569\ub2c8\ub2e4",
-        "\uc9c4\ud589\ud558\uc9c0 \uc54a\uaca0\uc2b5\ub2c8\ub2e4",
-        "\uc9c4\ud589\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4",
-        "\ubbf8\ud305 \ucde8\uc18c",
-        "\uc77c\uc815 \ucde8\uc18c",
+        "취소 부탁",
+        "취소 요청",
+        "취소해야",
+        "취소합니다",
+        "진행하지 않겠습니다",
+        "진행하지 않습니다",
+        "미팅 취소",
+        "일정 취소",
     )
     strong_confirm_markers = (
-        "\ud655\uc815\ud569\ub2c8\ub2e4",
-        "\uadf8\ub300\ub85c \uc9c4\ud589",
-        "\uc608\uc815\ub300\ub85c \uc9c4\ud589",
-        "\ucc38\uc11d \uac00\ub2a5\ud569\ub2c8\ub2e4",
-        "\uc77c\uc815\uc73c\ub85c \uc9c4\ud589\ud558\uaca0\uc2b5\ub2c8\ub2e4",
+        "확정합니다",
+        "그대로 진행",
+        "예정대로 진행",
+        "참석 가능합니다",
+        "일정으로 진행하겠습니다",
     )
 
     return not any(marker in text for marker in strong_cancel_markers + strong_confirm_markers)
@@ -1389,37 +1228,36 @@ def is_weak_embedding_only_action(text: str) -> bool:
 def is_strong_non_business_email(text: str) -> bool:
     lowered = text.lower()
     non_business_markers = (
-        "\ub3d9\uc544\ub9ac",
-        "\ud559\uad50 \ud589\uc0ac",
-        "\uad50\ub0b4 \ud589\uc0ac",
-        "\uac15\uc758\uc2e4",
-        "\ud559\uad50 \ud3ec\ud138",
-        "\ud559\uc0dd",
-        "\ud0dd\ubc30",
-        "\ubc30\uc1a1 \uc644\ub8cc",
-        "\ubc30\uc1a1 \ub0b4\uc5ed",
-        "\ud0dd\ubc30\uc0ac",
-        "\uc8fc\ubb38\ud558\uc2e0 \uc0c1\ud488",
-        "\ub274\uc2a4\ub808\ud130",
-        "\uad6c\ub3c5",
-        "\ubb34\ub8cc \uc774\uc6a9",
-        "\uc694\uae08\uc81c",
-        "\uc5c5\uadf8\ub808\uc774\ub4dc",
-        "\ud504\ub85c\ubaa8\uc158",
-        "\ud560\uc778",
-        "\uad11\uace0",
+        "동아리",
+        "학교 행사",
+        "교내 행사",
+        "강의실",
+        "학교 포털",
+        "학생",
+        "택배",
+        "배송 완료",
+        "배송 내역",
+        "택배사",
+        "주문하신 상품",
+        "뉴스레터",
+        "구독",
+        "무료 이용",
+        "요금제",
+        "업그레이드",
+        "프로모션",
+        "할인",
+        "광고",
         "facebook",
         "youtube",
-        "gamma imagine",
     )
     business_markers = (
-        "\uace0\uac1d\uc0ac",
-        "\ub3c4\uc785",
-        "\uacac\uc801",
-        "\uacc4\uc57d",
-        "\uc81c\ud488 \uc18c\uac1c",
-        "\uc0c1\ub2f4 \ubbf8\ud305",
-        "\ub370\ubaa8",
+        "고객사",
+        "도입",
+        "견적",
+        "계약",
+        "제품 소개",
+        "상담 미팅",
+        "데모",
         "crm",
         "sales analytics",
         "sales platform",

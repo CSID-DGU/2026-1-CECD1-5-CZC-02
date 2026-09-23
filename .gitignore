@@ -30,3 +30,6 @@ replay_pid*.log
 
 # Python 가상환경
 .venv/
+
+# 평가 실행 결과 (로컬 산출물)
+ai-module/eval/results/
