@@ -1,16 +1,13 @@
 package com.salesmap.backend.autopipeline.service;
 
-import com.salesmap.backend.analysis.dto.AnalysisCreateRequest;
-import com.salesmap.backend.analysis.dto.AnalysisGroupCreateRequest;
-import com.salesmap.backend.analysis.repository.AnalysisRepository;
-import com.salesmap.backend.analysis.service.AnalysisService;
+import com.salesmap.backend.analysisjob.service.AnalysisJobService;
+import com.salesmap.backend.gmail.dto.GmailCollectResponse;
 import com.salesmap.backend.gmail.service.GmailIntegrationService;
 import com.salesmap.backend.integration.entity.Integration;
 import com.salesmap.backend.integration.entity.IntegrationProvider;
 import com.salesmap.backend.integration.entity.IntegrationStatus;
 import com.salesmap.backend.integration.repository.IntegrationRepository;
 import com.salesmap.backend.source.entity.Source;
-import com.salesmap.backend.source.entity.SourceDirection;
 import com.salesmap.backend.source.repository.SourceRepository;
 import com.salesmap.backend.user.entity.User;
 import com.salesmap.backend.user.repository.UserRepository;
@@ -24,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -56,23 +52,20 @@ public class AutoPipelineService {
     private final GmailIntegrationService gmailIntegrationService;
     private final IntegrationRepository integrationRepository;
     private final SourceRepository sourceRepository;
-    private final AnalysisRepository analysisRepository;
-    private final AnalysisService analysisService;
+    private final AnalysisJobService analysisJobService;
     private final UserRepository userRepository;
 
     public AutoPipelineService(
             GmailIntegrationService gmailIntegrationService,
             IntegrationRepository integrationRepository,
             SourceRepository sourceRepository,
-            AnalysisRepository analysisRepository,
-            AnalysisService analysisService,
+            AnalysisJobService analysisJobService,
             UserRepository userRepository
     ) {
         this.gmailIntegrationService = gmailIntegrationService;
         this.integrationRepository = integrationRepository;
         this.sourceRepository = sourceRepository;
-        this.analysisRepository = analysisRepository;
-        this.analysisService = analysisService;
+        this.analysisJobService = analysisJobService;
         this.userRepository = userRepository;
     }
 
@@ -138,7 +131,11 @@ public class AutoPipelineService {
 
         // 1) 새 메일 증분 수집 (마지막 동기화 이후 것만)
         try {
-            gmailIntegrationService.collectMessages(userId, "auto", null, false, false, null);
+            GmailCollectResponse collected = gmailIntegrationService.collectMessages(userId, "auto", null, false, false, null);
+            if (collected.savedCount() > 0) {
+                analysisJobService.recordEvent(userId, "COLLECTED", "AUTO",
+                        "[자동] 새 메일 " + collected.savedCount() + "건을 수집했습니다");
+            }
         } catch (RuntimeException exception) {
             log.warn("[AUTO_PIPELINE] auto collect failed. userId={}, reason={}", userId, exception.getMessage());
         }
@@ -150,57 +147,14 @@ public class AutoPipelineService {
     private void analyzePendingSources(Long userId) {
         LocalDateTime cutoff = LocalDateTime.now().minusDays(AUTO_ANALYZE_RECENT_DAYS);
 
-        // 최근 N일 메일 중 "최신 MAX_PENDING_CONSIDERED건"만 자동 분석 후보로 삼고,
-        // 그 안에서는 오래된 순으로 처리해 발신자별 기억이 시간순으로 누적되게 한다.
-        List<Source> sources = sourceRepository.findByUserId(userId).stream()
-                // 분석(정보 추출) 대상은 "받은 메일"만. 내가 보낸 답장은 대화 맥락일 뿐 분석하지 않는다.
-                .filter(source -> source.getDirection() != SourceDirection.SENT)
+        // 최근 N일 메일 중 "최신 MAX_PENDING_CONSIDERED건"만 자동 분석 후보로 삼는다.
+        List<Source> candidates = sourceRepository.findByUserId(userId).stream()
                 .filter(source -> orderingTime(source).isAfter(cutoff))
                 .sorted(Comparator.comparing(this::orderingTime).reversed())
                 .limit(MAX_PENDING_CONSIDERED)
-                .sorted(Comparator.comparing(this::orderingTime))
                 .toList();
 
-        Set<Long> handledGroups = new HashSet<>();
-        int analyzed = 0;
-
-        for (Source source : sources) {
-            if (analyzed >= MAX_ANALYSES_PER_TICK) {
-                break;
-            }
-            if (isAlreadyAnalyzed(source)) {
-                continue;
-            }
-
-            Long groupId = source.getSourceGroup() == null ? null : source.getSourceGroup().getId();
-            try {
-                if (groupId != null) {
-                    if (!handledGroups.add(groupId)) {
-                        continue;
-                    }
-                    analysisService.createGroupAnalysis(new AnalysisGroupCreateRequest(groupId, "ollama"), userId);
-                } else {
-                    analysisService.createAnalysis(new AnalysisCreateRequest(source.getId(), "ollama"), userId);
-                }
-                analyzed++;
-                log.info("[AUTO_PIPELINE] auto-analyzed. userId={}, sourceId={}, groupId={}", userId, source.getId(), groupId);
-            } catch (RuntimeException exception) {
-                log.warn("[AUTO_PIPELINE] auto analyze failed. userId={}, sourceId={}, reason={}",
-                        userId, source.getId(), exception.getMessage());
-            }
-        }
-    }
-
-    private boolean isAlreadyAnalyzed(Source source) {
-        if (source.getSourceGroup() != null) {
-            List<Long> groupSourceIds = sourceRepository
-                    .findBySourceGroupIdOrderBySentAtAscIdAsc(source.getSourceGroup().getId())
-                    .stream()
-                    .map(Source::getId)
-                    .toList();
-            return !analysisRepository.findBySourceIdIn(groupSourceIds).isEmpty();
-        }
-        return !analysisRepository.findBySourceId(source.getId()).isEmpty();
+        analysisJobService.runAutoBatch(userId, candidates, MAX_ANALYSES_PER_TICK);
     }
 
     private LocalDateTime orderingTime(Source source) {
