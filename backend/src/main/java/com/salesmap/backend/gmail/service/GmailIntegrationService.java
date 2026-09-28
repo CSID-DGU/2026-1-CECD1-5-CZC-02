@@ -3,6 +3,7 @@ package com.salesmap.backend.gmail.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.salesmap.backend.demo.service.DemoMailbox;
 import com.salesmap.backend.gmail.config.GmailOAuthProperties;
 import com.salesmap.backend.gmail.dto.GmailAuthorizeResponse;
 import com.salesmap.backend.gmail.dto.GmailCollectResponse;
@@ -75,6 +76,7 @@ public class GmailIntegrationService {
     private final UserRepository userRepository;
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
+    private final DemoMailbox demoMailbox;
 
     public GmailIntegrationService(
             GmailOAuthProperties properties,
@@ -83,7 +85,8 @@ public class GmailIntegrationService {
             SourceRepository sourceRepository,
             SourceGroupRepository sourceGroupRepository,
             UserRepository userRepository,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            DemoMailbox demoMailbox
     ) {
         this.properties = properties;
         this.stateService = stateService;
@@ -92,10 +95,12 @@ public class GmailIntegrationService {
         this.sourceGroupRepository = sourceGroupRepository;
         this.userRepository = userRepository;
         this.objectMapper = objectMapper;
+        this.demoMailbox = demoMailbox;
         this.restClient = RestClient.create();
     }
 
     public GmailAuthorizeResponse createAuthorizationUrl(Long authenticatedUserId) {
+        rejectInDemoMode(authenticatedUserId);
         validateOAuthProperties();
         log.info("Creating Gmail OAuth authorization URL. userId={}, clientId={}, redirectUri={}, scope={}",
                 authenticatedUserId,
@@ -184,6 +189,7 @@ public class GmailIntegrationService {
 
     @Transactional
     public void disconnect(Long authenticatedUserId) {
+        rejectInDemoMode(authenticatedUserId);
         Integration integration = integrationRepository.findByUserIdAndProvider(authenticatedUserId, IntegrationProvider.GMAIL)
                 .orElseThrow(() -> new NoSuchElementException("Gmail 연동 정보를 찾을 수 없습니다."));
 
@@ -205,6 +211,10 @@ public class GmailIntegrationService {
             boolean ignoreQuery,
             String queryOverride
     ) {
+        if (demoMailbox.isDemoUser(authenticatedUserId)) {
+            return demoMailbox.deliverNextStage(authenticatedUserId, resolveSyncMode(requestedMode));
+        }
+
         User user = userRepository.findById(authenticatedUserId)
                 .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
         Integration integration = integrationRepository.findByUserIdAndProvider(authenticatedUserId, IntegrationProvider.GMAIL)
@@ -435,6 +445,9 @@ public class GmailIntegrationService {
     public String sendReplyEmail(Long authenticatedUserId, String toEmail, String subject, String body, String threadId) {
         if (toEmail == null || toEmail.isBlank()) {
             throw new IllegalArgumentException("받는 사람 이메일이 없어 답장을 보낼 수 없습니다.");
+        }
+        if (demoMailbox.isDemoUser(authenticatedUserId)) {
+            return demoMailbox.recordSentReply(authenticatedUserId, toEmail.trim(), safeText(subject), safeText(body), threadId);
         }
 
         String accessToken = getValidAccessTokenForUser(authenticatedUserId);
@@ -1043,6 +1056,12 @@ public class GmailIntegrationService {
         }
 
         return Math.min(pageSize, 500);
+    }
+
+    private void rejectInDemoMode(Long userId) {
+        if (demoMailbox.isDemoUser(userId)) {
+            throw new IllegalArgumentException("데모 모드에서는 가짜 메일 계정이 연결되어 있습니다. 실제 Gmail을 연결하려면 개발자 설정에서 데모 모드를 끄세요.");
+        }
     }
 
     private void validateOAuthProperties() {

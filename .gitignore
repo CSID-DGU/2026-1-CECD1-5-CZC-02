@@ -22,7 +22,7 @@ venv/
 
 # 로컬 작업물 (레포 미포함)
 project-docs/
-demo/
+/demo/
 frontend_backup/
 # JVM 크래시 로그
 hs_err_pid*.log
