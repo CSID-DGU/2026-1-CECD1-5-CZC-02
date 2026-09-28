@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Settings, Search, LayoutDashboard, ClipboardList, UsersRound, ChevronDown, ChevronRight, Wind, KanbanSquare } from 'lucide-react';
+import { Settings, Search, LayoutDashboard, ClipboardList, UsersRound, ChevronDown, ChevronRight, Wind, KanbanSquare, FlaskConical } from 'lucide-react';
 import jandiLogo from '../assets/잔디 로고 이미지 .jpg';
 import gmailLogo from '../assets/gmail로고 이미지 spaced.png';
 import { getMe } from '../api/auth';
 import { getIntegrations } from '../api/integrations';
+import { getDemoStatus } from '../api/demo';
 import { getSchedules } from '../api/schedules';
 import { ReminderModal } from './ReminderModal';
 
@@ -70,6 +71,7 @@ export function DashboardLayout({ children }) {
   const [companyName, setCompanyName] = useState(() => localStorage.getItem('salesmapCompany') || '');
   const [gmailCalendarConnected, setGmailCalendarConnected] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [demoEnabled, setDemoEnabled] = useState(false);
   const [showReminder, setShowReminder] = useState(false);
   const [currentReminder, setCurrentReminder] = useState(null);
   const [reminderQueue, setReminderQueue] = useState([]);
@@ -147,6 +149,13 @@ export function DashboardLayout({ children }) {
     };
 
     fetchUser();
+    getDemoStatus()
+      .then((status) => {
+        if (!ignore) {
+          setDemoEnabled(Boolean(status?.enabled));
+        }
+      })
+      .catch(() => {});
 
     return () => {
       ignore = true;
@@ -365,6 +374,17 @@ export function DashboardLayout({ children }) {
               <h2 className="text-base font-bold text-slate-900" style={{ fontFamily: 'var(--display)' }}>
                 {pageTitle}
               </h2>
+              {demoEnabled && (
+                <button
+                  type="button"
+                  onClick={() => navigate('/settings')}
+                  title="데모 데이터 모드가 켜져 있습니다. 설정에서 끌 수 있습니다."
+                  className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-[11px] font-semibold text-amber-700 hover:bg-amber-100"
+                >
+                  <FlaskConical className="h-3 w-3" />
+                  데모 데이터
+                </button>
+              )}
             </div>
 
             <div className="flex items-center gap-3">

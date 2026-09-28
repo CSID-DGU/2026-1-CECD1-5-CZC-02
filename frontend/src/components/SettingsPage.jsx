@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { CalendarCheck, CheckCircle2, Link2, Settings as SettingsIcon, Zap } from 'lucide-react';
+import { CalendarCheck, CheckCircle2, FlaskConical, Link2, RotateCcw, Settings as SettingsIcon, Zap } from 'lucide-react';
 import { getApiErrorMessage } from '../api/errors';
 import { disconnectGmailIntegration, getGmailAuthorizationUrl, getIntegrations } from '../api/integrations';
 import { disableAutoPipeline, enableAutoPipeline, getAutoPipelineStatus } from '../api/autoPipeline';
+import { disableDemo, enableDemo, getDemoStatus, resetDemo } from '../api/demo';
 import jandiIcon from '../assets/image-8.png';
 import jandiText from '../assets/image-9.png';
 import gmailIcon from '../assets/image-10.png';
@@ -31,6 +32,141 @@ function StatusBadge({ connected, pending = false }) {
     <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-500">
       연결되지 않음
     </span>
+  );
+}
+
+const DEMO_FLASH_KEY = 'demoModeFlash';
+
+function DemoModePanel() {
+  const [status, setStatus] = useState(null);
+  const [isWorking, setIsWorking] = useState(false);
+  const [message] = useState(() => sessionStorage.getItem(DEMO_FLASH_KEY) || '');
+  const [errorMessage, setErrorMessage] = useState('');
+  const enabled = Boolean(status?.enabled);
+
+  useEffect(() => {
+    sessionStorage.removeItem(DEMO_FLASH_KEY);
+    getDemoStatus()
+      .then(setStatus)
+      .catch((error) => setErrorMessage(`데모 상태 조회 실패: ${getApiErrorMessage(error)}`));
+  }, []);
+
+  // 켜고 끄면 모든 화면이 다른 사용자 데이터를 봐야 하므로 새로고침으로 한 번에 다시 불러온다.
+  const reloadWith = (flash) => {
+    sessionStorage.setItem(DEMO_FLASH_KEY, flash);
+    window.location.reload();
+  };
+
+  const handleToggle = async () => {
+    try {
+      setIsWorking(true);
+      setErrorMessage('');
+      if (enabled) {
+        await disableDemo();
+        reloadWith('데모 모드를 껐습니다. 실제 계정 데이터로 돌아왔습니다.');
+      } else {
+        await enableDemo();
+        reloadWith('데모 모드를 켰습니다. Gmail 메일함에서 "Gmail 새로고침"을 눌러 데모 메일을 받아보세요.');
+      }
+    } catch (error) {
+      setErrorMessage(`데모 모드 전환 실패: ${getApiErrorMessage(error)}`);
+      setIsWorking(false);
+    }
+  };
+
+  const handleReset = async () => {
+    if (!window.confirm('데모 메일·분석·일정을 모두 지우고 처음부터 다시 시작할까요? (실제 계정 데이터는 영향 없음)')) {
+      return;
+    }
+    try {
+      setIsWorking(true);
+      setErrorMessage('');
+      await resetDemo();
+      reloadWith('데모 데이터를 초기화했습니다. "Gmail 새로고침"부터 다시 시작하세요.');
+    } catch (error) {
+      setErrorMessage(`데모 초기화 실패: ${getApiErrorMessage(error)}`);
+      setIsWorking(false);
+    }
+  };
+
+  const nextArrival = !status
+    ? ''
+    : status.deliveredStage >= status.lastStage
+      ? '시나리오 메일이 모두 도착했습니다.'
+      : status.deliveredStage === 0
+        ? `"Gmail 새로고침"을 누르면 첫 메일 묶음이 도착합니다. (남은 ${status.pendingMailCount}통)`
+        : `다음 "Gmail 새로고침"에서 일정 변경·취소·확정 메일과 새 문의가 도착합니다. (남은 ${status.pendingMailCount}통)`;
+
+  return (
+    <section className={`rounded-2xl border border-dashed p-4 ${enabled ? 'border-amber-300 bg-amber-50/60' : 'border-slate-300 bg-white/60'}`}>
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-start gap-3 text-left">
+          <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${enabled ? 'bg-amber-500' : 'bg-slate-100'}`}>
+            <FlaskConical className={`h-4 w-4 ${enabled ? 'text-white' : 'text-slate-400'}`} />
+          </span>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">개발자 기능</span>
+              <h3 className="text-sm font-bold text-slate-900">데모 데이터 모드</h3>
+              <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                enabled ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'
+              }`}>
+                {enabled ? '켜짐' : '꺼짐'}
+              </span>
+            </div>
+            <p className="mt-1 max-w-2xl text-xs leading-5 text-slate-500">
+              실제 Gmail 없이 고객사 6곳의 가짜 영업 메일로 전체 흐름을 시연합니다. 메일만 가짜이고
+              AI 분석·딜 파이프라인·일정·답장 초안은 실제로 동작합니다. 켜져 있는 동안 실제 계정 데이터는 가려지고, 끄면 그대로 돌아옵니다.
+              데모에서 보낸 답장과 등록한 일정은 외부(Gmail·Google Calendar)로 나가지 않습니다.
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleToggle}
+          disabled={isWorking || !status}
+          role="switch"
+          aria-checked={enabled}
+          aria-label="데모 데이터 모드"
+          className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition disabled:opacity-60 ${
+            enabled ? 'bg-amber-500' : 'bg-slate-300'
+          }`}
+        >
+          <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
+            enabled ? 'translate-x-6' : 'translate-x-1'
+          }`} />
+        </button>
+      </div>
+
+      {(message || errorMessage) && (
+        <p className={`mt-3 text-xs ${errorMessage ? 'text-red-600' : 'text-amber-700'}`}>{errorMessage || message}</p>
+      )}
+
+      {enabled && status && (
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-amber-200/70 pt-3 text-left">
+          <div className="space-y-1 text-xs text-slate-600">
+            <p>
+              데모 메일 계정 <b className="font-medium text-slate-800">{status.demoAccountEmail}</b>
+              {' · '}도착 {status.deliveredMailCount}통 / 단계 {status.deliveredStage}/{status.lastStage}
+            </p>
+            <p className="text-slate-500">{nextArrival}</p>
+            <p className="text-slate-400">
+              순서: Gmail 새로고침 → 수집 메일 AI 분석 → 미팅 건 승인·일정 등록 → 다시 새로고침(변경·취소 메일) → 분석·승인
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleReset}
+            disabled={isWorking}
+            className="inline-flex items-center gap-1.5 rounded-md border border-amber-300 bg-white px-3 py-1.5 text-xs font-medium text-amber-700 hover:bg-amber-50 disabled:opacity-50"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            처음부터 다시
+          </button>
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -395,6 +531,8 @@ export function SettingsPage() {
             </div>
           </div>
         </section>
+
+        <DemoModePanel />
       </div>
     </div>
   );
