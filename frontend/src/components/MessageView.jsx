@@ -6,6 +6,8 @@ import { getSalesmapRecordsByAnalysis, registerSalesmapRecord } from '../api/sal
 import { deleteSource, getSourceById, getSources } from '../api/sources';
 import { collectGmailMessages } from '../api/integrations';
 import { getAutoPipelineStatus } from '../api/autoPipeline';
+import { startBulkAnalysis } from '../api/analysisJobs';
+import { useActivity } from './useActivityFeed';
 
 const EMPTY_TEXT = '해당 없음';
 
@@ -358,12 +360,13 @@ export function MessageView() {
   const [sourceDetailMessage, setSourceDetailMessage] = useState('');
   const [analysisActionMessage, setAnalysisActionMessage] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [isBulkAnalyzing, setIsBulkAnalyzing] = useState(false);
   const [isDeletingSource, setIsDeletingSource] = useState(false);
   const [salesmapRecordsByAnalysisId, setSalesmapRecordsByAnalysisId] = useState({});
   const [salesmapActionByAnalysisId, setSalesmapActionByAnalysisId] = useState({});
   const [registeringAnalysisId, setRegisteringAnalysisId] = useState(null);
   const sourceItemRefs = useRef({});
+  const { job: analysisJob, dataVersion, refresh: refreshActivity } = useActivity();
+  const isBulkAnalyzing = Boolean(analysisJob?.running);
 
   const selectedSourceId = source?.startsWith('source-')
     ? Number(source.replace('source-', ''))
@@ -423,28 +426,35 @@ export function MessageView() {
     };
   }, []);
 
+  // 서버의 수집·분석 작업이 진척될 때마다 목록과 열어둔 메일의 분석 결과를 다시 불러온다.
   useEffect(() => {
-    if (!isAutoMode) {
+    if (dataVersion === 0) {
       return undefined;
     }
 
-    const intervalId = window.setInterval(async () => {
+    let ignore = false;
+    const reload = async () => {
       await fetchSources();
-      // 자동 분석이 방금 끝났을 수 있으니, 열어둔 메일의 분석 결과도 함께 갱신한다.
-      if (selectedSourceId) {
-        try {
-          const analyses = await getAnalysesBySource(selectedSourceId);
-          if (Array.isArray(analyses) && analyses.length > 0) {
-            setSourceAnalyses(latestAnalysisOnly(analyses));
-          }
-        } catch (error) {
-          // 조용히 무시 (다음 주기에 다시 시도)
-        }
+      if (!selectedSourceId) {
+        return;
       }
-    }, 15000);
+      try {
+        const analyses = await getAnalysesBySource(selectedSourceId);
+        if (!ignore && Array.isArray(analyses) && analyses.length > 0) {
+          setSourceAnalyses(latestAnalysisOnly(analyses));
+        }
+      } catch {
+        // 다음 갱신 때 다시 시도한다.
+      }
+    };
+    reload();
 
-    return () => window.clearInterval(intervalId);
-  }, [isAutoMode, fetchSources, selectedSourceId]);
+    return () => {
+      ignore = true;
+    };
+    // selectedSourceId가 바뀔 때는 상세 조회 effect가 따로 불러온다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataVersion, fetchSources]);
 
   useEffect(() => {
     if (!selectedSourceId || backendSources.length === 0) {
@@ -491,98 +501,14 @@ export function MessageView() {
     }
   };
 
+  // 분석은 서버 작업으로 돌기 때문에 다른 화면으로 옮겨도 계속되고, 진행률은 상단 표시로 이어진다.
   const handleAnalyzeCollectedSources = async () => {
-    if (backendSources.length === 0) {
-      setSourceListMessage('분석할 수집 메일이 없습니다.');
-      return;
-    }
-
-    // 기억(memory)은 "같은 발신자의 이미 분석된 이전 메일"을 참조하므로,
-    // 먼저 온 메일이 먼저 분석되어야 고객사/제품 등이 다음 메일로 이어진다.
-    // 따라서 최신순 목록을 보낸 시각 오름차순(오래된 순)으로 정렬한 뒤 분석한다.
-    // 분석(정보 추출)은 "받은 메일"만 대상. 내가 보낸 답장(SENT)은 대화 맥락일 뿐 분석하지 않는다.
-    const chronologicalSources = [...backendSources]
-      .filter((item) => item.direction !== 'SENT')
-      .sort((left, right) => {
-        const leftTime = left.sentAt ? new Date(left.sentAt).getTime() : 0;
-        const rightTime = right.sentAt ? new Date(right.sentAt).getTime() : 0;
-        return leftTime - rightTime;
-      });
-
-    const uniqueTargets = [];
-    const seenKeys = new Set();
-
-    chronologicalSources.forEach((item) => {
-      const key = item.sourceGroupId ? `group-${item.sourceGroupId}` : `source-${item.sourceId}`;
-      if (!seenKeys.has(key)) {
-        seenKeys.add(key);
-        uniqueTargets.push(item);
-      }
-    });
-
-    // 분석 대상은 최대 30건까지만 (오래된 순 기준).
-    uniqueTargets.splice(30);
-
-    let analyzedCount = 0;
-    let skippedCount = 0;
-    let failedCount = 0;
-
     try {
-      setIsBulkAnalyzing(true);
-      setSourceListMessage(`수집 메일 AI 분석 준비 중... 0/${uniqueTargets.length}`);
-
-      for (let index = 0; index < uniqueTargets.length; index += 1) {
-        const item = uniqueTargets[index];
-        setSourceListMessage(`수집 메일 AI 분석 중... ${index + 1}/${uniqueTargets.length}`);
-
-        try {
-          const existingAnalyses = await getAnalysesBySource(item.sourceId);
-          if (Array.isArray(existingAnalyses) && existingAnalyses.length > 0) {
-            skippedCount += 1;
-            continue;
-          }
-
-          if (item.sourceGroupId) {
-            await createGroupAnalysis({ sourceGroupId: item.sourceGroupId, analysisMode: 'ollama' });
-          } else {
-            await createAnalysis({ sourceId: item.sourceId, analysisMode: 'ollama' });
-          }
-
-          analyzedCount += 1;
-        } catch (error) {
-          failedCount += 1;
-          console.error('Failed to analyze collected source:', {
-            sourceId: item.sourceId,
-            sourceGroupId: item.sourceGroupId,
-            status: error.response?.status,
-            message: error.response?.data?.message,
-            data: error.response?.data?.data,
-            responseBody: error.response?.data,
-            rawError: error,
-          });
-        }
-      }
-
-      await fetchSources();
-
-      if (selectedSourceId) {
-        try {
-          const analyses = await getAnalysesBySource(selectedSourceId);
-          setSourceAnalyses(latestAnalysisOnly(analyses));
-        } catch (error) {
-          console.error('Failed to refresh selected source analyses after bulk analysis:', {
-            sourceId: selectedSourceId,
-            status: error.response?.status,
-            message: error.response?.data?.message,
-            data: error.response?.data?.data,
-            rawError: error,
-          });
-        }
-      }
-
-      setSourceListMessage(`AI 분석 완료: ${analyzedCount}건 분석, ${skippedCount}건 이미 분석됨, ${failedCount}건 실패`);
-    } finally {
-      setIsBulkAnalyzing(false);
+      const response = await startBulkAnalysis();
+      setSourceListMessage(response.message);
+      refreshActivity();
+    } catch (error) {
+      setSourceListMessage(`AI 분석 시작 실패: ${getApiErrorMessage(error)}`);
     }
   };
 
@@ -844,10 +770,14 @@ export function MessageView() {
               )}
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-400">{sourceListMessage}</span>
+              <span className="text-xs text-slate-400">
+                {isBulkAnalyzing
+                  ? `${analysisJob.trigger === 'AUTO' ? '자동 ' : ''}AI 분석 중... ${analysisJob.done}/${analysisJob.total}`
+                  : sourceListMessage}
+              </span>
               <button
                 onClick={handleSyncGmail}
-                disabled={isSyncingGmail || isBulkAnalyzing}
+                disabled={isSyncingGmail}
                 className="px-2.5 py-1 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-600 disabled:opacity-50"
               >
                 {isSyncingGmail ? '동기화 중...' : 'Gmail 새로고침'}

@@ -8,6 +8,8 @@ import { getIntegrations } from '../api/integrations';
 import { getDemoStatus } from '../api/demo';
 import { getSchedules } from '../api/schedules';
 import { ReminderModal } from './ReminderModal';
+import { ActivityProvider, ActivityToasts, AnalysisProgressChip } from './ActivityFeed';
+import { useActivityFeed } from './useActivityFeed';
 
 const THIRTY_MINUTES_STORAGE_PREFIX = 'schedule-30m-shown';
 
@@ -76,6 +78,7 @@ export function DashboardLayout({ children }) {
   const [currentReminder, setCurrentReminder] = useState(null);
   const [reminderQueue, setReminderQueue] = useState([]);
   const loginSummaryShownRef = useRef(false);
+  const activity = useActivityFeed();
 
   const enqueueReminder = useCallback((reminder) => {
     setReminderQueue((prev) => {
@@ -371,7 +374,7 @@ export function DashboardLayout({ children }) {
         <div className="flex-1 min-w-0 flex flex-col">
           <div className="bg-white/80 backdrop-blur border-b border-slate-200/70 px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <h2 className="text-base font-bold text-slate-900" style={{ fontFamily: 'var(--display)' }}>
+              <h2 className="whitespace-nowrap text-base font-bold text-slate-900" style={{ fontFamily: 'var(--display)' }}>
                 {pageTitle}
               </h2>
               {demoEnabled && (
@@ -385,6 +388,7 @@ export function DashboardLayout({ children }) {
                   데모 데이터
                 </button>
               )}
+              <AnalysisProgressChip job={activity.job} onClick={() => navigate('/messages/gmail')} />
             </div>
 
             <div className="flex items-center gap-3">
@@ -421,10 +425,18 @@ export function DashboardLayout({ children }) {
           </div>
 
           <div className="flex-1 min-w-0 overflow-auto">
-            {children}
+            <ActivityProvider value={activity}>
+              {children}
+            </ActivityProvider>
           </div>
         </div>
       </div>
+
+      <ActivityToasts
+        toasts={activity.toasts}
+        onDismiss={activity.dismissToast}
+        onOpen={() => navigate('/messages/gmail')}
+      />
 
       {currentReminder && (
         <ReminderModal
