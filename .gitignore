@@ -33,3 +33,6 @@ replay_pid*.log
 
 # 평가 실행 결과 (로컬 산출물)
 ai-module/eval/results/
+
+# Vite 의존성 캐시
+.vite/
