@@ -3,9 +3,12 @@ import { LoginPage } from './components/LoginPage';
 import { DashboardLayout } from './components/DashboardLayout';
 import { Dashboard } from './components/Dashboard';
 import { SettingsPage } from './components/SettingsPage';
-import { SalesmapLoginPage } from './components/SalesmapLoginPage';
 import { MessageView } from './components/MessageView';
+import { JandiComingSoon } from './components/JandiComingSoon';
 import { GmailOAuthCallbackPage } from './components/GmailOAuthCallbackPage';
+import { ProcessingHistoryPage } from './components/ProcessingHistoryPage';
+import { CustomerTimelinePage } from './components/CustomerTimelinePage';
+import { PipelinePage } from './components/PipelinePage';
 
 function ProtectedRoute({ children }) {
   const accessToken = localStorage.getItem('accessToken');
@@ -24,15 +27,17 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/salesmap-login" element={
-            <ProtectedRoute>
-              <SalesmapLoginPage />
-            </ProtectedRoute>
-          } />
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <DashboardLayout>
                 <Dashboard />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/messages/jandi" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <JandiComingSoon />
               </DashboardLayout>
             </ProtectedRoute>
           } />
@@ -47,6 +52,27 @@ export default function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <SettingsPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/history" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <ProcessingHistoryPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/customers" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <CustomerTimelinePage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/pipeline" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <PipelinePage />
               </DashboardLayout>
             </ProtectedRoute>
           } />

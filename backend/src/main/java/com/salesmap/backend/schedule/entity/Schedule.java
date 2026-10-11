@@ -54,6 +54,13 @@ public class Schedule extends BaseEntity {
     @Column(nullable = false, length = 50)
     private ScheduleStatus status;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ScheduleOutcome outcome;
+
+    @Column
+    private LocalDateTime outcomeRecordedAt;
+
     protected Schedule() {
     }
 
@@ -120,6 +127,20 @@ public class Schedule extends BaseEntity {
 
     public void cancel() {
         this.status = ScheduleStatus.CANCELED;
+    }
+
+    public ScheduleOutcome getOutcome() {
+        return outcome;
+    }
+
+    public LocalDateTime getOutcomeRecordedAt() {
+        return outcomeRecordedAt;
+    }
+
+    public void recordOutcome(ScheduleOutcome outcome) {
+        this.outcome = outcome;
+        this.outcomeRecordedAt = LocalDateTime.now();
+        this.status = ScheduleStatus.COMPLETED;
     }
 
     public void linkGoogleCalendarEvent(String googleCalendarEventId) {

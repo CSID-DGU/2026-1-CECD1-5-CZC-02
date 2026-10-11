@@ -22,18 +22,30 @@ class AnalyzeResponse(BaseModel):
     targetScheduleId: Optional[int] = None
     targetScheduleTitle: Optional[str] = None
     actionReason: Optional[str] = None
+    businessType: str = "UNKNOWN"
+    businessRelevanceScore: float = Field(default=0.5, ge=0.0, le=1.0)
+    businessReason: Optional[str] = None
     scheduleTitle: Optional[str] = None
     scheduleDateTime: Optional[datetime] = None
     todoContent: Optional[str] = None
     keyIssues: Optional[str] = None
     summary: str
     confidenceScore: float = Field(ge=0.0, le=1.0)
+    llmProvider: str = "rule"
+    llmModel: Optional[str] = None
+    llmFallbackReason: Optional[str] = None
 
 
 class ScheduleAnalyzeResponse(BaseModel):
     """AI Module 단독 테스트용 응답"""
     success: bool
     schedule: ScheduleResponse
+
+
+class ReplyDraftResponse(BaseModel):
+    subject: str
+    body: str
+    generatedBy: str = "template"
 
 
 class AiErrorResponse(BaseModel):

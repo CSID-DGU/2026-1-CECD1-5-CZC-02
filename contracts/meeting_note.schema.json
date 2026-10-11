@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "meeting_note.schema.json",
+  "title": "MeetingNote — 표준 회의록 (B → C)",
+  "description": "메모·녹취·메일 등 비정형 입력을 표준 회의록 양식에 채운 결과. 모르는 칸은 추측하지 않고 비워 두고 missingFields에 적는다. 모든 내용 항목은 근거(원문 인용)를 함께 가진다. 문항 구성은 초안이며 회사의 회의록 양식이 확정되면 맞춘다.",
+  "type": "object",
+  "required": ["noteId", "sourceRefs", "mode", "participants", "fields", "missingFields", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "noteId": {
+      "type": "string",
+      "pattern": "^mn_[0-9a-z_]+$"
+    },
+    "sourceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "description": "이 회의록을 만든 원본들. 원본은 지우지 않는다",
+      "items": {
+        "type": "object",
+        "required": ["sourceId", "sourceType"],
+        "additionalProperties": false,
+        "properties": {
+          "sourceId": { "type": "string" },
+          "sourceType": {
+            "enum": ["EMAIL", "JANDI_MESSAGE", "MEETING_NOTE", "MANUAL_INPUT", "VOICE_MEMO"]
+          }
+        }
+      }
+    },
+    "occurredAt": {
+      "type": ["string", "null"],
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+      "description": "접촉 시각 (KST, 시간대 표기 없음). 모르면 null"
+    },
+    "location": { "type": ["string", "null"] },
+    "mode": {
+      "enum": ["FULL", "LIGHT"],
+      "description": "FULL=일반 회의록, LIGHT=다인 방문 경량본(인당 3필드, perPerson 사용)"
+    },
+    "participants": {
+      "type": "array",
+      "description": "상대측 참석자. A의 식별 결과를 참조한다",
+      "items": {
+        "type": "object",
+        "required": ["displayName", "resolutionId", "personId"],
+        "additionalProperties": false,
+        "properties": {
+          "displayName": { "type": "string" },
+          "resolutionId": { "type": ["string", "null"] },
+          "personId": {
+            "type": ["string", "null"],
+            "description": "아직 식별 전이거나 후보 상태면 null"
+          }
+        }
+      }
+    },
+    "fields": {
+      "type": "object",
+      "description": "FULL 모드 회의록 문항. 항목이 없으면 빈 배열 + missingFields에 이름 기록",
+      "required": ["discussion", "customerRequests", "concerns", "commitments", "nextContact"],
+      "additionalProperties": false,
+      "properties": {
+        "discussion": { "$ref": "#/$defs/itemList", "description": "논의 내용" },
+        "customerRequests": { "$ref": "#/$defs/itemList", "description": "고객 요청" },
+        "concerns": { "$ref": "#/$defs/itemList", "description": "우려·이슈" },
+        "commitments": { "$ref": "#/$defs/itemList", "description": "약속 (C가 할 일로 뽑는 주 재료)" },
+        "nextContact": { "$ref": "#/$defs/itemList", "description": "다음 접촉 계획" }
+      }
+    },
+    "perPerson": {
+      "type": "array",
+      "description": "LIGHT 모드에서만 사용. 인당 3필드",
+      "items": {
+        "type": "object",
+        "required": ["displayName", "personId", "status", "request", "followUp"],
+        "additionalProperties": false,
+        "properties": {
+          "displayName": { "type": "string" },
+          "personId": { "type": ["string", "null"] },
+          "status": { "$ref": "#/$defs/nullableItem", "description": "근황" },
+          "request": { "$ref": "#/$defs/nullableItem", "description": "요청 사항" },
+          "followUp": { "$ref": "#/$defs/nullableItem", "description": "후속 조치" }
+        }
+      }
+    },
+    "missingFields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "원문에서 찾지 못해 비워 둔 문항 이름"
+    },
+    "uncertainSegments": {
+      "type": "array",
+      "description": "음성 인식 등에서 판독이 불확실한 구간. 추정하지 않고 표시만 한다",
+      "items": {
+        "type": "object",
+        "required": ["text", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "text": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "status": {
+      "enum": ["DRAFT", "CONFIRMED"],
+      "description": "사람이 확인 화면에서 확정하기 전에는 DRAFT"
+    },
+    "generatedBy": {
+      "enum": ["RULE", "LLM", "HUMAN"]
+    },
+    "llmModel": { "type": ["string", "null"] }
+  },
+  "$defs": {
+    "item": {
+      "type": "object",
+      "required": ["text", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "text": { "type": "string", "minLength": 1 },
+        "evidence": {
+          "type": "string",
+          "minLength": 1,
+          "description": "근거가 된 원문 문장 그대로"
+        }
+      }
+    },
+    "itemList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/item" }
+    },
+    "nullableItem": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/item" }]
+    }
+  }
+}

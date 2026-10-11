@@ -32,3 +32,28 @@ export async function updateAnalysis(analysisId, payload) {
 
   return response.data.data;
 }
+
+export async function generateReplyDraft(analysisId) {
+  const response = await api.post(`/api/analysis/${analysisId}/reply-draft`);
+
+  return response.data.data;
+}
+
+export async function sendReplyDraft(analysisId, payload) {
+  const response = await api.post(`/api/analysis/${analysisId}/send-reply`, payload);
+
+  return response.data.data;
+}
+
+export async function rejectAnalysis(analysisId) {
+  const response = await api.post(`/api/analysis/${analysisId}/reject`);
+
+  return response.data.data;
+}
+
+// AI 원본값 → 사용자 수정값 기록
+export async function getAnalysisRevisions(analysisId) {
+  const response = await api.get(`/api/analysis/${analysisId}/revisions`);
+
+  return response.data.data;
+}

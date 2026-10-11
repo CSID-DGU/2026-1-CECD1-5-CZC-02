@@ -1,9 +1,13 @@
 """분석 요청 라우트"""
+from datetime import datetime
+from typing import Optional
+
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.request import AnalyzeRequest
-from app.schemas.response import AnalyzeResponse, ScheduleAnalyzeResponse
+from app.schemas.request import AnalyzeRequest, ReplyDraftRequest
+from app.schemas.response import AnalyzeResponse, ReplyDraftResponse, ScheduleAnalyzeResponse
 from app.services.analyzer import analyze_message, analyze_schedule
+from app.services.reply_draft import generate_reply_draft
 from app.services.regex_parser import to_backend_datetime
 
 router = APIRouter(tags=["analyze"])
@@ -21,6 +25,9 @@ async def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
         request.messages,
         _requester_name(request),
         request.existingSchedules,
+        request.analysisMode,
+        request.recentSenderAnalyses,
+        reference_time=_reference_time(request),
     )
     schedule = analysis_result.schedule
 
@@ -34,6 +41,9 @@ async def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
         targetScheduleId=analysis_result.target_schedule_id,
         targetScheduleTitle=analysis_result.target_schedule_title,
         actionReason=analysis_result.action_reason,
+        businessType=analysis_result.business_type,
+        businessRelevanceScore=analysis_result.business_relevance_score,
+        businessReason=analysis_result.business_reason,
         scheduleTitle=schedule.title if schedule else None,
         scheduleDateTime=to_backend_datetime(
             schedule.date if schedule else None,
@@ -43,6 +53,9 @@ async def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
         keyIssues=None,
         summary=analysis_result.summary,
         confidenceScore=analysis_result.confidence,
+        llmProvider=analysis_result.llm_provider,
+        llmModel=analysis_result.llm_model,
+        llmFallbackReason=analysis_result.llm_fallback_reason,
     )
 
 
@@ -55,8 +68,16 @@ async def analyze_schedule_only(request: AnalyzeRequest) -> ScheduleAnalyzeRespo
 
     return ScheduleAnalyzeResponse(
         success=True,
-        schedule=analyze_schedule(message, request.messages, _requester_name(request)),
+        schedule=analyze_schedule(message, request.messages, _requester_name(request), _reference_time(request)),
     )
+
+
+@router.post("/reply-draft", response_model=ReplyDraftResponse)
+async def reply_draft(request: ReplyDraftRequest) -> ReplyDraftResponse:
+    if not request.emailContent.strip():
+        raise HTTPException(status_code=400, detail="emailContent is required.")
+
+    return generate_reply_draft(request)
 
 
 @router.post("/api/analyze", response_model=AnalyzeResponse, include_in_schema=False)
@@ -80,3 +101,11 @@ def _build_analysis_text(request: AnalyzeRequest) -> str:
 
 def _requester_name(request: AnalyzeRequest) -> str | None:
     return request.requester.name if request.requester else None
+
+
+def _reference_time(request: AnalyzeRequest) -> Optional[datetime]:
+    """상대 날짜 해석 기준: 가장 최근 메일의 발송 시각 → 수집 시각 → (없으면) 현재."""
+    sent_times = [message.sentAt for message in request.messages if message.sentAt]
+    if sent_times:
+        return max(sent_times)
+    return request.collectedAt

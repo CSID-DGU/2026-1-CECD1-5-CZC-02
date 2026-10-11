@@ -1,0 +1,46 @@
+[
+  {
+    "personId": "p_001",
+    "name": "홍길동",
+    "nameVariants": ["Hong Gildong", "홍 부장님"],
+    "company": "가상전자",
+    "department": "영업팀",
+    "title": "부장",
+    "emails": ["gildong.hong@gasang-elec.example"],
+    "phones": ["010-0000-0001"],
+    "channels": ["EMAIL", "MEETING"],
+    "companyHistory": [
+      { "company": "예시정보", "title": "차장", "until": "2025-12-31" }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_002",
+    "name": "홍길동",
+    "nameVariants": ["GD Hong"],
+    "company": "예시솔루션",
+    "department": "개발팀",
+    "title": "과장",
+    "emails": ["gd.hong@yesi-sol.example"],
+    "phones": ["010-0000-0002"],
+    "channels": ["EMAIL"],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_003",
+    "name": "김예시",
+    "nameVariants": ["김 대리님"],
+    "company": "가상전자",
+    "department": "구매팀",
+    "title": "대리",
+    "emails": ["yesi.kim@gasang-elec.example"],
+    "phones": [],
+    "channels": ["EMAIL", "JANDI"],
+    "companyHistory": [],
+    "photoAvailable": true,
+    "isSynthetic": true
+  }
+]

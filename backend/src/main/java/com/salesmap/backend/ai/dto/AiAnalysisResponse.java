@@ -12,11 +12,18 @@ public record AiAnalysisResponse(
         Long targetScheduleId,
         String targetScheduleTitle,
         String actionReason,
+        String businessType,
+        Double businessRelevanceScore,
+        String businessReason,
         String scheduleTitle,
         LocalDateTime scheduleDateTime,
         String todoContent,
         String keyIssues,
         String summary,
-        Double confidenceScore
+        Double confidenceScore,
+        // 의미 필드를 보정한 엔진 (rule / ollama / openai / mock)
+        String llmProvider,
+        String llmModel,
+        String llmFallbackReason
 ) {
 }

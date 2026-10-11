@@ -34,6 +34,10 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 50)
     private UserStatus status;
 
+    // 자동 수집·분석 모드. 서버를 재시작해도 유지되도록 DB에 저장한다(null = 꺼짐).
+    @Column
+    private Boolean autoPipelineEnabled;
+
     protected User() {
     }
 
@@ -67,5 +71,13 @@ public class User extends BaseEntity {
 
     public UserStatus getStatus() {
         return status;
+    }
+
+    public boolean isAutoPipelineEnabled() {
+        return Boolean.TRUE.equals(autoPipelineEnabled);
+    }
+
+    public void changeAutoPipelineEnabled(boolean enabled) {
+        this.autoPipelineEnabled = enabled;
     }
 }

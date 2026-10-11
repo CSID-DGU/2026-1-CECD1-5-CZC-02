@@ -14,6 +14,9 @@ SALESMAP 활동 자동화 AI Agent 백엔드 구조와 실행 방법입니다.
 - Gmail API
 - Google Calendar API
 - FastAPI AI Module 연동
+- BGE-M3 임베딩 모델
+- GLiNER 엔티티 추출 모델
+- Ollama 로컬 LLM
 
 ## 로컬 실행
 
@@ -48,7 +51,34 @@ cd C:\salesmap-agent\backend
 .\gradlew.bat bootRun
 ```
 
-### 4. Swagger
+### 4. FastAPI AI Module 실행
+
+기본 규칙 기반 분석만 사용할 때:
+
+```powershell
+cd C:\salesmap-agent\ai-module
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000
+```
+
+BGE-M3/GLiNER/Ollama 보조 분석을 사용할 때 필요한 환경변수 예시:
+
+```powershell
+$env:AI_ENGINE="rule"
+$env:EMBEDDING_CLASSIFIER_ENABLED="true"
+$env:GLINER_ENABLED="true"
+$env:OLLAMA_BASE_URL="http://localhost:11434"
+$env:OLLAMA_MODEL="qwen2.5:3b"
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000
+```
+
+참고:
+
+- `BGE-M3`는 영업 메일 여부와 일정 의도 분류를 보조합니다.
+- `GLiNER`는 고객사/제품/참석자 추출을 보조합니다.
+- `Ollama`는 답장 초안 생성 또는 일부 분석 보정에 사용할 수 있습니다.
+- 최종 시연 안정성을 위해 주요 메일 케이스는 템플릿/규칙 보정도 함께 적용됩니다.
+
+### 5. Swagger
 
 ```text
 http://localhost:8080/swagger-ui/index.html
@@ -95,6 +125,7 @@ com.salesmap.backend
   schedule      내부 일정
   calendar      Google Calendar API
   salesmap      Salesmap 등록 이력/승인 흐름
+  customer      고객사별 활동 타임라인
   ai            FastAPI AI 모듈 client
   global        공통 응답/예외/보안/config
 ```
@@ -118,8 +149,20 @@ Gmail OAuth 연결
 Source 선택
   -> sourceGroupId가 있으면 POST /api/analysis/group
   -> FastAPI /analyze 호출
+  -> 규칙 기반 분석 + BGE-M3/GLiNER 보조
+  -> 필요 시 Ollama 보정
   -> actionType, 일정 정보, 고객사, 제품, 참석자 추출
   -> Analysis 저장
+```
+
+### 답장 초안 생성
+
+```text
+Analysis 선택
+  -> POST /api/analysis/{analysisId}/reply-draft
+  -> FastAPI /reply-draft 호출
+  -> 시연 핵심 케이스 템플릿 또는 Ollama 생성
+  -> 제목/본문 반환
 ```
 
 ### 사용자 승인
@@ -127,10 +170,23 @@ Source 선택
 ```text
 Analysis 결과 확인/수정
   -> POST /api/salesmap/register
+  -> 일정 충돌 검사
   -> actionType 기준 Schedule 처리
   -> Google Calendar 이벤트 처리
   -> SalesmapRecord 저장
 ```
+
+### 고객 타임라인
+
+```text
+영업 메일 분석 성공
+  -> customer_contacts 생성/갱신
+  -> AI 분석/일정 반영/Salesmap 등록 활동 저장
+  -> GET /api/customers
+  -> GET /api/customers/{customerContactId}/timeline
+```
+
+업무 외 메일은 고객 타임라인에 등록하지 않습니다.
 
 ### Salesmap 반영
 
@@ -166,7 +222,8 @@ cd C:\salesmap-agent\backend
 팀원이 발표 자료를 준비할 때는 아래 문서를 우선 읽으면 됩니다.
 
 1. [final-presentation-guide.md](./final-presentation-guide.md)
-2. [backend-status.md](./backend-status.md)
-3. [e2e-test-flow.md](./e2e-test-flow.md)
-4. [frontend-api-guide.md](./frontend-api-guide.md)
-5. [api-spec.md](./api-spec.md)
+2. [latest-feature-summary.md](./latest-feature-summary.md)
+3. [backend-status.md](./backend-status.md)
+4. [e2e-test-flow.md](./e2e-test-flow.md)
+5. [frontend-api-guide.md](./frontend-api-guide.md)
+6. [api-spec.md](./api-spec.md)

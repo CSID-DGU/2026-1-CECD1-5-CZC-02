@@ -3,8 +3,12 @@ package com.salesmap.backend.analysis.controller;
 import com.salesmap.backend.analysis.dto.AnalysisCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisGroupCreateRequest;
 import com.salesmap.backend.analysis.dto.AnalysisResponse;
+import com.salesmap.backend.analysis.dto.AnalysisRevisionResponse;
 import com.salesmap.backend.analysis.dto.AnalysisUpdateRequest;
+import com.salesmap.backend.analysis.dto.ReplySendRequest;
+import com.salesmap.backend.analysis.dto.ReplySendResponse;
 import com.salesmap.backend.analysis.service.AnalysisService;
+import com.salesmap.backend.ai.dto.AiReplyDraftResponse;
 import com.salesmap.backend.global.response.ApiResponse;
 import com.salesmap.backend.global.security.CustomUserPrincipal;
 import jakarta.validation.Valid;
@@ -53,6 +57,23 @@ public class AnalysisController {
         return ApiResponse.success(analysisService.getAnalysis(analysisId, principal.getUserId()));
     }
 
+    @PostMapping("/{analysisId}/reply-draft")
+    public ApiResponse<AiReplyDraftResponse> generateReplyDraft(
+            @PathVariable Long analysisId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success("답장 초안이 생성되었습니다.", analysisService.generateReplyDraft(analysisId, principal.getUserId()));
+    }
+
+    @PostMapping("/{analysisId}/send-reply")
+    public ApiResponse<ReplySendResponse> sendReply(
+            @PathVariable Long analysisId,
+            @RequestBody ReplySendRequest request,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success("답장을 전송했습니다.", analysisService.sendReply(analysisId, request, principal.getUserId()));
+    }
+
     @PatchMapping("/{analysisId}")
     public ApiResponse<AnalysisResponse> updateAnalysis(
             @PathVariable Long analysisId,
@@ -60,6 +81,22 @@ public class AnalysisController {
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         return ApiResponse.success("AI 분석 결과가 수정되었습니다.", analysisService.updateAnalysis(analysisId, request, principal.getUserId()));
+    }
+
+    @PostMapping("/{analysisId}/reject")
+    public ApiResponse<AnalysisResponse> rejectAnalysis(
+            @PathVariable Long analysisId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success("AI 분석 결과를 거절했습니다.", analysisService.rejectAnalysis(analysisId, principal.getUserId()));
+    }
+
+    @GetMapping("/{analysisId}/revisions")
+    public ApiResponse<List<AnalysisRevisionResponse>> getRevisions(
+            @PathVariable Long analysisId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success(analysisService.getRevisions(analysisId, principal.getUserId()));
     }
 
     @GetMapping("/source/{sourceId}")

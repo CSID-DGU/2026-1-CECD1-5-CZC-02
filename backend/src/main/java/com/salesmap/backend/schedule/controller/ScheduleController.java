@@ -3,6 +3,7 @@ package com.salesmap.backend.schedule.controller;
 import com.salesmap.backend.global.response.ApiResponse;
 import com.salesmap.backend.global.security.CustomUserPrincipal;
 import com.salesmap.backend.schedule.dto.ScheduleCreateRequest;
+import com.salesmap.backend.schedule.dto.ScheduleOutcomeRequest;
 import com.salesmap.backend.schedule.dto.ScheduleResponse;
 import com.salesmap.backend.schedule.dto.ScheduleUpdateRequest;
 import com.salesmap.backend.schedule.service.ScheduleService;
@@ -55,6 +56,18 @@ public class ScheduleController {
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         return ApiResponse.success("일정이 수정되었습니다.", scheduleService.updateSchedule(scheduleId, request, principal.getUserId()));
+    }
+
+    @PatchMapping("/{scheduleId}/outcome")
+    public ApiResponse<ScheduleResponse> recordOutcome(
+            @PathVariable Long scheduleId,
+            @Valid @RequestBody ScheduleOutcomeRequest request,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success(
+                "미팅 결과가 기록되었습니다.",
+                scheduleService.recordOutcome(scheduleId, request.outcome(), principal.getUserId())
+        );
     }
 
     @DeleteMapping("/{scheduleId}")

@@ -17,6 +17,9 @@ public record AnalysisResponse(
         Long targetScheduleId,
         String targetScheduleTitle,
         String actionReason,
+        String businessType,
+        Double businessRelevanceScore,
+        String businessReason,
         String scheduleText,
         String followUpAction,
         String summary,
@@ -24,7 +27,11 @@ public record AnalysisResponse(
         LocalDateTime analyzedAt,
         LocalDateTime approvedAt,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        String llmProvider,
+        String llmModel,
+        String llmFallbackReason,
+        Boolean approvedWithoutEdit
 ) {
 
     public static AnalysisResponse from(Analysis analysis) {
@@ -40,6 +47,9 @@ public record AnalysisResponse(
                 analysis.getTargetScheduleId(),
                 analysis.getTargetScheduleTitle(),
                 analysis.getActionReason(),
+                analysis.getBusinessType(),
+                analysis.getBusinessRelevanceScore(),
+                analysis.getBusinessReason(),
                 analysis.getScheduleText(),
                 analysis.getFollowUpAction(),
                 analysis.getSummary(),
@@ -47,7 +57,11 @@ public record AnalysisResponse(
                 analysis.getAnalyzedAt(),
                 analysis.getApprovedAt(),
                 analysis.getCreatedAt(),
-                analysis.getUpdatedAt()
+                analysis.getUpdatedAt(),
+                analysis.getLlmProvider(),
+                analysis.getLlmModel(),
+                analysis.getLlmFallbackReason(),
+                analysis.getApprovedWithoutEdit()
         );
     }
 }

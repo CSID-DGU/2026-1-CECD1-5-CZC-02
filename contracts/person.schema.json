@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "person.schema.json",
+  "title": "Person — 인물 대장 레코드",
+  "description": "고객사 담당자·인재 한 명의 기록. A(인물 식별)가 관리하고, ML-1 비교 쌍 생성의 원본이 된다. 레포 안의 데이터는 전부 가짜(isSynthetic=true)여야 한다.",
+  "type": "object",
+  "required": ["personId", "name", "isSynthetic"],
+  "additionalProperties": false,
+  "properties": {
+    "personId": {
+      "type": "string",
+      "pattern": "^p_[0-9a-z_]+$",
+      "description": "인물 고유 ID. 예: p_001"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "대표 표기 이름 (호칭·직함 제외). 예: 홍길동"
+    },
+    "nameVariants": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "같은 사람의 다른 표기. 영문 표기, 호칭 붙은 표기 등. 예: [\"Hong Gildong\", \"홍 부장님\"]"
+    },
+    "company": {
+      "type": ["string", "null"],
+      "description": "현재 소속 회사. 모르면 null"
+    },
+    "department": {
+      "type": ["string", "null"]
+    },
+    "title": {
+      "type": ["string", "null"],
+      "description": "현재 직함. 예: 부장"
+    },
+    "emails": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "phones": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "enum": ["EMAIL", "JANDI", "KAKAO", "PHONE", "OPEN_MARKET", "MEETING"]
+      },
+      "description": "이 사람과 접촉한 적 있는 채널"
+    },
+    "companyHistory": {
+      "type": "array",
+      "description": "소속·직함 이동 이력. 식별 시 '소속 이동' 단서로 쓴다",
+      "items": {
+        "type": "object",
+        "required": ["company"],
+        "additionalProperties": false,
+        "properties": {
+          "company": { "type": "string" },
+          "title": { "type": ["string", "null"] },
+          "until": {
+            "type": ["string", "null"],
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        }
+      }
+    },
+    "photoAvailable": {
+      "type": "boolean",
+      "description": "증명사진 보유 여부 (사진 파일 자체는 계약에 넣지 않는다)"
+    },
+    "isSynthetic": {
+      "type": "boolean",
+      "description": "가짜 데이터 여부. 레포에 들어가는 모든 예시는 true"
+    }
+  }
+}

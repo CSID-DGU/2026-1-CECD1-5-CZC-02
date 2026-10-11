@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task.schema.json",
+  "title": "Task — 할 일 (C → D)",
+  "description": "회의록에서 뽑은 할 일 하나. '무엇을 · 언제까지 · 누가' + 종류(11부류). 기한이 없으면 종류별 기본값을 넣고 dueDateIsDefault=true로 표시한다. 종류 정의는 docs/project/task-types.md.",
+  "type": "object",
+  "required": [
+    "taskId",
+    "noteId",
+    "content",
+    "dueDate",
+    "dueDateIsDefault",
+    "assignee",
+    "counterpartPersonId",
+    "commitmentKind",
+    "taskType",
+    "taskTypeConfidence",
+    "taskTypeSource",
+    "evidence",
+    "status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "taskId": {
+      "type": "string",
+      "pattern": "^t_[0-9a-z_]+$"
+    },
+    "noteId": {
+      "type": ["string", "null"],
+      "description": "출처 회의록. 사람이 직접 만든 할 일이면 null"
+    },
+    "content": {
+      "type": "string",
+      "minLength": 1,
+      "description": "무엇을. 예: 계약서 초안 송부"
+    },
+    "dueDate": {
+      "type": ["string", "null"],
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "언제까지 (날짜만)"
+    },
+    "dueDateIsDefault": {
+      "type": "boolean",
+      "description": "원문에 기한이 없어 기본값을 넣었으면 true"
+    },
+    "assignee": {
+      "type": ["string", "null"],
+      "description": "누가 (우리 쪽 담당자 이름 또는 사용자 ID)"
+    },
+    "counterpartPersonId": {
+      "type": ["string", "null"],
+      "description": "상대방 (인물 대장 personId)"
+    },
+    "commitmentKind": {
+      "enum": ["EXPLICIT", "IMPLICIT"],
+      "description": "EXPLICIT=명시적 약속('금요일까지 보내드리겠습니다'), IMPLICIT=암묵적 후속('검토해 보겠다' → 회신 확인)"
+    },
+    "taskType": {
+      "enum": [
+        "MEETING_PREP",
+        "VISIT_PREP",
+        "CONTRACT_PREP",
+        "RENEWAL_INTERVIEW",
+        "PROPOSAL_SUBMISSION",
+        "REJECTION_NOTICE",
+        "DOC_COLLECTION",
+        "END_EVALUATION",
+        "PROFITABILITY_REVIEW",
+        "SOURCING_START",
+        "NONE"
+      ],
+      "description": "11부류. S-01~S-10 + 해당 없음. 억지로 10종에 넣지 말고 애매하면 NONE"
+    },
+    "taskTypeConfidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "taskTypeSource": {
+      "enum": ["RULE", "MODEL", "LLM", "HUMAN"],
+      "description": "MODEL=ML-2 분류기, LLM=LLM 직접 판정(비교 기준), HUMAN=사람이 고침"
+    },
+    "evidence": {
+      "type": "string",
+      "minLength": 1,
+      "description": "근거가 된 회의록 문장 그대로"
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "선행 조건 (선택). 예: 계약 유형 판정, 서류 수집"
+    },
+    "status": {
+      "enum": ["DRAFT", "CONFIRMED", "DONE", "CANCELLED"],
+      "description": "사람이 확인하기 전에는 DRAFT. D는 CONFIRMED 이상만 일정·브리핑 대상으로 쓴다"
+    }
+  }
+}

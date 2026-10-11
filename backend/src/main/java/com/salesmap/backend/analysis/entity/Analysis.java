@@ -59,6 +59,16 @@ public class Analysis extends BaseEntity {
     @Column(columnDefinition = "LONGTEXT")
     private String actionReason;
 
+    @Column(length = 50)
+    private String businessType;
+
+    @Column
+    private Double businessRelevanceScore;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String businessReason;
+
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String scheduleText;
@@ -81,6 +91,25 @@ public class Analysis extends BaseEntity {
     @Column
     private LocalDateTime approvedAt;
 
+    // AI가 처음 만든 결과(수정 가능 필드)의 JSON 스냅샷. 사용자가 고쳐도 바뀌지 않는다 → 학습 데이터의 "AI 원본".
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String aiSnapshot;
+
+    // 의미 필드를 보정한 엔진 (rule / ollama / openai / mock)
+    @Column(length = 50)
+    private String llmProvider;
+
+    @Column(length = 100)
+    private String llmModel;
+
+    @Column(length = 1000)
+    private String llmFallbackReason;
+
+    // 한 번도 수정하지 않고 승인했는지 (true면 AI 결과가 그대로 정답으로 쓰였다는 뜻)
+    @Column
+    private Boolean approvedWithoutEdit;
+
     protected Analysis() {
     }
 
@@ -95,6 +124,9 @@ public class Analysis extends BaseEntity {
             Long targetScheduleId,
             String targetScheduleTitle,
             String actionReason,
+            String businessType,
+            Double businessRelevanceScore,
+            String businessReason,
             String scheduleText,
             String followUpAction,
             String summary,
@@ -112,6 +144,9 @@ public class Analysis extends BaseEntity {
         this.targetScheduleId = targetScheduleId;
         this.targetScheduleTitle = targetScheduleTitle;
         this.actionReason = actionReason;
+        this.businessType = businessType;
+        this.businessRelevanceScore = businessRelevanceScore;
+        this.businessReason = businessReason;
         this.scheduleText = scheduleText;
         this.followUpAction = followUpAction;
         this.summary = summary;
@@ -164,6 +199,18 @@ public class Analysis extends BaseEntity {
         return actionReason;
     }
 
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public Double getBusinessRelevanceScore() {
+        return businessRelevanceScore;
+    }
+
+    public String getBusinessReason() {
+        return businessReason;
+    }
+
     public String getScheduleText() {
         return scheduleText;
     }
@@ -188,9 +235,41 @@ public class Analysis extends BaseEntity {
         return approvedAt;
     }
 
-    public void markApproved() {
+    public String getAiSnapshot() {
+        return aiSnapshot;
+    }
+
+    public String getLlmProvider() {
+        return llmProvider;
+    }
+
+    public String getLlmModel() {
+        return llmModel;
+    }
+
+    public String getLlmFallbackReason() {
+        return llmFallbackReason;
+    }
+
+    public Boolean getApprovedWithoutEdit() {
+        return approvedWithoutEdit;
+    }
+
+    public void recordAiOrigin(String aiSnapshot, String llmProvider, String llmModel, String llmFallbackReason) {
+        this.aiSnapshot = aiSnapshot;
+        this.llmProvider = llmProvider;
+        this.llmModel = llmModel;
+        this.llmFallbackReason = llmFallbackReason;
+    }
+
+    public void markApproved(boolean withoutEdit) {
         this.status = AnalysisStatus.APPROVED;
         this.approvedAt = LocalDateTime.now();
+        this.approvedWithoutEdit = withoutEdit;
+    }
+
+    public void markRejected() {
+        this.status = AnalysisStatus.REJECTED;
     }
 
     public void markDeleted() {
@@ -208,8 +287,13 @@ public class Analysis extends BaseEntity {
             String actionReason,
             String scheduleText,
             String followUpAction,
-            String summary
+            String summary,
+            String businessType
     ) {
+        if (businessType != null && !businessType.isBlank()) {
+            // 영업/비영업 분류는 사용자가 바꿀 때만 반영한다(요청에 없으면 기존 값 유지).
+            this.businessType = businessType;
+        }
         this.customerName = customerName;
         this.contactName = contactName;
         this.productName = productName;

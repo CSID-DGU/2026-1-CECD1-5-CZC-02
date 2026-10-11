@@ -29,6 +29,8 @@
 - `users` 1:N `integrations`
 - `users` 1:N `sources`
 - `users` 1:N `schedules`
+- `users` 1:N `customer_contacts`
+- `users` 1:N `customer_activities`
 
 ## integrations
 
@@ -178,6 +180,57 @@ Salesmap 등록/변경/삭제 승인 이력입니다.
 
 - `salesmap_records` N:1 `analyses`
 
+## customer_contacts
+
+고객사/담당자 식별 정보입니다. AI 분석 결과가 영업 메일로 판단되고 고객사 또는 발신자 정보가 있는 경우 생성/갱신됩니다.
+
+| 컬럼 | 설명 |
+| --- | --- |
+| `id` | 고객 연락처 ID |
+| `user_id` | 사용자 FK |
+| `customer_name` | 고객사 |
+| `contact_name` | 담당자 |
+| `email` | 발신자 이메일 |
+| `domain` | 이메일 도메인 |
+| `last_seen_at` | 마지막 활동 시각 |
+| `created_at` | 생성 시각 |
+| `updated_at` | 수정 시각 |
+
+제약:
+
+- `user_id + email` unique
+
+관계:
+
+- `customer_contacts` N:1 `users`
+- `customer_contacts` 1:N `customer_activities`
+
+## customer_activities
+
+고객사별 활동 타임라인입니다.
+
+| 컬럼 | 설명 |
+| --- | --- |
+| `id` | 활동 ID |
+| `user_id` | 사용자 FK |
+| `customer_contact_id` | 고객 연락처 FK |
+| `customer_name` | 당시 고객사명 |
+| `activity_type` | `AI_ANALYZED`, `SCHEDULE_CREATED`, `SCHEDULE_UPDATED`, `SCHEDULE_CANCELED`, `SALESMAP_REGISTERED` |
+| `title` | 활동 제목 |
+| `description` | 활동 설명, LONGTEXT |
+| `source_id` | Source FK, nullable |
+| `analysis_id` | Analysis FK, nullable |
+| `schedule_id` | Schedule FK, nullable |
+| `salesmap_record_id` | SalesmapRecord FK, nullable |
+| `occurred_at` | 실제 활동 시각 |
+| `created_at` | 생성 시각 |
+| `updated_at` | 수정 시각 |
+
+정책:
+
+- `business_type=NON_BUSINESS`로 판단된 업무 외 메일은 고객 타임라인에 등록하지 않습니다.
+- 일정 삭제 시 타임라인의 `schedule_id` 참조는 끊고 이력 자체는 유지합니다.
+
 ## ERD 요약
 
 ```text
@@ -189,5 +242,7 @@ users
   │    └─ analyses
   │         ├─ schedules
   │         └─ salesmap_records
-  └─ schedules
+  ├─ schedules
+  └─ customer_contacts
+       └─ customer_activities
 ```

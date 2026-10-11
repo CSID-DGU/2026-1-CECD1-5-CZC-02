@@ -1,10 +1,19 @@
 """FastAPI 메인 앱"""
+import sys
+
+# Windows 콘솔(cp949)에서 한글/이모지 로그 출력 시 UnicodeEncodeError로 죽는 것을 방지
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from app.config import SERVER_HOST, SERVER_PORT, BACKEND_URL
+from app.config import AI_ENGINE, OLLAMA_BASE_URL, OLLAMA_MODEL, SERVER_HOST, SERVER_PORT, BACKEND_URL, EMBEDDING_CLASSIFIER_ENABLED, EMBEDDING_MODEL_NAME, GLINER_ENABLED, GLINER_MODEL_NAME
 from app.routes.analyze import router as analyze_router
 from app.schemas.models import AiErrorResponse
 
@@ -68,6 +77,11 @@ async def startup_event():
     print(f"📌 서버: http://{SERVER_HOST}:{SERVER_PORT}")
     print(f"📌 문서: http://{SERVER_HOST}:{SERVER_PORT}/docs")
     print(f"📌 Backend: {BACKEND_URL}")
+    print(f"📌 AI Engine: {AI_ENGINE}")
+    print(f"📌 Embedding Classifier: {EMBEDDING_CLASSIFIER_ENABLED} / {EMBEDDING_MODEL_NAME}")
+    print(f"📌 Entity Extractor: {GLINER_ENABLED} / {GLINER_MODEL_NAME}")
+    if AI_ENGINE in {"ollama", "llm", "hybrid"}:
+        print(f"📌 Ollama: {OLLAMA_BASE_URL} / {OLLAMA_MODEL}")
 
 
 @app.on_event("shutdown")

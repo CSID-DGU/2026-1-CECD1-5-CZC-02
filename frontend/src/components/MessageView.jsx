@@ -1,10 +1,13 @@
-﻿import { useCallback, useEffect, useState } from 'react';
+﻿import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createAnalysis, createGroupAnalysis, getAnalysesBySource, getAnalysisById, updateAnalysis } from '../api/analyses';
+import { createAnalysis, createGroupAnalysis, generateReplyDraft, sendReplyDraft, getAnalysesBySource, getAnalysisById, rejectAnalysis, updateAnalysis } from '../api/analyses';
 import { getApiErrorMessage } from '../api/errors';
 import { getSalesmapRecordsByAnalysis, registerSalesmapRecord } from '../api/salesmapRecords';
-import { getSourceById, getSources } from '../api/sources';
+import { deleteSource, getSourceById, getSources } from '../api/sources';
 import { collectGmailMessages } from '../api/integrations';
+import { getAutoPipelineStatus } from '../api/autoPipeline';
+import { startBulkAnalysis } from '../api/analysisJobs';
+import { useActivity } from './useActivityFeed';
 
 const EMPTY_TEXT = '해당 없음';
 
@@ -102,6 +105,62 @@ function getActionTypeClass(actionType) {
   }
 }
 
+function getDisplayActionType(analysis) {
+  if (analysis?.businessType === 'NON_BUSINESS') {
+    return 'UNKNOWN';
+  }
+
+  return analysis?.actionType || 'UNKNOWN';
+}
+
+function getDisplayAnalysisValue(analysis, field) {
+  if (analysis?.businessType === 'NON_BUSINESS') {
+    return EMPTY_TEXT;
+  }
+
+  return analysis?.[field];
+}
+
+function getDisplayAmount(analysis) {
+  if (analysis?.businessType === 'NON_BUSINESS') {
+    return EMPTY_TEXT;
+  }
+
+  return formatMoney(analysis?.amount);
+}
+
+function formatBusinessType(type) {
+  switch (type) {
+    case 'SALES_ACTIVITY':
+      return '영업 메일';
+    case 'NON_BUSINESS':
+      return '업무 외 메일';
+    case 'UNKNOWN':
+      return '확인 필요';
+    default:
+      return '확인 필요';
+  }
+}
+
+function getBusinessTypeClass(type) {
+  switch (type) {
+    case 'SALES_ACTIVITY':
+      return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+    case 'NON_BUSINESS':
+      return 'bg-gray-100 text-gray-600 border-gray-200';
+    default:
+      return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+  }
+}
+
+function formatBusinessScore(score) {
+  if (score === null || score === undefined || score === '') {
+    return EMPTY_TEXT;
+  }
+
+  return `${Math.round(Number(score) * 100)}%`;
+}
+
 function getAnalysisStatusClass(status) {
   switch (status) {
     case 'ANALYZED':
@@ -184,6 +243,47 @@ function formatSalesmapResultTitle(actionType) {
   }
 }
 
+function formatScheduleConflictType(type) {
+  switch (type) {
+    case 'DUPLICATE_SCHEDULE':
+      return '이미 같은 일정이 등록되어 있습니다.';
+    case 'SAME_TIME_SCHEDULE':
+      return '같은 시간대에 다른 일정이 있습니다.';
+    case 'NEARBY_SCHEDULE':
+      return '등록하려는 일정 전후 3시간 이내에 다른 일정이 있습니다.';
+    default:
+      return '일정 충돌이 감지되었습니다.';
+  }
+}
+
+function formatConflictDateTime(value) {
+  if (!value) {
+    return EMPTY_TEXT;
+  }
+
+  return String(value).replace('T', ' ');
+}
+
+function formatScheduleConflictMessage(conflict) {
+  if (!conflict) {
+    return '등록 전 일정 충돌을 확인해야 합니다.';
+  }
+
+  const candidate = conflict.newSchedule;
+  const conflictItems = Array.isArray(conflict.conflicts) ? conflict.conflicts : [];
+  const candidateText = candidate
+    ? `등록 예정: ${formatEmpty(candidate.title)} / ${formatConflictDateTime(candidate.scheduleDateTime)}`
+    : '';
+  const existingText = conflictItems
+    .slice(0, 3)
+    .map((item) => `기존 일정: ${formatEmpty(item.title)} / ${formatConflictDateTime(item.scheduleDateTime)}`)
+    .join('\n');
+
+  return [formatScheduleConflictType(conflict.type), candidateText, existingText]
+    .filter(Boolean)
+    .join('\n');
+}
+
 function getSalesmapResultClass(actionType) {
   switch (actionType) {
     case 'CANCEL':
@@ -231,16 +331,20 @@ function toAnalysisForm(analysis) {
     actionType: analysis.actionType || 'UNKNOWN',
     actionReason: analysis.actionReason || '',
     targetScheduleTitle: analysis.targetScheduleTitle || '',
+    businessType: analysis.businessType || 'UNKNOWN',
   };
 }
 
-function shouldHideSourceFromList(source) {
-  const title = source.title || '';
-
-  return (
-    title.includes('David Shin님이 새로운 릴스를 추가했습니다')
-    || title.includes("추천: '26년 5월' 이경준님의 상태 업데이트")
-  );
+// 어떤 엔진이 분석했는지 표시 (규칙 / 로컬 LLM / OpenAI)
+function formatAnalysisEngine(analysis) {
+  const model = analysis?.llmModel ? ` (${analysis.llmModel})` : '';
+  switch (analysis?.llmProvider) {
+    case 'openai': return `OpenAI${model}`;
+    case 'ollama': return `로컬 LLM${model}`;
+    case 'mock': return '가짜 응답(mock 모드)';
+    case 'rule': return analysis?.llmFallbackReason ? '규칙 기반 (LLM 실패로 대체)' : '규칙 기반';
+    default: return EMPTY_TEXT;
+  }
 }
 
 export function MessageView() {
@@ -248,6 +352,7 @@ export function MessageView() {
   const { source } = useParams();
   const navigate = useNavigate();
   const [backendSources, setBackendSources] = useState([]);
+  const [isAutoMode, setIsAutoMode] = useState(false);
   const [sourceListMessage, setSourceListMessage] = useState('메일 조회 중');
   const [isSyncingGmail, setIsSyncingGmail] = useState(false);
   const [selectedSourceDetail, setSelectedSourceDetail] = useState(null);
@@ -255,9 +360,13 @@ export function MessageView() {
   const [sourceDetailMessage, setSourceDetailMessage] = useState('');
   const [analysisActionMessage, setAnalysisActionMessage] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isDeletingSource, setIsDeletingSource] = useState(false);
   const [salesmapRecordsByAnalysisId, setSalesmapRecordsByAnalysisId] = useState({});
   const [salesmapActionByAnalysisId, setSalesmapActionByAnalysisId] = useState({});
   const [registeringAnalysisId, setRegisteringAnalysisId] = useState(null);
+  const sourceItemRefs = useRef({});
+  const { job: analysisJob, dataVersion, refresh: refreshActivity } = useActivity();
+  const isBulkAnalyzing = Boolean(analysisJob?.running);
 
   const selectedSourceId = source?.startsWith('source-')
     ? Number(source.replace('source-', ''))
@@ -280,10 +389,9 @@ export function MessageView() {
   const fetchSources = useCallback(async () => {
     try {
       const sources = await getSources();
-      const visibleSources = sources.filter((item) => !shouldHideSourceFromList(item));
-      setBackendSources(visibleSources);
-      setSourceListMessage(`${visibleSources.length}건 확인됨`);
-      return visibleSources;
+      setBackendSources(sources);
+      setSourceListMessage(`${sources.length}건 확인됨`);
+      return sources;
     } catch (error) {
       console.error('Failed to fetch sources:', {
         status: error.response?.status,
@@ -300,6 +408,67 @@ export function MessageView() {
   useEffect(() => {
     fetchSources();
   }, [fetchSources]);
+
+  // 자동 수집·분석 모드가 켜져 있으면, 서버가 백그라운드로 처리한 새 결과를 주기적으로 가져와 목록을 갱신한다.
+  useEffect(() => {
+    let ignore = false;
+
+    getAutoPipelineStatus()
+      .then((result) => {
+        if (!ignore) {
+          setIsAutoMode(Boolean(result?.enabled));
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  // 서버의 수집·분석 작업이 진척될 때마다 목록과 열어둔 메일의 분석 결과를 다시 불러온다.
+  useEffect(() => {
+    if (dataVersion === 0) {
+      return undefined;
+    }
+
+    let ignore = false;
+    const reload = async () => {
+      await fetchSources();
+      if (!selectedSourceId) {
+        return;
+      }
+      try {
+        const analyses = await getAnalysesBySource(selectedSourceId);
+        if (!ignore && Array.isArray(analyses) && analyses.length > 0) {
+          setSourceAnalyses(latestAnalysisOnly(analyses));
+        }
+      } catch {
+        // 다음 갱신 때 다시 시도한다.
+      }
+    };
+    reload();
+
+    return () => {
+      ignore = true;
+    };
+    // selectedSourceId가 바뀔 때는 상세 조회 effect가 따로 불러온다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataVersion, fetchSources]);
+
+  useEffect(() => {
+    if (!selectedSourceId || backendSources.length === 0) {
+      return;
+    }
+
+    const selectedItem = sourceItemRefs.current[selectedSourceId];
+    if (selectedItem) {
+      selectedItem.scrollIntoView({
+        block: 'center',
+        behavior: 'smooth',
+      });
+    }
+  }, [backendSources, selectedSourceId]);
 
   const handleSyncGmail = async () => {
     try {
@@ -329,6 +498,17 @@ export function MessageView() {
       setSourceListMessage(`Gmail 동기화 실패: ${getApiErrorMessage(error)}`);
     } finally {
       setIsSyncingGmail(false);
+    }
+  };
+
+  // 분석은 서버 작업으로 돌기 때문에 다른 화면으로 옮겨도 계속되고, 진행률은 상단 표시로 이어진다.
+  const handleAnalyzeCollectedSources = async () => {
+    try {
+      const response = await startBulkAnalysis();
+      setSourceListMessage(response.message);
+      refreshActivity();
+    } catch (error) {
+      setSourceListMessage(`AI 분석 시작 실패: ${getApiErrorMessage(error)}`);
     }
   };
 
@@ -376,6 +556,44 @@ export function MessageView() {
     navigate(`/messages/source-${sourceId}`);
   };
 
+  const handleDeleteSource = async (sourceId = selectedSourceId) => {
+    if (!sourceId) {
+      return;
+    }
+
+    const confirmed = window.confirm('선택한 수집 메일을 목록에서 삭제할까요?');
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setIsDeletingSource(true);
+      await deleteSource(sourceId);
+      setBackendSources((prev) => prev.filter((item) => item.sourceId !== sourceId));
+      setSelectedSourceDetail(null);
+      setSourceAnalyses([]);
+      setSalesmapRecordsByAnalysisId({});
+      setSalesmapActionByAnalysisId({});
+      setAnalysisActionMessage('');
+      setSourceDetailMessage('');
+      await fetchSources();
+      setSourceListMessage('수집된 메일이 삭제되었습니다.');
+      navigate('/messages/gmail');
+    } catch (error) {
+      console.error('Failed to delete source:', {
+        sourceId,
+        status: error.response?.status,
+        message: error.response?.data?.message,
+        data: error.response?.data?.data,
+        responseBody: error.response?.data,
+        rawError: error,
+      });
+      setAnalysisActionMessage(`메일 삭제 실패: ${formatDetailedError(error)}`);
+    } finally {
+      setIsDeletingSource(false);
+    }
+  };
+
   const handleCreateAnalysis = async () => {
     if (!selectedSourceId || !selectedSourceDetail) {
       return;
@@ -383,8 +601,8 @@ export function MessageView() {
 
     const isGroupAnalysis = Boolean(selectedSourceDetail.sourceGroupId);
     const payload = isGroupAnalysis
-      ? { sourceGroupId: selectedSourceDetail.sourceGroupId }
-      : { sourceId: selectedSourceId };
+      ? { sourceGroupId: selectedSourceDetail.sourceGroupId, analysisMode: 'ollama' }
+      : { sourceId: selectedSourceId, analysisMode: 'ollama' };
 
     try {
       setIsAnalyzing(true);
@@ -417,7 +635,7 @@ export function MessageView() {
         responseBody: error.response?.data,
         rawError: error,
       });
-      setAnalysisActionMessage(`AI 遺꾩꽍 ?ㅽ뙣: ${formatDetailedError(error)}`);
+      setAnalysisActionMessage(`AI 분석 실패: ${formatDetailedError(error)}`);
     } finally {
       setIsAnalyzing(false);
     }
@@ -427,11 +645,8 @@ export function MessageView() {
     const currentAnalysis = sourceAnalyses.find((analysis) => analysis.analysisId === analysisId);
     const actionType = currentAnalysis?.actionType;
 
-    try {
-      setRegisteringAnalysisId(analysisId);
-      setSalesmapActionByAnalysisId((prev) => ({ ...prev, [analysisId]: '' }));
-
-      await registerSalesmapRecord({ analysisId });
+    const completeRegistration = async (force = false) => {
+      await registerSalesmapRecord({ analysisId, force });
       const records = await getSalesmapRecordsByAnalysis(analysisId);
       const updatedAnalysis = await getAnalysisById(analysisId);
 
@@ -441,6 +656,13 @@ export function MessageView() {
         ...prev,
         [analysisId]: formatRegisterSuccessMessage(actionType),
       }));
+    };
+
+    try {
+      setRegisteringAnalysisId(analysisId);
+      setSalesmapActionByAnalysisId((prev) => ({ ...prev, [analysisId]: '' }));
+
+      await completeRegistration(false);
     } catch (error) {
       console.error('Failed to register salesmap record:', {
         analysisId,
@@ -450,12 +672,68 @@ export function MessageView() {
         responseBody: error.response?.data,
         rawError: error,
       });
+
+      if (error.response?.status === 409) {
+        const conflict = error.response?.data?.data;
+        const conflictMessage = formatScheduleConflictMessage(conflict);
+
+        if (conflict?.type !== 'DUPLICATE_SCHEDULE') {
+          const confirmed = window.confirm(`${conflictMessage}\n\n그래도 등록할까요?`);
+          if (confirmed) {
+            try {
+              await completeRegistration(true);
+              return;
+            } catch (retryError) {
+              console.error('Failed to force register salesmap record:', {
+                analysisId,
+                status: retryError.response?.status,
+                message: retryError.response?.data?.message,
+                data: retryError.response?.data?.data,
+                responseBody: retryError.response?.data,
+                rawError: retryError,
+              });
+              setSalesmapActionByAnalysisId((prev) => ({
+                ...prev,
+                [analysisId]: `${formatRegisterButtonLabel(actionType)} 실패: ${formatDetailedError(retryError)}`,
+              }));
+              return;
+            }
+          }
+
+          setSalesmapActionByAnalysisId((prev) => ({
+            ...prev,
+            [analysisId]: '일정 충돌 확인 후 등록을 취소했습니다.',
+          }));
+          return;
+        }
+
+        setSalesmapActionByAnalysisId((prev) => ({
+          ...prev,
+          [analysisId]: `${formatRegisterButtonLabel(actionType)} 실패: ${conflictMessage}`,
+        }));
+        return;
+      }
+
       setSalesmapActionByAnalysisId((prev) => ({
         ...prev,
         [analysisId]: `${formatRegisterButtonLabel(actionType)} 실패: ${formatDetailedError(error)}`,
       }));
     } finally {
       setRegisteringAnalysisId(null);
+    }
+  };
+
+  const handleRejectAnalysis = async (analysisId) => {
+    if (!window.confirm('이 분석 결과를 거절할까요? 거절한 결과는 딜 파이프라인과 고객 타임라인에서 빠집니다.')) {
+      return;
+    }
+    try {
+      const rejected = await rejectAnalysis(analysisId);
+      setSourceAnalyses([rejected]);
+      setAnalysisActionMessage('AI 분석 결과를 거절했습니다.');
+    } catch (error) {
+      console.error('Failed to reject analysis:', error);
+      setAnalysisActionMessage(`AI 분석 결과 거절 실패: ${formatDetailedError(error)}`);
     }
   };
 
@@ -481,17 +759,35 @@ export function MessageView() {
   return (
     <div className="p-6 h-full w-full min-w-0 overflow-hidden grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(380px,2fr)] gap-5">
       <div className="min-w-0 space-y-4 overflow-auto">
-        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm text-gray-700">수집된 메일</h3>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500">{sourceListMessage}</span>
+              <h3 className="text-sm font-bold text-slate-800" style={{ fontFamily: 'var(--display)' }}>수집된 메일</h3>
+              {isAutoMode && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-sky-500/10 to-indigo-500/10 px-2 py-0.5 text-[11px] font-semibold text-blue-600">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500" /> 자동 처리 켜짐
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-400">
+                {isBulkAnalyzing
+                  ? `${analysisJob.trigger === 'AUTO' ? '자동 ' : ''}AI 분석 중... ${analysisJob.done}/${analysisJob.total}`
+                  : sourceListMessage}
+              </span>
               <button
                 onClick={handleSyncGmail}
                 disabled={isSyncingGmail}
-                className="px-2.5 py-1 text-xs border border-gray-300 rounded hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400"
+                className="px-2.5 py-1 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-600 disabled:opacity-50"
               >
                 {isSyncingGmail ? '동기화 중...' : 'Gmail 새로고침'}
+              </button>
+              <button
+                onClick={handleAnalyzeCollectedSources}
+                disabled={isBulkAnalyzing || isSyncingGmail || backendSources.length === 0}
+                className="px-2.5 py-1 text-xs rounded-lg bg-gradient-to-r from-sky-500 to-indigo-500 text-white font-semibold shadow-sm hover:from-sky-600 hover:to-indigo-600 disabled:opacity-50"
+              >
+                {isBulkAnalyzing ? '분석 중...' : '수집 메일 AI 분석'}
               </button>
             </div>
           </div>
@@ -501,16 +797,34 @@ export function MessageView() {
               {backendSources.map((item) => (
                 <button
                   key={item.sourceId}
+                  ref={(element) => {
+                    if (element) {
+                      sourceItemRefs.current[item.sourceId] = element;
+                    }
+                  }}
                   onClick={() => handleSourceClick(item.sourceId)}
                   className={`w-full text-left border rounded-md p-3 transition-colors ${
                     selectedSourceId === item.sourceId
                       ? 'border-blue-400 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      : item.direction === 'SENT'
+                        ? 'border-slate-100 bg-slate-50 opacity-55 hover:opacity-100 hover:border-slate-200'
+                        : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-sm text-gray-800 truncate">{item.title}</p>
-                    <span className="text-xs text-gray-500 shrink-0">{formatSourceType(item.sourceType)}</span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span
+                        className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full border ${
+                          item.direction === 'SENT'
+                            ? 'bg-slate-100 text-slate-500 border-slate-200'
+                            : 'bg-teal-50 text-teal-700 border-teal-200'
+                        }`}
+                      >
+                        {item.direction === 'SENT' ? '보낸' : '받은'}
+                      </span>
+                      <span className="text-xs text-gray-500">{formatSourceType(item.sourceType)}</span>
+                    </div>
                   </div>
                   <p className="text-xs text-gray-500 mt-1 line-clamp-2 break-words">
                     {item.senderEmail ? `${item.senderEmail} - ` : ''}
@@ -552,9 +866,9 @@ export function MessageView() {
         )}
       </div>
 
-      <div className="w-full max-w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col min-w-0 overflow-hidden">
-        <div className="border-b border-gray-200 px-5 py-4">
-          <h3 className="text-sm text-gray-800">메일 상세 및 AI 분석</h3>
+      <div className="w-full max-w-full bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col min-w-0 overflow-hidden">
+        <div className="border-b border-slate-200 px-5 py-4">
+          <h3 className="text-sm font-bold text-slate-800" style={{ fontFamily: 'var(--display)' }}>메일 상세 및 AI 분석</h3>
         </div>
 
         <div className="flex-1 overflow-auto p-5 space-y-4">
@@ -570,10 +884,19 @@ export function MessageView() {
 
           {selectedSourceDetail && (
             <>
-              <div className="bg-gray-50 border border-gray-200 rounded-md p-3 min-w-0">
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 min-w-0">
                 <div className="flex items-center justify-between mb-2 gap-2">
-                  <span className="text-xs text-gray-500">{formatSourceType(selectedSourceDetail.sourceType)}</span>
-                  <span className="text-xs text-gray-500">{formatSourceStatus(selectedSourceDetail.status)}</span>
+                  <span className="text-xs text-slate-500">{formatSourceType(selectedSourceDetail.sourceType)}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500">{formatSourceStatus(selectedSourceDetail.status)}</span>
+                    <button
+                      onClick={() => handleDeleteSource(selectedSourceDetail.sourceId)}
+                      disabled={isDeletingSource}
+                      className="px-2 py-0.5 text-xs border border-red-200 text-red-600 rounded hover:bg-red-50 disabled:bg-gray-100 disabled:text-gray-400"
+                    >
+                      {isDeletingSource ? '삭제 중...' : '삭제'}
+                    </button>
+                  </div>
                 </div>
                 {isDev && (
                   <div className="mb-2 text-left text-xs text-gray-400">
@@ -595,18 +918,27 @@ export function MessageView() {
                 </p>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-md p-3 min-w-0">
+              {selectedSourceDetail.direction === 'SENT' ? (
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 min-w-0 text-center">
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    내가 보낸 메일은 AI 분석 대상이 아닙니다.
+                    <br />
+                    <span className="text-xs text-slate-400">
+                      받은 메일만 분석하며, 이 답장은 해당 고객 타임라인에 소통 기록으로 남습니다.
+                    </span>
+                  </p>
+                </div>
+              ) : (
+              <div className="bg-gradient-to-br from-blue-50 to-violet-50/40 border border-blue-100 rounded-xl p-3 min-w-0">
                 <div className="flex items-center justify-between gap-3 mb-3">
-                  <h4 className="text-sm text-blue-700">AI 분석 결과</h4>
-                  {isDev && (
-                    <button
-                      onClick={handleCreateAnalysis}
-                      disabled={isAnalyzing}
-                      className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded shrink-0"
-                    >
-                      {isAnalyzing ? '분석 중...' : 'AI 분석 실행'}
-                    </button>
-                  )}
+                  <h4 className="text-sm font-bold text-blue-700" style={{ fontFamily: 'var(--display)' }}>AI 분석 결과</h4>
+                  <button
+                    onClick={handleCreateAnalysis}
+                    disabled={isAnalyzing}
+                    className="px-3 py-1 text-xs rounded-lg bg-gradient-to-r from-sky-500 to-indigo-500 text-white font-semibold shadow-sm hover:from-sky-600 hover:to-indigo-600 disabled:opacity-50 shrink-0"
+                  >
+                    {isAnalyzing ? '분석 중...' : 'AI 분석 실행'}
+                  </button>
                 </div>
 
                 {analysisActionMessage && (
@@ -631,12 +963,16 @@ export function MessageView() {
                         isRegistering={registeringAnalysisId === analysis.analysisId}
                         onRegister={() => handleRegisterSalesmap(analysis.analysisId)}
                         onSave={(payload) => handleUpdateAnalysis(analysis.analysisId, payload)}
+                        onReject={() => handleRejectAnalysis(analysis.analysisId)}
+                        onDeleteSource={() => handleDeleteSource(selectedSourceId)}
+                        isDeletingSource={isDeletingSource}
                         isDev={isDev}
                       />
                     ))}
                   </div>
                 )}
               </div>
+              )}
             </>
           )}
         </div>
@@ -645,15 +981,62 @@ export function MessageView() {
   );
 }
 
-function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegister, onSave, isDev }) {
+function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegister, onSave, onReject, onDeleteSource, isDeletingSource, isDev }) {
+  const isClosed = ['APPROVED', 'REJECTED', 'DELETED'].includes(analysis.status);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDrafting, setIsDrafting] = useState(false);
+  const [replyDraft, setReplyDraft] = useState(null);
+  const [draftMessage, setDraftMessage] = useState('');
+  const [draftSubject, setDraftSubject] = useState('');
+  const [draftBody, setDraftBody] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [sentInfo, setSentInfo] = useState(null);
   const [form, setForm] = useState(() => toAnalysisForm(analysis));
 
   useEffect(() => {
     setForm(toAnalysisForm(analysis));
     setIsEditing(false);
+    setSentInfo(null);
+
+    // 미리 생성해 둔 답장 초안이 있으면 복원한다.
+    // (로컬 상태만 쓰면 다른 메일을 봤다 돌아올 때 초안이 사라져 미리 만들어둘 수 없다)
+    try {
+      const cached = analysis.analysisId
+        ? localStorage.getItem(`salesmap:replyDraft:${analysis.analysisId}`)
+        : null;
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        setReplyDraft(parsed);
+        setDraftSubject(parsed.subject || '');
+        setDraftBody(parsed.body || '');
+        setDraftMessage('미리 생성해 둔 답장 초안을 불러왔습니다.');
+        return;
+      }
+    } catch (error) {
+      console.error('Failed to restore cached reply draft:', error);
+    }
+
+    setReplyDraft(null);
+    setDraftMessage('');
+    setDraftSubject('');
+    setDraftBody('');
   }, [analysis]);
+
+  // 초안 생성/수정 시 localStorage에 저장해 내비게이션에도 유지되게 한다.
+  useEffect(() => {
+    if (!replyDraft || !analysis.analysisId) {
+      return;
+    }
+    try {
+      localStorage.setItem(
+        `salesmap:replyDraft:${analysis.analysisId}`,
+        JSON.stringify({ subject: draftSubject, body: draftBody })
+      );
+    } catch (error) {
+      console.error('Failed to cache reply draft:', error);
+    }
+  }, [replyDraft, draftSubject, draftBody, analysis.analysisId]);
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -672,13 +1055,87 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
     }
   };
 
+  const handleGenerateReplyDraft = async () => {
+    try {
+      setIsDrafting(true);
+      setDraftMessage('');
+      setSentInfo(null);
+      const draft = await generateReplyDraft(analysis.analysisId);
+      // 생성이 끝나는 즉시 저장한다. 생성 도중(40초) 다른 메일로 이동해 컴포넌트가 사라져도
+      // 이 콜백은 계속 실행되므로, setState는 무시돼도 localStorage 저장은 남아 나중에 복원된다.
+      try {
+        localStorage.setItem(
+          `salesmap:replyDraft:${analysis.analysisId}`,
+          JSON.stringify({ subject: draft.subject || '', body: draft.body || '' })
+        );
+      } catch (error) {
+        console.error('Failed to cache reply draft:', error);
+      }
+      setReplyDraft(draft);
+      setDraftSubject(draft.subject || '');
+      setDraftBody(draft.body || '');
+      setDraftMessage('답장 초안이 생성되었습니다. 내용을 다듬고 바로 전송할 수 있어요.');
+    } catch (error) {
+      console.error('Failed to generate reply draft:', error);
+      setDraftMessage(`답장 초안 생성 실패: ${getApiErrorMessage(error)}`);
+    } finally {
+      setIsDrafting(false);
+    }
+  };
+
+  const handleCopyReplyDraft = async () => {
+    if (!replyDraft) {
+      return;
+    }
+
+    const text = `${draftSubject}\n\n${draftBody}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setDraftMessage('답장 초안이 복사되었습니다.');
+    } catch (error) {
+      console.error('Failed to copy reply draft:', error);
+      setDraftMessage('복사에 실패했습니다. 초안 내용을 직접 선택해 복사해주세요.');
+    }
+  };
+
+  const handleSendReply = async () => {
+    if (!draftBody.trim()) {
+      setDraftMessage('보낼 본문이 비어 있습니다.');
+      return;
+    }
+    try {
+      setIsSending(true);
+      setDraftMessage('');
+      const result = await sendReplyDraft(analysis.analysisId, {
+        subject: draftSubject,
+        body: draftBody,
+      });
+      setSentInfo(result);
+      setDraftMessage(`${result.sentTo} 로 답장을 전송했습니다.`);
+      // 전송 완료된 초안은 캐시에서 제거 (다시 열어도 재등장하지 않게)
+      try {
+        localStorage.removeItem(`salesmap:replyDraft:${analysis.analysisId}`);
+      } catch (error) {
+        console.error('Failed to clear cached reply draft:', error);
+      }
+    } catch (error) {
+      console.error('Failed to send reply:', error);
+      setDraftMessage(`답장 전송 실패: ${getApiErrorMessage(error)}`);
+    } finally {
+      setIsSending(false);
+    }
+  };
+
   return (
-    <div className="bg-white border border-blue-100 rounded p-3 min-w-0">
+    <div className="bg-white border border-slate-200 rounded-xl p-3 min-w-0 shadow-sm">
       <div className="flex items-center justify-between mb-3 gap-2">
-        <span className="text-xs text-gray-500">분석 번호 #{analysis.analysisId}</span>
+        <span className="text-xs text-slate-400">분석 번호 #{analysis.analysisId}</span>
         <div className="flex items-center gap-2">
-          <span className={`border rounded-full px-2 py-0.5 text-xs ${getActionTypeClass(analysis.actionType)}`}>
-            {formatActionType(analysis.actionType)}
+          <span className={`border rounded-full px-2 py-0.5 text-xs ${getBusinessTypeClass(analysis.businessType)}`}>
+            {formatBusinessType(analysis.businessType)}
+          </span>
+          <span className={`border rounded-full px-2 py-0.5 text-xs ${getActionTypeClass(getDisplayActionType(analysis))}`}>
+            {formatActionType(getDisplayActionType(analysis))}
           </span>
           <span className={`border rounded-full px-2 py-0.5 text-xs ${getAnalysisStatusClass(analysis.status)}`}>
             {formatAnalysisStatus(analysis.status)}
@@ -688,6 +1145,18 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
 
       {isEditing ? (
         <div className="space-y-2">
+          <div className="mb-2 grid grid-cols-[88px_1fr] gap-2">
+            <p className="text-xs text-gray-500">메일 분류</p>
+            <select
+              value={form.businessType}
+              onChange={(event) => handleChange('businessType', event.target.value)}
+              className="text-sm border border-gray-300 rounded px-2 py-1 outline-none focus:border-blue-500"
+            >
+              <option value="SALES_ACTIVITY">영업 메일</option>
+              <option value="NON_BUSINESS">비영업 메일</option>
+              <option value="UNKNOWN">확인 필요</option>
+            </select>
+          </div>
           <AnalysisEditField label="분석 요약" value={form.summary} onChange={(value) => handleChange('summary', value)} textarea />
           <AnalysisEditField label="다음 행동" value={form.followUpAction} onChange={(value) => handleChange('followUpAction', value)} />
           <AnalysisEditField label="일정 정보" value={form.scheduleText} onChange={(value) => handleChange('scheduleText', value)} />
@@ -714,17 +1183,20 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
         </div>
       ) : (
         <>
-          <AnalysisField label="분석 요약" value={analysis.summary} strong />
-          <AnalysisField label="다음 행동" value={analysis.followUpAction} />
-          <AnalysisField label="일정 정보" value={analysis.scheduleText} />
-          <AnalysisField label="참석자" value={analysis.attendees} />
-          <AnalysisField label="고객사" value={analysis.customerName} />
-          <AnalysisField label="제품" value={analysis.productName} />
-          <AnalysisField label="금액" value={formatMoney(analysis.amount)} alreadyFormatted />
-          <AnalysisField label="처리 유형" value={formatActionType(analysis.actionType)} alreadyFormatted />
-          <AnalysisField label="판단 근거" value={analysis.actionReason} />
+          <AnalysisField label="분석 요약" value={getDisplayAnalysisValue(analysis, 'summary')} strong />
+          <AnalysisField label="다음 행동" value={getDisplayAnalysisValue(analysis, 'followUpAction')} />
+          <AnalysisField label="일정 정보" value={getDisplayAnalysisValue(analysis, 'scheduleText')} />
+          <AnalysisField label="참석자" value={getDisplayAnalysisValue(analysis, 'attendees')} />
+          <AnalysisField label="고객사" value={getDisplayAnalysisValue(analysis, 'customerName')} />
+          <AnalysisField label="제품" value={getDisplayAnalysisValue(analysis, 'productName')} />
+          <AnalysisField label="금액" value={getDisplayAmount(analysis)} alreadyFormatted />
+          <AnalysisField label="메일 분류" value={`${formatBusinessType(analysis.businessType)} (${formatBusinessScore(analysis.businessRelevanceScore)})`} alreadyFormatted />
+          <AnalysisField label="분류 근거" value={analysis.businessReason} />
+          <AnalysisField label="처리 유형" value={formatActionType(getDisplayActionType(analysis))} alreadyFormatted />
+          <AnalysisField label="판단 근거" value={getDisplayAnalysisValue(analysis, 'actionReason')} />
           {isDev && <AnalysisField label="대상 일정 ID" value={analysis.targetScheduleId} />}
-          <AnalysisField label="대상 일정명" value={analysis.targetScheduleTitle} />
+          <AnalysisField label="대상 일정명" value={getDisplayAnalysisValue(analysis, 'targetScheduleTitle')} />
+          <AnalysisField label="분석 엔진" value={formatAnalysisEngine(analysis)} alreadyFormatted />
         </>
       )}
 
@@ -753,18 +1225,110 @@ function AnalysisCard({ analysis, records, actionMessage, isRegistering, onRegis
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => setIsEditing(true)}
-              disabled={analysis.status === 'APPROVED' || analysis.status === 'DELETED'}
+              disabled={isClosed}
               className="px-3 py-1.5 text-xs border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400"
             >
               수정
             </button>
+            {analysis.businessType === 'NON_BUSINESS' ? (
+              <button
+                onClick={onDeleteSource}
+                disabled={isDeletingSource}
+                className="px-3 py-1.5 text-xs bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white rounded"
+              >
+                {isDeletingSource ? '삭제 중...' : '메일 삭제'}
+              </button>
+            ) : (
+              <button
+                onClick={onRegister}
+                disabled={isRegistering || isClosed}
+                className="px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+              >
+                {isRegistering ? formatRegisteringLabel(analysis.actionType) : formatRegisterButtonLabel(analysis.actionType)}
+              </button>
+            )}
+          </div>
+        )}
+
+        {!isEditing && !isClosed && (
+          <button
+            onClick={onReject}
+            className="mt-2 w-full px-3 py-1.5 text-xs text-slate-500 hover:text-red-600 hover:bg-red-50 rounded"
+          >
+            분석 결과가 틀렸어요 (거절)
+          </button>
+        )}
+
+        {!isEditing && analysis.businessType !== 'NON_BUSINESS' && (
+          <div className="mt-2">
             <button
-              onClick={onRegister}
-              disabled={isRegistering || analysis.status === 'APPROVED' || analysis.status === 'DELETED'}
-              className="px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded"
+              onClick={handleGenerateReplyDraft}
+              disabled={isDrafting}
+              className="w-full px-3 py-1.5 text-xs border border-blue-200 text-blue-700 rounded hover:bg-blue-50 disabled:bg-gray-100 disabled:text-gray-400"
             >
-              {isRegistering ? formatRegisteringLabel(analysis.actionType) : formatRegisterButtonLabel(analysis.actionType)}
+              {isDrafting ? '답장 초안 생성 중...' : '답장 초안 생성'}
             </button>
+          </div>
+        )}
+
+        {draftMessage && (
+          <p className="text-xs text-blue-700 mt-2 text-left">{draftMessage}</p>
+        )}
+
+        {replyDraft && (
+          <div className="mt-3 overflow-hidden rounded-xl border border-sky-100 bg-gradient-to-br from-sky-50 to-indigo-50/40 p-3.5 text-left shadow-sm">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <p className="flex items-center gap-1.5 text-xs font-bold text-sky-800">
+                <span aria-hidden>✉️</span> AI 답장 초안
+                <span className="rounded-full bg-white/70 px-1.5 py-0.5 text-[10px] font-medium text-sky-600">
+                  수정 후 전송 가능
+                </span>
+              </p>
+              <button
+                type="button"
+                onClick={handleCopyReplyDraft}
+                className="shrink-0 rounded-md border border-sky-200 bg-white px-2 py-1 text-xs text-sky-700 hover:bg-sky-50"
+              >
+                복사
+              </button>
+            </div>
+
+            <label className="block text-[11px] font-semibold text-slate-500">제목</label>
+            <input
+              type="text"
+              value={draftSubject}
+              onChange={(event) => setDraftSubject(event.target.value)}
+              disabled={isSending || Boolean(sentInfo)}
+              className="mt-1 w-full rounded-lg border border-sky-200 bg-white px-2.5 py-1.5 text-sm text-gray-900 outline-none focus:border-sky-400 disabled:bg-slate-50 disabled:text-slate-500"
+            />
+
+            <label className="mt-2.5 block text-[11px] font-semibold text-slate-500">본문</label>
+            <textarea
+              value={draftBody}
+              onChange={(event) => setDraftBody(event.target.value)}
+              disabled={isSending || Boolean(sentInfo)}
+              rows={7}
+              className="mt-1 w-full resize-y rounded-lg border border-sky-200 bg-white px-2.5 py-2 text-sm leading-6 text-gray-800 outline-none focus:border-sky-400 disabled:bg-slate-50 disabled:text-slate-500"
+            />
+
+            {sentInfo ? (
+              <div className="mt-2.5 flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700">
+                <span aria-hidden>✅</span> {sentInfo.sentTo} 로 전송 완료
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSendReply}
+                disabled={isSending}
+                className="mt-2.5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-sky-500 to-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:from-sky-600 hover:to-indigo-600 disabled:opacity-60"
+              >
+                {isSending ? '전송 중...' : (
+                  <>
+                    <span aria-hidden>📮</span> Gmail로 답장 전송
+                  </>
+                )}
+              </button>
+            )}
           </div>
         )}
 

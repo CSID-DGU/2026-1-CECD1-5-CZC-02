@@ -3,10 +3,13 @@ package com.salesmap.backend.source.controller;
 import com.salesmap.backend.global.response.ApiResponse;
 import com.salesmap.backend.source.dto.SourceCreateRequest;
 import com.salesmap.backend.source.dto.SourceResponse;
+import com.salesmap.backend.source.dto.UnansweredSourceResponse;
 import com.salesmap.backend.source.service.SourceService;
+import com.salesmap.backend.source.service.UnansweredMailService;
 import com.salesmap.backend.global.security.CustomUserPrincipal;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +25,11 @@ import java.util.List;
 public class SourceController {
 
     private final SourceService sourceService;
+    private final UnansweredMailService unansweredMailService;
 
-    public SourceController(SourceService sourceService) {
+    public SourceController(SourceService sourceService, UnansweredMailService unansweredMailService) {
         this.sourceService = sourceService;
+        this.unansweredMailService = unansweredMailService;
     }
 
     @PostMapping
@@ -45,11 +50,27 @@ public class SourceController {
         return ApiResponse.success(sourceService.getSourcesByUser(userId, principal.getUserId(), page, size));
     }
 
+    @GetMapping("/unanswered")
+    public ApiResponse<List<UnansweredSourceResponse>> getUnansweredSources(
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success(unansweredMailService.findUnanswered(principal.getUserId()));
+    }
+
     @GetMapping("/{sourceId}")
     public ApiResponse<SourceResponse> getSource(
             @PathVariable Long sourceId,
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         return ApiResponse.success(sourceService.getSource(sourceId, principal.getUserId()));
+    }
+
+    @DeleteMapping("/{sourceId}")
+    public ApiResponse<Long> deleteSource(
+            @PathVariable Long sourceId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        sourceService.deleteSource(sourceId, principal.getUserId());
+        return ApiResponse.success("수집된 메일이 삭제되었습니다.", sourceId);
     }
 }

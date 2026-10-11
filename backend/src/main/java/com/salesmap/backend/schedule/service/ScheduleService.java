@@ -3,10 +3,12 @@ package com.salesmap.backend.schedule.service;
 import com.salesmap.backend.analysis.entity.Analysis;
 import com.salesmap.backend.analysis.repository.AnalysisRepository;
 import com.salesmap.backend.calendar.service.GoogleCalendarEventService;
+import com.salesmap.backend.customer.service.CustomerTimelineService;
 import com.salesmap.backend.schedule.dto.ScheduleCreateRequest;
 import com.salesmap.backend.schedule.dto.ScheduleResponse;
 import com.salesmap.backend.schedule.dto.ScheduleUpdateRequest;
 import com.salesmap.backend.schedule.entity.Schedule;
+import com.salesmap.backend.schedule.entity.ScheduleOutcome;
 import com.salesmap.backend.schedule.entity.ScheduleStatus;
 import com.salesmap.backend.schedule.repository.ScheduleRepository;
 import com.salesmap.backend.user.entity.User;
@@ -17,6 +19,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -27,17 +30,20 @@ public class ScheduleService {
     private final UserRepository userRepository;
     private final AnalysisRepository analysisRepository;
     private final GoogleCalendarEventService googleCalendarEventService;
+    private final CustomerTimelineService customerTimelineService;
 
     public ScheduleService(
             ScheduleRepository scheduleRepository,
             UserRepository userRepository,
             AnalysisRepository analysisRepository,
-            GoogleCalendarEventService googleCalendarEventService
+            GoogleCalendarEventService googleCalendarEventService,
+            CustomerTimelineService customerTimelineService
     ) {
         this.scheduleRepository = scheduleRepository;
         this.userRepository = userRepository;
         this.analysisRepository = analysisRepository;
         this.googleCalendarEventService = googleCalendarEventService;
+        this.customerTimelineService = customerTimelineService;
     }
 
     @Transactional
@@ -97,6 +103,21 @@ public class ScheduleService {
         return ScheduleResponse.from(schedule);
     }
 
+    /** 미팅이 끝난 뒤 결과(잘됨/보류/무산)를 기록한다. 아직 시작 전인 일정에는 기록할 수 없다. */
+    @Transactional
+    public ScheduleResponse recordOutcome(Long scheduleId, ScheduleOutcome outcome, Long authenticatedUserId) {
+        Schedule schedule = findScheduleOwnedBy(scheduleId, authenticatedUserId);
+        if (schedule.getStatus() == ScheduleStatus.CANCELED) {
+            throw new IllegalArgumentException("취소된 일정에는 미팅 결과를 기록할 수 없습니다.");
+        }
+        if (schedule.getScheduleDateTime().isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("아직 시작하지 않은 일정입니다. 미팅이 끝난 뒤 결과를 기록해 주세요.");
+        }
+
+        schedule.recordOutcome(outcome);
+        return ScheduleResponse.from(schedule);
+    }
+
     @Transactional
     public void deleteSchedule(Long scheduleId, Long authenticatedUserId) {
         Schedule schedule = findScheduleOwnedBy(scheduleId, authenticatedUserId);
@@ -106,6 +127,7 @@ public class ScheduleService {
         }
 
         googleCalendarEventService.deleteEventForSchedule(schedule, authenticatedUserId);
+        customerTimelineService.unlinkScheduleReferences(schedule.getId());
         scheduleRepository.delete(schedule);
     }
 

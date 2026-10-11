@@ -36,6 +36,19 @@ class ExistingScheduleInfo(BaseModel):
     participants: List[str] = Field(default_factory=list)
 
 
+class HistoricalAnalysisInfo(BaseModel):
+    analysisId: Optional[int] = Field(default=None, gt=0)
+    sourceId: Optional[int] = Field(default=None, gt=0)
+    title: Optional[str] = None
+    customerName: Optional[str] = None
+    productName: Optional[str] = None
+    attendees: Optional[str] = None
+    amount: Optional[int] = None
+    actionType: Optional[str] = None
+    scheduleText: Optional[str] = None
+    summary: Optional[str] = None
+
+
 class AnalyzeRequest(BaseModel):
     """Backend 또는 단독 테스트에서 들어오는 분석 요청"""
     user_id: Optional[int] = Field(default=None, gt=0)
@@ -45,6 +58,8 @@ class AnalyzeRequest(BaseModel):
     sourceGroup: Optional[SourceGroupInfo] = None
     messages: List[MessageItem] = Field(default_factory=list)
     existingSchedules: List[ExistingScheduleInfo] = Field(default_factory=list)
+    recentSenderAnalyses: List[HistoricalAnalysisInfo] = Field(default_factory=list)
+    analysisMode: Optional[Literal["rule", "ollama"]] = None
 
     sourceId: Optional[int] = Field(default=None, gt=0)
     sourceType: Optional[Literal["EMAIL", "JANDI_MESSAGE", "MEETING_NOTE", "MANUAL_INPUT"]] = None
@@ -62,3 +77,17 @@ class AnalyzeRequest(BaseModel):
         if self.sourceGroup and self.sourceGroup.title:
             return self.sourceGroup.title
         return self.title or ""
+
+
+class ReplyDraftRequest(BaseModel):
+    emailTitle: Optional[str] = None
+    emailContent: str = Field(min_length=1)
+    senderEmail: Optional[str] = None
+    customerName: Optional[str] = None
+    contactName: Optional[str] = None
+    productName: Optional[str] = None
+    attendees: Optional[str] = None
+    actionType: Optional[str] = None
+    scheduleInfo: Optional[str] = None
+    summary: Optional[str] = None
+    nextAction: Optional[str] = None

@@ -6,6 +6,10 @@ import jakarta.validation.constraints.Positive;
 public record SalesmapRegisterRequest(
         @NotNull(message = "analysisId는 필수입니다.")
         @Positive(message = "analysisId는 1 이상이어야 합니다.")
-        Long analysisId
+        Long analysisId,
+        Boolean force
 ) {
+    public boolean forceEnabled() {
+        return Boolean.TRUE.equals(force);
+    }
 }

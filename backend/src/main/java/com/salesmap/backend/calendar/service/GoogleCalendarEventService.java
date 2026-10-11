@@ -5,6 +5,7 @@ import com.salesmap.backend.calendar.client.GoogleCalendarClient;
 import com.salesmap.backend.calendar.config.GoogleCalendarProperties;
 import com.salesmap.backend.calendar.dto.GoogleCalendarEventRequest;
 import com.salesmap.backend.calendar.dto.GoogleCalendarEventResponse;
+import com.salesmap.backend.demo.service.DemoMailbox;
 import com.salesmap.backend.gmail.service.GmailIntegrationService;
 import com.salesmap.backend.schedule.entity.Schedule;
 import com.salesmap.backend.schedule.entity.ScheduleStatus;
@@ -18,15 +19,23 @@ public class GoogleCalendarEventService {
     private final GoogleCalendarProperties properties;
     private final GmailIntegrationService gmailIntegrationService;
     private final GoogleCalendarClient googleCalendarClient;
+    private final DemoMailbox demoMailbox;
 
     public GoogleCalendarEventService(
             GoogleCalendarProperties properties,
             GmailIntegrationService gmailIntegrationService,
-            GoogleCalendarClient googleCalendarClient
+            GoogleCalendarClient googleCalendarClient,
+            DemoMailbox demoMailbox
     ) {
         this.properties = properties;
         this.gmailIntegrationService = gmailIntegrationService;
         this.googleCalendarClient = googleCalendarClient;
+        this.demoMailbox = demoMailbox;
+    }
+
+    // 데모 모드의 일정은 앱 안에서만 관리하고 실제 Google Calendar에는 쓰지 않는다.
+    private boolean skipsGoogleCalendar(Long userId) {
+        return !properties.isEnabled() || demoMailbox.isDemoUser(userId);
     }
 
     public GoogleCalendarEventResponse createEventForApprovedSchedule(
@@ -34,7 +43,7 @@ public class GoogleCalendarEventService {
             Schedule schedule,
             Long authenticatedUserId
     ) {
-        if (!properties.isEnabled() || schedule == null || schedule.getStatus() == ScheduleStatus.CANCELED) {
+        if (skipsGoogleCalendar(authenticatedUserId) || schedule == null || schedule.getStatus() == ScheduleStatus.CANCELED) {
             return null;
         }
 
@@ -54,7 +63,7 @@ public class GoogleCalendarEventService {
     }
 
     public GoogleCalendarEventResponse updateEventForSchedule(Schedule schedule, Long authenticatedUserId) {
-        if (!properties.isEnabled() || schedule == null || !schedule.hasGoogleCalendarEvent()) {
+        if (skipsGoogleCalendar(authenticatedUserId) || schedule == null || !schedule.hasGoogleCalendarEvent()) {
             return null;
         }
 
@@ -75,7 +84,7 @@ public class GoogleCalendarEventService {
     }
 
     public void deleteEventForSchedule(Schedule schedule, Long authenticatedUserId) {
-        if (!properties.isEnabled() || schedule == null || !schedule.hasGoogleCalendarEvent()) {
+        if (skipsGoogleCalendar(authenticatedUserId) || schedule == null || !schedule.hasGoogleCalendarEvent()) {
             return;
         }
 

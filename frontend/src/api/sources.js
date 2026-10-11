@@ -4,7 +4,7 @@ export async function getSources(params = {}) {
   const response = await api.get('/api/sources', {
     params: {
       page: 0,
-      size: 20,
+      size: 30,
       ...params,
     },
   });
@@ -20,6 +20,19 @@ export async function getSourceById(sourceId) {
 
 export async function createSource(payload) {
   const response = await api.post('/api/sources', payload);
+
+  return response.data.data;
+}
+
+export async function deleteSource(sourceId) {
+  const response = await api.delete(`/api/sources/${sourceId}`);
+
+  return response.data.data;
+}
+
+// 고객이 보낸 영업 메일 중 아직 답장하지 않은 대화
+export async function getUnansweredSources() {
+  const response = await api.get('/api/sources/unanswered');
 
   return response.data.data;
 }

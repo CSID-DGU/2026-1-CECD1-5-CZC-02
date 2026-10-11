@@ -19,3 +19,20 @@ out/
 __pycache__/
 *.pyc
 venv/
+
+# 로컬 작업물 (레포 미포함)
+project-docs/
+/demo/
+frontend_backup/
+# JVM 크래시 로그
+hs_err_pid*.log
+replay_pid*.log
+
+# Python 가상환경
+.venv/
+
+# 평가 실행 결과 (로컬 산출물)
+ai-module/eval/results/
+
+# Vite 의존성 캐시
+.vite/

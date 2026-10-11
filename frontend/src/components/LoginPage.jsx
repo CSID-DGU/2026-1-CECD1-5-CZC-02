@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Wind } from 'lucide-react';
 import { api } from '../api/client';
-import logoImg from '../assets/님버스테크 로고.png';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -66,16 +66,17 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="flex w-full max-w-5xl bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#F6F8FC] to-[#EEF2F9]">
+      <div className="flex w-full max-w-5xl overflow-hidden rounded-3xl border border-white/60 bg-white/70 shadow-[0_20px_60px_-24px_rgba(37,99,235,0.4)] backdrop-blur">
         {/* Left: Brand Area */}
         <div className="flex-1 bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-12">
           <div className="text-center max-w-md">
-            <div className="border-2 border-blue-200 rounded-2xl px-16 py-12 mb-8 bg-white min-h-[285px] flex flex-col items-center justify-center">
-              <div className="flex flex-col items-center mb-6">
-                {}
-                {}
-                <img src={logoImg} alt="NimbusTech" className="w-96 h-auto object-contain" />
+            <div className="border border-blue-100 rounded-2xl px-16 py-12 mb-8 bg-white/80 shadow-sm min-h-[285px] flex flex-col items-center justify-center">
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <Wind className="w-12 h-12 text-blue-500" strokeWidth={2.5} />
+                <span className="text-5xl font-extrabold tracking-tight text-gray-900" style={{ fontFamily: 'var(--display)' }}>
+                  Sales<span className="text-blue-600">Breeze</span>
+                </span>
               </div>
               <p className="text-xl text-gray-600">AI 영업 자동화 에이전트</p>
             </div>
@@ -87,10 +88,10 @@ export function LoginPage() {
         </div>
 
         {/* Right: Login Form */}
-        <div className="flex-1 bg-white flex items-center justify-center p-12">
+        <div className="flex-1 bg-white/60 flex items-center justify-center p-12">
           <div className="w-full max-w-md">
-            <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-8">
-              <h2 className="text-xl !font-semibold !text-black mb-8 text-center">
+            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-8">
+              <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center" style={{ fontFamily: 'var(--display)', color: '#0f172a', fontWeight: 700 }}>
                 {isSignup ? '회원가입' : '로그인'}
               </h2>
 
@@ -101,7 +102,7 @@ export function LoginPage() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded outline-none focus:border-blue-500 text-sm"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400 text-sm"
                     placeholder="이메일을 입력하세요"
                     autoComplete="email"
                   />
@@ -114,7 +115,7 @@ export function LoginPage() {
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded outline-none focus:border-blue-500 text-sm"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400 text-sm"
                       placeholder="이름을 입력하세요"
                       autoComplete="name"
                     />
@@ -127,7 +128,7 @@ export function LoginPage() {
                     type="password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded outline-none focus:border-blue-500 text-sm"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400 text-sm"
                     placeholder="비밀번호를 입력하세요"
                     autoComplete={isSignup ? 'new-password' : 'current-password'}
                   />
@@ -140,7 +141,7 @@ export function LoginPage() {
                       type="password"
                       value={formData.passwordConfirm}
                       onChange={(e) => setFormData({ ...formData, passwordConfirm: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded outline-none focus:border-blue-500 text-sm"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400 text-sm"
                       placeholder="비밀번호를 다시 입력하세요"
                       autoComplete="new-password"
                     />
@@ -154,7 +155,7 @@ export function LoginPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white py-2.5 rounded text-sm"
+                  className="w-full bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg shadow-sm transition text-sm"
                 >
                   {isSubmitting ? '처리 중...' : isSignup ? '회원가입' : '로그인'}
                 </button>
