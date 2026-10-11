@@ -85,8 +85,12 @@ cd backend
 ## 디렉터리
 
 ```
-backend/     Spring Boot API 서버
-ai-module/   FastAPI 분석 엔진
-frontend/    React 웹 클라이언트
-docs/        API 명세 등 문서
+backend/       Spring Boot API 서버
+ai-module/     FastAPI 분석 엔진
+frontend/      React 웹 클라이언트
+contracts/     모듈 사이 데이터 형식 (JSON Schema + 가짜 샘플)
+docs/          API 명세 등 문서
+docs/project/  2학기 목표·역할·결정 기록
 ```
+
+2학기 작업을 시작하기 전에 [AGENTS.md](AGENTS.md)를 먼저 읽으세요. Codex와 Claude Code는 이 파일을 자동으로 읽습니다.

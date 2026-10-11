@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "identity_resolution.schema.json",
+  "title": "IdentityResolution — 상대 식별 결과 (A → B)",
+  "description": "텍스트·채널에서 나온 인물 언급 하나를 인물 대장과 맞춘 결과. 3단 판정: CONFIRMED(자동 연결) / CANDIDATES(후보 최대 3명, 사람이 고름) / NEW(일치 없음, 신규 등록은 사람이 결정). '같은 사람이다'를 에이전트가 단독으로 확정하지 않는 것이 원칙이며, 사람이 고른 결과는 revision으로 남긴다.",
+  "type": "object",
+  "required": ["resolutionId", "mention", "decision", "personId", "candidates", "decidedBy"],
+  "additionalProperties": false,
+  "properties": {
+    "resolutionId": {
+      "type": "string",
+      "pattern": "^ir_[0-9a-z_]+$"
+    },
+    "mention": {
+      "type": "object",
+      "description": "원문에서 뽑은 인물 단서. 없는 값은 null",
+      "required": ["name", "channel"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "company": { "type": ["string", "null"] },
+        "title": { "type": ["string", "null"] },
+        "email": { "type": ["string", "null"] },
+        "phone": { "type": ["string", "null"] },
+        "channel": {
+          "enum": ["EMAIL", "JANDI", "KAKAO", "PHONE", "OPEN_MARKET", "MEETING"]
+        },
+        "sourceRef": {
+          "type": ["string", "null"],
+          "description": "어느 원본에서 나왔는지. 예: src_101"
+        }
+      }
+    },
+    "decision": {
+      "enum": ["CONFIRMED", "CANDIDATES", "NEW"]
+    },
+    "personId": {
+      "type": ["string", "null"],
+      "description": "CONFIRMED이거나 사람이 후보를 고른 뒤에만 값이 있다"
+    },
+    "candidates": {
+      "type": "array",
+      "maxItems": 3,
+      "description": "CANDIDATES일 때 점수 높은 순. CONFIRMED/NEW면 빈 배열이어도 된다",
+      "items": {
+        "type": "object",
+        "required": ["personId", "score", "reasons"],
+        "additionalProperties": false,
+        "properties": {
+          "personId": { "type": "string" },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "같은 사람일 확률 (ML-1은 확률 보정된 값)"
+          },
+          "reasons": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "화면에 근거로 보여줄 문장. 예: '연락처 일치', '성·이름 일치, 소속 다름'"
+          }
+        }
+      }
+    },
+    "decidedBy": {
+      "enum": ["RULE", "MODEL", "HUMAN"],
+      "description": "RULE=기준 모델(규칙+유사도), MODEL=ML-1, HUMAN=사람이 고름"
+    },
+    "modelVersion": {
+      "type": ["string", "null"]
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "decision": { "const": "CONFIRMED" } } },
+      "then": { "properties": { "personId": { "type": "string" } } }
+    },
+    {
+      "if": { "properties": { "decision": { "const": "CANDIDATES" } } },
+      "then": { "properties": { "candidates": { "minItems": 1 } } }
+    }
+  ]
+}

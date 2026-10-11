@@ -7,3 +7,4 @@ sentence-transformers
 gliner
 openai
 pytest
+jsonschema

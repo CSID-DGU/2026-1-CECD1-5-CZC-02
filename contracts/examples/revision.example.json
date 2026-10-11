@@ -1,0 +1,30 @@
+[
+  {
+    "revisionId": "rv_001",
+    "screen": "IDENTITY_CANDIDATE",
+    "targetType": "IDENTITY_RESOLUTION",
+    "targetId": "ir_002",
+    "fieldName": "personId",
+    "proposedValue": "p_001",
+    "finalValue": "p_001",
+    "action": "SELECTED_CANDIDATE",
+    "proposedBy": "RULE",
+    "modelVersion": "rule-baseline-0.1",
+    "actorId": "user_001",
+    "decidedAt": "2026-10-14T18:05:10"
+  },
+  {
+    "revisionId": "rv_002",
+    "screen": "TASK_REVIEW",
+    "targetType": "TASK",
+    "targetId": "t_001",
+    "fieldName": "taskType",
+    "proposedValue": "DOC_COLLECTION",
+    "finalValue": "CONTRACT_PREP",
+    "action": "EDITED",
+    "proposedBy": "MODEL",
+    "modelVersion": "task-type-lr-0.1",
+    "actorId": "user_001",
+    "decidedAt": "2026-10-14T18:07:42"
+  }
+]

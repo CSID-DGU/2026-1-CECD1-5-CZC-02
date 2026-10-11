@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "revision.schema.json",
+  "title": "Revision — 사람 수정 기록 (ML-4, 모두 → D)",
+  "description": "사람이 확인·수정하는 모든 화면에서 '에이전트가 제안한 값 · 사람이 최종 선택한 값 · 시각 · 화면'을 한 줄로 남긴다. ML-1·ML-2(·ML-3) 재학습의 정답 공급원. 저장 API는 D가 만들고, A·B·C는 각자 화면에서 호출만 한다. 기존 analysis_revisions(aiValue/userValue)를 이 형식으로 확장한다.",
+  "type": "object",
+  "required": [
+    "revisionId",
+    "screen",
+    "targetType",
+    "targetId",
+    "fieldName",
+    "proposedValue",
+    "finalValue",
+    "action",
+    "proposedBy",
+    "decidedAt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "revisionId": {
+      "type": "string",
+      "pattern": "^rv_[0-9a-z_]+$"
+    },
+    "screen": {
+      "enum": ["IDENTITY_CANDIDATE", "MEETING_NOTE_REVIEW", "TASK_REVIEW", "BRIEFING"],
+      "description": "어느 화면에서 일어났나. IDENTITY_CANDIDATE=A, MEETING_NOTE_REVIEW·TASK_REVIEW=B 확인 화면(할 일 종류 수정은 C 소관 필드), BRIEFING=D"
+    },
+    "targetType": {
+      "enum": ["IDENTITY_RESOLUTION", "MEETING_NOTE", "TASK", "BRIEFING_ITEM"]
+    },
+    "targetId": {
+      "type": "string",
+      "description": "대상 ID. 예: ir_002, mn_001, t_001"
+    },
+    "fieldName": {
+      "type": "string",
+      "description": "바뀐 필드. 예: personId, taskType, fields.commitments"
+    },
+    "proposedValue": {
+      "description": "에이전트가 제안한 값 (타입 자유, 없으면 null)"
+    },
+    "finalValue": {
+      "description": "사람이 최종 선택한 값 (타입 자유, 없으면 null)"
+    },
+    "action": {
+      "enum": [
+        "ACCEPTED",
+        "EDITED",
+        "REJECTED",
+        "SELECTED_CANDIDATE",
+        "CREATED_NEW",
+        "OPENED",
+        "IGNORED"
+      ],
+      "description": "ACCEPTED=그대로 승인, EDITED=고침, REJECTED=버림, SELECTED_CANDIDATE=식별 후보 중 선택, CREATED_NEW=신규 인물 등록, OPENED/IGNORED=브리핑 항목 열람/무시(ML-5 기록용)"
+    },
+    "proposedBy": {
+      "enum": ["RULE", "MODEL", "LLM"]
+    },
+    "modelVersion": {
+      "type": ["string", "null"]
+    },
+    "actorId": {
+      "type": ["string", "null"],
+      "description": "확인한 사용자"
+    },
+    "decidedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$"
+    }
+  }
+}
