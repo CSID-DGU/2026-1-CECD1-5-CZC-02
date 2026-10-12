@@ -119,6 +119,8 @@ cd backend
 
 `BackendApplicationTests`는 실제 MySQL 연결이 필요합니다.
 
+PR을 열면 GitHub Actions가 브랜치 이름 규칙(`s2/<담당>-<주제>`), AI 모듈 테스트, 백엔드 단위 테스트, 프론트엔드 빌드를 자동으로 검사합니다 ([ci.yml](.github/workflows/ci.yml)). 브랜치·PR 규칙은 [docs/project/workflow.md](docs/project/workflow.md)를 참고하세요.
+
 ## 디렉터리
 
 ```

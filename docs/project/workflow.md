@@ -31,10 +31,40 @@ backend revision 패키지에 만들어 줘. 기존 analysis_revisions 테이블
 
 ## 브랜치·커밋·PR
 
-- 브랜치: `feature/<역할>-<주제>` 예) `feature/a-identity-baseline`, `feature/d-revision-api`
+### 브랜치 이름 — 2학기는 `s2/`로 시작
+
+```
+s2/<담당>-<주제>
+```
+
+| 부분 | 규칙 | 예 |
+| --- | --- | --- |
+| `s2/` | 2학기 작업 표시 (1학기 `feature/…` 브랜치와 구분) | |
+| 담당 | `a` · `b` · `c` · `d` · `common`(공용·총괄·여러 역할에 걸친 작업) | |
+| 주제 | 영어 소문자, 단어는 `-`로 연결 | `identity-baseline`, `revision-api` |
+
+예) `s2/a-identity-baseline`, `s2/b-minutes-prompt`, `s2/c-task-extractor`, `s2/d-revision-api`, `s2/common-ci-setup`
+
+- 규칙에 안 맞는 이름으로 PR을 열면 **CI의 "브랜치 이름 규칙" 검사가 실패**한다. 이미 만든 브랜치는 `git branch -m s2/<담당>-<주제>`로 이름을 바꾼 뒤 다시 push.
+- `feature/…`, `dev` 등 1학기 브랜치는 기록용으로 남겨 두고 **새 작업을 시작하지 않는다**. 2학기 작업은 항상 최신 `main`에서 `s2/` 브랜치를 만든다.
+
+### 커밋·PR
+
 - 커밋: 기존 형식 유지 `feat(ai): …`, `fix(backend): …`, `docs: …` (한국어 설명 OK)
 - PR은 작게 자주. 템플릿의 체크리스트를 채운다.
 - 데이터 형식을 바꾸는 PR은 제목에 `[contract]`, 영향 받는 사람 모두 승인 후 합친다.
+- PR을 열면 개발 총괄이 `CODEOWNERS`로 자동 리뷰어가 된다.
+
+### 자동 검사 (GitHub Actions)
+
+PR을 열거나 새 커밋을 push하면 4가지가 자동으로 돈다. 하나라도 빨간불이면 고친 뒤 다시 push.
+
+| 검사 | 내용 |
+| --- | --- |
+| 브랜치 이름 규칙 | `s2/<담당>-<주제>` 형식인지 |
+| AI 모듈 테스트 + 데이터 형식 검사 | `ai-module/tests` 전체 (`requirements-test.txt`만 설치하므로 테스트에서 새 라이브러리를 import하면 그 파일에도 추가) |
+| 백엔드 단위 테스트 | MySQL이 필요 없는 테스트만 |
+| 프론트엔드 빌드 | `npm run build`가 성공하는지 |
 
 ## 매주 할 일
 
@@ -43,6 +73,8 @@ backend revision 패키지에 만들어 줘. 기존 analysis_revisions 테이블
 3. **제약·한계 기록**: 못 한 것과 이유 (발표 3부 재료이자 인수인계 자료)
 
 ## 테스트
+
+PR 전에 로컬에서 먼저 돌려 보면 빨간불을 줄일 수 있다.
 
 ```bash
 # AI 모듈 (데이터 형식 검사 포함, 네트워크·유료 API 호출 없음)

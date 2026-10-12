@@ -1,0 +1,12 @@
+# PR이 열리면 아래 담당자가 자동으로 리뷰어로 지정된다.
+# 개발 총괄(@aiswody)이 모든 변경을 확인한다. 역할별 담당자를 추가하려면 해당 경로 줄 끝에 GitHub 아이디를 붙인다.
+# 예) /ai-module/app/identity/ @aiswody @A담당아이디
+
+* @aiswody
+
+# 공용 — 반드시 총괄 확인
+/contracts/ @aiswody
+/AGENTS.md @aiswody
+/CLAUDE.md @aiswody
+/docs/project/ @aiswody
+/.github/ @aiswody

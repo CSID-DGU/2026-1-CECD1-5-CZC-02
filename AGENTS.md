@@ -55,7 +55,7 @@ Salesmap 영업 활동 자동화 에이전트 — 2026 종합설계2 팀 컴쫀�
 
 - 주변 코드의 이름·주석 밀도·구조를 따른다. 백엔드 JSON은 camelCase, 파이썬 내부는 snake_case.
 - 커밋 메시지: `feat(ai): …`, `fix(backend): …`, `docs: …` (한국어 설명 가능)
-- 브랜치: `feature/<역할>-<주제>` 예) `feature/a-identity-baseline`
+- 브랜치: **`s2/<담당>-<주제>`** (2학기 작업 표시). 담당은 `a`·`b`·`c`·`d`·`common`, 주제는 영어 소문자 kebab-case. 예) `s2/a-identity-baseline`, `s2/common-ci-setup`. 규칙에 안 맞으면 PR 검사가 실패한다. `feature/…` 등 1학기 브랜치에서 새 작업을 시작하지 않는다.
 
 ## 테스트
 
@@ -65,3 +65,5 @@ cd backend && ./gradlew test --tests "*BusinessDayCalculatorTest" --tests "*Anal
 ```
 
 `BackendApplicationTests`는 실제 MySQL이 필요하다. 작업을 끝냈다고 말하기 전에 관련 테스트를 실행하고 결과를 그대로 보고한다.
+
+PR을 열면 GitHub Actions(`.github/workflows/ci.yml`)가 브랜치 이름, AI 모듈 테스트, 백엔드 단위 테스트, 프론트 빌드를 자동으로 검사한다. AI 모듈 테스트에 새 라이브러리 import가 필요하면 `ai-module/requirements-test.txt`에도 추가한다.
