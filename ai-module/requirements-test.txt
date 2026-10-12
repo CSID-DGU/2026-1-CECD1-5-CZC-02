@@ -1,0 +1,8 @@
+# CI와 빠른 로컬 테스트용 최소 의존성.
+# 무거운 모델 라이브러리(sentence-transformers, gliner, konlpy, openai)는 테스트에서 불러오지 않는다.
+# 테스트가 새 라이브러리를 직접 import하면 여기에도 추가할 것.
+fastapi
+pydantic
+python-dotenv
+pytest
+jsonschema

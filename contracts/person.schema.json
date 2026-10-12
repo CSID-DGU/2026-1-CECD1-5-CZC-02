@@ -10,7 +10,7 @@
     "personId": {
       "type": "string",
       "pattern": "^p_[0-9a-z_]+$",
-      "description": "인물 고유 ID. 예: p_001"
+      "description": "인물 고유 ID. DB 저장 후에는 p_ + DB PK (예: p_17), 저장 전 가짜 데이터는 임의 번호 (예: p_001)"
     },
     "name": {
       "type": "string",

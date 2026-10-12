@@ -1,0 +1,78 @@
+# PR·main 푸시마다 자동 검사. 하나라도 실패하면 PR에 빨간불이 뜬다.
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  branch-name:
+    name: 브랜치 이름 규칙 (s2/<담당>-<주제>)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 브랜치 이름 확인
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          if [[ "$BRANCH" =~ ^s2/(a|b|c|d|common)-[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+            echo "OK: $BRANCH"
+          else
+            echo "::error::브랜치 이름 '$BRANCH'이(가) 2학기 규칙에 맞지 않습니다. 예) s2/a-identity-baseline, s2/common-ci-setup (docs/project/workflow.md 참고)"
+            exit 1
+          fi
+
+  ai-module:
+    name: AI 모듈 테스트 + 데이터 형식 검사
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-module
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: ai-module/requirements-test.txt
+      - run: pip install -r requirements-test.txt
+      - run: python -m pytest tests -q
+
+  backend:
+    name: 백엔드 단위 테스트
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x gradlew
+      # BackendApplicationTests는 실제 MySQL이 필요해서 제외
+      - run: ./gradlew test --tests "*BusinessDayCalculatorTest" --tests "*AnalysisRevisionRecordingTest"
+
+  frontend:
+    name: 프론트엔드 빌드
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build

@@ -25,7 +25,9 @@ A 인물 식별 ──identity_resolution──▶ B 회의록 ──meeting_not
 
 - 키 이름은 **camelCase** (백엔드 API와 같음)
 - ID는 접두어 + 문자열: `p_` 인물, `ir_` 식별 결과, `mn_` 회의록, `t_` 할 일, `rv_` 수정 기록, `src_` 원본
-- 날짜 `YYYY-MM-DD`, 시각 `YYYY-MM-DDTHH:mm:ss` (KST, 시간대 표기 없음)
+  - DB에 저장된 것은 **접두어 + DB 숫자 PK** (예: person PK 17 → `p_17`, source PK 101 → `src_101`). 받는 쪽은 접두어를 떼면 PK
+  - DB에 넣기 전 가짜 데이터·샘플은 임의 번호 (`p_001`)
+- 날짜 `YYYY-MM-DD`, 시각 `YYYY-MM-DDTHH:mm:ss` (KST, 시간대 표기 없음. `+09:00` 붙이지 않음)
 - 모르는 값은 **추측하지 말고 `null`** (배열이면 빈 배열)
 - 내용을 뽑은 항목에는 **근거 원문(`evidence`)을 그대로** 붙인다
 - 레포에 들어가는 데이터는 **전부 가짜**. 실제 사람·회사처럼 보이는 이름도 피한다
