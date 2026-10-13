@@ -9,7 +9,7 @@
 1학기에 만든 "메일 → 분석 → 승인 → 캘린더 등록" 흐름을 두 개의 에이전트로 확장합니다.
 
 ```
-메일·메모·녹음
+메일(Gmail·메일플러그)·미팅 메모
    │
    ▼
 ① 일정관리 에이전트 (기록 담당)
@@ -137,6 +137,7 @@ docs/project/  2학기 목표·역할·결정 기록·작업 방법
 
 | 문서 | 내용 |
 | --- | --- |
+| [docs/project/](docs/project/overview.md) | **2학기 목표·역할·일정·결정·화면 시안** (팀원은 여기부터) |
 | [docs/api-spec.md](docs/api-spec.md) | REST API 명세 |
 | [docs/db-design.md](docs/db-design.md) · [docs/domain-enums.md](docs/domain-enums.md) | DB 설계, 상태값 |
 | [docs/frontend-api-guide.md](docs/frontend-api-guide.md) | 프론트에서 API 쓰는 법 |
