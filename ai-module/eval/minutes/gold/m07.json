@@ -1,0 +1,82 @@
+{
+  "noteId": "mn_eval_m07",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_m07",
+      "sourceType": "MEETING_NOTE"
+    }
+  ],
+  "occurredAt": "2026-10-23T10:00:00",
+  "location": "가상전자 본사",
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "홍길동 부장",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "박가상 대리",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "지난번 견적 검토 결과 금액은 대체로 수용",
+        "evidence": "지난번 보내드린 견적 검토하셨고 금액은 대체로 괜찮다고 하심"
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "보안 점검 체크리스트 작성 요청 (양식 공유받음)",
+        "evidence": "박 대리님이 보안 점검 체크리스트 작성해야 한다고 양식 공유해 주심"
+      },
+      {
+        "text": "계약서 초안 요청",
+        "evidence": "계약서 초안도 같이 요청하셔서"
+      },
+      {
+        "text": "테스트 계정 2개 발급 요청",
+        "evidence": "박 대리님이 테스트 계정 2개 발급해 달라고 하셔서"
+      }
+    ],
+    "concerns": [
+      {
+        "text": "보안 점검 통과 못 하면 도입이 내년으로 밀릴 수 있음",
+        "evidence": "보안 점검 통과 못 하면 도입이 내년으로 밀릴 수 있다고 걱정하심"
+      }
+    ],
+    "commitments": [
+      {
+        "text": "보안 점검 체크리스트 답변 다음 주 수요일까지 작성해 전달",
+        "evidence": "체크리스트 답변은 다음 주 수요일까지 작성해서 드리기로 함"
+      },
+      {
+        "text": "계약서 초안 월말까지 송부",
+        "evidence": "계약서 초안도 같이 요청하셔서 월말까지 보내드리기로"
+      },
+      {
+        "text": "오늘 회의 자료 내일 오전 메일 재송부",
+        "evidence": "오늘 회의 자료는 내일 오전에 메일로 다시 보내드리기로 함"
+      },
+      {
+        "text": "법무팀 검토 일정 확인해서 공유 (고객 측)",
+        "evidence": "홍 부장님은 법무팀 검토 일정 확인해서 알려주신다고 하심"
+      },
+      {
+        "text": "테스트 계정 2개 오늘 중 발급",
+        "evidence": "오늘 중으로 발급해 드리기로"
+      }
+    ],
+    "nextContact": []
+  },
+  "missingFields": [
+    "nextContact"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

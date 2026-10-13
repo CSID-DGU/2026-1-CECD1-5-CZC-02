@@ -1,0 +1,86 @@
+{
+  "noteId": "mn_eval_m06",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_m06",
+      "sourceType": "MEETING_NOTE"
+    }
+  ],
+  "occurredAt": "2026-10-22T11:00:00",
+  "location": "전시회 부스",
+  "mode": "LIGHT",
+  "participants": [
+    {
+      "displayName": "한모의 대표",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "윤샘플 실장",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "강테스트 매니저",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [],
+    "customerRequests": [],
+    "concerns": [],
+    "commitments": [],
+    "nextContact": []
+  },
+  "perPerson": [
+    {
+      "displayName": "한모의 대표",
+      "personId": null,
+      "status": {
+        "text": "작년 설비 모니터링 도입 고객, 2공장 증설 중",
+        "evidence": "작년에 우리 설비 모니터링 도입한 고객. 2공장 증설 중이라고 함."
+      },
+      "request": {
+        "text": "2공장도 같은 구성으로 견적 요청",
+        "evidence": "2공장에도 같은 구성으로 견적 요청."
+      },
+      "followUp": {
+        "text": "다음 주 중 견적 송부",
+        "evidence": "다음 주 중으로 견적 보내드리기로 함"
+      }
+    },
+    {
+      "displayName": "윤샘플 실장",
+      "personId": null,
+      "status": {
+        "text": "첫 만남, 명함 교환",
+        "evidence": "처음 뵘. 명함만 교환함"
+      },
+      "request": null,
+      "followUp": null
+    },
+    {
+      "displayName": "강테스트 매니저",
+      "personId": null,
+      "status": {
+        "text": "경쟁사 제품 사용 중, 유지보수 비용 부담",
+        "evidence": "경쟁사 제품 쓰는 중인데 유지보수 비용이 부담된다고 함."
+      },
+      "request": {
+        "text": "비교 자료 요청",
+        "evidence": "비교 자료 있으면 달라고 하심"
+      },
+      "followUp": null
+    }
+  ],
+  "missingFields": [
+    "perPerson[1].request",
+    "perPerson[1].followUp",
+    "perPerson[2].followUp"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

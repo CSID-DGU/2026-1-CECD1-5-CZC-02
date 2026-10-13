@@ -1,0 +1,105 @@
+{
+  "noteId": "mn_eval_m05",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_m05",
+      "sourceType": "MEETING_NOTE"
+    }
+  ],
+  "occurredAt": "2026-10-20T14:00:00",
+  "location": "예시바이오 연구소",
+  "mode": "LIGHT",
+  "participants": [
+    {
+      "displayName": "김예시 박사",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "이예시 연구원",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "박예시 선임",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "오예시 책임",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [],
+    "customerRequests": [],
+    "concerns": [],
+    "commitments": [],
+    "nextContact": []
+  },
+  "perPerson": [
+    {
+      "displayName": "김예시 박사",
+      "personId": null,
+      "status": {
+        "text": "실험 데이터 관리 시스템 잘 사용 중",
+        "evidence": "실험 데이터 관리 시스템 잘 쓰고 계심."
+      },
+      "request": {
+        "text": "백업 주기 하루 1회에서 2회로 변경 요청",
+        "evidence": "백업 주기를 하루 1회에서 2회로 늘려달라고 요청."
+      },
+      "followUp": {
+        "text": "설정 변경 방법 안내 메일 송부",
+        "evidence": "설정 변경 방법 안내 메일 드리기로"
+      }
+    },
+    {
+      "displayName": "이예시 연구원",
+      "personId": null,
+      "status": {
+        "text": "신규 입사, 첫 인사",
+        "evidence": "신규 입사라 첫 인사만 드림"
+      },
+      "request": null,
+      "followUp": null
+    },
+    {
+      "displayName": "박예시 선임",
+      "personId": null,
+      "status": {
+        "text": "다음 달 장비 교체 예정으로 바쁨",
+        "evidence": "다음 달 장비 교체 예정이라 바쁘시다고 함."
+      },
+      "request": null,
+      "followUp": {
+        "text": "장비 교체 후 연동 테스트 일정 잡기",
+        "evidence": "교체 끝나면 연동 테스트 일정 잡자고 하심"
+      }
+    },
+    {
+      "displayName": "오예시 책임",
+      "personId": null,
+      "status": {
+        "text": "라이선스 추가 구매 품의 올림",
+        "evidence": "라이선스 추가 구매 품의 올렸다고 함."
+      },
+      "request": {
+        "text": "견적서 유효기간 연장 요청",
+        "evidence": "견적서 유효기간 연장해 달라고 요청하심"
+      },
+      "followUp": null
+    }
+  ],
+  "missingFields": [
+    "perPerson[1].request",
+    "perPerson[1].followUp",
+    "perPerson[2].request",
+    "perPerson[3].followUp"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}
