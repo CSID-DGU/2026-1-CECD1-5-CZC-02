@@ -13,6 +13,9 @@ Salesmap 영업 활동 자동화 에이전트 — 2026 종합설계2 팀 컴쫀�
 | 무엇을 왜 만드는지 | `docs/project/overview.md` |
 | 내 역할·담당 폴더 | `docs/project/roles.md` |
 | 모듈 사이 데이터 형식 | `contracts/README.md`, `contracts/*.schema.json`, `contracts/examples/` |
+| 회사 요청 기능 5개·주간 일정 | `docs/project/overview.md` |
+| 화면 시안·화면별 담당 | `docs/project/screens.md` (이미지 `docs/project/screens/`) |
+| 메일플러그 연동 | `docs/project/mailplug.md` |
 | 할 일 11부류 | `docs/project/task-types.md` |
 | 최근 결정 (다른 문서와 충돌하면 이것이 우선) | `docs/project/decisions.md` |
 | 용어 | `docs/project/glossary.md` |
