@@ -13,13 +13,14 @@
 
 데이터는 A → B → C → D로 흐르지만 **개발은 동시에** 한다. 앞사람 결과 대신 `contracts/examples/`의 샘플을 입력으로 쓴다.
 
-역할별 세부 작업 계획(세션 단위로 나눈 것)은 [`plans/`](plans/)에 둔다. 지금 있는 것: [B 회의록](plans/b-minutes.md).
+역할별 세부 작업 계획(세션 단위로 나눈 것)은 [`plans/`](plans/)에 둔다. 지금 있는 것: [B 회의록](plans/b-minutes.md), [개발 총괄](plans/lead.md). 주간 진행 상태는 [`status.md`](status.md).
 
 ### 개발 총괄 (이민재)
 
 - 모든 PR 리뷰·승인 (`CODEOWNERS`), 주간 이어 붙이기 진행, `decisions.md` 정리
 - 공용 파일(`contracts/`, `docs/project/`, `AGENTS.md`, `ai-module/app/llm/`, `backend/.../global/`) 관리
 - **메일플러그 수집** (4주차, 브랜치 `s2/common-mailplug-imap`, [`mailplug.md`](mailplug.md))
+- **모델 비교·교체**: LLM(로컬 vs OpenAI)·개체명 인식·임베딩을 같은 평가셋으로 비교하고 이길 때만 교체 ([`plans/lead.md`](plans/lead.md) L-0~L-4)
 - 회사·멘토 소통 (잔디)
 
 ## 담당 폴더 (제안 · 첫 PR에서 확정)
