@@ -15,15 +15,13 @@ Salesmap 영업 활동 자동화 에이전트 — 2026 종합설계2 팀 컴쫀�
 | 모듈 사이 데이터 형식 | `contracts/README.md`, `contracts/*.schema.json`, `contracts/examples/` |
 | 회사 요청 기능 5개·주간 일정 | `docs/project/overview.md` |
 | 화면 시안·화면별 담당 | `docs/project/screens.md` (이미지 `docs/project/screens/`) |
-| 내 역할의 세션별 작업 계획 | `docs/project/plans/` (예: B는 `plans/b-minutes.md`, 총괄·모델 교체는 `plans/lead.md`) |
-| 지금 어디까지 왔는지 | `docs/project/status.md` |
 | 메일플러그 연동 | `docs/project/mailplug.md` |
 | 할 일 11부류 | `docs/project/task-types.md` |
 | 최근 결정 (다른 문서와 충돌하면 이것이 우선) | `docs/project/decisions.md` |
 | 용어 | `docs/project/glossary.md` |
 | 기존 API·DB | `docs/api-spec.md`, `docs/db-design.md`, `docs/domain-enums.md` |
 
-사용자가 자기 역할(A/B/C/D)을 말하면 `roles.md`에서 담당 폴더를 확인하고 그 범위 안에서 작업한다. `plans/`의 세션 번호(예: "B-2 진행해 줘")를 말하면 그 세션의 목표·완료 기준만큼만 작업한다.
+사용자가 자기 역할(A/B/C/D)을 말하면 `roles.md`에서 담당 폴더를 확인하고 그 범위 안에서 작업한다.
 
 ## 레포 구조
 
