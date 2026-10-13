@@ -1,6 +1,6 @@
 # API Specification
 
-최종 시연 기준 주요 API 명세입니다. 모든 보호 API는 JWT가 필요합니다.
+현재 코드 기준 API 명세입니다 (2026-10 갱신: 컨트롤러의 모든 엔드포인트 포함). 모든 보호 API는 JWT가 필요합니다. 2학기 새 데이터 형식은 `contracts/`가 기준입니다.
 
 공통 헤더:
 
@@ -119,6 +119,22 @@ Response data 주요 필드:
   "collectedAt": "2026-06-03T10:05:00"
 }
 ```
+
+## Integrations (공통)
+
+### GET /api/integrations
+
+내 외부 연동 목록을 조회합니다. Authorization: 필요
+
+### GET /api/integrations/{provider}
+
+`provider`(`GMAIL`, `JANDI`, `SALESMAP`)별 연동 정보를 조회합니다. Authorization: 필요
+
+### POST /api/integrations
+
+연동 정보를 직접 저장합니다 (1학기 초기 테스트용, Gmail은 OAuth 흐름을 사용). Authorization: 필요
+
+Request: `provider`, `externalAccountId`, `accessToken`, `refreshToken`, `tokenExpiresAt`(미래 시각) — 모두 필수
 
 ## Sources
 
@@ -362,6 +378,59 @@ Authorization: 필요
 
 현재 프론트는 최신 분석 결과를 중심으로 표시합니다.
 
+### GET /api/analysis/{analysisId}
+
+분석 결과 하나를 조회합니다. Authorization: 필요
+
+### POST /api/analysis/{analysisId}/send-reply
+
+사용자가 초안을 확인·수정한 뒤 **전송 버튼을 눌렀을 때** 답장을 Gmail로 보냅니다 (자동 발송 아님). 받는 사람은 서버가 원본 메일 발신자로 정합니다 (임의 주소로 보낼 수 없음). Authorization: 필요
+
+Request:
+
+```json
+{ "subject": "Re: 견적 문의", "body": "본문" }
+```
+
+Response data: `sentTo`, `subject`, `messageId`
+
+> 사람이 눌러야 발송되므로 사람 확인 원칙은 지켜집니다. 2학기에 발송 대기함(초안을 서버에 쌓아 두고 목록에서 확인 후 발송)을 만들 때 이 기능을 그쪽으로 옮길 예정입니다 (`docs/project/overview.md` "바꿔야 함").
+
+## Analysis Jobs
+
+### POST /api/analysis-jobs/bulk
+
+아직 분석하지 않은 메일을 백그라운드에서 일괄 분석합니다. Authorization: 필요
+
+Response data: `result`(`STARTED` / `ALREADY_RUNNING` / `NOTHING_TO_ANALYZE`), `job`(아래 진행 상태)
+
+### GET /api/analysis-jobs/activity?since={eventId}
+
+분석 진행률과 활동 피드(새 메일 수집·분석 시작·끝)를 조회합니다. 프론트가 주기적으로 호출합니다. Authorization: 필요
+
+Response data:
+
+```json
+{
+  "job": { "trigger": "MANUAL", "running": true, "total": 12, "done": 5, "analyzed": 4, "skipped": 1, "failed": 0,
+           "currentTitle": "견적 문의", "startedAt": "2026-10-13T10:00:00", "finishedAt": null },
+  "events": [ { "id": 7, "type": "ANALYSIS_STARTED", "trigger": "MANUAL", "message": "…", "occurredAt": "2026-10-13T10:00:00" } ],
+  "latestEventId": 7
+}
+```
+
+이벤트 `type`: `COLLECTED`, `ANALYSIS_STARTED`, `ANALYSIS_FINISHED`
+
+## Auto Pipeline (자동 수집·분석)
+
+켜 두면 서버가 주기적으로(기본 45초, `auto.pipeline.interval-ms`) Gmail 새 메일을 수집하고 분석합니다. 모두 Authorization: 필요, Response data `{ "enabled": true }`.
+
+### GET /api/auto-pipeline/status
+
+### POST /api/auto-pipeline/enable
+
+### POST /api/auto-pipeline/disable
+
 ## Schedules
 
 ### GET /api/schedules
@@ -564,6 +633,46 @@ Response data 예시:
   ]
 }
 ```
+
+### GET /api/customers/pipeline
+
+고객사별 딜 진행 카드 목록입니다. 최근 분석의 actionType으로 단계를 정하고, 업무 외 메일은 제외합니다. Authorization: 필요
+
+Response data 항목: `customerContactId`, `customerName`, `contactName`, `email`, `productName`, `amount`, `stage`, `stageLabel`, `stageOrder`, `lastActionType`, `nextAction`, `stale`, `dealCount`, `lastActivityAt`
+
+| stage | 라벨 | 기준 |
+| --- | --- | --- |
+| `LEAD` | 리드 | 그 외 |
+| `MEETING` | 미팅 예정 | 최근 `CREATE` |
+| `ADJUSTING` | 일정 조율 | 최근 `UPDATE` |
+| `CONFIRMED` | 확정 | 최근 `CONFIRM` |
+| `CANCELED` | 보류·취소 | 최근 `CANCEL` |
+
+`stale`: 리드·미팅 예정·일정 조율 단계에서 3영업일 이상 활동이 없으면 `true`
+
+## Dev (개발자용 데모 모드)
+
+켜면 로그인한 사용자의 요청이 숨은 데모 사용자의 데이터로 처리됩니다. 모두 Authorization: 필요.
+
+### GET /api/dev/demo/status
+
+### POST /api/dev/demo/enable
+
+### POST /api/dev/demo/disable
+
+### POST /api/dev/demo/reset
+
+Response data: `enabled`, `demoAccountEmail`, `anchorDate`, `deliveredStage`, `lastStage`, `deliveredMailCount`, `pendingMailCount`
+
+## 기타
+
+### GET /api/health
+
+서버 상태 확인. Authorization: 불필요
+
+### POST /api/users · GET /api/users/{id}
+
+1학기 초기 사용자 생성·조회 API (회원가입은 `/api/auth/signup` 사용). Authorization: 필요
 
 ## Status Codes
 

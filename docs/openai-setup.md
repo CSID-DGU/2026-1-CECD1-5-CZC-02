@@ -34,7 +34,7 @@ AI 모듈은 기본적으로 **로컬 Ollama(무료)** 를 사용합니다. 아�
    - 단, **서버를 재시작하면 0부터 다시 셉니다.** 그래서 1~3번 설정이 반드시 필요합니다.
 
 예상 비용(2026-09 공식 가격 기준): 하루 메일 50통 분석 + 답장 10건이면 **월 약 $2 내외**입니다.
-자세한 계산은 `docs/phase2-feature-proposal.md` 2-1절을 참고하세요.
+자세한 계산은 `docs/archive/phase2-feature-proposal.md` 2-1절을 참고하세요.
 
 ## 3. API 키 발급 · 설정
 
@@ -85,4 +85,4 @@ python -m eval.run_eval --engine ollama
 OpenAI로 전환하면 **고객 메일 본문이 외부 서버로 전송됩니다.**
 - 실제 고객 메일로 테스트하기 전에 팀과 멘토에게 확인합니다.
 - 시연과 평가는 가상 고객사 메일로 진행합니다. `eval/dataset.jsonl`이 그렇게 되어 있습니다.
-- 대응 방안(마스킹, 보존 정책)은 `docs/phase2-feature-proposal.md` 2-6절을 참고하세요.
+- 대응 방안(마스킹, 보존 정책)은 `docs/archive/phase2-feature-proposal.md` 2-6절을 참고하세요.

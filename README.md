@@ -129,8 +129,9 @@ backend/       Spring Boot API 서버
 ai-module/     FastAPI 분석 엔진 (app/, eval/, tests/)
 frontend/      React 웹 클라이언트
 contracts/     모듈 사이 데이터 형식 (JSON Schema + 가짜 샘플)
-docs/          API 명세, DB 설계, 연동 가이드
+docs/          API 명세, DB 설계, 상태값, OpenAI 설정
 docs/project/  2학기 목표·역할·결정 기록·작업 방법
+docs/archive/  지난 분석 자료 (참고용, 최신 아님)
 ```
 
 ## 문서
@@ -140,7 +141,8 @@ docs/project/  2학기 목표·역할·결정 기록·작업 방법
 | [docs/project/](docs/project/overview.md) | **2학기 목표·역할·일정·결정·화면 시안** (팀원은 여기부터) |
 | [docs/api-spec.md](docs/api-spec.md) | REST API 명세 |
 | [docs/db-design.md](docs/db-design.md) · [docs/domain-enums.md](docs/domain-enums.md) | DB 설계, 상태값 |
-| [docs/frontend-api-guide.md](docs/frontend-api-guide.md) | 프론트에서 API 쓰는 법 |
-| [docs/e2e-test-flow.md](docs/e2e-test-flow.md) | 통합 테스트 흐름 |
-| [docs/latest-feature-summary.md](docs/latest-feature-summary.md) | 1학기 최종 이후 추가 기능 |
-| [docs/phase2-feature-proposal.md](docs/phase2-feature-proposal.md) | 2학기 확장 제안서 |
+| [backend/README.md](backend/README.md) | DB 생성, Google·Salesmap 연결 설정, 패키지 구조 |
+| [ai-module/README.md](ai-module/README.md) | AI 모듈 구조·API·분석 흐름·모델 설정 |
+| [frontend/README.md](frontend/README.md) | 화면별 컴포넌트와 API 파일 |
+| [docs/openai-setup.md](docs/openai-setup.md) | OpenAI 전환 방법 (기본은 꺼짐) |
+| [docs/archive/](docs/archive/phase2-feature-proposal.md) | 9월 확장 제안서 (비용 추정 등 참고용. 2학기 계획은 `docs/project/`가 기준) |

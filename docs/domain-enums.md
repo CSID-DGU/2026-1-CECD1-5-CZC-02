@@ -1,6 +1,6 @@
 # Domain Enums
 
-백엔드, DB, 프론트가 동일하게 이해해야 하는 주요 상태값입니다.
+백엔드, DB, 프론트가 동일하게 이해해야 하는 주요 상태값입니다 (2026-10 코드 기준 갱신). 2학기 새 데이터의 값은 `contracts/*.schema.json`이 기준입니다.
 
 ## UserStatus
 
@@ -78,7 +78,8 @@ public enum SourceStatus {
     COLLECTED,
     ANALYSIS_REQUESTED,
     ANALYZED,
-    FAILED
+    FAILED,
+    DELETED
 }
 ```
 
@@ -88,6 +89,7 @@ public enum SourceStatus {
 CREATED -> ANALYSIS_REQUESTED -> ANALYZED
 COLLECTED -> ANALYSIS_REQUESTED -> ANALYZED
 ANALYSIS_REQUESTED -> FAILED
+(어느 상태든) -> DELETED   사용자가 원본을 삭제
 ```
 
 | 값 | 화면 의미 |
@@ -97,6 +99,23 @@ ANALYSIS_REQUESTED -> FAILED
 | `ANALYSIS_REQUESTED` | 분석 요청 |
 | `ANALYZED` | 분석 완료 |
 | `FAILED` | 실패 |
+| `DELETED` | 사용자가 삭제 (분석 작업·목록에서 제외) |
+
+## SourceDirection
+
+```java
+public enum SourceDirection {
+    SENT,
+    RECEIVED,
+    UNKNOWN
+}
+```
+
+| 값 | 의미 |
+| --- | --- |
+| `SENT` | 내가 보낸 메일 |
+| `RECEIVED` | 받은 메일 |
+| `UNKNOWN` | 판단 불가 |
 
 ## AnalysisStatus
 
@@ -106,6 +125,7 @@ public enum AnalysisStatus {
     ANALYZING,
     ANALYZED,
     APPROVED,
+    DELETED,
     REJECTED,
     FAILED
 }
@@ -117,6 +137,7 @@ public enum AnalysisStatus {
 REQUESTED -> ANALYZING -> ANALYZED -> APPROVED
 REQUESTED -> ANALYZING -> ANALYZED -> REJECTED
 ANALYZING -> FAILED
+APPROVED -> DELETED   연결된 일정을 삭제
 ```
 
 | 값 | 화면 의미 |
@@ -126,6 +147,7 @@ ANALYZING -> FAILED
 | `ANALYZED` | 승인 대기 |
 | `APPROVED` | 등록됨 |
 | `REJECTED` | 반려됨 |
+| `DELETED` | 일정 삭제로 함께 삭제됨 (타임라인에서 제외) |
 | `FAILED` | 분석 실패 |
 
 ## AnalysisActionType
@@ -166,6 +188,24 @@ public enum ScheduleStatus {
 | `CANCELED` | 취소 |
 | `REMINDED` | 알림 완료 |
 
+## ScheduleOutcome
+
+미팅이 끝난 뒤 담당자가 남기는 결과입니다. 나중에 딜 성사 예측을 하게 되면 정답 라벨로 씁니다.
+
+```java
+public enum ScheduleOutcome {
+    SUCCESS,
+    ON_HOLD,
+    LOST
+}
+```
+
+| 값 | 화면 의미 |
+| --- | --- |
+| `SUCCESS` | 잘됨 |
+| `ON_HOLD` | 보류 |
+| `LOST` | 무산 |
+
 최종 시연에서는 취소 승인 시 일정 상태만 바꾸는 것이 아니라 캘린더에서 제거되는 삭제 흐름을 사용합니다.
 
 ## SalesmapRecordStatus
@@ -185,3 +225,35 @@ public enum SalesmapRecordStatus {
 | `REGISTERED` | 처리 완료 |
 | `FAILED` | 처리 실패 |
 | `CANCELED` | 취소 |
+
+## CustomerActivityType
+
+```java
+public enum CustomerActivityType {
+    AI_ANALYZED,
+    SCHEDULE_CREATED,
+    SCHEDULE_UPDATED,
+    SCHEDULE_CANCELED,
+    SALESMAP_REGISTERED,
+    REPLY_SENT
+}
+```
+
+| 값 | 타임라인 표시 |
+| --- | --- |
+| `AI_ANALYZED` | AI 분석 |
+| `SCHEDULE_CREATED` | 일정 등록 |
+| `SCHEDULE_UPDATED` | 일정 변경 |
+| `SCHEDULE_CANCELED` | 일정 취소 |
+| `SALESMAP_REGISTERED` | Salesmap 반영 |
+| `REPLY_SENT` | 답장 발송 |
+
+## businessType (AI 응답 문자열)
+
+Java enum이 아니라 AI 모듈이 돌려주는 문자열로 `analyses.business_type`에 저장됩니다.
+
+| 값 | 의미 |
+| --- | --- |
+| `SALES_ACTIVITY` | 영업 활동 메일 |
+| `NON_BUSINESS` | 업무 외 메일 (고객 타임라인에 넣지 않음) |
+| `UNKNOWN` | 판단 불가 |
