@@ -384,7 +384,7 @@ Authorization: 필요
 
 ### POST /api/analysis/{analysisId}/send-reply
 
-답장을 Gmail로 **즉시 전송**합니다. 받는 사람은 서버가 원본 메일 발신자로 정합니다 (임의 주소로 보낼 수 없음). Authorization: 필요
+사용자가 초안을 확인·수정한 뒤 **전송 버튼을 눌렀을 때** 답장을 Gmail로 보냅니다 (자동 발송 아님). 받는 사람은 서버가 원본 메일 발신자로 정합니다 (임의 주소로 보낼 수 없음). Authorization: 필요
 
 Request:
 
@@ -394,7 +394,7 @@ Request:
 
 Response data: `sentTo`, `subject`, `messageId`
 
-> 2학기 규칙(AGENTS 2)은 외부 발송을 **발송 대기함까지만** 만드는 것이라, 이 즉시 전송은 바꿀 대상입니다 (`docs/project/overview.md` "바꿔야 함").
+> 사람이 눌러야 발송되므로 사람 확인 원칙은 지켜집니다. 2학기에 발송 대기함(초안을 서버에 쌓아 두고 목록에서 확인 후 발송)을 만들 때 이 기능을 그쪽으로 옮길 예정입니다 (`docs/project/overview.md` "바꿔야 함").
 
 ## Analysis Jobs
 
