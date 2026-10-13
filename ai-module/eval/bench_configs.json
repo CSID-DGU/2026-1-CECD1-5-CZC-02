@@ -1,0 +1,49 @@
+{
+  "_설명": "eval/bench.py가 돌리는 설정 목록. env에는 app/config.py의 모델 설정 환경 변수만 넣는다(키는 넣지 않음). default=true면 --only 없이 실행할 때 포함. LLM_PROVIDER=openai는 유료라 --allow-paid --limit이 있어야만 돈다.",
+  "configs": [
+    {
+      "name": "rule",
+      "task": "mail",
+      "engine": "rule",
+      "env": {},
+      "note": "규칙 엔진만. 서버 기본값(AI_ENGINE=rule)",
+      "default": true
+    },
+    {
+      "name": "ollama-default",
+      "task": "mail",
+      "engine": "ollama",
+      "env": {},
+      "note": "규칙 + 로컬 LLM 기본값(OLLAMA_MODEL). LLM 비교의 기준",
+      "default": true
+    },
+    {
+      "name": "ollama-qwen2.5-7b",
+      "task": "mail",
+      "engine": "ollama",
+      "env": {"OLLAMA_MODEL": "qwen2.5:7b"},
+      "note": "로컬 후보 예시 (L-2에서 후보 추가)"
+    },
+    {
+      "name": "openai-analysis",
+      "task": "mail",
+      "engine": "ollama",
+      "env": {"LLM_PROVIDER": "openai"},
+      "note": "유료. OPENAI_MODEL_ANALYSIS 사용, 실패 시 Ollama 폴백"
+    },
+    {
+      "name": "rule+gliner",
+      "task": "mail",
+      "engine": "rule",
+      "env": {"GLINER_ENABLED": "true"},
+      "note": "GLiNER 개체명 보조 (gliner 설치·모델 다운로드 필요, L-3)"
+    },
+    {
+      "name": "rule+embedding",
+      "task": "mail",
+      "engine": "rule",
+      "env": {"EMBEDDING_CLASSIFIER_ENABLED": "true"},
+      "note": "BGE-M3 임베딩 분류 (sentence-transformers·모델 다운로드 필요, L-4)"
+    }
+  ]
+}
