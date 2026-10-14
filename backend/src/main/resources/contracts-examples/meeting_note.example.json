@@ -1,0 +1,47 @@
+{
+  "noteId": "mn_001",
+  "sourceRefs": [{ "sourceId": "src_101", "sourceType": "MEETING_NOTE" }],
+  "occurredAt": "2026-10-14T15:00:00",
+  "location": "가상전자 본사",
+  "mode": "FULL",
+  "participants": [
+    { "displayName": "홍 부장", "resolutionId": "ir_002", "personId": "p_001" },
+    { "displayName": "박가상 대리", "resolutionId": "ir_003", "personId": null }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "내년 상반기 개발 인력 2명 추가 투입 검토",
+        "evidence": "홍 부장님이 내년 상반기에 개발자 두 명 정도 더 필요하다고 하심"
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "투입 후보 프로필 먼저 전달 요청",
+        "evidence": "후보 있으면 프로필 먼저 보내달라고 함"
+      }
+    ],
+    "concerns": [],
+    "commitments": [
+      {
+        "text": "계약서 초안 금요일까지 송부",
+        "evidence": "계약서 초안은 이번 주 금요일까지 보내드리기로 함"
+      },
+      {
+        "text": "투입 일정 내부 검토 후 회신 (고객 측)",
+        "evidence": "투입 시기는 내부 검토해 보고 다시 말씀 주신다고 함"
+      }
+    ],
+    "nextContact": [
+      {
+        "text": "11월 첫 주 재방문",
+        "evidence": "11월 첫 주에 다시 뵙기로"
+      }
+    ]
+  },
+  "missingFields": ["concerns"],
+  "uncertainSegments": [],
+  "status": "CONFIRMED",
+  "generatedBy": "LLM",
+  "llmModel": "qwen2.5"
+}

@@ -8,6 +8,7 @@ import com.salesmap.backend.integration.entity.IntegrationProvider;
 import com.salesmap.backend.integration.entity.IntegrationStatus;
 import com.salesmap.backend.integration.repository.IntegrationRepository;
 import com.salesmap.backend.source.entity.Source;
+import com.salesmap.backend.source.entity.SourceType;
 import com.salesmap.backend.source.repository.SourceRepository;
 import com.salesmap.backend.user.entity.User;
 import com.salesmap.backend.user.repository.UserRepository;
@@ -147,8 +148,9 @@ public class AutoPipelineService {
     private void analyzePendingSources(Long userId) {
         LocalDateTime cutoff = LocalDateTime.now().minusDays(AUTO_ANALYZE_RECENT_DAYS);
 
-        // 최근 N일 메일 중 "최신 MAX_PENDING_CONSIDERED건"만 자동 분석 후보로 삼는다.
+        // 최근 N일 메일 중 "최신 MAX_PENDING_CONSIDERED건"만 자동 분석 후보로 삼는다. 미팅 메모가 후보 자리를 차지하지 않게 메일만.
         List<Source> candidates = sourceRepository.findByUserId(userId).stream()
+                .filter(source -> source.getSourceType() == SourceType.EMAIL)
                 .filter(source -> orderingTime(source).isAfter(cutoff))
                 .sorted(Comparator.comparing(this::orderingTime).reversed())
                 .limit(MAX_PENDING_CONSIDERED)

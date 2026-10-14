@@ -140,7 +140,7 @@ Request: `provider`, `externalAccountId`, `accessToken`, `refreshToken`, `tokenE
 
 ### GET /api/sources
 
-로그인 사용자의 수집 메일 목록을 조회합니다.
+로그인 사용자의 수집 메일 목록을 조회합니다. `sourceType=EMAIL`만 나옵니다 (미팅 메모 원본은 `/api/meeting-notes`에서).
 
 Authorization: 필요
 
@@ -400,7 +400,7 @@ Response data: `sentTo`, `subject`, `messageId`
 
 ### POST /api/analysis-jobs/bulk
 
-아직 분석하지 않은 메일을 백그라운드에서 일괄 분석합니다. Authorization: 필요
+아직 분석하지 않은 메일을 백그라운드에서 일괄 분석합니다. 메일함 목록과 같은 최신 30건(`sourceType=EMAIL`)에서 고르며, 자동 수집·분석도 메일만 분석합니다. Authorization: 필요
 
 Response data: `result`(`STARTED` / `ALREADY_RUNNING` / `NOTHING_TO_ANALYZE`), `job`(아래 진행 상태)
 
@@ -430,6 +430,158 @@ Response data:
 ### POST /api/auto-pipeline/enable
 
 ### POST /api/auto-pipeline/disable
+
+## Meeting Notes (회의록)
+
+미팅 메모 → 회의록 초안 → 확인·수정 → 확정. 회의록 ID는 `mn_` + PK, 원본 ID는 `src_` + PK입니다. `meetingNote`는 `contracts/meeting_note.schema.json` 형식 그대로이고, 시각은 `YYYY-MM-DDTHH:mm:ss`(KST, 시간대 표기 없음)입니다. 확정 전에는 상태가 `DRAFT`이며 아무것도 등록되지 않습니다.
+
+### POST /api/meeting-notes
+
+메모로 회의록 초안을 만듭니다. 메모는 먼저 `sources`에 `sourceType=MEETING_NOTE`로 저장되고(지우지 않음, 메일함 목록·메일 분석에는 나오지 않음), A 인물 식별 → AI 모듈 `POST /minutes` → 회의록 저장 → C 할 일 초안 순서로 묶어 돌려줍니다. AI 모듈 응답이 오래 걸릴 수 있습니다(최대 330초, D-019).
+
+Authorization: 필요
+
+Request:
+
+```json
+{
+  "occurredAt": "2026-10-14T15:00:00",
+  "location": "가상전자 본사",
+  "attendees": ["홍 부장"],
+  "text": "홍 부장님이 내년 상반기에 개발자 두 명 정도 더 필요하다고 하심\n계약서 초안은 이번 주 금요일까지 보내드리기로 함",
+  "mode": null,
+  "title": null
+}
+```
+
+- `text`만 필수입니다. `occurredAt`·`location`은 모르면 `null`.
+- `mode`: `FULL` / `LIGHT` / `null`(AI 모듈이 메모 모양을 보고 정함). 그 밖의 값은 400.
+- `title`을 비우면 원본 제목을 `미팅 메모 2026-10-14 15:00 · 가상전자 본사`처럼 만듭니다.
+
+Response data 예시:
+
+```json
+{
+  "note": {
+    "meetingNote": {
+      "noteId": "mn_1",
+      "sourceRefs": [{ "sourceId": "src_28", "sourceType": "MEETING_NOTE" }],
+      "occurredAt": "2026-10-14T15:00:00",
+      "location": "가상전자 본사",
+      "mode": "FULL",
+      "participants": [{ "displayName": "홍 부장", "resolutionId": "ir_002", "personId": null }],
+      "fields": {
+        "discussion": [{ "text": "내년 상반기 개발 인력 2명 추가 투입 검토", "evidence": "홍 부장님이 내년 상반기에 개발자 두 명 정도 더 필요하다고 하심" }],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [{ "text": "계약서 초안 금요일까지 송부", "evidence": "계약서 초안은 이번 주 금요일까지 보내드리기로 함" }],
+        "nextContact": []
+      },
+      "missingFields": ["customerRequests", "concerns", "nextContact"],
+      "uncertainSegments": [],
+      "status": "DRAFT",
+      "generatedBy": "LLM",
+      "llmModel": "qwen2.5:7b"
+    },
+    "source": { "sourceId": "src_28", "sourceType": "MEETING_NOTE", "title": "미팅 메모 2026-10-14 15:00 · 가상전자 본사", "content": "메모 원문" },
+    "llmProvider": "ollama",
+    "llmFallbackReason": null,
+    "confirmedAt": null,
+    "confirmedWithoutEdit": null,
+    "createdAt": "2026-10-14T15:30:00",
+    "updatedAt": "2026-10-14T15:30:00"
+  },
+  "identityResolutions": [],
+  "tasks": [],
+  "droppedItems": [{ "field": "nextContact", "text": "…", "evidence": "…", "reason": "근거가 원문에 없음" }]
+}
+```
+
+- `identityResolutions`(A)·`tasks`(C)는 각자 `contracts/` 형식 그대로입니다. A·C API가 생기기 전에는 `contracts/examples` 샘플을 돌려주는 가짜 구현이 들어 있습니다.
+- `droppedItems`: AI 모듈 규칙 검증에서 버린 항목(회의록에는 들어가지 않음).
+- AI 모듈 호출이 실패하면 빈 회의록(모든 문항 `missingFields`, `generatedBy: RULE`, `llmProvider: rule`)이 저장되고 `llmFallbackReason`에 이유가 적힙니다. 지어내지 않습니다.
+- `AI_MODULE_MODE=mock`이면 `contracts/examples`의 샘플 회의록에 원본·시각·장소·참석자만 바꿔 돌려줍니다(`llmProvider: mock`).
+
+### GET /api/meeting-notes
+
+로그인 사용자의 회의록 목록을 최신순으로 조회합니다 (② 미팅 기록 오른쪽 목록, 확인 대기함).
+
+Authorization: 필요
+
+Query:
+
+| Name | Default | 설명 |
+| --- | --- | --- |
+| `status` | 없음(전체) | `DRAFT` / `CONFIRMED`. 그 밖의 값은 400 |
+
+Response data 예시:
+
+```json
+[
+  {
+    "noteId": "mn_1",
+    "status": "DRAFT",
+    "mode": "FULL",
+    "occurredAt": "2026-10-14T15:00:00",
+    "location": "가상전자 본사",
+    "participantNames": ["홍 부장"],
+    "sourceTitle": "미팅 메모 2026-10-14 15:00 · 가상전자 본사",
+    "missingFieldCount": 3,
+    "createdAt": "2026-10-14T15:30:00",
+    "confirmedAt": null
+  }
+]
+```
+
+### GET /api/meeting-notes/{noteId}
+
+회의록 하나와 원문을 조회합니다 (③ 확인 화면). Response data는 `POST /api/meeting-notes`의 `note`와 같습니다. 근거 강조는 `source.content`에서 각 항목의 `evidence`를 찾습니다.
+
+Authorization: 필요
+
+소유자가 아니면 `403`, 없으면 `404`, `noteId`가 `mn_<숫자>` 형식이 아니면 `400`을 반환합니다.
+
+### PATCH /api/meeting-notes/{noteId}
+
+확인 화면에서 문항을 고칩니다. 보낸 문항만 통째로 바꾸고, 보내지 않은(`null`) 문항은 그대로 둡니다. 빈 배열을 보내면 그 문항을 비웁니다.
+
+Authorization: 필요
+
+Request 예시 (FULL):
+
+```json
+{
+  "fields": {
+    "concerns": [{ "text": "예산 확정 시기 불확실", "evidence": "예산은 아직 확정 전이라고 하심" }]
+  }
+}
+```
+
+Request 예시 (LIGHT — 기존과 같은 인원·순서로 보내며 `displayName`·`personId`는 무시):
+
+```json
+{
+  "perPerson": [
+    { "displayName": "홍 부장", "personId": null,
+      "status": { "text": "신규 과제 검토 중", "evidence": "홍 부장 신규 과제 검토 중" }, "request": null, "followUp": null }
+  ]
+}
+```
+
+- FULL 회의록은 `fields`만, LIGHT 회의록은 `perPerson`만 고칠 수 있습니다(반대는 400).
+- 항목마다 `text`·`evidence`(원문 근거)가 모두 있어야 합니다. 비어 있으면 400. 사람이 추가한 항목도 원문 문장을 골라 붙입니다.
+- `missingFields`는 서버가 다시 계산합니다 (D-018 규칙).
+- 바뀐 값마다 D의 수정 기록 API(`contracts/revision.schema.json`)를 부릅니다: `screen=MEETING_NOTE_REVIEW`, `fieldName`은 `fields.concerns`·`perPerson[0].status` 형식, `proposedValue`는 AI가 처음 만든 값, `action=EDITED`. D의 API가 생기기 전에는 로그로만 남습니다.
+- 확정된 회의록은 고칠 수 없습니다(400). Response data는 `GET /api/meeting-notes/{noteId}`와 같습니다.
+
+### POST /api/meeting-notes/{noteId}/confirm
+
+사람이 확인한 회의록을 확정합니다. 상태가 `CONFIRMED`가 되고, 고치지 않은 값은 수정 기록에 `action=ACCEPTED`로 남습니다. 할 일 확정은 C, 일정(다음 접촉)은 D로 넘깁니다(아직 가짜 구현, 로그만).
+
+Authorization: 필요
+
+- 한 번도 고치지 않고 확정하면 `confirmedWithoutEdit: true`.
+- 이미 확정된 회의록이면 400. Response data는 `GET /api/meeting-notes/{noteId}`와 같습니다.
 
 ## Schedules
 
