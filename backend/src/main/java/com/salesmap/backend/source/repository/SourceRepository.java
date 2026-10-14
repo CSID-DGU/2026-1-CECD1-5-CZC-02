@@ -17,6 +17,13 @@ public interface SourceRepository extends JpaRepository<Source, Long> {
 
     Page<Source> findByUserIdAndStatusNot(Long userId, SourceStatus status, Pageable pageable);
 
+    Page<Source> findByUserIdAndSourceTypeAndStatusNot(
+            Long userId,
+            SourceType sourceType,
+            SourceStatus status,
+            Pageable pageable
+    );
+
     List<Source> findByIntegrationId(Long integrationId);
 
     List<Source> findBySourceGroupIdOrderBySentAtAscIdAsc(Long sourceGroupId);

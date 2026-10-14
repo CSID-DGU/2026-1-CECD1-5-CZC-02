@@ -11,6 +11,7 @@ import com.salesmap.backend.analysisjob.dto.AnalysisJobStatus;
 import com.salesmap.backend.source.entity.Source;
 import com.salesmap.backend.source.entity.SourceDirection;
 import com.salesmap.backend.source.entity.SourceStatus;
+import com.salesmap.backend.source.entity.SourceType;
 import com.salesmap.backend.source.repository.SourceRepository;
 import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
@@ -83,8 +84,9 @@ public class AnalysisJobService {
             return new AnalysisJobStartResponse("ALREADY_RUNNING", running.toStatus());
         }
 
-        List<Source> candidates = sourceRepository.findByUserIdAndStatusNot(
+        List<Source> candidates = sourceRepository.findByUserIdAndSourceTypeAndStatusNot(
                 userId,
+                SourceType.EMAIL,
                 SourceStatus.DELETED,
                 PageRequest.of(0, MANUAL_SOURCE_WINDOW, Sort.by(Sort.Direction.DESC, "sentAt")
                         .and(Sort.by(Sort.Direction.DESC, "createdAt")))
@@ -175,9 +177,13 @@ public class AnalysisJobService {
         }
     }
 
-    /** 받은 메일만, 보낸 시각 오름차순(발신자 기억이 시간순으로 쌓이도록), 대화(스레드)당 한 번, 아직 분석 안 된 것만. */
+    /**
+     * 받은 메일만, 보낸 시각 오름차순(발신자 기억이 시간순으로 쌓이도록), 대화(스레드)당 한 번, 아직 분석 안 된 것만.
+     * 미팅 메모(MEETING_NOTE) 등 메일이 아닌 원본은 회의록 쪽에서 다루므로 메일 분석 대상이 아니다.
+     */
     private List<Source> pendingTargets(List<Source> candidates, int limit) {
         List<Source> ordered = candidates.stream()
+                .filter(source -> source.getSourceType() == SourceType.EMAIL)
                 .filter(source -> source.getDirection() != SourceDirection.SENT)
                 .filter(source -> source.getStatus() != SourceStatus.DELETED)
                 .sorted(Comparator.comparing(this::orderingTime))

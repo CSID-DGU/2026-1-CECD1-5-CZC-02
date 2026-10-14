@@ -126,7 +126,13 @@ public class SourceService {
                         .and(Sort.by(Sort.Direction.DESC, "createdAt"))
         );
 
-        return sourceRepository.findByUserIdAndStatusNot(authenticatedUserId, SourceStatus.DELETED, pageRequest).stream()
+        // 메일함 목록은 메일만. 미팅 메모(MEETING_NOTE) 원본은 회의록 화면에서 본다.
+        return sourceRepository.findByUserIdAndSourceTypeAndStatusNot(
+                        authenticatedUserId,
+                        SourceType.EMAIL,
+                        SourceStatus.DELETED,
+                        pageRequest
+                ).stream()
                 .map(SourceResponse::from)
                 .toList();
     }
