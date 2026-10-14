@@ -21,6 +21,7 @@ CREATE DATABASE IF NOT EXISTS salesmap
 | 변수 | 설명 | 기본값 |
 | --- | --- | --- |
 | `AI_MODULE_BASE_URL` | AI 모듈 주소 (`AI_MODULE_MODE=http`일 때) | `http://localhost:8000` |
+| `AI_MODULE_READ_TIMEOUT_MS` | AI 모듈 응답 대기. AI 모듈의 LLM 대기(300초)보다 길게 | `330000` (5분 30초) |
 | `GMAIL_REDIRECT_URI` | Google OAuth 콜백 | `http://localhost:5173/settings/gmail/callback` |
 | `GMAIL_OAUTH_SCOPE` | Google 권한 범위 | 아래 참고 |
 | `GOOGLE_CALENDAR_ENABLED` · `GOOGLE_CALENDAR_ID` | 캘린더 등록 사용 여부·대상 | `true` · `primary` |
