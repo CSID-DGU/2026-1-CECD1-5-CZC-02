@@ -64,9 +64,9 @@ Salesmap 영업 활동 자동화 에이전트 — 2026 종합설계2 팀 컴쫀�
 
 ```bash
 cd ai-module && python -m pytest tests          # AI 모듈 + 데이터 형식 검사
-cd backend && ./gradlew test --tests "*BusinessDayCalculatorTest" --tests "*AnalysisRevisionRecordingTest"
+cd backend && ./gradlew test --tests "*Test"                 # 단위 테스트 전부 (MySQL 불필요)
 ```
 
-`BackendApplicationTests`는 실제 MySQL이 필요하다. 작업을 끝냈다고 말하기 전에 관련 테스트를 실행하고 결과를 그대로 보고한다.
+`BackendApplicationTests`는 실제 MySQL이 필요해서 위 명령에서 빠진다. **백엔드 단위 테스트 클래스 이름은 `...Test`로 끝나게** 하고 MySQL 없이 돌게 만든다 (CI가 이 이름으로 고른다). 작업을 끝냈다고 말하기 전에 관련 테스트를 실행하고 결과를 그대로 보고한다.
 
 PR을 열면 GitHub Actions(`.github/workflows/ci.yml`)가 브랜치 이름, AI 모듈 테스트, 백엔드 단위 테스트, 프론트 빌드를 자동으로 검사한다. AI 모듈 테스트에 새 라이브러리 import가 필요하면 `ai-module/requirements-test.txt`에도 추가한다.

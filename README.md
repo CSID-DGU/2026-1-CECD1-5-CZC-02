@@ -121,10 +121,10 @@ python -m eval.minutes.score --self
 
 # 백엔드 단위 테스트
 cd backend
-./gradlew test --tests "*BusinessDayCalculatorTest" --tests "*AnalysisRevisionRecordingTest"
+./gradlew test --tests "*Test"   # 단위 테스트 전부
 ```
 
-`BackendApplicationTests`는 실제 MySQL 연결이 필요합니다.
+`BackendApplicationTests`는 실제 MySQL 연결이 필요해서 위 명령에서 빠집니다. 백엔드 단위 테스트 이름은 `...Test`로 끝나게 합니다.
 
 PR을 열면 GitHub Actions가 브랜치 이름 규칙(`s2/<담당>-<주제>`), AI 모듈 테스트, 백엔드 단위 테스트, 프론트엔드 빌드를 자동으로 검사합니다 ([ci.yml](.github/workflows/ci.yml)). 브랜치·PR 규칙은 [docs/project/workflow.md](docs/project/workflow.md)를 참고하세요.
 
