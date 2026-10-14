@@ -1,0 +1,78 @@
+{
+  "noteId": "mn_eval_m10",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_m10",
+      "sourceType": "MEETING_NOTE"
+    }
+  ],
+  "occurredAt": "2026-10-29T14:00:00",
+  "location": "샘플제약 본사 대회의실",
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "임샘플 상무",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "노샘플 차장",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "문샘플 주임",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "연내 1차 오픈 목표",
+        "evidence": "임 상무님이 연내 1차 오픈을 목표로 하자고 말씀하심."
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "영업사원 60명 계정과 권한 체계 우선 정리 희망",
+        "evidence": "노 차장님은 영업사원 60명 계정과 권한 체계를 먼저 정리하고 싶다고 함."
+      },
+      {
+        "text": "기존 엑셀 거래처 목록 그대로 업로드 가능 여부 문의",
+        "evidence": "문 주임님은 기존 엑셀 거래처 목록을 그대로 올릴 수 있는지 물어보심."
+      }
+    ],
+    "concerns": [
+      {
+        "text": "현업 교육 일정이 연말 결산과 겹칠 우려",
+        "evidence": "노 차장님이 현업 교육 일정이 연말 결산과 겹칠까 봐 걱정하심."
+      }
+    ],
+    "commitments": [
+      {
+        "text": "권한 체계 초안 다음 주 금요일까지 작성해 공유",
+        "evidence": "권한 체계 초안은 다음 주 금요일까지 우리가 만들어서 공유하기로 함."
+      },
+      {
+        "text": "엑셀 업로드 양식 내일까지 문 주임에게 송부",
+        "evidence": "엑셀 업로드 양식은 내일까지 문 주임님께 보내드리기로."
+      },
+      {
+        "text": "거래처 목록 정리해서 이달 말까지 전달 (고객 측)",
+        "evidence": "문 주임님은 거래처 목록 정리해서 이달 말까지 넘겨주시기로 함."
+      }
+    ],
+    "nextContact": [
+      {
+        "text": "매주 목요일 오후 2시 주간 점검 회의",
+        "evidence": "매주 목요일 오후 2시에 주간 점검 회의 하기로 함."
+      }
+    ]
+  },
+  "missingFields": [],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

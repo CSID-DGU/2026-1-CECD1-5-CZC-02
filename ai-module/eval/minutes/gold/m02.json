@@ -1,0 +1,73 @@
+{
+  "noteId": "mn_eval_m02",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_m02",
+      "sourceType": "MEETING_NOTE"
+    }
+  ],
+  "occurredAt": "2026-10-15T10:30:00",
+  "location": "모의물산 구매팀",
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "김모의 과장",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "이모의 대리",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "연말 전 도입 결정 필요",
+        "evidence": "과장님이 연말 전에 결정해야 한다고 하셔서"
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "연 단위 계약 대신 월 구독 가능 여부 문의",
+        "evidence": "그래서 연 단위 계약 대신 월 구독으로 할 수 있는지 물어보심."
+      },
+      {
+        "text": "비슷한 규모 유통사 도입 사례 자료 요청",
+        "evidence": "도입 사례 중에 비슷한 규모 유통사 있으면 자료 달라고 하심."
+      }
+    ],
+    "concerns": [
+      {
+        "text": "물류 관리 솔루션 예산 작년 대비 20% 감소",
+        "evidence": "김 과장님 말로는 올해 물류 관리 솔루션 예산이 작년보다 20% 줄었다고 함."
+      },
+      {
+        "text": "기존 ERP 연동 여부 우려",
+        "evidence": "이 대리님은 기존 ERP랑 연동되는지가 제일 걱정이라고 함."
+      }
+    ],
+    "commitments": [
+      {
+        "text": "월 구독 요금표 다음 달 초까지 정리해서 전달",
+        "evidence": "월 구독 요금표는 다음 달 초까지 정리해서 드리기로 했음."
+      },
+      {
+        "text": "엔지니어 일정 잡아 ERP 연동 함께 확인",
+        "evidence": "ERP 연동 관련해서는 우리 쪽 엔지니어 일정 잡아서 같이 확인하기로."
+      }
+    ],
+    "nextContact": [
+      {
+        "text": "다음 달 중순쯤 다시 연락",
+        "evidence": "다음 달 중순쯤 다시 연락드리기로 함."
+      }
+    ]
+  },
+  "missingFields": [],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

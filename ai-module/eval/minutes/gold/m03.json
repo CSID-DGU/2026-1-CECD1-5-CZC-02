@@ -1,0 +1,53 @@
+{
+  "noteId": "mn_eval_m03",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_m03",
+      "sourceType": "MEETING_NOTE"
+    }
+  ],
+  "occurredAt": "2026-10-16T12:00:00",
+  "location": "회사 근처 카페",
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "최예시 이사",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "현장 안전 점검 앱 도입을 내년 예산에 반영하는 방향으로 검토 중",
+        "evidence": "현장 안전 점검 앱 도입은 내년 예산에 넣는 쪽으로 검토 중이라고 하심"
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "간단한 사용 설명 영상 요청",
+        "evidence": "간단한 사용 설명 영상 있으면 보내달라고 하심"
+      }
+    ],
+    "concerns": [
+      {
+        "text": "현장 소장들이 앱 사용을 어려워할 우려",
+        "evidence": "현장 소장들이 앱 쓰기 어려워할까 봐 그게 걱정이라고"
+      }
+    ],
+    "commitments": [
+      {
+        "text": "사용 설명 영상 내일 오전 중 송부",
+        "evidence": "영상은 내일 오전 중에 보내드리기로"
+      }
+    ],
+    "nextContact": []
+  },
+  "missingFields": [
+    "nextContact"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

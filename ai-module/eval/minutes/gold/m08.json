@@ -1,0 +1,57 @@
+{
+  "noteId": "mn_eval_m08",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_m08",
+      "sourceType": "MEETING_NOTE"
+    }
+  ],
+  "occurredAt": "2026-10-27T16:00:00",
+  "location": "테스트에너지 회의실",
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "서테스트 본부장",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "재발 방지 대책은 내부 논의 필요로 확답 보류",
+        "evidence": "재발 방지 대책은 내부 논의가 필요해서 오늘은 확답 못 드림"
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "장애 재발 방지 대책 문서 정리 요청",
+        "evidence": "장애 재발 방지 대책을 문서로 정리해 달라고 요청하심"
+      },
+      {
+        "text": "월 1회 정기 점검 보고서 요청",
+        "evidence": "월 1회 정기 점검 보고서도 받아보고 싶다고 하심"
+      }
+    ],
+    "concerns": [
+      {
+        "text": "지난달 장애 대응 지연에 대한 불만",
+        "evidence": "지난달 장애 때 대응이 늦었던 걸 아직 언짢아하심"
+      },
+      {
+        "text": "경영진이 시스템 교체까지 고려 중",
+        "evidence": "본부장님 말로는 경영진이 시스템 교체까지 고려하고 있다고 함"
+      }
+    ],
+    "commitments": [],
+    "nextContact": []
+  },
+  "missingFields": [
+    "commitments",
+    "nextContact"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}
