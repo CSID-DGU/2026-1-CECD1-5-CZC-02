@@ -13,6 +13,22 @@
 
 데이터는 A → B → C → D로 흐르지만 **개발은 동시에** 한다. 앞사람 결과 대신 `contracts/examples/`의 샘플을 입력으로 쓴다.
 
+## 담당별 읽을 문서
+
+작업 시작 전에 **모두 읽기**를 읽고, 자기 담당 줄을 읽는다. AI 도구에 "나는 ○ 담당이야"라고 말하면 이 표를 보고 같은 문서를 읽는다.
+
+**모두 읽기** (순서대로): `AGENTS.md` → [`overview.md`](overview.md) (목표·주간 일정) → 이 파일 → [`decisions.md`](decisions.md) (최근 결정, 다른 문서보다 우선) → [`workflow.md`](workflow.md) (브랜치·PR·AI 도구) → [`screens.md`](screens.md) (화면 시안) → [`contracts/README.md`](../../contracts/README.md)
+
+| 담당 | 추가로 읽을 것 | 관련 결정 |
+| --- | --- | --- |
+| **A** | `contracts/person.schema.json`, `identity_resolution.schema.json`, `contracts/examples/` · [`glossary.md`](glossary.md) · 화면 ⑤, ③의 참석자 후보 영역 · `ai-module/README.md`의 임베딩·개체명 설정 | D-002, D-008 |
+| **B** | `contracts/meeting_note.schema.json` · `ai-module/eval/minutes/README.md` (회의록 정답 규칙) · 화면 ②, ③ 틀 · `ai-module/eval/MODELS.md` (모델 비교) | D-009, D-015, D-017, D-018 |
+| **C** | [`task-types.md`](task-types.md) (11부류) · `contracts/task.schema.json`, `meeting_note.schema.json` · `ai-module/eval/minutes/README.md`의 `commitments`·`nextContact` 규칙 · 화면 ④, ③의 할 일 영역 | D-002, D-007, D-018 |
+| **D** | `contracts/revision.schema.json` · `docs/db-design.md`의 `analysis_revisions` · `docs/domain-enums.md` · `backend/README.md` · 화면 ①, ⑥ | D-002, D-007, D-016 |
+| **총괄** | [`mailplug.md`](mailplug.md) · `ai-module/eval/MODELS.md` · `.github/workflows/ci.yml` | D-010 ~ D-014 |
+
+**이 표는 문서가 생기거나 바뀔 때 같은 PR에서 고친다.** 총괄이 PR 리뷰 때 확인한다.
+
 ### 개발 총괄 (이민재)
 
 - 모든 PR 리뷰·승인 (`CODEOWNERS`), 주간 이어 붙이기 진행, `decisions.md` 정리
