@@ -50,10 +50,12 @@ python -m eval.minutes.score --pred <폴더> --verbose --json <폴더>/report.js
 - 기한 표현은 원문 그대로 둔다("이번 주 금요일", "다음 달 초"). 날짜 계산은 C의 규칙 코드가 한다
 - `commitments`는 결과물이 있는 약속. 고객이 하기로 한 일은 끝에 `(고객 측)`
 - `nextContact`는 다음 만남·연락 계획. 같은 문장을 `commitments`에 겹쳐 넣지 않는다
+- 고객이 **내용을 알려주기로** 하면 `commitments`에 `(고객 측)`, **연락만 주기로** 하면 `nextContact` (예: m01 "결재 라인 정리해서 알려주신다고"·m07 "법무팀 검토 일정 확인해서 알려주신다고" → `commitments`, m09 "예산 확정되면 연락 주시기로" → `nextContact`)
 - 걱정·불만·위험은 `concerns`, 고객이 원하는 것은 `customerRequests`, 그 밖의 오간 내용은 `discussion`
 - `participants`는 입력으로 받은 만난 사람 그대로. 평가셋에서는 A의 식별 결과를 넣지 않으므로 `resolutionId`·`personId`는 `null`
 - `status`는 `DRAFT`, `generatedBy`는 `HUMAN`(정답이므로)
 - **FULL**: 빈 문항 이름을 `missingFields`에 (`["concerns"]`)
 - **LIGHT** (여러 사람을 짧게 차례로 만난 방문): `fields` 5문항은 모두 빈 배열이고 `missingFields`에 넣지 않는다. 사람별 빈 칸만 `perPerson[<순서>].<칸>` 형식으로 적는다 (`["perPerson[1].request"]`). 채점할 때는 순서 대신 사람 이름으로 맞춰 본다
+- `perPerson[n]`의 `n`은 `perPerson` 배열의 순서이며 **0부터** 센다 (첫 사람이 `perPerson[0]`)
 
 정답을 고치거나 케이스를 추가하면 `python -m pytest tests/test_minutes_eval.py`로 스키마·근거·missingFields 규칙을 확인한다. 정답은 만든 사람이 아닌 팀원이 한 번 검수한다 (roles.md 공통 과업).
