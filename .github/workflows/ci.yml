@@ -58,8 +58,8 @@ jobs:
           java-version: "17"
       - uses: gradle/actions/setup-gradle@v4
       - run: chmod +x gradlew
-      # BackendApplicationTests는 실제 MySQL이 필요해서 제외
-      - run: ./gradlew test --tests "*BusinessDayCalculatorTest" --tests "*AnalysisRevisionRecordingTest"
+      # 이름이 ...Test로 끝나는 단위 테스트를 모두 돌린다. MySQL이 필요한 BackendApplicationTests(...Tests)는 빠진다 (D-020)
+      - run: ./gradlew test --tests "*Test"
 
   frontend:
     name: 프론트엔드 빌드

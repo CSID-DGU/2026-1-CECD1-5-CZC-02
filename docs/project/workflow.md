@@ -64,7 +64,7 @@ PR을 열거나 새 커밋을 push하면 4가지가 자동으로 돈다. 하나�
 | --- | --- |
 | 브랜치 이름 규칙 | `s2/<담당>-<주제>` 형식인지 |
 | AI 모듈 테스트 + 데이터 형식 검사 | `ai-module/tests` 전체 (`requirements-test.txt`만 설치하므로 테스트에서 새 라이브러리를 import하면 그 파일에도 추가) |
-| 백엔드 단위 테스트 | MySQL이 필요 없는 테스트만 |
+| 백엔드 단위 테스트 | 이름이 `...Test`로 끝나는 테스트 전부 (MySQL이 필요한 `BackendApplicationTests`는 제외) |
 | 프론트엔드 빌드 | `npm run build`가 성공하는지 |
 
 ## 매주 할 일

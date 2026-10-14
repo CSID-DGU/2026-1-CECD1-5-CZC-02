@@ -78,7 +78,7 @@ com.salesmap.backend
 ## 테스트
 
 ```bash
-./gradlew test --tests "*BusinessDayCalculatorTest" --tests "*AnalysisRevisionRecordingTest"
+./gradlew test --tests "*Test"
 ```
 
-`BackendApplicationTests`는 실제 MySQL이 필요합니다.
+이름이 `...Test`로 끝나는 단위 테스트를 모두 돌립니다 (CI와 같음). `BackendApplicationTests`는 실제 MySQL이 필요해서 빠집니다. 새 단위 테스트도 이름을 `...Test`로 끝내고 MySQL 없이 돌게 만드세요.
