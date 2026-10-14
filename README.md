@@ -28,7 +28,7 @@
 ## 팀원이라면 먼저
 
 1. **[AGENTS.md](AGENTS.md)** 를 읽습니다. 팀 공통 규칙이며 Codex·Claude Code가 자동으로 읽습니다 (`CLAUDE.md`는 이 파일을 불러옵니다).
-2. 내 역할의 담당 폴더를 [docs/project/roles.md](docs/project/roles.md)에서 확인합니다.
+2. [docs/project/roles.md](docs/project/roles.md)에서 내 역할의 **담당 폴더**와 **읽을 문서**("담당별 읽을 문서")를 확인합니다.
 3. 모듈 사이 데이터는 **[contracts/](contracts/README.md)** 의 형식을 따릅니다. 앞 단계가 아직 없으면 `contracts/examples/`의 가짜 샘플을 입력으로 씁니다.
 4. 결정은 [docs/project/decisions.md](docs/project/decisions.md)에 기록합니다. AI 도구 사용법·브랜치·PR 규칙은 [docs/project/workflow.md](docs/project/workflow.md).
 
@@ -111,6 +111,13 @@ python -m pytest tests
 # 정답 라벨 평가셋(eval/dataset.jsonl, 21통)으로 분석 정확도 측정
 python -m eval.run_eval                  # 규칙 엔진
 python -m eval.run_eval --engine ollama  # 규칙 + LLM
+
+# 모델 비교: 설정만 바꿔 같은 평가셋을 돌리고 eval/MODELS.md 표로 모으기 (유료는 --allow-paid --limit N 필요)
+python -m eval.bench --list
+python -m eval.bench --write-md
+
+# 회의록 평가셋(가짜 메모 10개): 정답끼리 채점하면 만점이어야 정상, 엔진 결과는 --pred <폴더>
+python -m eval.minutes.score --self
 
 # 백엔드 단위 테스트
 cd backend
