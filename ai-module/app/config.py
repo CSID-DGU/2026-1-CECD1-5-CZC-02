@@ -15,8 +15,9 @@ BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8080")
 # ollama: rule-based analyzer + local Ollama LLM enhancement with rule fallback
 AI_ENGINE = os.getenv("AI_ENGINE", "rule").lower()
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:3b")
-OLLAMA_TIMEOUT_SECONDS = float(os.getenv("OLLAMA_TIMEOUT_SECONDS", "45"))
+# 기본 모델·대기 시간은 D-019 (CPU에서 회의록 1건에 1~4분 걸려 300초까지 기다린다)
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:7b")
+OLLAMA_TIMEOUT_SECONDS = float(os.getenv("OLLAMA_TIMEOUT_SECONDS", "300"))
 OLLAMA_TEMPERATURE = float(os.getenv("OLLAMA_TEMPERATURE", "0.1"))
 
 # LLM provider

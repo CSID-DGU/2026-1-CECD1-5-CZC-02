@@ -91,7 +91,7 @@ cp .env.example .env             # 필요한 값만 수정
 uvicorn app.main:app --port 8000
 ```
 
-LLM 분석을 쓰려면 [Ollama](https://ollama.com)를 설치하고 `ollama pull qwen2.5:3b` 후 `.env`에서 `AI_ENGINE=ollama`로 설정합니다. OpenAI 전환은 [docs/openai-setup.md](docs/openai-setup.md)를 참고하세요 (기본은 꺼져 있고, 키가 없으면 과금되지 않습니다).
+LLM 분석을 쓰려면 [Ollama](https://ollama.com)를 설치하고 `ollama pull qwen2.5:7b` 후 `.env`에서 `AI_ENGINE=ollama`로 설정합니다 (모델 메모리 약 4.7GB. 부족하면 `qwen2.5:3b`를 받고 `OLLAMA_MODEL=qwen2.5:3b`). OpenAI 전환은 [docs/openai-setup.md](docs/openai-setup.md)를 참고하세요 (기본은 꺼져 있고, 키가 없으면 과금되지 않습니다).
 
 ### frontend
 
