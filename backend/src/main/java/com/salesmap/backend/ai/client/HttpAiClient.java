@@ -7,6 +7,8 @@ import com.salesmap.backend.ai.dto.AiAnalysisRequest;
 import com.salesmap.backend.ai.dto.AiAnalysisResponse;
 import com.salesmap.backend.ai.dto.AiErrorResponse;
 import com.salesmap.backend.ai.dto.AiGroupAnalysisRequest;
+import com.salesmap.backend.ai.dto.AiMinutesRequest;
+import com.salesmap.backend.ai.dto.AiMinutesResponse;
 import com.salesmap.backend.ai.dto.AiReplyDraftRequest;
 import com.salesmap.backend.ai.dto.AiReplyDraftResponse;
 import com.salesmap.backend.ai.exception.AiClientException;
@@ -75,6 +77,40 @@ public class HttpAiClient implements AiClient {
             throw exception;
         } catch (RestClientException exception) {
             throw new AiClientException("AI Module reply draft call failed.", exception);
+        }
+    }
+
+    @Override
+    public AiMinutesResponse generateMinutes(AiMinutesRequest request) {
+        try {
+            log.debug("AI Module /minutes request JSON={}", toDebugJson(request));
+
+            AiMinutesResponse response = restClient.post()
+                    .uri("/minutes")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .body(request)
+                    .retrieve()
+                    .onStatus(status -> status.isError(), (httpRequest, httpResponse) -> {
+                        throw toAiClientException(httpResponse);
+                    })
+                    .body(AiMinutesResponse.class);
+
+            if (response == null || response.meetingNote() == null) {
+                throw new AiClientException("AI Module 회의록 응답이 비어 있습니다.");
+            }
+
+            log.debug("AI Module /minutes completed. llmProvider={}, llmModel={}, dropped={}",
+                    response.llmProvider(),
+                    response.llmModel(),
+                    response.droppedItems() == null ? 0 : response.droppedItems().size()
+            );
+
+            return response;
+        } catch (AiClientException exception) {
+            throw exception;
+        } catch (RestClientException exception) {
+            throw new AiClientException("AI Module 회의록 호출에 실패했습니다.", exception);
         }
     }
 
