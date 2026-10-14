@@ -27,12 +27,15 @@
 ## 실행 (ai-module 폴더에서)
 
 ```bash
+python -m eval.minutes.run --verbose                                 # 엔진(app/minutes)을 10건에 돌리고 채점 (로컬 Ollama 필요)
 python -m eval.minutes.score --self                                  # 정답끼리 → 만점이어야 정상
 python -m eval.minutes.score --pred eval/results/minutes_<실행이름>    # 엔진 결과 채점
 python -m eval.minutes.score --pred <폴더> --verbose --json <폴더>/report.json
 ```
 
-엔진 결과는 `<caseId>.json`(meeting_note) 10개를 한 폴더에 둔다. `eval/results/`는 git에 올라가지 않는다. 네트워크·LLM 호출이 없어서 CI 테스트(`tests/test_minutes_eval.py`)에서도 돈다.
+`run.py`는 결과 JSON(`eval/results/minutes_<시각>.json`)과 같은 이름의 폴더에 케이스별 예측 `<caseId>.json`(meeting_note)을 남긴다. 모델은 `OLLAMA_MODEL` 환경 변수로 바꾼다. CPU만 쓰는 PC에서는 건당 수십 초~분이 걸리므로 `OLLAMA_TIMEOUT_SECONDS`를 넉넉히(예: 300) 준다. `eval/results/`는 git에 올라가지 않는다.
+
+채점(`score.py`)은 네트워크·LLM 호출이 없어서 CI 테스트(`tests/test_minutes_eval.py`)에서도 돈다. `run.py`는 LLM을 부르므로 CI에서 돌리지 않는다.
 
 ## 지표
 
