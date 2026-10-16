@@ -1,0 +1,8534 @@
+[
+  {
+    "personId": "p_001",
+    "name": "가상인물_1825",
+    "nameVariants": [
+      "가상인물_1825 대리님",
+      "Synthetic Person 1825",
+      "가상인물_1825님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_001@people.example"
+    ],
+    "phones": [
+      "000-0000-0001"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_020",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_002",
+    "name": "가상인물_1825",
+    "nameVariants": [
+      "가상인물_1825 팀장님",
+      "Synthetic Person 1825",
+      "가상인물_1825님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_002@people.example"
+    ],
+    "phones": [
+      "000-0000-0002"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_002",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_003",
+    "name": "가상인물_0410",
+    "nameVariants": [
+      "가상인물_0410 팀장님",
+      "Synthetic Person 0410",
+      "가상인물_0410님"
+    ],
+    "company": "가상회사_003",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_003@people.example"
+    ],
+    "phones": [
+      "000-0000-0003"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_020",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_004",
+    "name": "가상인물_0410",
+    "nameVariants": [
+      "가상인물_0410 차장님",
+      "Synthetic Person 0410",
+      "가상인물_0410님"
+    ],
+    "company": "가상회사_014",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_004@people.example"
+    ],
+    "phones": [
+      "000-0000-0004"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_009",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_005",
+    "name": "가상인물_4507",
+    "nameVariants": [
+      "가상인물_4507 차장님",
+      "Synthetic Person 4507",
+      "가상인물_4507님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_005@people.example"
+    ],
+    "phones": [
+      "000-0000-0005"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_014",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_006",
+    "name": "가상인물_4507",
+    "nameVariants": [
+      "가상인물_4507 차장님",
+      "Synthetic Person 4507",
+      "가상인물_4507님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_006@people.example"
+    ],
+    "phones": [
+      "000-0000-0006"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_016",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_007",
+    "name": "가상인물_4013",
+    "nameVariants": [
+      "가상인물_4013 부장님",
+      "Synthetic Person 4013",
+      "가상인물_4013님"
+    ],
+    "company": "가상회사_003",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_007@people.example"
+    ],
+    "phones": [
+      "000-0000-0007"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_020",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_008",
+    "name": "가상인물_4013",
+    "nameVariants": [
+      "가상인물_4013 대리님",
+      "Synthetic Person 4013",
+      "가상인물_4013님"
+    ],
+    "company": "가상회사_001",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_008@people.example"
+    ],
+    "phones": [
+      "000-0000-0008"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_019",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_009",
+    "name": "가상인물_3658",
+    "nameVariants": [
+      "가상인물_3658 과장님",
+      "Synthetic Person 3658",
+      "가상인물_3658님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_009@people.example"
+    ],
+    "phones": [
+      "000-0000-0009"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_012",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_010",
+    "name": "가상인물_3658",
+    "nameVariants": [
+      "가상인물_3658 과장님",
+      "Synthetic Person 3658",
+      "가상인물_3658님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_010@people.example"
+    ],
+    "phones": [
+      "000-0000-0010"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_013",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_011",
+    "name": "가상인물_2287",
+    "nameVariants": [
+      "가상인물_2287 팀장님",
+      "Synthetic Person 2287",
+      "가상인물_2287님"
+    ],
+    "company": "가상회사_006",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_011@people.example"
+    ],
+    "phones": [
+      "000-0000-0011"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_011",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_012",
+    "name": "가상인물_2287",
+    "nameVariants": [
+      "가상인물_2287 팀장님",
+      "Synthetic Person 2287",
+      "가상인물_2287님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_012@people.example"
+    ],
+    "phones": [
+      "000-0000-0012"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_001",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_013",
+    "name": "가상인물_1680",
+    "nameVariants": [
+      "가상인물_1680 과장님",
+      "Synthetic Person 1680",
+      "가상인물_1680님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_013@people.example"
+    ],
+    "phones": [
+      "000-0000-0013"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_009",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_014",
+    "name": "가상인물_1680",
+    "nameVariants": [
+      "가상인물_1680 대리님",
+      "Synthetic Person 1680",
+      "가상인물_1680님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_014@people.example"
+    ],
+    "phones": [
+      "000-0000-0014"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_019",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_015",
+    "name": "가상인물_8936",
+    "nameVariants": [
+      "가상인물_8936 팀장님",
+      "Synthetic Person 8936",
+      "가상인물_8936님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_015@people.example"
+    ],
+    "phones": [
+      "000-0000-0015"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_007",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_016",
+    "name": "가상인물_8936",
+    "nameVariants": [
+      "가상인물_8936 과장님",
+      "Synthetic Person 8936",
+      "가상인물_8936님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_016@people.example"
+    ],
+    "phones": [
+      "000-0000-0016"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_009",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_017",
+    "name": "가상인물_1425",
+    "nameVariants": [
+      "가상인물_1425 대리님",
+      "Synthetic Person 1425",
+      "가상인물_1425님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_017@people.example"
+    ],
+    "phones": [
+      "000-0000-0017"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_003",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_018",
+    "name": "가상인물_1425",
+    "nameVariants": [
+      "가상인물_1425 차장님",
+      "Synthetic Person 1425",
+      "가상인물_1425님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_018@people.example"
+    ],
+    "phones": [
+      "000-0000-0018"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_002",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_019",
+    "name": "가상인물_9675",
+    "nameVariants": [
+      "가상인물_9675 차장님",
+      "Synthetic Person 9675",
+      "가상인물_9675님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_019@people.example"
+    ],
+    "phones": [
+      "000-0000-0019"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_006",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_020",
+    "name": "가상인물_9675",
+    "nameVariants": [
+      "가상인물_9675 팀장님",
+      "Synthetic Person 9675",
+      "가상인물_9675님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_020@people.example"
+    ],
+    "phones": [
+      "000-0000-0020"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_015",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_021",
+    "name": "가상인물_6913",
+    "nameVariants": [
+      "가상인물_6913 대리님",
+      "Synthetic Person 6913",
+      "가상인물_6913님"
+    ],
+    "company": "가상회사_001",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_021@people.example"
+    ],
+    "phones": [
+      "000-0000-0021"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_006",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_022",
+    "name": "가상인물_0521",
+    "nameVariants": [
+      "가상인물_0521 차장님",
+      "Synthetic Person 0521",
+      "가상인물_0521님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_022@people.example"
+    ],
+    "phones": [
+      "000-0000-0022"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_023",
+    "name": "가상인물_0489",
+    "nameVariants": [
+      "가상인물_0489 부장님",
+      "Synthetic Person 0489",
+      "가상인물_0489님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_023@people.example"
+    ],
+    "phones": [
+      "000-0000-0023"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_011",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_024",
+    "name": "가상인물_1536",
+    "nameVariants": [
+      "가상인물_1536 차장님",
+      "Synthetic Person 1536",
+      "가상인물_1536님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_024@people.example"
+    ],
+    "phones": [
+      "000-0000-0024"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_009",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_025",
+    "name": "가상인물_3583",
+    "nameVariants": [
+      "가상인물_3583 팀장님",
+      "Synthetic Person 3583",
+      "가상인물_3583님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_025@people.example"
+    ],
+    "phones": [
+      "000-0000-0025"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_026",
+    "name": "가상인물_3812",
+    "nameVariants": [
+      "가상인물_3812 팀장님",
+      "Synthetic Person 3812",
+      "가상인물_3812님"
+    ],
+    "company": "가상회사_014",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_026@people.example"
+    ],
+    "phones": [
+      "000-0000-0026"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_027",
+    "name": "가상인물_8280",
+    "nameVariants": [
+      "가상인물_8280 과장님",
+      "Synthetic Person 8280",
+      "가상인물_8280님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_027@people.example"
+    ],
+    "phones": [
+      "000-0000-0027"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_028",
+    "name": "가상인물_9864",
+    "nameVariants": [
+      "가상인물_9864 부장님",
+      "Synthetic Person 9864",
+      "가상인물_9864님"
+    ],
+    "company": "가상회사_006",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_028@people.example"
+    ],
+    "phones": [
+      "000-0000-0028"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_012",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_029",
+    "name": "가상인물_0435",
+    "nameVariants": [
+      "가상인물_0435 차장님",
+      "Synthetic Person 0435",
+      "가상인물_0435님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_029@people.example"
+    ],
+    "phones": [
+      "000-0000-0029"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_004",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_030",
+    "name": "가상인물_9196",
+    "nameVariants": [
+      "가상인물_9196 부장님",
+      "Synthetic Person 9196",
+      "가상인물_9196님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_030@people.example"
+    ],
+    "phones": [
+      "000-0000-0030"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_016",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_031",
+    "name": "가상인물_3258",
+    "nameVariants": [
+      "가상인물_3258 과장님",
+      "Synthetic Person 3258",
+      "가상인물_3258님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_031@people.example"
+    ],
+    "phones": [
+      "000-0000-0031"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_007",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_032",
+    "name": "가상인물_8929",
+    "nameVariants": [
+      "가상인물_8929 차장님",
+      "Synthetic Person 8929",
+      "가상인물_8929님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_032@people.example"
+    ],
+    "phones": [
+      "000-0000-0032"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_033",
+    "name": "가상인물_6874",
+    "nameVariants": [
+      "가상인물_6874 차장님",
+      "Synthetic Person 6874",
+      "가상인물_6874님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_033@people.example"
+    ],
+    "phones": [
+      "000-0000-0033"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_034",
+    "name": "가상인물_3612",
+    "nameVariants": [
+      "가상인물_3612 팀장님",
+      "Synthetic Person 3612",
+      "가상인물_3612님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_034@people.example"
+    ],
+    "phones": [
+      "000-0000-0034"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_001",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_035",
+    "name": "가상인물_7360",
+    "nameVariants": [
+      "가상인물_7360 과장님",
+      "Synthetic Person 7360",
+      "가상인물_7360님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_035@people.example"
+    ],
+    "phones": [
+      "000-0000-0035"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_036",
+    "name": "가상인물_9655",
+    "nameVariants": [
+      "가상인물_9655 대리님",
+      "Synthetic Person 9655",
+      "가상인물_9655님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_036@people.example"
+    ],
+    "phones": [
+      "000-0000-0036"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_015",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_037",
+    "name": "가상인물_4558",
+    "nameVariants": [
+      "가상인물_4558 부장님",
+      "Synthetic Person 4558",
+      "가상인물_4558님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_037@people.example"
+    ],
+    "phones": [
+      "000-0000-0037"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_038",
+    "name": "가상인물_0107",
+    "nameVariants": [
+      "가상인물_0107 대리님",
+      "Synthetic Person 0107",
+      "가상인물_0107님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_038@people.example"
+    ],
+    "phones": [
+      "000-0000-0038"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_039",
+    "name": "가상인물_2616",
+    "nameVariants": [
+      "가상인물_2616 과장님",
+      "Synthetic Person 2616",
+      "가상인물_2616님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_039@people.example"
+    ],
+    "phones": [
+      "000-0000-0039"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_014",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_040",
+    "name": "가상인물_6925",
+    "nameVariants": [
+      "가상인물_6925 팀장님",
+      "Synthetic Person 6925",
+      "가상인물_6925님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_040@people.example"
+    ],
+    "phones": [
+      "000-0000-0040"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_041",
+    "name": "가상인물_5575",
+    "nameVariants": [
+      "가상인물_5575 차장님",
+      "Synthetic Person 5575",
+      "가상인물_5575님"
+    ],
+    "company": "가상회사_007",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_041@people.example"
+    ],
+    "phones": [
+      "000-0000-0041"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_042",
+    "name": "가상인물_4553",
+    "nameVariants": [
+      "가상인물_4553 팀장님",
+      "Synthetic Person 4553",
+      "가상인물_4553님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_042@people.example"
+    ],
+    "phones": [
+      "000-0000-0042"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_004",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_043",
+    "name": "가상인물_2548",
+    "nameVariants": [
+      "가상인물_2548 차장님",
+      "Synthetic Person 2548",
+      "가상인물_2548님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_043@people.example"
+    ],
+    "phones": [
+      "000-0000-0043"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_044",
+    "name": "가상인물_3528",
+    "nameVariants": [
+      "가상인물_3528 부장님",
+      "Synthetic Person 3528",
+      "가상인물_3528님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_044@people.example"
+    ],
+    "phones": [
+      "000-0000-0044"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_045",
+    "name": "가상인물_5515",
+    "nameVariants": [
+      "가상인물_5515 과장님",
+      "Synthetic Person 5515",
+      "가상인물_5515님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_045@people.example"
+    ],
+    "phones": [
+      "000-0000-0045"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_013",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_046",
+    "name": "가상인물_1675",
+    "nameVariants": [
+      "가상인물_1675 팀장님",
+      "Synthetic Person 1675",
+      "가상인물_1675님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_046@people.example"
+    ],
+    "phones": [
+      "000-0000-0046"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_018",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_047",
+    "name": "가상인물_1520",
+    "nameVariants": [
+      "가상인물_1520 차장님",
+      "Synthetic Person 1520",
+      "가상인물_1520님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_047@people.example"
+    ],
+    "phones": [
+      "000-0000-0047"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_020",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_048",
+    "name": "가상인물_6225",
+    "nameVariants": [
+      "가상인물_6225 부장님",
+      "Synthetic Person 6225",
+      "가상인물_6225님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_048@people.example"
+    ],
+    "phones": [
+      "000-0000-0048"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_049",
+    "name": "가상인물_1585",
+    "nameVariants": [
+      "가상인물_1585 팀장님",
+      "Synthetic Person 1585",
+      "가상인물_1585님"
+    ],
+    "company": "가상회사_007",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_049@people.example"
+    ],
+    "phones": [
+      "000-0000-0049"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_050",
+    "name": "가상인물_5882",
+    "nameVariants": [
+      "가상인물_5882 대리님",
+      "Synthetic Person 5882",
+      "가상인물_5882님"
+    ],
+    "company": "가상회사_006",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_050@people.example"
+    ],
+    "phones": [
+      "000-0000-0050"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_012",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_051",
+    "name": "가상인물_5636",
+    "nameVariants": [
+      "가상인물_5636 차장님",
+      "Synthetic Person 5636",
+      "가상인물_5636님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_051@people.example"
+    ],
+    "phones": [
+      "000-0000-0051"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_007",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_052",
+    "name": "가상인물_9892",
+    "nameVariants": [
+      "가상인물_9892 대리님",
+      "Synthetic Person 9892",
+      "가상인물_9892님"
+    ],
+    "company": "가상회사_001",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_052@people.example"
+    ],
+    "phones": [
+      "000-0000-0052"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_017",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_053",
+    "name": "가상인물_4334",
+    "nameVariants": [
+      "가상인물_4334 부장님",
+      "Synthetic Person 4334",
+      "가상인물_4334님"
+    ],
+    "company": "가상회사_003",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_053@people.example"
+    ],
+    "phones": [
+      "000-0000-0053"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_054",
+    "name": "가상인물_0712",
+    "nameVariants": [
+      "가상인물_0712 과장님",
+      "Synthetic Person 0712",
+      "가상인물_0712님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_054@people.example"
+    ],
+    "phones": [
+      "000-0000-0054"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_055",
+    "name": "가상인물_7528",
+    "nameVariants": [
+      "가상인물_7528 부장님",
+      "Synthetic Person 7528",
+      "가상인물_7528님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_055@people.example"
+    ],
+    "phones": [
+      "000-0000-0055"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_056",
+    "name": "가상인물_8786",
+    "nameVariants": [
+      "가상인물_8786 대리님",
+      "Synthetic Person 8786",
+      "가상인물_8786님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_056@people.example"
+    ],
+    "phones": [
+      "000-0000-0056"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_057",
+    "name": "가상인물_2046",
+    "nameVariants": [
+      "가상인물_2046 부장님",
+      "Synthetic Person 2046",
+      "가상인물_2046님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_057@people.example"
+    ],
+    "phones": [
+      "000-0000-0057"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_018",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_058",
+    "name": "가상인물_6202",
+    "nameVariants": [
+      "가상인물_6202 팀장님",
+      "Synthetic Person 6202",
+      "가상인물_6202님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_058@people.example"
+    ],
+    "phones": [
+      "000-0000-0058"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_005",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_059",
+    "name": "가상인물_1292",
+    "nameVariants": [
+      "가상인물_1292 부장님",
+      "Synthetic Person 1292",
+      "가상인물_1292님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_059@people.example"
+    ],
+    "phones": [
+      "000-0000-0059"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_060",
+    "name": "가상인물_9045",
+    "nameVariants": [
+      "가상인물_9045 팀장님",
+      "Synthetic Person 9045",
+      "가상인물_9045님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_060@people.example"
+    ],
+    "phones": [
+      "000-0000-0060"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_015",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_061",
+    "name": "가상인물_4804",
+    "nameVariants": [
+      "가상인물_4804 부장님",
+      "Synthetic Person 4804",
+      "가상인물_4804님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_061@people.example"
+    ],
+    "phones": [
+      "000-0000-0061"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_062",
+    "name": "가상인물_5926",
+    "nameVariants": [
+      "가상인물_5926 부장님",
+      "Synthetic Person 5926",
+      "가상인물_5926님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_062@people.example"
+    ],
+    "phones": [
+      "000-0000-0062"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_063",
+    "name": "가상인물_9460",
+    "nameVariants": [
+      "가상인물_9460 부장님",
+      "Synthetic Person 9460",
+      "가상인물_9460님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_063@people.example"
+    ],
+    "phones": [
+      "000-0000-0063"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_008",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_064",
+    "name": "가상인물_3151",
+    "nameVariants": [
+      "가상인물_3151 부장님",
+      "Synthetic Person 3151",
+      "가상인물_3151님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_064@people.example"
+    ],
+    "phones": [
+      "000-0000-0064"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_065",
+    "name": "가상인물_1140",
+    "nameVariants": [
+      "가상인물_1140 부장님",
+      "Synthetic Person 1140",
+      "가상인물_1140님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_065@people.example"
+    ],
+    "phones": [
+      "000-0000-0065"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_011",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_066",
+    "name": "가상인물_0751",
+    "nameVariants": [
+      "가상인물_0751 차장님",
+      "Synthetic Person 0751",
+      "가상인물_0751님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_066@people.example"
+    ],
+    "phones": [
+      "000-0000-0066"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_019",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_067",
+    "name": "가상인물_3734",
+    "nameVariants": [
+      "가상인물_3734 과장님",
+      "Synthetic Person 3734",
+      "가상인물_3734님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_067@people.example"
+    ],
+    "phones": [
+      "000-0000-0067"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_006",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_068",
+    "name": "가상인물_4742",
+    "nameVariants": [
+      "가상인물_4742 부장님",
+      "Synthetic Person 4742",
+      "가상인물_4742님"
+    ],
+    "company": "가상회사_003",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_068@people.example"
+    ],
+    "phones": [
+      "000-0000-0068"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_069",
+    "name": "가상인물_1308",
+    "nameVariants": [
+      "가상인물_1308 부장님",
+      "Synthetic Person 1308",
+      "가상인물_1308님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_069@people.example"
+    ],
+    "phones": [
+      "000-0000-0069"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_070",
+    "name": "가상인물_3815",
+    "nameVariants": [
+      "가상인물_3815 부장님",
+      "Synthetic Person 3815",
+      "가상인물_3815님"
+    ],
+    "company": "가상회사_007",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_070@people.example"
+    ],
+    "phones": [
+      "000-0000-0070"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_071",
+    "name": "가상인물_1655",
+    "nameVariants": [
+      "가상인물_1655 대리님",
+      "Synthetic Person 1655",
+      "가상인물_1655님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_071@people.example"
+    ],
+    "phones": [
+      "000-0000-0071"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_072",
+    "name": "가상인물_6228",
+    "nameVariants": [
+      "가상인물_6228 부장님",
+      "Synthetic Person 6228",
+      "가상인물_6228님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_072@people.example"
+    ],
+    "phones": [
+      "000-0000-0072"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_073",
+    "name": "가상인물_4555",
+    "nameVariants": [
+      "가상인물_4555 차장님",
+      "Synthetic Person 4555",
+      "가상인물_4555님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_073@people.example"
+    ],
+    "phones": [
+      "000-0000-0073"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_074",
+    "name": "가상인물_7429",
+    "nameVariants": [
+      "가상인물_7429 팀장님",
+      "Synthetic Person 7429",
+      "가상인물_7429님"
+    ],
+    "company": "가상회사_014",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_074@people.example"
+    ],
+    "phones": [
+      "000-0000-0074"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_075",
+    "name": "가상인물_5978",
+    "nameVariants": [
+      "가상인물_5978 팀장님",
+      "Synthetic Person 5978",
+      "가상인물_5978님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_075@people.example"
+    ],
+    "phones": [
+      "000-0000-0075"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_076",
+    "name": "가상인물_2665",
+    "nameVariants": [
+      "가상인물_2665 과장님",
+      "Synthetic Person 2665",
+      "가상인물_2665님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_076@people.example"
+    ],
+    "phones": [
+      "000-0000-0076"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_017",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_077",
+    "name": "가상인물_6066",
+    "nameVariants": [
+      "가상인물_6066 차장님",
+      "Synthetic Person 6066",
+      "가상인물_6066님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_077@people.example"
+    ],
+    "phones": [
+      "000-0000-0077"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_078",
+    "name": "가상인물_5821",
+    "nameVariants": [
+      "가상인물_5821 과장님",
+      "Synthetic Person 5821",
+      "가상인물_5821님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_078@people.example"
+    ],
+    "phones": [
+      "000-0000-0078"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_079",
+    "name": "가상인물_3433",
+    "nameVariants": [
+      "가상인물_3433 팀장님",
+      "Synthetic Person 3433",
+      "가상인물_3433님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_079@people.example"
+    ],
+    "phones": [
+      "000-0000-0079"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_080",
+    "name": "가상인물_4375",
+    "nameVariants": [
+      "가상인물_4375 팀장님",
+      "Synthetic Person 4375",
+      "가상인물_4375님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_080@people.example"
+    ],
+    "phones": [
+      "000-0000-0080"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_081",
+    "name": "가상인물_1170",
+    "nameVariants": [
+      "가상인물_1170 대리님",
+      "Synthetic Person 1170",
+      "가상인물_1170님"
+    ],
+    "company": "가상회사_001",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_081@people.example"
+    ],
+    "phones": [
+      "000-0000-0081"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_082",
+    "name": "가상인물_9981",
+    "nameVariants": [
+      "가상인물_9981 부장님",
+      "Synthetic Person 9981",
+      "가상인물_9981님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_082@people.example"
+    ],
+    "phones": [
+      "000-0000-0082"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_010",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_083",
+    "name": "가상인물_2804",
+    "nameVariants": [
+      "가상인물_2804 과장님",
+      "Synthetic Person 2804",
+      "가상인물_2804님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_083@people.example"
+    ],
+    "phones": [
+      "000-0000-0083"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_084",
+    "name": "가상인물_8752",
+    "nameVariants": [
+      "가상인물_8752 부장님",
+      "Synthetic Person 8752",
+      "가상인물_8752님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_084@people.example"
+    ],
+    "phones": [
+      "000-0000-0084"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_015",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_085",
+    "name": "가상인물_4011",
+    "nameVariants": [
+      "가상인물_4011 부장님",
+      "Synthetic Person 4011",
+      "가상인물_4011님"
+    ],
+    "company": "가상회사_003",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_085@people.example"
+    ],
+    "phones": [
+      "000-0000-0085"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_019",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_086",
+    "name": "가상인물_2678",
+    "nameVariants": [
+      "가상인물_2678 과장님",
+      "Synthetic Person 2678",
+      "가상인물_2678님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_086@people.example"
+    ],
+    "phones": [
+      "000-0000-0086"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_087",
+    "name": "가상인물_7574",
+    "nameVariants": [
+      "가상인물_7574 대리님",
+      "Synthetic Person 7574",
+      "가상인물_7574님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_087@people.example"
+    ],
+    "phones": [
+      "000-0000-0087"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_088",
+    "name": "가상인물_6217",
+    "nameVariants": [
+      "가상인물_6217 대리님",
+      "Synthetic Person 6217",
+      "가상인물_6217님"
+    ],
+    "company": "가상회사_007",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_088@people.example"
+    ],
+    "phones": [
+      "000-0000-0088"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_089",
+    "name": "가상인물_4423",
+    "nameVariants": [
+      "가상인물_4423 과장님",
+      "Synthetic Person 4423",
+      "가상인물_4423님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_089@people.example"
+    ],
+    "phones": [
+      "000-0000-0089"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_090",
+    "name": "가상인물_9126",
+    "nameVariants": [
+      "가상인물_9126 팀장님",
+      "Synthetic Person 9126",
+      "가상인물_9126님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_090@people.example"
+    ],
+    "phones": [
+      "000-0000-0090"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_091",
+    "name": "가상인물_3599",
+    "nameVariants": [
+      "가상인물_3599 차장님",
+      "Synthetic Person 3599",
+      "가상인물_3599님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_091@people.example"
+    ],
+    "phones": [
+      "000-0000-0091"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_092",
+    "name": "가상인물_5314",
+    "nameVariants": [
+      "가상인물_5314 팀장님",
+      "Synthetic Person 5314",
+      "가상인물_5314님"
+    ],
+    "company": "가상회사_006",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_092@people.example"
+    ],
+    "phones": [
+      "000-0000-0092"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_093",
+    "name": "가상인물_0917",
+    "nameVariants": [
+      "가상인물_0917 과장님",
+      "Synthetic Person 0917",
+      "가상인물_0917님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_093@people.example"
+    ],
+    "phones": [
+      "000-0000-0093"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_094",
+    "name": "가상인물_3753",
+    "nameVariants": [
+      "가상인물_3753 팀장님",
+      "Synthetic Person 3753",
+      "가상인물_3753님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_094@people.example"
+    ],
+    "phones": [
+      "000-0000-0094"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_011",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_095",
+    "name": "가상인물_0526",
+    "nameVariants": [
+      "가상인물_0526 부장님",
+      "Synthetic Person 0526",
+      "가상인물_0526님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_095@people.example"
+    ],
+    "phones": [
+      "000-0000-0095"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_096",
+    "name": "가상인물_5169",
+    "nameVariants": [
+      "가상인물_5169 대리님",
+      "Synthetic Person 5169",
+      "가상인물_5169님"
+    ],
+    "company": "가상회사_007",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_096@people.example"
+    ],
+    "phones": [
+      "000-0000-0096"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_097",
+    "name": "가상인물_6573",
+    "nameVariants": [
+      "가상인물_6573 대리님",
+      "Synthetic Person 6573",
+      "가상인물_6573님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_097@people.example"
+    ],
+    "phones": [
+      "000-0000-0097"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_098",
+    "name": "가상인물_4387",
+    "nameVariants": [
+      "가상인물_4387 팀장님",
+      "Synthetic Person 4387",
+      "가상인물_4387님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_098@people.example"
+    ],
+    "phones": [
+      "000-0000-0098"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_099",
+    "name": "가상인물_1085",
+    "nameVariants": [
+      "가상인물_1085 대리님",
+      "Synthetic Person 1085",
+      "가상인물_1085님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_099@people.example"
+    ],
+    "phones": [
+      "000-0000-0099"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_014",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_100",
+    "name": "가상인물_3457",
+    "nameVariants": [
+      "가상인물_3457 팀장님",
+      "Synthetic Person 3457",
+      "가상인물_3457님"
+    ],
+    "company": "가상회사_003",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_100@people.example"
+    ],
+    "phones": [
+      "000-0000-0100"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_101",
+    "name": "가상인물_9293",
+    "nameVariants": [
+      "가상인물_9293 부장님",
+      "Synthetic Person 9293",
+      "가상인물_9293님"
+    ],
+    "company": "가상회사_001",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_101@people.example"
+    ],
+    "phones": [
+      "000-0000-0101"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_102",
+    "name": "가상인물_5156",
+    "nameVariants": [
+      "가상인물_5156 부장님",
+      "Synthetic Person 5156",
+      "가상인물_5156님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_102@people.example"
+    ],
+    "phones": [
+      "000-0000-0102"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_103",
+    "name": "가상인물_3484",
+    "nameVariants": [
+      "가상인물_3484 과장님",
+      "Synthetic Person 3484",
+      "가상인물_3484님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_103@people.example"
+    ],
+    "phones": [
+      "000-0000-0103"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_104",
+    "name": "가상인물_8180",
+    "nameVariants": [
+      "가상인물_8180 차장님",
+      "Synthetic Person 8180",
+      "가상인물_8180님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_104@people.example"
+    ],
+    "phones": [
+      "000-0000-0104"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_105",
+    "name": "가상인물_6483",
+    "nameVariants": [
+      "가상인물_6483 부장님",
+      "Synthetic Person 6483",
+      "가상인물_6483님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_105@people.example"
+    ],
+    "phones": [
+      "000-0000-0105"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_106",
+    "name": "가상인물_7518",
+    "nameVariants": [
+      "가상인물_7518 차장님",
+      "Synthetic Person 7518",
+      "가상인물_7518님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_106@people.example"
+    ],
+    "phones": [
+      "000-0000-0106"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_008",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_107",
+    "name": "가상인물_2341",
+    "nameVariants": [
+      "가상인물_2341 부장님",
+      "Synthetic Person 2341",
+      "가상인물_2341님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_107@people.example"
+    ],
+    "phones": [
+      "000-0000-0107"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_016",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_108",
+    "name": "가상인물_4340",
+    "nameVariants": [
+      "가상인물_4340 부장님",
+      "Synthetic Person 4340",
+      "가상인물_4340님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_108@people.example"
+    ],
+    "phones": [
+      "000-0000-0108"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_016",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_109",
+    "name": "가상인물_2288",
+    "nameVariants": [
+      "가상인물_2288 부장님",
+      "Synthetic Person 2288",
+      "가상인물_2288님"
+    ],
+    "company": "가상회사_006",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_109@people.example"
+    ],
+    "phones": [
+      "000-0000-0109"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_010",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_110",
+    "name": "가상인물_4041",
+    "nameVariants": [
+      "가상인물_4041 팀장님",
+      "Synthetic Person 4041",
+      "가상인물_4041님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_110@people.example"
+    ],
+    "phones": [
+      "000-0000-0110"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_111",
+    "name": "가상인물_9198",
+    "nameVariants": [
+      "가상인물_9198 팀장님",
+      "Synthetic Person 9198",
+      "가상인물_9198님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_111@people.example"
+    ],
+    "phones": [
+      "000-0000-0111"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_007",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_112",
+    "name": "가상인물_8831",
+    "nameVariants": [
+      "가상인물_8831 부장님",
+      "Synthetic Person 8831",
+      "가상인물_8831님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_112@people.example"
+    ],
+    "phones": [
+      "000-0000-0112"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_113",
+    "name": "가상인물_4305",
+    "nameVariants": [
+      "가상인물_4305 부장님",
+      "Synthetic Person 4305",
+      "가상인물_4305님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_113@people.example"
+    ],
+    "phones": [
+      "000-0000-0113"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_114",
+    "name": "가상인물_9578",
+    "nameVariants": [
+      "가상인물_9578 부장님",
+      "Synthetic Person 9578",
+      "가상인물_9578님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_114@people.example"
+    ],
+    "phones": [
+      "000-0000-0114"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_115",
+    "name": "가상인물_7020",
+    "nameVariants": [
+      "가상인물_7020 차장님",
+      "Synthetic Person 7020",
+      "가상인물_7020님"
+    ],
+    "company": "가상회사_003",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_115@people.example"
+    ],
+    "phones": [
+      "000-0000-0115"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_009",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_116",
+    "name": "가상인물_9561",
+    "nameVariants": [
+      "가상인물_9561 차장님",
+      "Synthetic Person 9561",
+      "가상인물_9561님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_116@people.example"
+    ],
+    "phones": [
+      "000-0000-0116"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_117",
+    "name": "가상인물_6544",
+    "nameVariants": [
+      "가상인물_6544 차장님",
+      "Synthetic Person 6544",
+      "가상인물_6544님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_117@people.example"
+    ],
+    "phones": [
+      "000-0000-0117"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_118",
+    "name": "가상인물_5931",
+    "nameVariants": [
+      "가상인물_5931 차장님",
+      "Synthetic Person 5931",
+      "가상인물_5931님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_118@people.example"
+    ],
+    "phones": [
+      "000-0000-0118"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_119",
+    "name": "가상인물_3594",
+    "nameVariants": [
+      "가상인물_3594 차장님",
+      "Synthetic Person 3594",
+      "가상인물_3594님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_119@people.example"
+    ],
+    "phones": [
+      "000-0000-0119"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_008",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_120",
+    "name": "가상인물_2267",
+    "nameVariants": [
+      "가상인물_2267 차장님",
+      "Synthetic Person 2267",
+      "가상인물_2267님"
+    ],
+    "company": "가상회사_007",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_120@people.example"
+    ],
+    "phones": [
+      "000-0000-0120"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_019",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_121",
+    "name": "가상인물_8349",
+    "nameVariants": [
+      "가상인물_8349 과장님",
+      "Synthetic Person 8349",
+      "가상인물_8349님"
+    ],
+    "company": "가상회사_007",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_121@people.example"
+    ],
+    "phones": [
+      "000-0000-0121"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_122",
+    "name": "가상인물_8086",
+    "nameVariants": [
+      "가상인물_8086 팀장님",
+      "Synthetic Person 8086",
+      "가상인물_8086님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_122@people.example"
+    ],
+    "phones": [
+      "000-0000-0122"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_123",
+    "name": "가상인물_1490",
+    "nameVariants": [
+      "가상인물_1490 팀장님",
+      "Synthetic Person 1490",
+      "가상인물_1490님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_123@people.example"
+    ],
+    "phones": [
+      "000-0000-0123"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_004",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_124",
+    "name": "가상인물_0772",
+    "nameVariants": [
+      "가상인물_0772 과장님",
+      "Synthetic Person 0772",
+      "가상인물_0772님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_124@people.example"
+    ],
+    "phones": [
+      "000-0000-0124"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_125",
+    "name": "가상인물_1797",
+    "nameVariants": [
+      "가상인물_1797 대리님",
+      "Synthetic Person 1797",
+      "가상인물_1797님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_125@people.example"
+    ],
+    "phones": [
+      "000-0000-0125"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_126",
+    "name": "가상인물_2505",
+    "nameVariants": [
+      "가상인물_2505 차장님",
+      "Synthetic Person 2505",
+      "가상인물_2505님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_126@people.example"
+    ],
+    "phones": [
+      "000-0000-0126"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_002",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_127",
+    "name": "가상인물_2622",
+    "nameVariants": [
+      "가상인물_2622 과장님",
+      "Synthetic Person 2622",
+      "가상인물_2622님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_127@people.example"
+    ],
+    "phones": [
+      "000-0000-0127"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_128",
+    "name": "가상인물_6917",
+    "nameVariants": [
+      "가상인물_6917 대리님",
+      "Synthetic Person 6917",
+      "가상인물_6917님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_128@people.example"
+    ],
+    "phones": [
+      "000-0000-0128"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_129",
+    "name": "가상인물_9772",
+    "nameVariants": [
+      "가상인물_9772 차장님",
+      "Synthetic Person 9772",
+      "가상인물_9772님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_129@people.example"
+    ],
+    "phones": [
+      "000-0000-0129"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_130",
+    "name": "가상인물_1041",
+    "nameVariants": [
+      "가상인물_1041 차장님",
+      "Synthetic Person 1041",
+      "가상인물_1041님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_130@people.example"
+    ],
+    "phones": [
+      "000-0000-0130"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_002",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_131",
+    "name": "가상인물_6305",
+    "nameVariants": [
+      "가상인물_6305 대리님",
+      "Synthetic Person 6305",
+      "가상인물_6305님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_131@people.example"
+    ],
+    "phones": [
+      "000-0000-0131"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_132",
+    "name": "가상인물_6253",
+    "nameVariants": [
+      "가상인물_6253 부장님",
+      "Synthetic Person 6253",
+      "가상인물_6253님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_132@people.example"
+    ],
+    "phones": [
+      "000-0000-0132"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_002",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_133",
+    "name": "가상인물_9764",
+    "nameVariants": [
+      "가상인물_9764 팀장님",
+      "Synthetic Person 9764",
+      "가상인물_9764님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_133@people.example"
+    ],
+    "phones": [
+      "000-0000-0133"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_134",
+    "name": "가상인물_7669",
+    "nameVariants": [
+      "가상인물_7669 과장님",
+      "Synthetic Person 7669",
+      "가상인물_7669님"
+    ],
+    "company": "가상회사_003",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_134@people.example"
+    ],
+    "phones": [
+      "000-0000-0134"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_015",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_135",
+    "name": "가상인물_8670",
+    "nameVariants": [
+      "가상인물_8670 팀장님",
+      "Synthetic Person 8670",
+      "가상인물_8670님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_135@people.example"
+    ],
+    "phones": [
+      "000-0000-0135"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_017",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_136",
+    "name": "가상인물_4120",
+    "nameVariants": [
+      "가상인물_4120 부장님",
+      "Synthetic Person 4120",
+      "가상인물_4120님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_136@people.example"
+    ],
+    "phones": [
+      "000-0000-0136"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_020",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_137",
+    "name": "가상인물_9065",
+    "nameVariants": [
+      "가상인물_9065 팀장님",
+      "Synthetic Person 9065",
+      "가상인물_9065님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_137@people.example"
+    ],
+    "phones": [
+      "000-0000-0137"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_138",
+    "name": "가상인물_0189",
+    "nameVariants": [
+      "가상인물_0189 대리님",
+      "Synthetic Person 0189",
+      "가상인물_0189님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_138@people.example"
+    ],
+    "phones": [
+      "000-0000-0138"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_139",
+    "name": "가상인물_1877",
+    "nameVariants": [
+      "가상인물_1877 과장님",
+      "Synthetic Person 1877",
+      "가상인물_1877님"
+    ],
+    "company": "가상회사_007",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_139@people.example"
+    ],
+    "phones": [
+      "000-0000-0139"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_003",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_140",
+    "name": "가상인물_8798",
+    "nameVariants": [
+      "가상인물_8798 과장님",
+      "Synthetic Person 8798",
+      "가상인물_8798님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_140@people.example"
+    ],
+    "phones": [
+      "000-0000-0140"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_141",
+    "name": "가상인물_4372",
+    "nameVariants": [
+      "가상인물_4372 대리님",
+      "Synthetic Person 4372",
+      "가상인물_4372님"
+    ],
+    "company": "가상회사_006",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_141@people.example"
+    ],
+    "phones": [
+      "000-0000-0141"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_142",
+    "name": "가상인물_5574",
+    "nameVariants": [
+      "가상인물_5574 부장님",
+      "Synthetic Person 5574",
+      "가상인물_5574님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_142@people.example"
+    ],
+    "phones": [
+      "000-0000-0142"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_008",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_143",
+    "name": "가상인물_1828",
+    "nameVariants": [
+      "가상인물_1828 부장님",
+      "Synthetic Person 1828",
+      "가상인물_1828님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_143@people.example"
+    ],
+    "phones": [
+      "000-0000-0143"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_008",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_144",
+    "name": "가상인물_4809",
+    "nameVariants": [
+      "가상인물_4809 과장님",
+      "Synthetic Person 4809",
+      "가상인물_4809님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_144@people.example"
+    ],
+    "phones": [
+      "000-0000-0144"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_145",
+    "name": "가상인물_7124",
+    "nameVariants": [
+      "가상인물_7124 과장님",
+      "Synthetic Person 7124",
+      "가상인물_7124님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_145@people.example"
+    ],
+    "phones": [
+      "000-0000-0145"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_146",
+    "name": "가상인물_2592",
+    "nameVariants": [
+      "가상인물_2592 과장님",
+      "Synthetic Person 2592",
+      "가상인물_2592님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_146@people.example"
+    ],
+    "phones": [
+      "000-0000-0146"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_006",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_147",
+    "name": "가상인물_7434",
+    "nameVariants": [
+      "가상인물_7434 팀장님",
+      "Synthetic Person 7434",
+      "가상인물_7434님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_147@people.example"
+    ],
+    "phones": [
+      "000-0000-0147"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_148",
+    "name": "가상인물_0054",
+    "nameVariants": [
+      "가상인물_0054 대리님",
+      "Synthetic Person 0054",
+      "가상인물_0054님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_148@people.example"
+    ],
+    "phones": [
+      "000-0000-0148"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_149",
+    "name": "가상인물_4316",
+    "nameVariants": [
+      "가상인물_4316 부장님",
+      "Synthetic Person 4316",
+      "가상인물_4316님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_149@people.example"
+    ],
+    "phones": [
+      "000-0000-0149"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_150",
+    "name": "가상인물_8202",
+    "nameVariants": [
+      "가상인물_8202 팀장님",
+      "Synthetic Person 8202",
+      "가상인물_8202님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_150@people.example"
+    ],
+    "phones": [
+      "000-0000-0150"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_151",
+    "name": "가상인물_2928",
+    "nameVariants": [
+      "가상인물_2928 팀장님",
+      "Synthetic Person 2928",
+      "가상인물_2928님"
+    ],
+    "company": "가상회사_003",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_151@people.example"
+    ],
+    "phones": [
+      "000-0000-0151"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_015",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_152",
+    "name": "가상인물_8318",
+    "nameVariants": [
+      "가상인물_8318 차장님",
+      "Synthetic Person 8318",
+      "가상인물_8318님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_152@people.example"
+    ],
+    "phones": [
+      "000-0000-0152"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_008",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_153",
+    "name": "가상인물_1744",
+    "nameVariants": [
+      "가상인물_1744 대리님",
+      "Synthetic Person 1744",
+      "가상인물_1744님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_153@people.example"
+    ],
+    "phones": [
+      "000-0000-0153"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_154",
+    "name": "가상인물_4890",
+    "nameVariants": [
+      "가상인물_4890 팀장님",
+      "Synthetic Person 4890",
+      "가상인물_4890님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_154@people.example"
+    ],
+    "phones": [
+      "000-0000-0154"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_006",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_155",
+    "name": "가상인물_9978",
+    "nameVariants": [
+      "가상인물_9978 부장님",
+      "Synthetic Person 9978",
+      "가상인물_9978님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_155@people.example"
+    ],
+    "phones": [
+      "000-0000-0155"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_156",
+    "name": "가상인물_3259",
+    "nameVariants": [
+      "가상인물_3259 팀장님",
+      "Synthetic Person 3259",
+      "가상인물_3259님"
+    ],
+    "company": "가상회사_006",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_156@people.example"
+    ],
+    "phones": [
+      "000-0000-0156"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_157",
+    "name": "가상인물_6127",
+    "nameVariants": [
+      "가상인물_6127 대리님",
+      "Synthetic Person 6127",
+      "가상인물_6127님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_157@people.example"
+    ],
+    "phones": [
+      "000-0000-0157"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_158",
+    "name": "가상인물_2647",
+    "nameVariants": [
+      "가상인물_2647 차장님",
+      "Synthetic Person 2647",
+      "가상인물_2647님"
+    ],
+    "company": "가상회사_014",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_158@people.example"
+    ],
+    "phones": [
+      "000-0000-0158"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_004",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_159",
+    "name": "가상인물_8838",
+    "nameVariants": [
+      "가상인물_8838 부장님",
+      "Synthetic Person 8838",
+      "가상인물_8838님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_159@people.example"
+    ],
+    "phones": [
+      "000-0000-0159"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_160",
+    "name": "가상인물_8690",
+    "nameVariants": [
+      "가상인물_8690 부장님",
+      "Synthetic Person 8690",
+      "가상인물_8690님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_160@people.example"
+    ],
+    "phones": [
+      "000-0000-0160"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_161",
+    "name": "가상인물_0010",
+    "nameVariants": [
+      "가상인물_0010 대리님",
+      "Synthetic Person 0010",
+      "가상인물_0010님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_161@people.example"
+    ],
+    "phones": [
+      "000-0000-0161"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_162",
+    "name": "가상인물_9814",
+    "nameVariants": [
+      "가상인물_9814 차장님",
+      "Synthetic Person 9814",
+      "가상인물_9814님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_162@people.example"
+    ],
+    "phones": [
+      "000-0000-0162"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_014",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_163",
+    "name": "가상인물_5311",
+    "nameVariants": [
+      "가상인물_5311 팀장님",
+      "Synthetic Person 5311",
+      "가상인물_5311님"
+    ],
+    "company": "가상회사_001",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_163@people.example"
+    ],
+    "phones": [
+      "000-0000-0163"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_164",
+    "name": "가상인물_8006",
+    "nameVariants": [
+      "가상인물_8006 과장님",
+      "Synthetic Person 8006",
+      "가상인물_8006님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_164@people.example"
+    ],
+    "phones": [
+      "000-0000-0164"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_165",
+    "name": "가상인물_0320",
+    "nameVariants": [
+      "가상인물_0320 부장님",
+      "Synthetic Person 0320",
+      "가상인물_0320님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_165@people.example"
+    ],
+    "phones": [
+      "000-0000-0165"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_166",
+    "name": "가상인물_1833",
+    "nameVariants": [
+      "가상인물_1833 과장님",
+      "Synthetic Person 1833",
+      "가상인물_1833님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_166@people.example"
+    ],
+    "phones": [
+      "000-0000-0166"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_006",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_167",
+    "name": "가상인물_5948",
+    "nameVariants": [
+      "가상인물_5948 부장님",
+      "Synthetic Person 5948",
+      "가상인물_5948님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_167@people.example"
+    ],
+    "phones": [
+      "000-0000-0167"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_008",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_168",
+    "name": "가상인물_5039",
+    "nameVariants": [
+      "가상인물_5039 팀장님",
+      "Synthetic Person 5039",
+      "가상인물_5039님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_168@people.example"
+    ],
+    "phones": [
+      "000-0000-0168"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_015",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_169",
+    "name": "가상인물_3924",
+    "nameVariants": [
+      "가상인물_3924 대리님",
+      "Synthetic Person 3924",
+      "가상인물_3924님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_169@people.example"
+    ],
+    "phones": [
+      "000-0000-0169"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_170",
+    "name": "가상인물_0950",
+    "nameVariants": [
+      "가상인물_0950 과장님",
+      "Synthetic Person 0950",
+      "가상인물_0950님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_170@people.example"
+    ],
+    "phones": [
+      "000-0000-0170"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_171",
+    "name": "가상인물_3947",
+    "nameVariants": [
+      "가상인물_3947 팀장님",
+      "Synthetic Person 3947",
+      "가상인물_3947님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_171@people.example"
+    ],
+    "phones": [
+      "000-0000-0171"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_172",
+    "name": "가상인물_9296",
+    "nameVariants": [
+      "가상인물_9296 부장님",
+      "Synthetic Person 9296",
+      "가상인물_9296님"
+    ],
+    "company": "가상회사_014",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_172@people.example"
+    ],
+    "phones": [
+      "000-0000-0172"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_173",
+    "name": "가상인물_1291",
+    "nameVariants": [
+      "가상인물_1291 부장님",
+      "Synthetic Person 1291",
+      "가상인물_1291님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_173@people.example"
+    ],
+    "phones": [
+      "000-0000-0173"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_174",
+    "name": "가상인물_1404",
+    "nameVariants": [
+      "가상인물_1404 과장님",
+      "Synthetic Person 1404",
+      "가상인물_1404님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_174@people.example"
+    ],
+    "phones": [
+      "000-0000-0174"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_175",
+    "name": "가상인물_7963",
+    "nameVariants": [
+      "가상인물_7963 과장님",
+      "Synthetic Person 7963",
+      "가상인물_7963님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_175@people.example"
+    ],
+    "phones": [
+      "000-0000-0175"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_176",
+    "name": "가상인물_1134",
+    "nameVariants": [
+      "가상인물_1134 부장님",
+      "Synthetic Person 1134",
+      "가상인물_1134님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_176@people.example"
+    ],
+    "phones": [
+      "000-0000-0176"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_018",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_177",
+    "name": "가상인물_8728",
+    "nameVariants": [
+      "가상인물_8728 차장님",
+      "Synthetic Person 8728",
+      "가상인물_8728님"
+    ],
+    "company": "가상회사_001",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_177@people.example"
+    ],
+    "phones": [
+      "000-0000-0177"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_178",
+    "name": "가상인물_2061",
+    "nameVariants": [
+      "가상인물_2061 팀장님",
+      "Synthetic Person 2061",
+      "가상인물_2061님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_178@people.example"
+    ],
+    "phones": [
+      "000-0000-0178"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_179",
+    "name": "가상인물_2104",
+    "nameVariants": [
+      "가상인물_2104 과장님",
+      "Synthetic Person 2104",
+      "가상인물_2104님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_179@people.example"
+    ],
+    "phones": [
+      "000-0000-0179"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_180",
+    "name": "가상인물_7788",
+    "nameVariants": [
+      "가상인물_7788 차장님",
+      "Synthetic Person 7788",
+      "가상인물_7788님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_180@people.example"
+    ],
+    "phones": [
+      "000-0000-0180"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_019",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_181",
+    "name": "가상인물_9008",
+    "nameVariants": [
+      "가상인물_9008 차장님",
+      "Synthetic Person 9008",
+      "가상인물_9008님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_181@people.example"
+    ],
+    "phones": [
+      "000-0000-0181"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_182",
+    "name": "가상인물_2706",
+    "nameVariants": [
+      "가상인물_2706 팀장님",
+      "Synthetic Person 2706",
+      "가상인물_2706님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_182@people.example"
+    ],
+    "phones": [
+      "000-0000-0182"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_183",
+    "name": "가상인물_4343",
+    "nameVariants": [
+      "가상인물_4343 대리님",
+      "Synthetic Person 4343",
+      "가상인물_4343님"
+    ],
+    "company": "가상회사_014",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_183@people.example"
+    ],
+    "phones": [
+      "000-0000-0183"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_017",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_184",
+    "name": "가상인물_8646",
+    "nameVariants": [
+      "가상인물_8646 과장님",
+      "Synthetic Person 8646",
+      "가상인물_8646님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_184@people.example"
+    ],
+    "phones": [
+      "000-0000-0184"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_185",
+    "name": "가상인물_9939",
+    "nameVariants": [
+      "가상인물_9939 과장님",
+      "Synthetic Person 9939",
+      "가상인물_9939님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_185@people.example"
+    ],
+    "phones": [
+      "000-0000-0185"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_186",
+    "name": "가상인물_6933",
+    "nameVariants": [
+      "가상인물_6933 차장님",
+      "Synthetic Person 6933",
+      "가상인물_6933님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_186@people.example"
+    ],
+    "phones": [
+      "000-0000-0186"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_187",
+    "name": "가상인물_3471",
+    "nameVariants": [
+      "가상인물_3471 대리님",
+      "Synthetic Person 3471",
+      "가상인물_3471님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_187@people.example"
+    ],
+    "phones": [
+      "000-0000-0187"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_188",
+    "name": "가상인물_8836",
+    "nameVariants": [
+      "가상인물_8836 대리님",
+      "Synthetic Person 8836",
+      "가상인물_8836님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_188@people.example"
+    ],
+    "phones": [
+      "000-0000-0188"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_189",
+    "name": "가상인물_3296",
+    "nameVariants": [
+      "가상인물_3296 과장님",
+      "Synthetic Person 3296",
+      "가상인물_3296님"
+    ],
+    "company": "가상회사_014",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_189@people.example"
+    ],
+    "phones": [
+      "000-0000-0189"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_009",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_190",
+    "name": "가상인물_5108",
+    "nameVariants": [
+      "가상인물_5108 부장님",
+      "Synthetic Person 5108",
+      "가상인물_5108님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_190@people.example"
+    ],
+    "phones": [
+      "000-0000-0190"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_191",
+    "name": "가상인물_6538",
+    "nameVariants": [
+      "가상인물_6538 팀장님",
+      "Synthetic Person 6538",
+      "가상인물_6538님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_191@people.example"
+    ],
+    "phones": [
+      "000-0000-0191"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_192",
+    "name": "가상인물_6119",
+    "nameVariants": [
+      "가상인물_6119 부장님",
+      "Synthetic Person 6119",
+      "가상인물_6119님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_192@people.example"
+    ],
+    "phones": [
+      "000-0000-0192"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_193",
+    "name": "가상인물_7178",
+    "nameVariants": [
+      "가상인물_7178 팀장님",
+      "Synthetic Person 7178",
+      "가상인물_7178님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_193@people.example"
+    ],
+    "phones": [
+      "000-0000-0193"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_011",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_194",
+    "name": "가상인물_8480",
+    "nameVariants": [
+      "가상인물_8480 부장님",
+      "Synthetic Person 8480",
+      "가상인물_8480님"
+    ],
+    "company": "가상회사_003",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_194@people.example"
+    ],
+    "phones": [
+      "000-0000-0194"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_195",
+    "name": "가상인물_7398",
+    "nameVariants": [
+      "가상인물_7398 부장님",
+      "Synthetic Person 7398",
+      "가상인물_7398님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_195@people.example"
+    ],
+    "phones": [
+      "000-0000-0195"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_011",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_196",
+    "name": "가상인물_1983",
+    "nameVariants": [
+      "가상인물_1983 차장님",
+      "Synthetic Person 1983",
+      "가상인물_1983님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_196@people.example"
+    ],
+    "phones": [
+      "000-0000-0196"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_197",
+    "name": "가상인물_4062",
+    "nameVariants": [
+      "가상인물_4062 차장님",
+      "Synthetic Person 4062",
+      "가상인물_4062님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_197@people.example"
+    ],
+    "phones": [
+      "000-0000-0197"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_198",
+    "name": "가상인물_3682",
+    "nameVariants": [
+      "가상인물_3682 과장님",
+      "Synthetic Person 3682",
+      "가상인물_3682님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_198@people.example"
+    ],
+    "phones": [
+      "000-0000-0198"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_199",
+    "name": "가상인물_1050",
+    "nameVariants": [
+      "가상인물_1050 과장님",
+      "Synthetic Person 1050",
+      "가상인물_1050님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_199@people.example"
+    ],
+    "phones": [
+      "000-0000-0199"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_003",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_200",
+    "name": "가상인물_5540",
+    "nameVariants": [
+      "가상인물_5540 팀장님",
+      "Synthetic Person 5540",
+      "가상인물_5540님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_200@people.example"
+    ],
+    "phones": [
+      "000-0000-0200"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_201",
+    "name": "가상인물_0345",
+    "nameVariants": [
+      "가상인물_0345 팀장님",
+      "Synthetic Person 0345",
+      "가상인물_0345님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_201@people.example"
+    ],
+    "phones": [
+      "000-0000-0201"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_015",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_202",
+    "name": "가상인물_9639",
+    "nameVariants": [
+      "가상인물_9639 차장님",
+      "Synthetic Person 9639",
+      "가상인물_9639님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_202@people.example"
+    ],
+    "phones": [
+      "000-0000-0202"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_203",
+    "name": "가상인물_9076",
+    "nameVariants": [
+      "가상인물_9076 차장님",
+      "Synthetic Person 9076",
+      "가상인물_9076님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_203@people.example"
+    ],
+    "phones": [
+      "000-0000-0203"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_204",
+    "name": "가상인물_3771",
+    "nameVariants": [
+      "가상인물_3771 대리님",
+      "Synthetic Person 3771",
+      "가상인물_3771님"
+    ],
+    "company": "가상회사_006",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_204@people.example"
+    ],
+    "phones": [
+      "000-0000-0204"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_205",
+    "name": "가상인물_9642",
+    "nameVariants": [
+      "가상인물_9642 팀장님",
+      "Synthetic Person 9642",
+      "가상인물_9642님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_205@people.example"
+    ],
+    "phones": [
+      "000-0000-0205"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_015",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_206",
+    "name": "가상인물_3609",
+    "nameVariants": [
+      "가상인물_3609 차장님",
+      "Synthetic Person 3609",
+      "가상인물_3609님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_206@people.example"
+    ],
+    "phones": [
+      "000-0000-0206"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_013",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_207",
+    "name": "가상인물_0118",
+    "nameVariants": [
+      "가상인물_0118 과장님",
+      "Synthetic Person 0118",
+      "가상인물_0118님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_207@people.example"
+    ],
+    "phones": [
+      "000-0000-0207"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_208",
+    "name": "가상인물_1164",
+    "nameVariants": [
+      "가상인물_1164 팀장님",
+      "Synthetic Person 1164",
+      "가상인물_1164님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_208@people.example"
+    ],
+    "phones": [
+      "000-0000-0208"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_010",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_209",
+    "name": "가상인물_0965",
+    "nameVariants": [
+      "가상인물_0965 차장님",
+      "Synthetic Person 0965",
+      "가상인물_0965님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_209@people.example"
+    ],
+    "phones": [
+      "000-0000-0209"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_002",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_210",
+    "name": "가상인물_3751",
+    "nameVariants": [
+      "가상인물_3751 차장님",
+      "Synthetic Person 3751",
+      "가상인물_3751님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_210@people.example"
+    ],
+    "phones": [
+      "000-0000-0210"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_211",
+    "name": "가상인물_1105",
+    "nameVariants": [
+      "가상인물_1105 팀장님",
+      "Synthetic Person 1105",
+      "가상인물_1105님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_211@people.example"
+    ],
+    "phones": [
+      "000-0000-0211"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_212",
+    "name": "가상인물_0515",
+    "nameVariants": [
+      "가상인물_0515 과장님",
+      "Synthetic Person 0515",
+      "가상인물_0515님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_212@people.example"
+    ],
+    "phones": [
+      "000-0000-0212"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_213",
+    "name": "가상인물_5414",
+    "nameVariants": [
+      "가상인물_5414 대리님",
+      "Synthetic Person 5414",
+      "가상인물_5414님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_213@people.example"
+    ],
+    "phones": [
+      "000-0000-0213"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_214",
+    "name": "가상인물_1161",
+    "nameVariants": [
+      "가상인물_1161 차장님",
+      "Synthetic Person 1161",
+      "가상인물_1161님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_214@people.example"
+    ],
+    "phones": [
+      "000-0000-0214"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_215",
+    "name": "가상인물_8424",
+    "nameVariants": [
+      "가상인물_8424 팀장님",
+      "Synthetic Person 8424",
+      "가상인물_8424님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_215@people.example"
+    ],
+    "phones": [
+      "000-0000-0215"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_216",
+    "name": "가상인물_3900",
+    "nameVariants": [
+      "가상인물_3900 대리님",
+      "Synthetic Person 3900",
+      "가상인물_3900님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_216@people.example"
+    ],
+    "phones": [
+      "000-0000-0216"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_217",
+    "name": "가상인물_4563",
+    "nameVariants": [
+      "가상인물_4563 부장님",
+      "Synthetic Person 4563",
+      "가상인물_4563님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_217@people.example"
+    ],
+    "phones": [
+      "000-0000-0217"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_005",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_218",
+    "name": "가상인물_7954",
+    "nameVariants": [
+      "가상인물_7954 팀장님",
+      "Synthetic Person 7954",
+      "가상인물_7954님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_218@people.example"
+    ],
+    "phones": [
+      "000-0000-0218"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_219",
+    "name": "가상인물_3511",
+    "nameVariants": [
+      "가상인물_3511 과장님",
+      "Synthetic Person 3511",
+      "가상인물_3511님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_219@people.example"
+    ],
+    "phones": [
+      "000-0000-0219"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_017",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_220",
+    "name": "가상인물_8835",
+    "nameVariants": [
+      "가상인물_8835 대리님",
+      "Synthetic Person 8835",
+      "가상인물_8835님"
+    ],
+    "company": "가상회사_011",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_220@people.example"
+    ],
+    "phones": [
+      "000-0000-0220"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_221",
+    "name": "가상인물_2168",
+    "nameVariants": [
+      "가상인물_2168 과장님",
+      "Synthetic Person 2168",
+      "가상인물_2168님"
+    ],
+    "company": "가상회사_003",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_221@people.example"
+    ],
+    "phones": [
+      "000-0000-0221"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_222",
+    "name": "가상인물_9356",
+    "nameVariants": [
+      "가상인물_9356 부장님",
+      "Synthetic Person 9356",
+      "가상인물_9356님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_222@people.example"
+    ],
+    "phones": [
+      "000-0000-0222"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_223",
+    "name": "가상인물_9441",
+    "nameVariants": [
+      "가상인물_9441 차장님",
+      "Synthetic Person 9441",
+      "가상인물_9441님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_223@people.example"
+    ],
+    "phones": [
+      "000-0000-0223"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_013",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_224",
+    "name": "가상인물_7745",
+    "nameVariants": [
+      "가상인물_7745 팀장님",
+      "Synthetic Person 7745",
+      "가상인물_7745님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_224@people.example"
+    ],
+    "phones": [
+      "000-0000-0224"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_013",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_225",
+    "name": "가상인물_3982",
+    "nameVariants": [
+      "가상인물_3982 부장님",
+      "Synthetic Person 3982",
+      "가상인물_3982님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_225@people.example"
+    ],
+    "phones": [
+      "000-0000-0225"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_226",
+    "name": "가상인물_7750",
+    "nameVariants": [
+      "가상인물_7750 대리님",
+      "Synthetic Person 7750",
+      "가상인물_7750님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_226@people.example"
+    ],
+    "phones": [
+      "000-0000-0226"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_227",
+    "name": "가상인물_6670",
+    "nameVariants": [
+      "가상인물_6670 대리님",
+      "Synthetic Person 6670",
+      "가상인물_6670님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_227@people.example"
+    ],
+    "phones": [
+      "000-0000-0227"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_228",
+    "name": "가상인물_3120",
+    "nameVariants": [
+      "가상인물_3120 차장님",
+      "Synthetic Person 3120",
+      "가상인물_3120님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_228@people.example"
+    ],
+    "phones": [
+      "000-0000-0228"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_229",
+    "name": "가상인물_1546",
+    "nameVariants": [
+      "가상인물_1546 대리님",
+      "Synthetic Person 1546",
+      "가상인물_1546님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_229@people.example"
+    ],
+    "phones": [
+      "000-0000-0229"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_230",
+    "name": "가상인물_1589",
+    "nameVariants": [
+      "가상인물_1589 차장님",
+      "Synthetic Person 1589",
+      "가상인물_1589님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_230@people.example"
+    ],
+    "phones": [
+      "000-0000-0230"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_231",
+    "name": "가상인물_7063",
+    "nameVariants": [
+      "가상인물_7063 과장님",
+      "Synthetic Person 7063",
+      "가상인물_7063님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_231@people.example"
+    ],
+    "phones": [
+      "000-0000-0231"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_002",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_232",
+    "name": "가상인물_5805",
+    "nameVariants": [
+      "가상인물_5805 대리님",
+      "Synthetic Person 5805",
+      "가상인물_5805님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_232@people.example"
+    ],
+    "phones": [
+      "000-0000-0232"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_019",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_233",
+    "name": "가상인물_6940",
+    "nameVariants": [
+      "가상인물_6940 부장님",
+      "Synthetic Person 6940",
+      "가상인물_6940님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_233@people.example"
+    ],
+    "phones": [
+      "000-0000-0233"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_234",
+    "name": "가상인물_6736",
+    "nameVariants": [
+      "가상인물_6736 부장님",
+      "Synthetic Person 6736",
+      "가상인물_6736님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_234@people.example"
+    ],
+    "phones": [
+      "000-0000-0234"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_235",
+    "name": "가상인물_7652",
+    "nameVariants": [
+      "가상인물_7652 부장님",
+      "Synthetic Person 7652",
+      "가상인물_7652님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_235@people.example"
+    ],
+    "phones": [
+      "000-0000-0235"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_236",
+    "name": "가상인물_0888",
+    "nameVariants": [
+      "가상인물_0888 팀장님",
+      "Synthetic Person 0888",
+      "가상인물_0888님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_236@people.example"
+    ],
+    "phones": [
+      "000-0000-0236"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_237",
+    "name": "가상인물_1613",
+    "nameVariants": [
+      "가상인물_1613 대리님",
+      "Synthetic Person 1613",
+      "가상인물_1613님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_237@people.example"
+    ],
+    "phones": [
+      "000-0000-0237"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_238",
+    "name": "가상인물_0994",
+    "nameVariants": [
+      "가상인물_0994 부장님",
+      "Synthetic Person 0994",
+      "가상인물_0994님"
+    ],
+    "company": "가상회사_007",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_238@people.example"
+    ],
+    "phones": [
+      "000-0000-0238"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_239",
+    "name": "가상인물_6597",
+    "nameVariants": [
+      "가상인물_6597 차장님",
+      "Synthetic Person 6597",
+      "가상인물_6597님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_239@people.example"
+    ],
+    "phones": [
+      "000-0000-0239"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_013",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_240",
+    "name": "가상인물_5560",
+    "nameVariants": [
+      "가상인물_5560 대리님",
+      "Synthetic Person 5560",
+      "가상인물_5560님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_240@people.example"
+    ],
+    "phones": [
+      "000-0000-0240"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_241",
+    "name": "가상인물_1791",
+    "nameVariants": [
+      "가상인물_1791 대리님",
+      "Synthetic Person 1791",
+      "가상인물_1791님"
+    ],
+    "company": "가상회사_007",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_241@people.example"
+    ],
+    "phones": [
+      "000-0000-0241"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_242",
+    "name": "가상인물_4074",
+    "nameVariants": [
+      "가상인물_4074 대리님",
+      "Synthetic Person 4074",
+      "가상인물_4074님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_242@people.example"
+    ],
+    "phones": [
+      "000-0000-0242"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_243",
+    "name": "가상인물_3140",
+    "nameVariants": [
+      "가상인물_3140 대리님",
+      "Synthetic Person 3140",
+      "가상인물_3140님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_243@people.example"
+    ],
+    "phones": [
+      "000-0000-0243"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_011",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_244",
+    "name": "가상인물_3117",
+    "nameVariants": [
+      "가상인물_3117 팀장님",
+      "Synthetic Person 3117",
+      "가상인물_3117님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_244@people.example"
+    ],
+    "phones": [
+      "000-0000-0244"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_019",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_245",
+    "name": "가상인물_8787",
+    "nameVariants": [
+      "가상인물_8787 과장님",
+      "Synthetic Person 8787",
+      "가상인물_8787님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_245@people.example"
+    ],
+    "phones": [
+      "000-0000-0245"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_246",
+    "name": "가상인물_7351",
+    "nameVariants": [
+      "가상인물_7351 차장님",
+      "Synthetic Person 7351",
+      "가상인물_7351님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_246@people.example"
+    ],
+    "phones": [
+      "000-0000-0246"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_247",
+    "name": "가상인물_2297",
+    "nameVariants": [
+      "가상인물_2297 대리님",
+      "Synthetic Person 2297",
+      "가상인물_2297님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_247@people.example"
+    ],
+    "phones": [
+      "000-0000-0247"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_005",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_248",
+    "name": "가상인물_3007",
+    "nameVariants": [
+      "가상인물_3007 차장님",
+      "Synthetic Person 3007",
+      "가상인물_3007님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_248@people.example"
+    ],
+    "phones": [
+      "000-0000-0248"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_249",
+    "name": "가상인물_4564",
+    "nameVariants": [
+      "가상인물_4564 대리님",
+      "Synthetic Person 4564",
+      "가상인물_4564님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_249@people.example"
+    ],
+    "phones": [
+      "000-0000-0249"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_013",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_250",
+    "name": "가상인물_7580",
+    "nameVariants": [
+      "가상인물_7580 차장님",
+      "Synthetic Person 7580",
+      "가상인물_7580님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_250@people.example"
+    ],
+    "phones": [
+      "000-0000-0250"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_009",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_251",
+    "name": "가상인물_4093",
+    "nameVariants": [
+      "가상인물_4093 부장님",
+      "Synthetic Person 4093",
+      "가상인물_4093님"
+    ],
+    "company": "가상회사_005",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_251@people.example"
+    ],
+    "phones": [
+      "000-0000-0251"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_252",
+    "name": "가상인물_1236",
+    "nameVariants": [
+      "가상인물_1236 부장님",
+      "Synthetic Person 1236",
+      "가상인물_1236님"
+    ],
+    "company": "가상회사_003",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_252@people.example"
+    ],
+    "phones": [
+      "000-0000-0252"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_253",
+    "name": "가상인물_7261",
+    "nameVariants": [
+      "가상인물_7261 팀장님",
+      "Synthetic Person 7261",
+      "가상인물_7261님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_253@people.example"
+    ],
+    "phones": [
+      "000-0000-0253"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_254",
+    "name": "가상인물_9017",
+    "nameVariants": [
+      "가상인물_9017 팀장님",
+      "Synthetic Person 9017",
+      "가상인물_9017님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_254@people.example"
+    ],
+    "phones": [
+      "000-0000-0254"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_002",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_255",
+    "name": "가상인물_1605",
+    "nameVariants": [
+      "가상인물_1605 부장님",
+      "Synthetic Person 1605",
+      "가상인물_1605님"
+    ],
+    "company": "가상회사_010",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_255@people.example"
+    ],
+    "phones": [
+      "000-0000-0255"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_256",
+    "name": "가상인물_0829",
+    "nameVariants": [
+      "가상인물_0829 대리님",
+      "Synthetic Person 0829",
+      "가상인물_0829님"
+    ],
+    "company": "가상회사_001",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_256@people.example"
+    ],
+    "phones": [
+      "000-0000-0256"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_257",
+    "name": "가상인물_8857",
+    "nameVariants": [
+      "가상인물_8857 부장님",
+      "Synthetic Person 8857",
+      "가상인물_8857님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_257@people.example"
+    ],
+    "phones": [
+      "000-0000-0257"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_258",
+    "name": "가상인물_0242",
+    "nameVariants": [
+      "가상인물_0242 부장님",
+      "Synthetic Person 0242",
+      "가상인물_0242님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_258@people.example"
+    ],
+    "phones": [
+      "000-0000-0258"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_003",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_259",
+    "name": "가상인물_1529",
+    "nameVariants": [
+      "가상인물_1529 과장님",
+      "Synthetic Person 1529",
+      "가상인물_1529님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_259@people.example"
+    ],
+    "phones": [
+      "000-0000-0259"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_009",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_260",
+    "name": "가상인물_3873",
+    "nameVariants": [
+      "가상인물_3873 팀장님",
+      "Synthetic Person 3873",
+      "가상인물_3873님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_260@people.example"
+    ],
+    "phones": [
+      "000-0000-0260"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_261",
+    "name": "가상인물_2725",
+    "nameVariants": [
+      "가상인물_2725 팀장님",
+      "Synthetic Person 2725",
+      "가상인물_2725님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_261@people.example"
+    ],
+    "phones": [
+      "000-0000-0261"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_262",
+    "name": "가상인물_6659",
+    "nameVariants": [
+      "가상인물_6659 팀장님",
+      "Synthetic Person 6659",
+      "가상인물_6659님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_262@people.example"
+    ],
+    "phones": [
+      "000-0000-0262"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_263",
+    "name": "가상인물_7957",
+    "nameVariants": [
+      "가상인물_7957 대리님",
+      "Synthetic Person 7957",
+      "가상인물_7957님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_263@people.example"
+    ],
+    "phones": [
+      "000-0000-0263"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_264",
+    "name": "가상인물_7887",
+    "nameVariants": [
+      "가상인물_7887 과장님",
+      "Synthetic Person 7887",
+      "가상인물_7887님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_264@people.example"
+    ],
+    "phones": [
+      "000-0000-0264"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_265",
+    "name": "가상인물_3503",
+    "nameVariants": [
+      "가상인물_3503 부장님",
+      "Synthetic Person 3503",
+      "가상인물_3503님"
+    ],
+    "company": "가상회사_008",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_265@people.example"
+    ],
+    "phones": [
+      "000-0000-0265"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_016",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_266",
+    "name": "가상인물_6571",
+    "nameVariants": [
+      "가상인물_6571 대리님",
+      "Synthetic Person 6571",
+      "가상인물_6571님"
+    ],
+    "company": "가상회사_014",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_266@people.example"
+    ],
+    "phones": [
+      "000-0000-0266"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_011",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_267",
+    "name": "가상인물_0961",
+    "nameVariants": [
+      "가상인물_0961 과장님",
+      "Synthetic Person 0961",
+      "가상인물_0961님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_267@people.example"
+    ],
+    "phones": [
+      "000-0000-0267"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_268",
+    "name": "가상인물_2698",
+    "nameVariants": [
+      "가상인물_2698 대리님",
+      "Synthetic Person 2698",
+      "가상인물_2698님"
+    ],
+    "company": "가상회사_016",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_268@people.example"
+    ],
+    "phones": [
+      "000-0000-0268"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_003",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_269",
+    "name": "가상인물_6210",
+    "nameVariants": [
+      "가상인물_6210 대리님",
+      "Synthetic Person 6210",
+      "가상인물_6210님"
+    ],
+    "company": "가상회사_014",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_269@people.example"
+    ],
+    "phones": [
+      "000-0000-0269"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_270",
+    "name": "가상인물_0036",
+    "nameVariants": [
+      "가상인물_0036 과장님",
+      "Synthetic Person 0036",
+      "가상인물_0036님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_270@people.example"
+    ],
+    "phones": [
+      "000-0000-0270"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_271",
+    "name": "가상인물_6397",
+    "nameVariants": [
+      "가상인물_6397 팀장님",
+      "Synthetic Person 6397",
+      "가상인물_6397님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_271@people.example"
+    ],
+    "phones": [
+      "000-0000-0271"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_272",
+    "name": "가상인물_4346",
+    "nameVariants": [
+      "가상인물_4346 부장님",
+      "Synthetic Person 4346",
+      "가상인물_4346님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_272@people.example"
+    ],
+    "phones": [
+      "000-0000-0272"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_273",
+    "name": "가상인물_7455",
+    "nameVariants": [
+      "가상인물_7455 대리님",
+      "Synthetic Person 7455",
+      "가상인물_7455님"
+    ],
+    "company": "가상회사_014",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_273@people.example"
+    ],
+    "phones": [
+      "000-0000-0273"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_274",
+    "name": "가상인물_4674",
+    "nameVariants": [
+      "가상인물_4674 차장님",
+      "Synthetic Person 4674",
+      "가상인물_4674님"
+    ],
+    "company": "가상회사_020",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_274@people.example"
+    ],
+    "phones": [
+      "000-0000-0274"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_275",
+    "name": "가상인물_6931",
+    "nameVariants": [
+      "가상인물_6931 팀장님",
+      "Synthetic Person 6931",
+      "가상인물_6931님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_275@people.example"
+    ],
+    "phones": [
+      "000-0000-0275"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_016",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_276",
+    "name": "가상인물_9106",
+    "nameVariants": [
+      "가상인물_9106 차장님",
+      "Synthetic Person 9106",
+      "가상인물_9106님"
+    ],
+    "company": "가상회사_004",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_276@people.example"
+    ],
+    "phones": [
+      "000-0000-0276"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_277",
+    "name": "가상인물_7974",
+    "nameVariants": [
+      "가상인물_7974 대리님",
+      "Synthetic Person 7974",
+      "가상인물_7974님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_277@people.example"
+    ],
+    "phones": [
+      "000-0000-0277"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_278",
+    "name": "가상인물_2537",
+    "nameVariants": [
+      "가상인물_2537 과장님",
+      "Synthetic Person 2537",
+      "가상인물_2537님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_278@people.example"
+    ],
+    "phones": [
+      "000-0000-0278"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_279",
+    "name": "가상인물_3112",
+    "nameVariants": [
+      "가상인물_3112 팀장님",
+      "Synthetic Person 3112",
+      "가상인물_3112님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_279@people.example"
+    ],
+    "phones": [
+      "000-0000-0279"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_280",
+    "name": "가상인물_4862",
+    "nameVariants": [
+      "가상인물_4862 대리님",
+      "Synthetic Person 4862",
+      "가상인물_4862님"
+    ],
+    "company": "가상회사_018",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_280@people.example"
+    ],
+    "phones": [
+      "000-0000-0280"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_281",
+    "name": "가상인물_3567",
+    "nameVariants": [
+      "가상인물_3567 대리님",
+      "Synthetic Person 3567",
+      "가상인물_3567님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_281@people.example"
+    ],
+    "phones": [
+      "000-0000-0281"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_011",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_282",
+    "name": "가상인물_0959",
+    "nameVariants": [
+      "가상인물_0959 대리님",
+      "Synthetic Person 0959",
+      "가상인물_0959님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_282@people.example"
+    ],
+    "phones": [
+      "000-0000-0282"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_005",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_283",
+    "name": "가상인물_9490",
+    "nameVariants": [
+      "가상인물_9490 대리님",
+      "Synthetic Person 9490",
+      "가상인물_9490님"
+    ],
+    "company": "가상회사_013",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_283@people.example"
+    ],
+    "phones": [
+      "000-0000-0283"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_001",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_284",
+    "name": "가상인물_8884",
+    "nameVariants": [
+      "가상인물_8884 과장님",
+      "Synthetic Person 8884",
+      "가상인물_8884님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_284@people.example"
+    ],
+    "phones": [
+      "000-0000-0284"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_285",
+    "name": "가상인물_0999",
+    "nameVariants": [
+      "가상인물_0999 차장님",
+      "Synthetic Person 0999",
+      "가상인물_0999님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_285@people.example"
+    ],
+    "phones": [
+      "000-0000-0285"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_010",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_286",
+    "name": "가상인물_5139",
+    "nameVariants": [
+      "가상인물_5139 팀장님",
+      "Synthetic Person 5139",
+      "가상인물_5139님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_286@people.example"
+    ],
+    "phones": [
+      "000-0000-0286"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_002",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_287",
+    "name": "가상인물_0937",
+    "nameVariants": [
+      "가상인물_0937 팀장님",
+      "Synthetic Person 0937",
+      "가상인물_0937님"
+    ],
+    "company": "가상회사_006",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_287@people.example"
+    ],
+    "phones": [
+      "000-0000-0287"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_003",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_288",
+    "name": "가상인물_0822",
+    "nameVariants": [
+      "가상인물_0822 부장님",
+      "Synthetic Person 0822",
+      "가상인물_0822님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_288@people.example"
+    ],
+    "phones": [
+      "000-0000-0288"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_289",
+    "name": "가상인물_9572",
+    "nameVariants": [
+      "가상인물_9572 부장님",
+      "Synthetic Person 9572",
+      "가상인물_9572님"
+    ],
+    "company": "가상회사_015",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_289@people.example"
+    ],
+    "phones": [
+      "000-0000-0289"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_018",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_290",
+    "name": "가상인물_7812",
+    "nameVariants": [
+      "가상인물_7812 부장님",
+      "Synthetic Person 7812",
+      "가상인물_7812님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_290@people.example"
+    ],
+    "phones": [
+      "000-0000-0290"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_020",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_291",
+    "name": "가상인물_8239",
+    "nameVariants": [
+      "가상인물_8239 차장님",
+      "Synthetic Person 8239",
+      "가상인물_8239님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_291@people.example"
+    ],
+    "phones": [
+      "000-0000-0291"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_013",
+        "title": "팀장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_292",
+    "name": "가상인물_8702",
+    "nameVariants": [
+      "가상인물_8702 대리님",
+      "Synthetic Person 8702",
+      "가상인물_8702님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_292@people.example"
+    ],
+    "phones": [
+      "000-0000-0292"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_008",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_293",
+    "name": "가상인물_2580",
+    "nameVariants": [
+      "가상인물_2580 차장님",
+      "Synthetic Person 2580",
+      "가상인물_2580님"
+    ],
+    "company": "가상회사_009",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_293@people.example"
+    ],
+    "phones": [
+      "000-0000-0293"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_001",
+        "title": "부장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_294",
+    "name": "가상인물_0932",
+    "nameVariants": [
+      "가상인물_0932 과장님",
+      "Synthetic Person 0932",
+      "가상인물_0932님"
+    ],
+    "company": "가상회사_014",
+    "department": null,
+    "title": "과장",
+    "emails": [
+      "synthetic-p_294@people.example"
+    ],
+    "phones": [
+      "000-0000-0294"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_019",
+        "title": "과장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_295",
+    "name": "가상인물_8321",
+    "nameVariants": [
+      "가상인물_8321 팀장님",
+      "Synthetic Person 8321",
+      "가상인물_8321님"
+    ],
+    "company": "가상회사_017",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_295@people.example"
+    ],
+    "phones": [
+      "000-0000-0295"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_296",
+    "name": "가상인물_1313",
+    "nameVariants": [
+      "가상인물_1313 대리님",
+      "Synthetic Person 1313",
+      "가상인물_1313님"
+    ],
+    "company": "가상회사_012",
+    "department": null,
+    "title": "대리",
+    "emails": [
+      "synthetic-p_296@people.example"
+    ],
+    "phones": [
+      "000-0000-0296"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_297",
+    "name": "가상인물_3045",
+    "nameVariants": [
+      "가상인물_3045 부장님",
+      "Synthetic Person 3045",
+      "가상인물_3045님"
+    ],
+    "company": "가상회사_002",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_297@people.example"
+    ],
+    "phones": [
+      "000-0000-0297"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_004",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_298",
+    "name": "가상인물_1123",
+    "nameVariants": [
+      "가상인물_1123 부장님",
+      "Synthetic Person 1123",
+      "가상인물_1123님"
+    ],
+    "company": "가상회사_019",
+    "department": null,
+    "title": "부장",
+    "emails": [
+      "synthetic-p_298@people.example"
+    ],
+    "phones": [
+      "000-0000-0298"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_299",
+    "name": "가상인물_9750",
+    "nameVariants": [
+      "가상인물_9750 차장님",
+      "Synthetic Person 9750",
+      "가상인물_9750님"
+    ],
+    "company": "가상회사_014",
+    "department": null,
+    "title": "차장",
+    "emails": [
+      "synthetic-p_299@people.example"
+    ],
+    "phones": [
+      "000-0000-0299"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상회사_001",
+        "title": "차장",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_300",
+    "name": "가상인물_1114",
+    "nameVariants": [
+      "가상인물_1114 팀장님",
+      "Synthetic Person 1114",
+      "가상인물_1114님"
+    ],
+    "company": "가상회사_006",
+    "department": null,
+    "title": "팀장",
+    "emails": [
+      "synthetic-p_300@people.example"
+    ],
+    "phones": [
+      "000-0000-0300"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL",
+      "PHONE"
+    ],
+    "companyHistory": [],
+    "photoAvailable": false,
+    "isSynthetic": true
+  }
+]

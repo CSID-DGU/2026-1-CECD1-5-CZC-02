@@ -1,0 +1,171 @@
+{
+  "version": "rule-latency-0.1",
+  "fixedThreshold": 0.88,
+  "freshHoldoutUsed": false,
+  "modelLoaded": false,
+  "queriesPerSize": 9,
+  "repeats": 3,
+  "environment": {
+    "python": "3.13.9",
+    "system": "Darwin",
+    "release": "24.6.0",
+    "architecture": "arm64",
+    "logicalCpus": 8
+  },
+  "scope": "single_process_sequential_rule_search_only",
+  "excluded": [
+    "file_io",
+    "roster_generation",
+    "schema_validation",
+    "cache_clear",
+    "warmup",
+    "model_inference",
+    "http",
+    "database"
+  ],
+  "sizeResults": [
+    {
+      "persons": 60,
+      "distance_cache_cold": {
+        "samples": 27,
+        "medianMs": 2.464708,
+        "p95Ms": 3.756167,
+        "minMs": 2.386666,
+        "maxMs": 3.891583
+      },
+      "distance_cache_warm": {
+        "samples": 27,
+        "medianMs": 1.198625,
+        "p95Ms": 1.309083,
+        "minMs": 1.177083,
+        "maxMs": 1.362834
+      }
+    },
+    {
+      "persons": 120,
+      "distance_cache_cold": {
+        "samples": 27,
+        "medianMs": 5.214958,
+        "p95Ms": 7.8135,
+        "minMs": 5.0745,
+        "maxMs": 7.862292
+      },
+      "distance_cache_warm": {
+        "samples": 27,
+        "medianMs": 2.38775,
+        "p95Ms": 2.595959,
+        "minMs": 2.325584,
+        "maxMs": 2.638166
+      }
+    },
+    {
+      "persons": 300,
+      "distance_cache_cold": {
+        "samples": 27,
+        "medianMs": 13.933375,
+        "p95Ms": 20.414417,
+        "minMs": 13.230417,
+        "maxMs": 55.182875
+      },
+      "distance_cache_warm": {
+        "samples": 27,
+        "medianMs": 6.298917,
+        "p95Ms": 6.8165,
+        "minMs": 6.085792,
+        "maxMs": 9.370625
+      }
+    },
+    {
+      "persons": 1000,
+      "distance_cache_cold": {
+        "samples": 27,
+        "medianMs": 47.728958,
+        "p95Ms": 76.822,
+        "minMs": 46.48175,
+        "maxMs": 77.123166
+      },
+      "distance_cache_warm": {
+        "samples": 27,
+        "medianMs": 17.519541,
+        "p95Ms": 19.0345,
+        "minMs": 17.026334,
+        "maxMs": 19.450083
+      }
+    }
+  ],
+  "profile300Cold": [
+    {
+      "function": "ranking.py:63:rank_candidates",
+      "calls": 9,
+      "selfSeconds": 0.0009501690000000001,
+      "cumulativeSeconds": 0.519889418
+    },
+    {
+      "function": "features.py:70:compare_people",
+      "calls": 9,
+      "selfSeconds": 0.002005764,
+      "cumulativeSeconds": 0.516770291
+    },
+    {
+      "function": "features.py:47:compare_person",
+      "calls": 2700,
+      "selfSeconds": 0.011219347000000001,
+      "cumulativeSeconds": 0.506228738
+    },
+    {
+      "function": "similarity.py:36:compare_name_similarity",
+      "calls": 2700,
+      "selfSeconds": 0.014613799,
+      "cumulativeSeconds": 0.361653545
+    },
+    {
+      "function": "similarity.py:18:_edit_distance",
+      "calls": 5220,
+      "selfSeconds": 0.18755311000000002,
+      "cumulativeSeconds": 0.295993589
+    },
+    {
+      "function": "features.py:38:_compare",
+      "calls": 10800,
+      "selfSeconds": 0.019180485,
+      "cumulativeSeconds": 0.11808431600000001
+    },
+    {
+      "function": "normalization.py:21:normalize_name",
+      "calls": 27004,
+      "selfSeconds": 0.029225070000000002,
+      "cumulativeSeconds": 0.085291342
+    },
+    {
+      "function": "normalization.py:46:normalize_email",
+      "calls": 5400,
+      "selfSeconds": 0.003451158,
+      "cumulativeSeconds": 0.0333214
+    },
+    {
+      "function": "normalization.py:12:normalize_text",
+      "calls": 33502,
+      "selfSeconds": 0.016619033000000002,
+      "cumulativeSeconds": 0.030087161
+    },
+    {
+      "function": "normalization.py:53:<genexpr>",
+      "calls": 102300,
+      "selfSeconds": 0.013355481,
+      "cumulativeSeconds": 0.019806519
+    }
+  ],
+  "limitations": [
+    "nine_training_queries",
+    "three_repetitions_default",
+    "synthetic_load_records_above_300",
+    "subset_rosters_may_not_contain_target",
+    "no_quality_metrics",
+    "no_service_sla",
+    "machine_load_sensitive"
+  ],
+  "inputSha256": {
+    "persons.json": "b1c655cf5a91051a7dec60c4d34b697bf9e384f3809a20e5c785a766ca148106",
+    "pairs_train.json": "f542f3c1b3e17bc08cd8f79a90dc7c166018f575f9c26cce4039d82b0037f6bc"
+  }
+}

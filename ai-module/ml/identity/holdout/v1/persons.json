@@ -1,0 +1,3482 @@
+[
+  {
+    "personId": "p_holdout_20261015_000",
+    "name": "가상검증인물_20261015_gzrsabvyjq",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 gzrsabvyjq"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-0@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0000"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_001",
+    "name": "가상검증인물_20261015_gzrsabvyjq",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 gzrsabvyjq"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-1@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0001"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_002",
+    "name": "가상검증인물_20261015_byjcnhxpwq",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 byjcnhxpwq"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-2@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0002"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_003",
+    "name": "가상검증인물_20261015_byjcnhxpwq",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 byjcnhxpwq"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-3@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0003"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_004",
+    "name": "가상검증인물_20261015_yrsbdcgwhj",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 yrsbdcgwhj"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-4@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0004"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_005",
+    "name": "가상검증인물_20261015_yrsbdcgwhj",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 yrsbdcgwhj"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-5@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0005"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_006",
+    "name": "가상검증인물_20261015_zedkbvpnqx",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 zedkbvpnqx"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-6@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0006"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_007",
+    "name": "가상검증인물_20261015_zedkbvpnqx",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 zedkbvpnqx"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-7@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0007"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_008",
+    "name": "가상검증인물_20261015_kehsrtpjqu",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 kehsrtpjqu"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-8@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0008"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_009",
+    "name": "가상검증인물_20261015_kehsrtpjqu",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 kehsrtpjqu"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-9@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0009"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_010",
+    "name": "가상검증인물_20261015_udgypnzbas",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 udgypnzbas"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-10@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0010"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_011",
+    "name": "가상검증인물_20261015_udgypnzbas",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 udgypnzbas"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-11@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0011"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_012",
+    "name": "가상검증인물_20261015_dcekvzjwrg",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 dcekvzjwrg"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-12@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0012"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_013",
+    "name": "가상검증인물_20261015_dcekvzjwrg",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 dcekvzjwrg"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-13@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0013"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_014",
+    "name": "가상검증인물_20261015_khxcevfpaw",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 khxcevfpaw"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-14@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0014"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_015",
+    "name": "가상검증인물_20261015_khxcevfpaw",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 khxcevfpaw"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-15@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0015"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_016",
+    "name": "가상검증인물_20261015_vfywrnepsg",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 vfywrnepsg"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-16@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0016"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_017",
+    "name": "가상검증인물_20261015_vfywrnepsg",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 vfywrnepsg"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-17@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0017"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_018",
+    "name": "가상검증인물_20261015_wcpbjgtdua",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 wcpbjgtdua"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-18@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0018"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_019",
+    "name": "가상검증인물_20261015_wcpbjgtdua",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 wcpbjgtdua"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-19@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0019"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_020",
+    "name": "가상검증인물_20261015_yudjkebzwh",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 yudjkebzwh"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-20@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0020"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_021",
+    "name": "가상검증인물_20261015_yudjkebzwh",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 yudjkebzwh"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-21@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0021"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_022",
+    "name": "가상검증인물_20261015_kabqxzejvw",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 kabqxzejvw"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-22@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0022"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_023",
+    "name": "가상검증인물_20261015_kabqxzejvw",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 kabqxzejvw"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-23@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0023"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_024",
+    "name": "가상검증인물_20261015_jnkpcxqmwh",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 jnkpcxqmwh"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-24@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0024"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_025",
+    "name": "가상검증인물_20261015_jnkpcxqmwh",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 jnkpcxqmwh"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-25@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0025"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_026",
+    "name": "가상검증인물_20261015_cnhtdmxfwz",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 cnhtdmxfwz"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-26@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0026"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_027",
+    "name": "가상검증인물_20261015_cnhtdmxfwz",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 cnhtdmxfwz"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-27@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0027"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_028",
+    "name": "가상검증인물_20261015_axnwvpugqr",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 axnwvpugqr"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-28@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0028"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_029",
+    "name": "가상검증인물_20261015_axnwvpugqr",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 axnwvpugqr"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-29@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0029"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_030",
+    "name": "가상검증인물_20261015_uvgkdxjrnb",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 uvgkdxjrnb"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-30@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0030"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_031",
+    "name": "가상검증인물_20261015_uvgkdxjrnb",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 uvgkdxjrnb"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-31@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0031"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_032",
+    "name": "가상검증인물_20261015_tvgzcbafmn",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 tvgzcbafmn"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-32@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0032"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_033",
+    "name": "가상검증인물_20261015_tvgzcbafmn",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 tvgzcbafmn"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-33@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0033"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_034",
+    "name": "가상검증인물_20261015_eutwshrfqv",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 eutwshrfqv"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-34@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0034"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_035",
+    "name": "가상검증인물_20261015_eutwshrfqv",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 eutwshrfqv"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-35@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0035"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_036",
+    "name": "가상검증인물_20261015_equbkrfmwv",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 equbkrfmwv"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-36@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0036"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_037",
+    "name": "가상검증인물_20261015_equbkrfmwv",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 equbkrfmwv"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-37@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0037"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_038",
+    "name": "가상검증인물_20261015_aqjevrpxsb",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 aqjevrpxsb"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-38@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0038"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_039",
+    "name": "가상검증인물_20261015_aqjevrpxsb",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 aqjevrpxsb"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-39@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0039"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_040",
+    "name": "가상검증인물_20261015_dptuxbfqvh",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 dptuxbfqvh"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-40@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0040"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_041",
+    "name": "가상검증인물_20261015_buwxyqdgje",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 buwxyqdgje"
+    ],
+    "company": "가상검증회사_20261015_05",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-40@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0040"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_042",
+    "name": "가상검증인물_20261015_nrbgceutpz",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 nrbgceutpz"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-42@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0042"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_043",
+    "name": "가상검증인물_20261015_eftgsadvym",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 eftgsadvym"
+    ],
+    "company": "가상검증회사_20261015_07",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-42@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0042"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_044",
+    "name": "가상검증인물_20261015_ujagrmthzy",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 ujagrmthzy"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-44@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0044"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_045",
+    "name": "가상검증인물_20261015_egcyvznxsp",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 egcyvznxsp"
+    ],
+    "company": "가상검증회사_20261015_09",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-44@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0044"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_046",
+    "name": "가상검증인물_20261015_kcwyqfzaem",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 kcwyqfzaem"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-46@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0046"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_047",
+    "name": "가상검증인물_20261015_wrjkmbaqep",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 wrjkmbaqep"
+    ],
+    "company": "가상검증회사_20261015_11",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-46@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0046"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_048",
+    "name": "가상검증인물_20261015_natqdrmuzf",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 natqdrmuzf"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-48@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0048"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_049",
+    "name": "가상검증인물_20261015_ucmpbdkeaw",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 ucmpbdkeaw"
+    ],
+    "company": "가상검증회사_20261015_01",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-48@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0048"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_050",
+    "name": "가상검증인물_20261015_juphbkygxs",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 juphbkygxs"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-50@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0050"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_051",
+    "name": "가상검증인물_20261015_zgufvphate",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 zgufvphate"
+    ],
+    "company": "가상검증회사_20261015_03",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-50@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0050"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_052",
+    "name": "가상검증인물_20261015_bwsaqktcdn",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 bwsaqktcdn"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-52@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0052"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_053",
+    "name": "가상검증인물_20261015_pkvmxqfzyc",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 pkvmxqfzyc"
+    ],
+    "company": "가상검증회사_20261015_05",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-52@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0052"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_054",
+    "name": "가상검증인물_20261015_ukvcmygxha",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 ukvcmygxha"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-54@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0054"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_055",
+    "name": "가상검증인물_20261015_twdqzxbech",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 twdqzxbech"
+    ],
+    "company": "가상검증회사_20261015_07",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-54@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0054"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_056",
+    "name": "가상검증인물_20261015_umdthafrxq",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 umdthafrxq"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-56@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0056"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_057",
+    "name": "가상검증인물_20261015_zstjxpfcav",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 zstjxpfcav"
+    ],
+    "company": "가상검증회사_20261015_09",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-56@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0056"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_058",
+    "name": "가상검증인물_20261015_xryahncumd",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 xryahncumd"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-58@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0058"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_059",
+    "name": "가상검증인물_20261015_rfezjvdqnh",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 rfezjvdqnh"
+    ],
+    "company": "가상검증회사_20261015_11",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-58@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0058"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_060",
+    "name": "가상검증인물_20261015_tcafpybegj",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 tcafpybegj"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-60@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0060"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_061",
+    "name": "가상검증인물_20261015_kqefayvtpg",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 kqefayvtpg"
+    ],
+    "company": "가상검증회사_20261015_01",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-60@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0060"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_062",
+    "name": "가상검증인물_20261015_mhcbvsqdkp",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 mhcbvsqdkp"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-62@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0062"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_063",
+    "name": "가상검증인물_20261015_mgjvwnrhqe",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 mgjvwnrhqe"
+    ],
+    "company": "가상검증회사_20261015_03",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-62@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0062"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_064",
+    "name": "가상검증인물_20261015_epsfcntkgx",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 epsfcntkgx"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-64@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0064"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_065",
+    "name": "가상검증인물_20261015_wqxarvjptf",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 wqxarvjptf"
+    ],
+    "company": "가상검증회사_20261015_05",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-64@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0064"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_066",
+    "name": "가상검증인물_20261015_rtdnvfwgup",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 rtdnvfwgup"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-66@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0066"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_067",
+    "name": "가상검증인물_20261015_tkwmhedjbv",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 tkwmhedjbv"
+    ],
+    "company": "가상검증회사_20261015_07",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-66@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0066"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_068",
+    "name": "가상검증인물_20261015_vtcfuwsdgm",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 vtcfuwsdgm"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-68@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0068"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_069",
+    "name": "가상검증인물_20261015_nzwchsabey",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 nzwchsabey"
+    ],
+    "company": "가상검증회사_20261015_09",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-68@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0068"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_070",
+    "name": "가상검증인물_20261015_dymhnevbap",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 dymhnevbap"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-70@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0070"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_071",
+    "name": "가상검증인물_20261015_vycxuqmdpw",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 vycxuqmdpw"
+    ],
+    "company": "가상검증회사_20261015_11",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-70@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0070"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_072",
+    "name": "가상검증인물_20261015_cyhbxzsjaq",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 cyhbxzsjaq"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-72@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0072"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_073",
+    "name": "가상검증인물_20261015_msfkuqjvdn",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 msfkuqjvdn"
+    ],
+    "company": "가상검증회사_20261015_01",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-72@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0072"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_074",
+    "name": "가상검증인물_20261015_gzbnpdmsqy",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 gzbnpdmsqy"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-74@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0074"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_075",
+    "name": "가상검증인물_20261015_wdbhpkmujv",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 wdbhpkmujv"
+    ],
+    "company": "가상검증회사_20261015_03",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-74@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0074"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_076",
+    "name": "가상검증인물_20261015_ntzubjaxdw",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 ntzubjaxdw"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-76@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0076"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_077",
+    "name": "가상검증인물_20261015_jczxdtvuwa",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 jczxdtvuwa"
+    ],
+    "company": "가상검증회사_20261015_05",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-76@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0076"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_078",
+    "name": "가상검증인물_20261015_rchqpjwnxm",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 rchqpjwnxm"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-78@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0078"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_079",
+    "name": "가상검증인물_20261015_kxrwmncfqa",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 kxrwmncfqa"
+    ],
+    "company": "가상검증회사_20261015_07",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-78@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0078"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_080",
+    "name": "가상검증인물_20261015_fjzrgyqcpe",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 fjzrgyqcpe"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-80@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0080"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_081",
+    "name": "가상검증인물_20261015_etwyapqdcn",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 etwyapqdcn"
+    ],
+    "company": "가상검증회사_20261015_09",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-81@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0081"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_082",
+    "name": "가상검증인물_20261015_hkarvufzes",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 hkarvufzes"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-82@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0082"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_083",
+    "name": "가상검증인물_20261015_kjhzeumxpn",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 kjhzeumxpn"
+    ],
+    "company": "가상검증회사_20261015_11",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-83@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0083"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_084",
+    "name": "가상검증인물_20261015_magdvbfqet",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 magdvbfqet"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-84@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0084"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_085",
+    "name": "가상검증인물_20261015_hpfnmezvuw",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 hpfnmezvuw"
+    ],
+    "company": "가상검증회사_20261015_01",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-85@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0085"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_086",
+    "name": "가상검증인물_20261015_achyskjmfx",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 achyskjmfx"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-86@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0086"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_087",
+    "name": "가상검증인물_20261015_canruyjwdk",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 canruyjwdk"
+    ],
+    "company": "가상검증회사_20261015_03",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-87@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0087"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_088",
+    "name": "가상검증인물_20261015_revafbszjt",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 revafbszjt"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-88@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0088"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_089",
+    "name": "가상검증인물_20261015_pxqguntacz",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 pxqguntacz"
+    ],
+    "company": "가상검증회사_20261015_05",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-89@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0089"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_090",
+    "name": "가상검증인물_20261015_vjsecfrdwy",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 vjsecfrdwy"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-90@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0090"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_091",
+    "name": "가상검증인물_20261015_bakrudvcxp",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 bakrudvcxp"
+    ],
+    "company": "가상검증회사_20261015_07",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-91@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0091"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_092",
+    "name": "가상검증인물_20261015_qteupjhfwy",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 qteupjhfwy"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-92@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0092"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_093",
+    "name": "가상검증인물_20261015_vczphstrdg",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 vczphstrdg"
+    ],
+    "company": "가상검증회사_20261015_09",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-93@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0093"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_094",
+    "name": "가상검증인물_20261015_jrafhpmesz",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 jrafhpmesz"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-94@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0094"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_095",
+    "name": "가상검증인물_20261015_qbtduncrhj",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 qbtduncrhj"
+    ],
+    "company": "가상검증회사_20261015_11",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-95@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0095"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_096",
+    "name": "가상검증인물_20261015_hecxakzvwm",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 hecxakzvwm"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-96@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0096"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_097",
+    "name": "가상검증인물_20261015_ekdyhxupsa",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 ekdyhxupsa"
+    ],
+    "company": "가상검증회사_20261015_01",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-97@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0097"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_098",
+    "name": "가상검증인물_20261015_vqgexwhjkt",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 vqgexwhjkt"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-98@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0098"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_099",
+    "name": "가상검증인물_20261015_mdbvhygpsq",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 mdbvhygpsq"
+    ],
+    "company": "가상검증회사_20261015_03",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-99@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0099"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_100",
+    "name": "가상검증인물_20261015_mkazsdqejv",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 mkazsdqejv"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-100@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0100"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_101",
+    "name": "가상검증인물_20261015_nshebrkqfv",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 nshebrkqfv"
+    ],
+    "company": "가상검증회사_20261015_05",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-101@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0101"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_102",
+    "name": "가상검증인물_20261015_mjztaxdykg",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 mjztaxdykg"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-102@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0102"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_103",
+    "name": "가상검증인물_20261015_kyecpjstnz",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 kyecpjstnz"
+    ],
+    "company": "가상검증회사_20261015_07",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-103@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0103"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_104",
+    "name": "가상검증인물_20261015_zjwsvaqtyn",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 zjwsvaqtyn"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-104@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0104"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_105",
+    "name": "가상검증인물_20261015_aknqhmwztg",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 aknqhmwztg"
+    ],
+    "company": "가상검증회사_20261015_09",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-105@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0105"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_106",
+    "name": "가상검증인물_20261015_sztvaxrdbg",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 sztvaxrdbg"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-106@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0106"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_107",
+    "name": "가상검증인물_20261015_hefmwzgnqj",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 hefmwzgnqj"
+    ],
+    "company": "가상검증회사_20261015_11",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-107@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0107"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_108",
+    "name": "가상검증인물_20261015_pnecvwuyzq",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 pnecvwuyzq"
+    ],
+    "company": "가상검증회사_20261015_00",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-108@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0108"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_109",
+    "name": "가상검증인물_20261015_qcgnszhbvr",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 qcgnszhbvr"
+    ],
+    "company": "가상검증회사_20261015_01",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-109@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0109"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_110",
+    "name": "가상검증인물_20261015_yarfjzunvg",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 yarfjzunvg"
+    ],
+    "company": "가상검증회사_20261015_02",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-110@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0110"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_111",
+    "name": "가상검증인물_20261015_wjxbhrzkqt",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 wjxbhrzkqt"
+    ],
+    "company": "가상검증회사_20261015_03",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-111@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0111"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_112",
+    "name": "가상검증인물_20261015_myceuzkghs",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 myceuzkghs"
+    ],
+    "company": "가상검증회사_20261015_04",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-112@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0112"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_113",
+    "name": "가상검증인물_20261015_ftepkygjdx",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 ftepkygjdx"
+    ],
+    "company": "가상검증회사_20261015_05",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-113@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0113"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_01",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_114",
+    "name": "가상검증인물_20261015_pkbruhzscn",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 pkbruhzscn"
+    ],
+    "company": "가상검증회사_20261015_06",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-114@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0114"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_02",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_115",
+    "name": "가상검증인물_20261015_bmvtgxjswy",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 bmvtgxjswy"
+    ],
+    "company": "가상검증회사_20261015_07",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-115@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0115"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_03",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_116",
+    "name": "가상검증인물_20261015_cfyevbstug",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 cfyevbstug"
+    ],
+    "company": "가상검증회사_20261015_08",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-116@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0116"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_04",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_117",
+    "name": "가상검증인물_20261015_zfcxvybgdk",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 zfcxvybgdk"
+    ],
+    "company": "가상검증회사_20261015_09",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-117@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0117"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_05",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_118",
+    "name": "가상검증인물_20261015_jrbpztsmce",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 jrbpztsmce"
+    ],
+    "company": "가상검증회사_20261015_10",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-118@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0118"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_06",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  },
+  {
+    "personId": "p_holdout_20261015_119",
+    "name": "가상검증인물_20261015_yrspcmxwnt",
+    "nameVariants": [
+      "Synthetic Holdout 20261015 yrspcmxwnt"
+    ],
+    "company": "가상검증회사_20261015_11",
+    "title": "과장",
+    "department": null,
+    "emails": [
+      "synthetic-20261015-119@holdout.example"
+    ],
+    "phones": [
+      "000-20261015-0119"
+    ],
+    "channels": [
+      "MEETING",
+      "EMAIL"
+    ],
+    "companyHistory": [
+      {
+        "company": "가상검증이전회사_20261015_00",
+        "title": "대리",
+        "until": "2025-12-31"
+      }
+    ],
+    "photoAvailable": false,
+    "isSynthetic": true
+  }
+]
