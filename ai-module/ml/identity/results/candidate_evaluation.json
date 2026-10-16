@@ -1,0 +1,689 @@
+{
+  "version": "candidate-ranking-0.1",
+  "selectedThreshold": 0.88,
+  "selectionData": "train_only",
+  "trainTrials": [
+    {
+      "threshold": 0.8,
+      "metrics": {
+        "retrieval": {
+          "queries": 2400,
+          "included": 1.0,
+          "top1Guaranteed": 0.9708333333333333,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 2.692083333333333
+        },
+        "byCase": {
+          "company_change": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.99,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.26
+          },
+          "english": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 18.22
+          },
+          "exact": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.14
+          },
+          "honorific": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.995,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.095
+          },
+          "missing_company": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.945,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.055
+          },
+          "random": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.995,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.1025
+          },
+          "same_company": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.9975,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.165
+          },
+          "same_name": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.8675,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 2.0
+          },
+          "typo": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.0
+          }
+        },
+        "pairCandidateInclusion": {
+          "tp": 1200,
+          "fp": 404,
+          "fn": 0,
+          "tn": 796,
+          "precision": 0.7481296758104738,
+          "recall": 1.0
+        }
+      }
+    },
+    {
+      "threshold": 0.85,
+      "metrics": {
+        "retrieval": {
+          "queries": 2400,
+          "included": 1.0,
+          "top1Guaranteed": 0.9708333333333333,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.8045833333333334
+        },
+        "byCase": {
+          "company_change": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.99,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.26
+          },
+          "english": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 7.57
+          },
+          "exact": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.14
+          },
+          "honorific": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.995,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.095
+          },
+          "missing_company": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.945,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.055
+          },
+          "random": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.995,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.1025
+          },
+          "same_company": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.9975,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.165
+          },
+          "same_name": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.8675,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 2.0
+          },
+          "typo": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.0
+          }
+        },
+        "pairCandidateInclusion": {
+          "tp": 1200,
+          "fp": 404,
+          "fn": 0,
+          "tn": 796,
+          "precision": 0.7481296758104738,
+          "recall": 1.0
+        }
+      }
+    },
+    {
+      "threshold": 0.88,
+      "metrics": {
+        "retrieval": {
+          "queries": 2400,
+          "included": 1.0,
+          "top1Guaranteed": 0.9708333333333333,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.3454166666666667
+        },
+        "byCase": {
+          "company_change": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.99,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.26
+          },
+          "english": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 2.06
+          },
+          "exact": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.14
+          },
+          "honorific": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.995,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.095
+          },
+          "missing_company": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.945,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.055
+          },
+          "random": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.995,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.1025
+          },
+          "same_company": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.9975,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.165
+          },
+          "same_name": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.8675,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 2.0
+          },
+          "typo": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.0
+          }
+        },
+        "pairCandidateInclusion": {
+          "tp": 1200,
+          "fp": 404,
+          "fn": 0,
+          "tn": 796,
+          "precision": 0.7481296758104738,
+          "recall": 1.0
+        }
+      }
+    },
+    {
+      "threshold": 0.9,
+      "metrics": {
+        "retrieval": {
+          "queries": 2400,
+          "included": 0.9166666666666666,
+          "top1Guaranteed": 0.8875,
+          "top3Guaranteed": 0.9166666666666666,
+          "top3Possible": 0.9166666666666666,
+          "candidateCount": 1.2204166666666667
+        },
+        "byCase": {
+          "company_change": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.99,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.14
+          },
+          "english": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 2.06
+          },
+          "exact": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.055
+          },
+          "honorific": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.995,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.055
+          },
+          "missing_company": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.945,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.055
+          },
+          "random": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.995,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.05
+          },
+          "same_company": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.9975,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.09
+          },
+          "same_name": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.8675,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 2.0
+          },
+          "typo": {
+            "queries": 200,
+            "included": 0.0,
+            "top1Guaranteed": 0.0,
+            "top3Guaranteed": 0.0,
+            "top3Possible": 0.0,
+            "candidateCount": 0.0
+          }
+        },
+        "pairCandidateInclusion": {
+          "tp": 1000,
+          "fp": 400,
+          "fn": 200,
+          "tn": 800,
+          "precision": 0.7142857142857143,
+          "recall": 0.8333333333333334
+        }
+      }
+    },
+    {
+      "threshold": 0.95,
+      "metrics": {
+        "retrieval": {
+          "queries": 2400,
+          "included": 0.9166666666666666,
+          "top1Guaranteed": 0.8875,
+          "top3Guaranteed": 0.9166666666666666,
+          "top3Possible": 0.9166666666666666,
+          "candidateCount": 1.1420833333333333
+        },
+        "byCase": {
+          "company_change": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.99,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.14
+          },
+          "english": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.12
+          },
+          "exact": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 1.0,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.055
+          },
+          "honorific": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.995,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.055
+          },
+          "missing_company": {
+            "queries": 200,
+            "included": 1.0,
+            "top1Guaranteed": 0.945,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.055
+          },
+          "random": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.995,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.05
+          },
+          "same_company": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.9975,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 1.09
+          },
+          "same_name": {
+            "queries": 400,
+            "included": 1.0,
+            "top1Guaranteed": 0.8675,
+            "top3Guaranteed": 1.0,
+            "top3Possible": 1.0,
+            "candidateCount": 2.0
+          },
+          "typo": {
+            "queries": 200,
+            "included": 0.0,
+            "top1Guaranteed": 0.0,
+            "top3Guaranteed": 0.0,
+            "top3Possible": 0.0,
+            "candidateCount": 0.0
+          }
+        },
+        "pairCandidateInclusion": {
+          "tp": 1000,
+          "fp": 400,
+          "fn": 200,
+          "tn": 800,
+          "precision": 0.7142857142857143,
+          "recall": 0.8333333333333334
+        }
+      }
+    }
+  ],
+  "train": {
+    "persons": 240,
+    "uniqueQueries": 1164
+  },
+  "eval": {
+    "persons": 60,
+    "uniqueQueries": 286,
+    "exactBaseline": {
+      "retrieval": {
+        "queries": 600,
+        "included": 0.9166666666666666,
+        "top1Guaranteed": 0.9166666666666666,
+        "top3Guaranteed": 0.9166666666666666,
+        "top3Possible": 0.9166666666666666,
+        "candidateCount": 1.1316666666666666
+      },
+      "byCase": {
+        "company_change": {
+          "queries": 50,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.14
+        },
+        "english": {
+          "queries": 50,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.04
+        },
+        "exact": {
+          "queries": 50,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.06
+        },
+        "honorific": {
+          "queries": 50,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.02
+        },
+        "missing_company": {
+          "queries": 50,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.0
+        },
+        "random": {
+          "queries": 100,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.13
+        },
+        "same_company": {
+          "queries": 100,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.03
+        },
+        "same_name": {
+          "queries": 100,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 2.0
+        },
+        "typo": {
+          "queries": 50,
+          "included": 0.0,
+          "top1Guaranteed": 0.0,
+          "top3Guaranteed": 0.0,
+          "top3Possible": 0.0,
+          "candidateCount": 0.0
+        }
+      },
+      "pairCandidateInclusion": {
+        "tp": 250,
+        "fp": 100,
+        "fn": 50,
+        "tn": 200,
+        "precision": 0.7142857142857143,
+        "recall": 0.8333333333333334
+      }
+    },
+    "fuzzyRanking": {
+      "retrieval": {
+        "queries": 600,
+        "included": 1.0,
+        "top1Guaranteed": 1.0,
+        "top3Guaranteed": 1.0,
+        "top3Possible": 1.0,
+        "candidateCount": 1.2616666666666667
+      },
+      "byCase": {
+        "company_change": {
+          "queries": 50,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.14
+        },
+        "english": {
+          "queries": 50,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.22
+        },
+        "exact": {
+          "queries": 50,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.1
+        },
+        "honorific": {
+          "queries": 50,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.1
+        },
+        "missing_company": {
+          "queries": 50,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.0
+        },
+        "random": {
+          "queries": 100,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.23
+        },
+        "same_company": {
+          "queries": 100,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.06
+        },
+        "same_name": {
+          "queries": 100,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 2.0
+        },
+        "typo": {
+          "queries": 50,
+          "included": 1.0,
+          "top1Guaranteed": 1.0,
+          "top3Guaranteed": 1.0,
+          "top3Possible": 1.0,
+          "candidateCount": 1.0
+        }
+      },
+      "pairCandidateInclusion": {
+        "tp": 300,
+        "fp": 101,
+        "fn": 0,
+        "tn": 199,
+        "precision": 0.7481296758104738,
+        "recall": 1.0
+      }
+    }
+  },
+  "inputSha256": {
+    "persons.json": "b1c655cf5a91051a7dec60c4d34b697bf9e384f3809a20e5c785a766ca148106",
+    "split.json": "b347078aaa5b0e183d4775cabafab01536eb865d8c223e785b91efbddfcef89b",
+    "pairs_train.json": "f542f3c1b3e17bc08cd8f79a90dc7c166018f575f9c26cce4039d82b0037f6bc",
+    "pairs_eval.json": "16c718eb6f18abc570454d0762601d986ffd4b33c88821533bd5f3c5d88a9468"
+  },
+  "limitations": [
+    "synthetic_numbered_names",
+    "repeated_queries",
+    "known_people_only",
+    "split_specific_rosters_240_and_60",
+    "no_probability_or_final_decision",
+    "top3_guaranteed_uses_worst_rank_within_ties",
+    "threshold_selection_is_train_only_not_cross_validation"
+  ]
+}

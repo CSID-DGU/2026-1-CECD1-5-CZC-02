@@ -1,0 +1,2776 @@
+{
+  "version": "failure-analysis-0.1",
+  "fixedThreshold": 0.88,
+  "freshHoldoutUsed": false,
+  "inputSha256": {
+    "persons.json": "b1c655cf5a91051a7dec60c4d34b697bf9e384f3809a20e5c785a766ca148106",
+    "split.json": "b347078aaa5b0e183d4775cabafab01536eb865d8c223e785b91efbddfcef89b",
+    "pairs_train.json": "f542f3c1b3e17bc08cd8f79a90dc7c166018f575f9c26cce4039d82b0037f6bc",
+    "pairs_eval.json": "16c718eb6f18abc570454d0762601d986ffd4b33c88821533bd5f3c5d88a9468"
+  },
+  "countingUnit": "pair_rows_including_repeats",
+  "splits": {
+    "train": {
+      "exactOnly": {
+        "counts": {
+          "queries": 2400,
+          "missed": 200,
+          "top1NotGuaranteed": 270,
+          "top3NotGuaranteed": 200,
+          "extraCandidates": 526,
+          "queriesWithExtraCandidates": 526
+        },
+        "uniqueObservedQueries": 1164,
+        "extraCandidateReasons": {
+          "EXACT_NAME_WITHOUT_COMPANY_MATCH": 465,
+          "EXACT_NAME_AND_COMPANY_OR_HISTORY": 61
+        },
+        "eventCounts": {
+          "EXACT_NAME_WITHOUT_COMPANY_MATCH": 465,
+          "TOP1_TIE_OR_LOWER_RANK": 70,
+          "EXACT_NAME_AND_COMPANY_OR_HISTORY": 61,
+          "TARGET_MISSED": 200
+        },
+        "byCase": {
+          "company_change": {
+            "queries": 200,
+            "missed": 0,
+            "top1NotGuaranteed": 2,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 28,
+            "queriesWithExtraCandidates": 28
+          },
+          "english": {
+            "queries": 200,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 9,
+            "queriesWithExtraCandidates": 9
+          },
+          "exact": {
+            "queries": 200,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 11,
+            "queriesWithExtraCandidates": 11
+          },
+          "honorific": {
+            "queries": 200,
+            "missed": 0,
+            "top1NotGuaranteed": 1,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 11,
+            "queriesWithExtraCandidates": 11
+          },
+          "missing_company": {
+            "queries": 200,
+            "missed": 0,
+            "top1NotGuaranteed": 11,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 11,
+            "queriesWithExtraCandidates": 11
+          },
+          "random": {
+            "queries": 400,
+            "missed": 0,
+            "top1NotGuaranteed": 2,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 20,
+            "queriesWithExtraCandidates": 20
+          },
+          "same_company": {
+            "queries": 400,
+            "missed": 0,
+            "top1NotGuaranteed": 1,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 36,
+            "queriesWithExtraCandidates": 36
+          },
+          "same_name": {
+            "queries": 400,
+            "missed": 0,
+            "top1NotGuaranteed": 53,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 400,
+            "queriesWithExtraCandidates": 400
+          },
+          "typo": {
+            "queries": 200,
+            "missed": 200,
+            "top1NotGuaranteed": 200,
+            "top3NotGuaranteed": 200,
+            "extraCandidates": 0,
+            "queriesWithExtraCandidates": 0
+          }
+        },
+        "samples": {
+          "EXACT_NAME_WITHOUT_COMPANY_MATCH": [
+            {
+              "pairId": "pair_train_2150",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_9675",
+                "company": "가상회사_011",
+                "title": "차장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_2150_b"
+              },
+              "evidence": "이름: 가상인물_9675 | 회사: 가상회사_011 | 직함: 차장 | 채널: PHONE",
+              "targetPersonId": "p_019",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_020",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_9675"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_9675 팀장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 9675"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_9675님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_train_0804",
+              "caseType": "missing_company",
+              "mention": {
+                "name": "가상인물_1825",
+                "company": null,
+                "title": "대리",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_0804_b"
+              },
+              "evidence": "이름: 가상인물_1825 | 직함: 대리 | 채널: EMAIL",
+              "targetPersonId": "p_001",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "UNKNOWN",
+              "extraPersonId": "p_002",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_1825"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_1825 팀장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 1825"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_1825님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_train_0258",
+              "caseType": "missing_company",
+              "mention": {
+                "name": "가상인물_9675",
+                "company": null,
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_0258_b"
+              },
+              "evidence": "이름: 가상인물_9675 | 직함: 팀장 | 채널: EMAIL",
+              "targetPersonId": "p_020",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "UNKNOWN",
+              "extraPersonId": "p_019",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_9675"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_9675 차장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 9675"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_9675님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_train_1531",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_4013",
+                "company": "가상회사_001",
+                "title": "대리",
+                "email": "synthetic-p_008@people.example",
+                "phone": "000-0000-0008",
+                "channel": "MEETING",
+                "sourceRef": "src_pair_train_1531_b"
+              },
+              "evidence": "이름: 가상인물_4013 | 회사: 가상회사_001 | 직함: 대리 | 이메일: synthetic-p_008@people.example | 전화: 000-0000-0008 | 채널: MEETING",
+              "targetPersonId": "p_008",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_007",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_4013"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_4013 부장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 4013"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_4013님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_train_1910",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_3658",
+                "company": "가상회사_009",
+                "title": "과장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_1910_b"
+              },
+              "evidence": "이름: 가상인물_3658 | 회사: 가상회사_009 | 직함: 과장 | 채널: EMAIL",
+              "targetPersonId": "p_010",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_009",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_3658"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_3658 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 3658"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_3658님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            }
+          ],
+          "TOP1_TIE_OR_LOWER_RANK": [
+            {
+              "pairId": "pair_train_0804",
+              "caseType": "missing_company",
+              "mention": {
+                "name": "가상인물_1825",
+                "company": null,
+                "title": "대리",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_0804_b"
+              },
+              "evidence": "이름: 가상인물_1825 | 직함: 대리 | 채널: EMAIL",
+              "targetPersonId": "p_001",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "UNKNOWN"
+            },
+            {
+              "pairId": "pair_train_0258",
+              "caseType": "missing_company",
+              "mention": {
+                "name": "가상인물_9675",
+                "company": null,
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_0258_b"
+              },
+              "evidence": "이름: 가상인물_9675 | 직함: 팀장 | 채널: EMAIL",
+              "targetPersonId": "p_020",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "UNKNOWN"
+            },
+            {
+              "pairId": "pair_train_2155",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_2155_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH"
+            },
+            {
+              "pairId": "pair_train_2267",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_2267_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH"
+            },
+            {
+              "pairId": "pair_train_2072",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "MEETING",
+                "sourceRef": "src_pair_train_2072_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH"
+            }
+          ],
+          "EXACT_NAME_AND_COMPANY_OR_HISTORY": [
+            {
+              "pairId": "pair_train_2155",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_2155_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_016",
+              "supportingFields": [
+                "name",
+                "company"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_8936"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_8936 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 8936"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_8936님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "companyHistory[0].company"
+              ]
+            },
+            {
+              "pairId": "pair_train_2267",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_2267_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_016",
+              "supportingFields": [
+                "name",
+                "company"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_8936"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_8936 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 8936"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_8936님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "companyHistory[0].company"
+              ]
+            },
+            {
+              "pairId": "pair_train_1444",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": "synthetic-p_015@people.example",
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_1444_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 이메일: synthetic-p_015@people.example | 채널: PHONE",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_016",
+              "supportingFields": [
+                "name",
+                "company"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_8936"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_8936 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 8936"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_8936님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "companyHistory[0].company"
+              ]
+            },
+            {
+              "pairId": "pair_train_2072",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "MEETING",
+                "sourceRef": "src_pair_train_2072_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_016",
+              "supportingFields": [
+                "name",
+                "company"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_8936"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_8936 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 8936"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_8936님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "companyHistory[0].company"
+              ]
+            },
+            {
+              "pairId": "pair_train_1925",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "MEETING",
+                "sourceRef": "src_pair_train_1925_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_016",
+              "supportingFields": [
+                "name",
+                "company"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_8936"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_8936 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 8936"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_8936님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "companyHistory[0].company"
+              ]
+            }
+          ],
+          "TARGET_MISSED": [
+            {
+              "pairId": "pair_train_0478",
+              "caseType": "typo",
+              "mention": {
+                "name": "가상인믈_7020",
+                "company": "가상회사_003",
+                "title": "차장",
+                "email": null,
+                "phone": null,
+                "channel": "MEETING",
+                "sourceRef": "src_pair_train_0478_b"
+              },
+              "evidence": "이름: 가상인믈_7020 | 회사: 가상회사_003 | 직함: 차장 | 채널: MEETING",
+              "targetPersonId": "p_115",
+              "targetRankBounds": null,
+              "targetNameStatus": "DIFFERENT",
+              "targetNameSimilarity": 0.8888888888888888,
+              "targetCompanyStatus": "MATCH"
+            },
+            {
+              "pairId": "pair_train_1012",
+              "caseType": "typo",
+              "mention": {
+                "name": "가상인믈_6127",
+                "company": "가상회사_016",
+                "title": "대리",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_1012_b"
+              },
+              "evidence": "이름: 가상인믈_6127 | 회사: 가상회사_016 | 직함: 대리 | 채널: PHONE",
+              "targetPersonId": "p_157",
+              "targetRankBounds": null,
+              "targetNameStatus": "DIFFERENT",
+              "targetNameSimilarity": 0.8888888888888888,
+              "targetCompanyStatus": "MATCH"
+            },
+            {
+              "pairId": "pair_train_0154",
+              "caseType": "typo",
+              "mention": {
+                "name": "가상인믈_5314",
+                "company": "가상회사_006",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_0154_b"
+              },
+              "evidence": "이름: 가상인믈_5314 | 회사: 가상회사_006 | 직함: 팀장 | 채널: EMAIL",
+              "targetPersonId": "p_092",
+              "targetRankBounds": null,
+              "targetNameStatus": "DIFFERENT",
+              "targetNameSimilarity": 0.8888888888888888,
+              "targetCompanyStatus": "MATCH"
+            },
+            {
+              "pairId": "pair_train_0790",
+              "caseType": "typo",
+              "mention": {
+                "name": "가상인믈_3771",
+                "company": "가상회사_006",
+                "title": "대리",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_0790_b"
+              },
+              "evidence": "이름: 가상인믈_3771 | 회사: 가상회사_006 | 직함: 대리 | 채널: PHONE",
+              "targetPersonId": "p_204",
+              "targetRankBounds": null,
+              "targetNameStatus": "DIFFERENT",
+              "targetNameSimilarity": 0.8888888888888888,
+              "targetCompanyStatus": "MATCH"
+            },
+            {
+              "pairId": "pair_train_0016",
+              "caseType": "typo",
+              "mention": {
+                "name": "가상인믈_5414",
+                "company": "가상회사_005",
+                "title": "대리",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_0016_b"
+              },
+              "evidence": "이름: 가상인믈_5414 | 회사: 가상회사_005 | 직함: 대리 | 채널: EMAIL",
+              "targetPersonId": "p_213",
+              "targetRankBounds": null,
+              "targetNameStatus": "DIFFERENT",
+              "targetNameSimilarity": 0.8888888888888888,
+              "targetCompanyStatus": "MATCH"
+            }
+          ]
+        }
+      },
+      "fuzzyRules": {
+        "counts": {
+          "queries": 2400,
+          "missed": 0,
+          "top1NotGuaranteed": 70,
+          "top3NotGuaranteed": 0,
+          "extraCandidates": 829,
+          "queriesWithExtraCandidates": 720
+        },
+        "uniqueObservedQueries": 1164,
+        "extraCandidateReasons": {
+          "EXACT_NAME_WITHOUT_COMPANY_MATCH": 465,
+          "EXACT_NAME_AND_COMPANY_OR_HISTORY": 61,
+          "SIMILAR_NAME_AND_COMPANY_OR_HISTORY": 303
+        },
+        "eventCounts": {
+          "EXACT_NAME_WITHOUT_COMPANY_MATCH": 465,
+          "TOP1_TIE_OR_LOWER_RANK": 70,
+          "EXACT_NAME_AND_COMPANY_OR_HISTORY": 61,
+          "SIMILAR_NAME_AND_COMPANY_OR_HISTORY": 303
+        },
+        "byCase": {
+          "company_change": {
+            "queries": 200,
+            "missed": 0,
+            "top1NotGuaranteed": 2,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 52,
+            "queriesWithExtraCandidates": 44
+          },
+          "english": {
+            "queries": 200,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 212,
+            "queriesWithExtraCandidates": 126
+          },
+          "exact": {
+            "queries": 200,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 28,
+            "queriesWithExtraCandidates": 23
+          },
+          "honorific": {
+            "queries": 200,
+            "missed": 0,
+            "top1NotGuaranteed": 1,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 19,
+            "queriesWithExtraCandidates": 18
+          },
+          "missing_company": {
+            "queries": 200,
+            "missed": 0,
+            "top1NotGuaranteed": 11,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 11,
+            "queriesWithExtraCandidates": 11
+          },
+          "random": {
+            "queries": 400,
+            "missed": 0,
+            "top1NotGuaranteed": 2,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 41,
+            "queriesWithExtraCandidates": 38
+          },
+          "same_company": {
+            "queries": 400,
+            "missed": 0,
+            "top1NotGuaranteed": 1,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 66,
+            "queriesWithExtraCandidates": 60
+          },
+          "same_name": {
+            "queries": 400,
+            "missed": 0,
+            "top1NotGuaranteed": 53,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 400,
+            "queriesWithExtraCandidates": 400
+          },
+          "typo": {
+            "queries": 200,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 0,
+            "queriesWithExtraCandidates": 0
+          }
+        },
+        "samples": {
+          "EXACT_NAME_WITHOUT_COMPANY_MATCH": [
+            {
+              "pairId": "pair_train_2150",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_9675",
+                "company": "가상회사_011",
+                "title": "차장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_2150_b"
+              },
+              "evidence": "이름: 가상인물_9675 | 회사: 가상회사_011 | 직함: 차장 | 채널: PHONE",
+              "targetPersonId": "p_019",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_020",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_9675"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_9675 팀장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 9675"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_9675님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_train_0804",
+              "caseType": "missing_company",
+              "mention": {
+                "name": "가상인물_1825",
+                "company": null,
+                "title": "대리",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_0804_b"
+              },
+              "evidence": "이름: 가상인물_1825 | 직함: 대리 | 채널: EMAIL",
+              "targetPersonId": "p_001",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "UNKNOWN",
+              "extraPersonId": "p_002",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_1825"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_1825 팀장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 1825"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_1825님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_train_0258",
+              "caseType": "missing_company",
+              "mention": {
+                "name": "가상인물_9675",
+                "company": null,
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_0258_b"
+              },
+              "evidence": "이름: 가상인물_9675 | 직함: 팀장 | 채널: EMAIL",
+              "targetPersonId": "p_020",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "UNKNOWN",
+              "extraPersonId": "p_019",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_9675"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_9675 차장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 9675"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_9675님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_train_1531",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_4013",
+                "company": "가상회사_001",
+                "title": "대리",
+                "email": "synthetic-p_008@people.example",
+                "phone": "000-0000-0008",
+                "channel": "MEETING",
+                "sourceRef": "src_pair_train_1531_b"
+              },
+              "evidence": "이름: 가상인물_4013 | 회사: 가상회사_001 | 직함: 대리 | 이메일: synthetic-p_008@people.example | 전화: 000-0000-0008 | 채널: MEETING",
+              "targetPersonId": "p_008",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_007",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_4013"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_4013 부장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 4013"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_4013님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_train_1910",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_3658",
+                "company": "가상회사_009",
+                "title": "과장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_1910_b"
+              },
+              "evidence": "이름: 가상인물_3658 | 회사: 가상회사_009 | 직함: 과장 | 채널: EMAIL",
+              "targetPersonId": "p_010",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_009",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_3658"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_3658 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 3658"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_3658님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            }
+          ],
+          "TOP1_TIE_OR_LOWER_RANK": [
+            {
+              "pairId": "pair_train_0804",
+              "caseType": "missing_company",
+              "mention": {
+                "name": "가상인물_1825",
+                "company": null,
+                "title": "대리",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_0804_b"
+              },
+              "evidence": "이름: 가상인물_1825 | 직함: 대리 | 채널: EMAIL",
+              "targetPersonId": "p_001",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "UNKNOWN"
+            },
+            {
+              "pairId": "pair_train_0258",
+              "caseType": "missing_company",
+              "mention": {
+                "name": "가상인물_9675",
+                "company": null,
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_0258_b"
+              },
+              "evidence": "이름: 가상인물_9675 | 직함: 팀장 | 채널: EMAIL",
+              "targetPersonId": "p_020",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "UNKNOWN"
+            },
+            {
+              "pairId": "pair_train_2155",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_2155_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH"
+            },
+            {
+              "pairId": "pair_train_2267",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_2267_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH"
+            },
+            {
+              "pairId": "pair_train_2072",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "MEETING",
+                "sourceRef": "src_pair_train_2072_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH"
+            }
+          ],
+          "EXACT_NAME_AND_COMPANY_OR_HISTORY": [
+            {
+              "pairId": "pair_train_2155",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_2155_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_016",
+              "supportingFields": [
+                "name",
+                "company"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_8936"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_8936 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 8936"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_8936님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "companyHistory[0].company"
+              ]
+            },
+            {
+              "pairId": "pair_train_2267",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_2267_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_016",
+              "supportingFields": [
+                "name",
+                "company"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_8936"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_8936 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 8936"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_8936님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "companyHistory[0].company"
+              ]
+            },
+            {
+              "pairId": "pair_train_1444",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": "synthetic-p_015@people.example",
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_1444_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 이메일: synthetic-p_015@people.example | 채널: PHONE",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_016",
+              "supportingFields": [
+                "name",
+                "company"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_8936"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_8936 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 8936"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_8936님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "companyHistory[0].company"
+              ]
+            },
+            {
+              "pairId": "pair_train_2072",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "MEETING",
+                "sourceRef": "src_pair_train_2072_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_016",
+              "supportingFields": [
+                "name",
+                "company"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_8936"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_8936 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 8936"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_8936님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "companyHistory[0].company"
+              ]
+            },
+            {
+              "pairId": "pair_train_1925",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_8936",
+                "company": "가상회사_009",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "MEETING",
+                "sourceRef": "src_pair_train_1925_b"
+              },
+              "evidence": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING",
+              "targetPersonId": "p_015",
+              "targetRankBounds": [
+                1,
+                2
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_016",
+              "supportingFields": [
+                "name",
+                "company"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_8936"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_8936 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 8936"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_8936님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "companyHistory[0].company"
+              ]
+            }
+          ],
+          "SIMILAR_NAME_AND_COMPANY_OR_HISTORY": [
+            {
+              "pairId": "pair_train_0911",
+              "caseType": "company_change",
+              "mention": {
+                "name": "가상인물_1520",
+                "company": "가상회사_020",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_0911_b"
+              },
+              "evidence": "이름: 가상인물_1520 | 회사: 가상회사_020 | 직함: 팀장 | 채널: PHONE",
+              "targetPersonId": "p_047",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_259",
+              "supportingFields": [
+                "name_similarity",
+                "company"
+              ],
+              "nameSimilarity": 0.8888888888888888,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_1529"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_1529 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 1529"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_1529님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "company"
+              ]
+            },
+            {
+              "pairId": "pair_train_0951",
+              "caseType": "english",
+              "mention": {
+                "name": "Synthetic Person 9814",
+                "company": "가상회사_011",
+                "title": "차장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_0951_b"
+              },
+              "evidence": "이름: Synthetic Person 9814 | 회사: 가상회사_011 | 직함: 차장 | 채널: EMAIL",
+              "targetPersonId": "p_162",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_083",
+              "supportingFields": [
+                "name_similarity",
+                "company"
+              ],
+              "nameSimilarity": 0.9047619047619048,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_2804"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_2804 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 2804"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_2804님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "company"
+              ]
+            },
+            {
+              "pairId": "pair_train_1605",
+              "caseType": "same_company",
+              "mention": {
+                "name": "가상인물_1825",
+                "company": "가상회사_008",
+                "title": "대리",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_1605_b"
+              },
+              "evidence": "이름: 가상인물_1825 | 회사: 가상회사_008 | 직함: 대리 | 채널: EMAIL",
+              "targetPersonId": "p_001",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_143",
+              "supportingFields": [
+                "name_similarity",
+                "company"
+              ],
+              "nameSimilarity": 0.8888888888888888,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_1828"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_1828 부장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 1828"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_1828님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "companyHistory[0].company"
+              ]
+            },
+            {
+              "pairId": "pair_train_0413",
+              "caseType": "company_change",
+              "mention": {
+                "name": "가상인물_1425",
+                "company": "가상회사_002",
+                "title": "대리",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_train_0413_b"
+              },
+              "evidence": "이름: 가상인물_1425 | 회사: 가상회사_002 | 직함: 대리 | 채널: PHONE",
+              "targetPersonId": "p_018",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_002",
+              "supportingFields": [
+                "name_similarity",
+                "company"
+              ],
+              "nameSimilarity": 0.8888888888888888,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_1825"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_1825 팀장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 1825"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_1825님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "companyHistory[0].company"
+              ]
+            },
+            {
+              "pairId": "pair_train_0993",
+              "caseType": "english",
+              "mention": {
+                "name": "Synthetic Person 4011",
+                "company": "가상회사_003",
+                "title": "부장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_train_0993_b"
+              },
+              "evidence": "이름: Synthetic Person 4011 | 회사: 가상회사_003 | 직함: 부장 | 채널: EMAIL",
+              "targetPersonId": "p_085",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_007",
+              "supportingFields": [
+                "name_similarity",
+                "company"
+              ],
+              "nameSimilarity": 0.9523809523809523,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_4013"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_4013 부장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 4013"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_4013님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "company"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "eval": {
+      "exactOnly": {
+        "counts": {
+          "queries": 600,
+          "missed": 50,
+          "top1NotGuaranteed": 50,
+          "top3NotGuaranteed": 50,
+          "extraCandidates": 129,
+          "queriesWithExtraCandidates": 129
+        },
+        "uniqueObservedQueries": 286,
+        "extraCandidateReasons": {
+          "EXACT_NAME_WITHOUT_COMPANY_MATCH": 129
+        },
+        "eventCounts": {
+          "TARGET_MISSED": 50,
+          "EXACT_NAME_WITHOUT_COMPANY_MATCH": 129
+        },
+        "byCase": {
+          "company_change": {
+            "queries": 50,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 7,
+            "queriesWithExtraCandidates": 7
+          },
+          "english": {
+            "queries": 50,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 2,
+            "queriesWithExtraCandidates": 2
+          },
+          "exact": {
+            "queries": 50,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 3,
+            "queriesWithExtraCandidates": 3
+          },
+          "honorific": {
+            "queries": 50,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 1,
+            "queriesWithExtraCandidates": 1
+          },
+          "missing_company": {
+            "queries": 50,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 0,
+            "queriesWithExtraCandidates": 0
+          },
+          "random": {
+            "queries": 100,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 13,
+            "queriesWithExtraCandidates": 13
+          },
+          "same_company": {
+            "queries": 100,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 3,
+            "queriesWithExtraCandidates": 3
+          },
+          "same_name": {
+            "queries": 100,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 100,
+            "queriesWithExtraCandidates": 100
+          },
+          "typo": {
+            "queries": 50,
+            "missed": 50,
+            "top1NotGuaranteed": 50,
+            "top3NotGuaranteed": 50,
+            "extraCandidates": 0,
+            "queriesWithExtraCandidates": 0
+          }
+        },
+        "samples": {
+          "TARGET_MISSED": [
+            {
+              "pairId": "pair_eval_0046",
+              "caseType": "typo",
+              "mention": {
+                "name": "가상인믈_8424",
+                "company": "가상회사_002",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_eval_0046_b"
+              },
+              "evidence": "이름: 가상인믈_8424 | 회사: 가상회사_002 | 직함: 팀장 | 채널: EMAIL",
+              "targetPersonId": "p_215",
+              "targetRankBounds": null,
+              "targetNameStatus": "DIFFERENT",
+              "targetNameSimilarity": 0.8888888888888888,
+              "targetCompanyStatus": "MATCH"
+            },
+            {
+              "pairId": "pair_eval_0028",
+              "caseType": "typo",
+              "mention": {
+                "name": "가상인믈_0959",
+                "company": "가상회사_012",
+                "title": "대리",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_eval_0028_b"
+              },
+              "evidence": "이름: 가상인믈_0959 | 회사: 가상회사_012 | 직함: 대리 | 채널: PHONE",
+              "targetPersonId": "p_282",
+              "targetRankBounds": null,
+              "targetNameStatus": "DIFFERENT",
+              "targetNameSimilarity": 0.8888888888888888,
+              "targetCompanyStatus": "MATCH"
+            },
+            {
+              "pairId": "pair_eval_0058",
+              "caseType": "typo",
+              "mention": {
+                "name": "가상인믈_4372",
+                "company": "가상회사_006",
+                "title": "대리",
+                "email": null,
+                "phone": null,
+                "channel": "MEETING",
+                "sourceRef": "src_pair_eval_0058_b"
+              },
+              "evidence": "이름: 가상인믈_4372 | 회사: 가상회사_006 | 직함: 대리 | 채널: MEETING",
+              "targetPersonId": "p_141",
+              "targetRankBounds": null,
+              "targetNameStatus": "DIFFERENT",
+              "targetNameSimilarity": 0.8888888888888888,
+              "targetCompanyStatus": "MATCH"
+            },
+            {
+              "pairId": "pair_eval_0064",
+              "caseType": "typo",
+              "mention": {
+                "name": "가상인믈_4387",
+                "company": "가상회사_010",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "MEETING",
+                "sourceRef": "src_pair_eval_0064_b"
+              },
+              "evidence": "이름: 가상인믈_4387 | 회사: 가상회사_010 | 직함: 팀장 | 채널: MEETING",
+              "targetPersonId": "p_098",
+              "targetRankBounds": null,
+              "targetNameStatus": "DIFFERENT",
+              "targetNameSimilarity": 0.8888888888888888,
+              "targetCompanyStatus": "MATCH"
+            },
+            {
+              "pairId": "pair_eval_0202",
+              "caseType": "typo",
+              "mention": {
+                "name": "가상인믈_0320",
+                "company": "가상회사_020",
+                "title": "부장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_eval_0202_b"
+              },
+              "evidence": "이름: 가상인믈_0320 | 회사: 가상회사_020 | 직함: 부장 | 채널: EMAIL",
+              "targetPersonId": "p_165",
+              "targetRankBounds": null,
+              "targetNameStatus": "DIFFERENT",
+              "targetNameSimilarity": 0.8888888888888888,
+              "targetCompanyStatus": "MATCH"
+            }
+          ],
+          "EXACT_NAME_WITHOUT_COMPANY_MATCH": [
+            {
+              "pairId": "pair_eval_0575",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_0410",
+                "company": "가상회사_003",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_eval_0575_b"
+              },
+              "evidence": "이름: 가상인물_0410 | 회사: 가상회사_003 | 직함: 팀장 | 채널: EMAIL",
+              "targetPersonId": "p_003",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_004",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_0410"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_0410 차장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 0410"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_0410님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_eval_0550",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_2287",
+                "company": "가상회사_015",
+                "title": "팀장",
+                "email": null,
+                "phone": "000-0000-0012",
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_eval_0550_b"
+              },
+              "evidence": "이름: 가상인물_2287 | 회사: 가상회사_015 | 직함: 팀장 | 전화: 000-0000-0012 | 채널: EMAIL",
+              "targetPersonId": "p_012",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_011",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_2287"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_2287 팀장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 2287"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_2287님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_eval_0530",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_0410",
+                "company": "가상회사_003",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_eval_0530_b"
+              },
+              "evidence": "이름: 가상인물_0410 | 회사: 가상회사_003 | 직함: 팀장 | 채널: PHONE",
+              "targetPersonId": "p_003",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_004",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_0410"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_0410 차장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 0410"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_0410님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_eval_0404",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_2287",
+                "company": "가상회사_015",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "MEETING",
+                "sourceRef": "src_pair_eval_0404_b"
+              },
+              "evidence": "이름: 가상인물_2287 | 회사: 가상회사_015 | 직함: 팀장 | 채널: MEETING",
+              "targetPersonId": "p_012",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_011",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_2287"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_2287 팀장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 2287"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_2287님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_eval_0559",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_2287",
+                "company": "가상회사_006",
+                "title": "팀장",
+                "email": "synthetic-p_011@people.example",
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_eval_0559_b"
+              },
+              "evidence": "이름: 가상인물_2287 | 회사: 가상회사_006 | 직함: 팀장 | 이메일: synthetic-p_011@people.example | 채널: EMAIL",
+              "targetPersonId": "p_011",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_012",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_2287"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_2287 팀장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 2287"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_2287님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            }
+          ]
+        }
+      },
+      "fuzzyRules": {
+        "counts": {
+          "queries": 600,
+          "missed": 0,
+          "top1NotGuaranteed": 0,
+          "top3NotGuaranteed": 0,
+          "extraCandidates": 157,
+          "queriesWithExtraCandidates": 150
+        },
+        "uniqueObservedQueries": 286,
+        "extraCandidateReasons": {
+          "EXACT_NAME_WITHOUT_COMPANY_MATCH": 129,
+          "SIMILAR_NAME_AND_COMPANY_OR_HISTORY": 28
+        },
+        "eventCounts": {
+          "EXACT_NAME_WITHOUT_COMPANY_MATCH": 129,
+          "SIMILAR_NAME_AND_COMPANY_OR_HISTORY": 28
+        },
+        "byCase": {
+          "company_change": {
+            "queries": 50,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 7,
+            "queriesWithExtraCandidates": 7
+          },
+          "english": {
+            "queries": 50,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 11,
+            "queriesWithExtraCandidates": 9
+          },
+          "exact": {
+            "queries": 50,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 5,
+            "queriesWithExtraCandidates": 5
+          },
+          "honorific": {
+            "queries": 50,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 5,
+            "queriesWithExtraCandidates": 5
+          },
+          "missing_company": {
+            "queries": 50,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 0,
+            "queriesWithExtraCandidates": 0
+          },
+          "random": {
+            "queries": 100,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 23,
+            "queriesWithExtraCandidates": 19
+          },
+          "same_company": {
+            "queries": 100,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 6,
+            "queriesWithExtraCandidates": 5
+          },
+          "same_name": {
+            "queries": 100,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 100,
+            "queriesWithExtraCandidates": 100
+          },
+          "typo": {
+            "queries": 50,
+            "missed": 0,
+            "top1NotGuaranteed": 0,
+            "top3NotGuaranteed": 0,
+            "extraCandidates": 0,
+            "queriesWithExtraCandidates": 0
+          }
+        },
+        "samples": {
+          "EXACT_NAME_WITHOUT_COMPANY_MATCH": [
+            {
+              "pairId": "pair_eval_0575",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_0410",
+                "company": "가상회사_003",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_eval_0575_b"
+              },
+              "evidence": "이름: 가상인물_0410 | 회사: 가상회사_003 | 직함: 팀장 | 채널: EMAIL",
+              "targetPersonId": "p_003",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_004",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_0410"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_0410 차장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 0410"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_0410님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_eval_0550",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_2287",
+                "company": "가상회사_015",
+                "title": "팀장",
+                "email": null,
+                "phone": "000-0000-0012",
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_eval_0550_b"
+              },
+              "evidence": "이름: 가상인물_2287 | 회사: 가상회사_015 | 직함: 팀장 | 전화: 000-0000-0012 | 채널: EMAIL",
+              "targetPersonId": "p_012",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_011",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_2287"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_2287 팀장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 2287"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_2287님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_eval_0530",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_0410",
+                "company": "가상회사_003",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "PHONE",
+                "sourceRef": "src_pair_eval_0530_b"
+              },
+              "evidence": "이름: 가상인물_0410 | 회사: 가상회사_003 | 직함: 팀장 | 채널: PHONE",
+              "targetPersonId": "p_003",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_004",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_0410"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_0410 차장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 0410"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_0410님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_eval_0404",
+              "caseType": "same_name",
+              "mention": {
+                "name": "가상인물_2287",
+                "company": "가상회사_015",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "MEETING",
+                "sourceRef": "src_pair_eval_0404_b"
+              },
+              "evidence": "이름: 가상인물_2287 | 회사: 가상회사_015 | 직함: 팀장 | 채널: MEETING",
+              "targetPersonId": "p_012",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_011",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_2287"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_2287 팀장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 2287"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_2287님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            },
+            {
+              "pairId": "pair_eval_0559",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_2287",
+                "company": "가상회사_006",
+                "title": "팀장",
+                "email": "synthetic-p_011@people.example",
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_eval_0559_b"
+              },
+              "evidence": "이름: 가상인물_2287 | 회사: 가상회사_006 | 직함: 팀장 | 이메일: synthetic-p_011@people.example | 채널: EMAIL",
+              "targetPersonId": "p_011",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_012",
+              "supportingFields": [
+                "name"
+              ],
+              "nameSimilarity": 1.0,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_2287"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_2287 팀장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 2287"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_2287님"
+                ]
+              ],
+              "companyMatchedPaths": []
+            }
+          ],
+          "SIMILAR_NAME_AND_COMPANY_OR_HISTORY": [
+            {
+              "pairId": "pair_eval_0279",
+              "caseType": "english",
+              "mention": {
+                "name": "Synthetic Person 4804",
+                "company": "가상회사_017",
+                "title": "부장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_eval_0279_b"
+              },
+              "evidence": "이름: Synthetic Person 4804 | 회사: 가상회사_017 | 직함: 부장 | 채널: EMAIL",
+              "targetPersonId": "p_061",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_284",
+              "supportingFields": [
+                "name_similarity",
+                "company"
+              ],
+              "nameSimilarity": 0.9047619047619048,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_8884"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_8884 과장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 8884"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_8884님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "company"
+              ]
+            },
+            {
+              "pairId": "pair_eval_0559",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_2287",
+                "company": "가상회사_006",
+                "title": "팀장",
+                "email": "synthetic-p_011@people.example",
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_eval_0559_b"
+              },
+              "evidence": "이름: 가상인물_2287 | 회사: 가상회사_006 | 직함: 팀장 | 이메일: synthetic-p_011@people.example | 채널: EMAIL",
+              "targetPersonId": "p_011",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_109",
+              "supportingFields": [
+                "name_similarity",
+                "company"
+              ],
+              "nameSimilarity": 0.8888888888888888,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_2288"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_2288 부장님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 2288"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_2288님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "company"
+              ]
+            },
+            {
+              "pairId": "pair_eval_0212",
+              "caseType": "honorific",
+              "mention": {
+                "name": "가상인물_7954 팀장님",
+                "company": "가상회사_012",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_eval_0212_b"
+              },
+              "evidence": "이름: 가상인물_7954 팀장님 | 회사: 가상회사_012 | 직함: 팀장 | 채널: EMAIL",
+              "targetPersonId": "p_218",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_277",
+              "supportingFields": [
+                "name_similarity",
+                "company"
+              ],
+              "nameSimilarity": 0.8888888888888888,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_7974"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_7974 대리님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 7974"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_7974님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "company"
+              ]
+            },
+            {
+              "pairId": "pair_eval_0589",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_7954",
+                "company": "가상회사_012",
+                "title": "팀장",
+                "email": null,
+                "phone": null,
+                "channel": "EMAIL",
+                "sourceRef": "src_pair_eval_0589_b"
+              },
+              "evidence": "이름: 가상인물_7954 | 회사: 가상회사_012 | 직함: 팀장 | 채널: EMAIL",
+              "targetPersonId": "p_218",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_277",
+              "supportingFields": [
+                "name_similarity",
+                "company"
+              ],
+              "nameSimilarity": 0.8888888888888888,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_7974"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_7974 대리님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 7974"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_7974님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "company"
+              ]
+            },
+            {
+              "pairId": "pair_eval_0487",
+              "caseType": "random",
+              "mention": {
+                "name": "가상인물_7954",
+                "company": "가상회사_012",
+                "title": "팀장",
+                "email": null,
+                "phone": "000-0000-0218",
+                "channel": "PHONE",
+                "sourceRef": "src_pair_eval_0487_b"
+              },
+              "evidence": "이름: 가상인물_7954 | 회사: 가상회사_012 | 직함: 팀장 | 전화: 000-0000-0218 | 채널: PHONE",
+              "targetPersonId": "p_218",
+              "targetRankBounds": [
+                1,
+                1
+              ],
+              "targetNameStatus": "MATCH",
+              "targetNameSimilarity": 1.0,
+              "targetCompanyStatus": "MATCH",
+              "extraPersonId": "p_277",
+              "supportingFields": [
+                "name_similarity",
+                "company"
+              ],
+              "nameSimilarity": 0.8888888888888888,
+              "warnings": [],
+              "registeredName": [
+                [
+                  "name",
+                  "가상인물_7974"
+                ],
+                [
+                  "nameVariants[0]",
+                  "가상인물_7974 대리님"
+                ],
+                [
+                  "nameVariants[1]",
+                  "Synthetic Person 7974"
+                ],
+                [
+                  "nameVariants[2]",
+                  "가상인물_7974님"
+                ]
+              ],
+              "companyMatchedPaths": [
+                "company"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

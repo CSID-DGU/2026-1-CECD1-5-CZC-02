@@ -1,0 +1,33 @@
+{
+  "seed": 20261015,
+  "purpose": "synthetic_fresh_holdout",
+  "modelEvaluationPerformed": false,
+  "counts": {
+    "persons": 120,
+    "newcomers": 20,
+    "queries": 300
+  },
+  "caseCounts": {
+    "company_change": 20,
+    "shared_email": 20,
+    "typo_insertion": 20,
+    "shared_phone": 20,
+    "same_company_homonyms": 20,
+    "exact": 20,
+    "english": 20,
+    "typo_transposition": 20,
+    "typo_deletion": 20,
+    "honorific": 20,
+    "missing_company": 20,
+    "contact_conflict": 20,
+    "insufficient": 20,
+    "new_person": 20,
+    "typo_substitution": 20
+  },
+  "baselinePersonSha256": "b1c655cf5a91051a7dec60c4d34b697bf9e384f3809a20e5c785a766ca148106",
+  "fileSha256": {
+    "persons.json": "bfa215c2cd14347ac067f6afd5b6e24ddadd83c9359b86bd8c0a3ddf4722d64d",
+    "newcomers.json": "c0f3982748826e61ef5113572811096bef7f186febe9236f4dfb1386b00629ee",
+    "queries.json": "c1a4ec7262d0ee1984a3a3a764ae084035258278d46dbe35418fa6a67ab3ac0c"
+  }
+}
