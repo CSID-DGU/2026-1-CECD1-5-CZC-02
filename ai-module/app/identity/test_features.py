@@ -21,7 +21,7 @@ def make_person(number=1, **updates):
               "emails": [f"synthetic{number}@people.example"], "phones": [f"000-0000-{number:04}"],
               "companyHistory": [{"company": "가상회사_001", "title": None, "until": None}]}
     person.update(updates)
-    schema = json.loads((CONTRACTS / "person.schema.json").read_text())
+    schema = json.loads((CONTRACTS / "person.schema.json").read_text(encoding="utf-8"))
     Draft202012Validator(schema).validate(person)
     return person
 
@@ -29,7 +29,7 @@ def make_person(number=1, **updates):
 def make_mention(**updates):
     mention = {"name": "가상인물_0001", "channel": "MEETING"}
     mention.update(updates)
-    schema = json.loads((CONTRACTS / "identity_resolution.schema.json").read_text())
+    schema = json.loads((CONTRACTS / "identity_resolution.schema.json").read_text(encoding="utf-8"))
     Draft202012Validator(schema["properties"]["mention"]).validate(mention)
     return mention
 
@@ -131,10 +131,10 @@ def test_inputs_preserved_and_metadata_not_compared():
 
 
 def test_generated_cases_exercise_expected_clues():
-    persons = {p["personId"]: p for p in json.loads((ROOT / "ml/identity/data/persons.json").read_text())}
+    persons = {p["personId"]: p for p in json.loads((ROOT / "ml/identity/data/persons.json").read_text(encoding="utf-8"))}
     seen = set()
     for filename in ("pairs_train.json", "pairs_eval.json"):
-        for pair in json.loads((ROOT / "ml/identity/data" / filename).read_text()):
+        for pair in json.loads((ROOT / "ml/identity/data" / filename).read_text(encoding="utf-8")):
             # label은 검사 정답에만 사용하며 비교 함수에는 전달하지 않는다.
             result = compare_person(pair["mentionB"], persons[pair["personIdA"]])
             case = pair["caseType"]

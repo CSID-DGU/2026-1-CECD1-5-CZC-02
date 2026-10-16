@@ -12,7 +12,7 @@ import pytest
 from ml.identity.generate_holdout import CASES, build_holdout, validate_holdout, write_holdout
 
 DATA = Path(__file__).resolve().parent / "data"
-BASELINE = json.loads((DATA / "persons.json").read_text())
+BASELINE = json.loads((DATA / "persons.json").read_text(encoding="utf-8"))
 
 
 @pytest.fixture(scope="module")
@@ -84,7 +84,7 @@ def test_files_and_manifest_hashes_and_no_overwrite(dataset, tmp_path):
     baseline_before = {p.name: p.read_bytes() for p in DATA.glob('*.json')}
     output = tmp_path / "holdout"
     write_holdout(dataset, DATA / "persons.json", output)
-    manifest = json.loads((output / "manifest.json").read_text())
+    manifest = json.loads((output / "manifest.json").read_text(encoding="utf-8"))
     for name, digest in manifest["fileSha256"].items():
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     assert manifest["baselinePersonSha256"] == hashlib.sha256((DATA / "persons.json").read_bytes()).hexdigest()
@@ -98,8 +98,8 @@ def test_files_and_manifest_hashes_and_no_overwrite(dataset, tmp_path):
 def test_checked_in_holdout_matches_generator(dataset):
     root = DATA.parent / "holdout/v1"
     for filename, key in (("persons.json", "persons"), ("newcomers.json", "newcomers"), ("queries.json", "queries")):
-        assert json.loads((root / filename).read_text()) == dataset[key]
-    manifest = json.loads((root / "manifest.json").read_text())
+        assert json.loads((root / filename).read_text(encoding="utf-8")) == dataset[key]
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["modelEvaluationPerformed"] is False
     for name, digest in manifest["fileSha256"].items():
         assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest

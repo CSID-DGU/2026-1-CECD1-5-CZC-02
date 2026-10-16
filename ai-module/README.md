@@ -70,7 +70,7 @@ tests/               단위 테스트 + contracts 형식 검사 (네트워크 �
 ## 테스트·평가
 
 ```bash
-python -m pytest tests                   # 네트워크·유료 API 호출 없음
+python -m pytest tests app ml           # 네트워크·유료 API 호출 없음 (CI와 같음)
 python -m eval.run_eval                  # 규칙 엔진 정확도 (21통)
 python -m eval.run_eval --engine ollama  # 규칙 + LLM
 ```

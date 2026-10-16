@@ -106,7 +106,7 @@ npm run dev
 ```bash
 # AI 모듈 단위 테스트 + 데이터 형식(contracts) 검사 (네트워크·유료 API 호출 없음)
 cd ai-module
-python -m pytest tests
+python -m pytest tests app ml   # 담당 폴더 안의 test_*.py 포함 (CI와 같음)
 
 # 정답 라벨 평가셋(eval/dataset.jsonl, 21통)으로 분석 정확도 측정
 python -m eval.run_eval                  # 규칙 엔진

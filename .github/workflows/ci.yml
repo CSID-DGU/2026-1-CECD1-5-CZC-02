@@ -42,7 +42,8 @@ jobs:
           cache: pip
           cache-dependency-path: ai-module/requirements-test.txt
       - run: pip install -r requirements-test.txt
-      - run: python -m pytest tests -q
+      # tests/ + 담당 폴더(app/<도메인>/, ml/<과제>/) 안의 test_*.py까지 (D-021)
+      - run: python -m pytest tests app ml -q
 
   backend:
     name: 백엔드 단위 테스트

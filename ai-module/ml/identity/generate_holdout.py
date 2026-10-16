@@ -124,8 +124,8 @@ def identity_values(persons):
 
 
 def validate_holdout(dataset, baseline_persons):
-    person_validator = Draft202012Validator(json.loads((CONTRACTS_DIR / "person.schema.json").read_text()))
-    mention_validator = Draft202012Validator(json.loads((CONTRACTS_DIR / "identity_resolution.schema.json").read_text())["properties"]["mention"])
+    person_validator = Draft202012Validator(json.loads((CONTRACTS_DIR / "person.schema.json").read_text(encoding="utf-8")))
+    mention_validator = Draft202012Validator(json.loads((CONTRACTS_DIR / "identity_resolution.schema.json").read_text(encoding="utf-8"))["properties"]["mention"])
     persons, newcomers, queries = dataset["persons"], dataset["newcomers"], dataset["queries"]
     if (len(persons), len(newcomers), len(queries)) != (120, 20, 300):
         raise ValueError("검증 데이터 개수가 올바르지 않습니다")
@@ -202,15 +202,15 @@ def write_holdout(dataset, baseline_path, output_dir):
     baseline_path, output_dir = Path(baseline_path), Path(output_dir)
     if output_dir.resolve() == baseline_path.parent.resolve():
         raise ValueError("기존 데이터 폴더에 덮어쓸 수 없습니다")
-    baseline = json.loads(baseline_path.read_text())
+    baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
     validate_holdout(dataset, baseline)
     # 최초 생성만 허용한다. 검증 자료를 실수로 재생성하지 않도록 기존 폴더는 거절한다.
     output_dir.mkdir(parents=True, exist_ok=False)
     for filename, key in (("persons.json", "persons"), ("newcomers.json", "newcomers"), ("queries.json", "queries")):
-        (output_dir / filename).write_text(json.dumps(dataset[key], ensure_ascii=False, indent=2) + "\n")
+        (output_dir / filename).write_text(json.dumps(dataset[key], ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     manifest = dict(dataset["manifest"], baselinePersonSha256=hashlib.sha256(baseline_path.read_bytes()).hexdigest())
     manifest["fileSha256"] = {name: hashlib.sha256((output_dir / name).read_bytes()).hexdigest() for name in ("persons.json", "newcomers.json", "queries.json")}
-    (output_dir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    (output_dir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
 
 
 def main():

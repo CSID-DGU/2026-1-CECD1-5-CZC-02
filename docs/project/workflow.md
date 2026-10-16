@@ -80,7 +80,7 @@ PR 전에 로컬에서 먼저 돌려 보면 빨간불을 줄일 수 있다.
 ```bash
 # AI 모듈 (데이터 형식 검사 포함, 네트워크·유료 API 호출 없음)
 cd ai-module
-python -m pytest tests
+python -m pytest tests app ml   # CI와 같음. 담당 폴더(app/identity/ 등) 안의 test_*.py도 포함
 
 # 데이터 형식만
 python -m pytest tests/test_contracts.py

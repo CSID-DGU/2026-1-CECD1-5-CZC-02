@@ -31,7 +31,7 @@ def make_roster(baseline, size):
                        "emails": [f"synthetic-load-{index}@load.example"], "phones": [f"000-9999-{index:05}"],
                        "companyHistory": [{"company": f"가상부하이전회사_{index % 10:03}", "until": None}],
                        "isSynthetic": True})
-    validator = Draft202012Validator(json.loads((CONTRACTS_DIR / "person.schema.json").read_text()))
+    validator = Draft202012Validator(json.loads((CONTRACTS_DIR / "person.schema.json").read_text(encoding="utf-8")))
     for person in people:
         validator.validate(person)
     return people
@@ -110,13 +110,13 @@ def main():
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parent / "results/candidate_benchmark.json")
     args = parser.parse_args()
-    people = json.loads((args.data_dir / "persons.json").read_text())
-    queries = select_queries(json.loads((args.data_dir / "pairs_train.json").read_text()))
+    people = json.loads((args.data_dir / "persons.json").read_text(encoding="utf-8"))
+    queries = select_queries(json.loads((args.data_dir / "pairs_train.json").read_text(encoding="utf-8")))
     report = benchmark(people, queries, sizes=args.sizes, repeats=args.repeats)
     report["inputSha256"] = {name: hashlib.sha256((args.data_dir / name).read_bytes()).hexdigest()
                              for name in ("persons.json", "pairs_train.json")}
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(f"저장: {args.output}")
 
 
