@@ -21,8 +21,8 @@
 
 | 담당 | 추가로 읽을 것 | 관련 결정 |
 | --- | --- | --- |
-| **A** | `contracts/person.schema.json`, `identity_resolution.schema.json`, `contracts/examples/` · [`glossary.md`](glossary.md) · 화면 ⑤, ③의 참석자 후보 영역 · `ai-module/README.md`의 임베딩·개체명 설정 | D-002, D-008 |
-| **B** | `contracts/meeting_note.schema.json` · `ai-module/eval/minutes/README.md` (회의록 정답 규칙) · 화면 ②, ③ 틀 · `ai-module/eval/MODELS.md` (모델 비교) | D-009, D-015, D-017, D-018 |
+| **A** | `contracts/person.schema.json`, `identity_resolution.schema.json`, `contracts/examples/` · [`glossary.md`](glossary.md) · 화면 ⑤, ③의 참석자 후보 영역 · `ai-module/README.md`의 임베딩·개체명 설정 · `ai-module/ml/identity/HANDOFF.md` | D-002, D-008, D-022 |
+| **B** | `contracts/meeting_note.schema.json` · `ai-module/eval/minutes/README.md` (회의록 정답 규칙) · 화면 ②, ③ 틀 · `ai-module/eval/MODELS.md` (모델 비교) | D-009, D-015, D-017, D-018, D-019, D-020, D-022 |
 | **C** | [`task-types.md`](task-types.md) (11부류) · `contracts/task.schema.json`, `meeting_note.schema.json` · `ai-module/eval/minutes/README.md`의 `commitments`·`nextContact` 규칙 · 화면 ④, ③의 할 일 영역 | D-002, D-007, D-018 |
 | **D** | `contracts/revision.schema.json` · `docs/db-design.md`의 `analysis_revisions` · `docs/domain-enums.md` · `backend/README.md` · 화면 ①, ⑥ | D-002, D-007, D-016 |
 | **총괄** | [`mailplug.md`](mailplug.md) · `ai-module/eval/MODELS.md` · `.github/workflows/ci.yml` | D-010 ~ D-014 |

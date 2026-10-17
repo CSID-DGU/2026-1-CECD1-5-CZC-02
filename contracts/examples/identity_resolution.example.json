@@ -13,7 +13,7 @@
     "decision": "CONFIRMED",
     "personId": "p_001",
     "candidates": [
-      { "personId": "p_001", "score": 0.99, "reasons": ["이메일 일치"] }
+      { "personId": "p_001", "score": null, "reasons": ["이메일 일치"] }
     ],
     "decidedBy": "RULE",
     "modelVersion": "rule-baseline-0.1"
@@ -32,8 +32,8 @@
     "decision": "CANDIDATES",
     "personId": null,
     "candidates": [
-      { "personId": "p_001", "score": 0.62, "reasons": ["성·직함 일치", "최근 미팅 상대"] },
-      { "personId": "p_002", "score": 0.21, "reasons": ["성 일치", "직함 다름"] }
+      { "personId": "p_001", "score": null, "reasons": ["성·직함 일치", "최근 미팅 상대"] },
+      { "personId": "p_002", "score": null, "reasons": ["성 일치", "직함 다름"] }
     ],
     "decidedBy": "RULE",
     "modelVersion": "rule-baseline-0.1"
