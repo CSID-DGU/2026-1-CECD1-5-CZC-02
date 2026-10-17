@@ -1,0 +1,4 @@
+# 데이터·검증 자료는 줄바꿈을 LF로 고정한다. holdout manifest의 SHA-256이 파일 바이트로 계산되므로
+# Windows(core.autocrlf=true)에서 CRLF로 바뀌면 해시 검사가 실패한다.
+*.json text eol=lf
+*.md text eol=lf

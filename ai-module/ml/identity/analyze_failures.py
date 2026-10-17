@@ -77,7 +77,7 @@ def analyze(prepared, threshold, *, sample_limit=5):
 
 def run(data_dir, threshold):
     paths = {name: data_dir / name for name in ("persons.json", "split.json", "pairs_train.json", "pairs_eval.json")}
-    loaded = {name: json.loads(path.read_text()) for name, path in paths.items()}
+    loaded = {name: json.loads(path.read_text(encoding="utf-8")) for name, path in paths.items()}
     dataset = {"persons": loaded["persons.json"], "split": loaded["split.json"],
                "trainPairs": loaded["pairs_train.json"], "evalPairs": loaded["pairs_eval.json"]}
     validate_dataset(dataset)
@@ -99,7 +99,7 @@ def main():
     args = parser.parse_args()
     report = run(args.data_dir, args.threshold)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps({key: value["fuzzyRules"]["counts"] for key, value in report["splits"].items()}, indent=2))
 
 

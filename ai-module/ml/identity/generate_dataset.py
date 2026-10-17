@@ -200,7 +200,7 @@ def write_dataset(dataset, output_dir):
     output_dir.mkdir(parents=True, exist_ok=True)
     for filename, key in (("persons.json", "persons"), ("pairs_train.json", "trainPairs"),
                           ("pairs_eval.json", "evalPairs"), ("split.json", "split")):
-        (output_dir / filename).write_text(json.dumps(dataset[key], ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (output_dir / filename).write_text(json.dumps(dataset[key], ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
 
 
 def main():

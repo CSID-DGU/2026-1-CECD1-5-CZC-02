@@ -87,7 +87,7 @@ def select_threshold(train_prepared):
 
 def evaluate(data_dir):
     paths = [data_dir / filename for filename in ("persons.json", "split.json", "pairs_train.json", "pairs_eval.json")]
-    persons, split, train, evaluation = [json.loads(path.read_text()) for path in paths]
+    persons, split, train, evaluation = [json.loads(path.read_text(encoding="utf-8")) for path in paths]
     train_ids, eval_ids = set(split["trainPersonIds"]), set(split["evalPersonIds"])
     ids = [p["personId"] for p in persons]
     if train_ids & eval_ids or train_ids | eval_ids != set(ids) or len(ids) != len(set(ids)):
@@ -120,7 +120,7 @@ def main():
     args = parser.parse_args()
     report = evaluate(args.data_dir)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps({"report": str(args.output), "threshold": report["selectedThreshold"],
                       "evalExact": report["eval"]["exactBaseline"]["retrieval"],
                       "evalFuzzy": report["eval"]["fuzzyRanking"]["retrieval"]}, ensure_ascii=False, indent=2))

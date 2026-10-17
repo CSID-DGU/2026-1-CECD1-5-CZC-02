@@ -72,11 +72,11 @@ def test_high_similarity_does_not_change_exact_match_or_candidates():
 
 def test_all_generated_typo_cases_have_distance_evidence_without_exact_match():
     root = Path(__file__).resolve().parents[2]
-    persons = {p["personId"]: p for p in json.loads((root / "ml/identity/data/persons.json").read_text())}
+    persons = {p["personId"]: p for p in json.loads((root / "ml/identity/data/persons.json").read_text(encoding="utf-8"))}
     counts = []
     for filename in ("pairs_train.json", "pairs_eval.json"):
         count = 0
-        for pair in json.loads((root / "ml/identity/data" / filename).read_text()):
+        for pair in json.loads((root / "ml/identity/data" / filename).read_text(encoding="utf-8")):
             if pair["caseType"] != "typo":
                 continue
             result = compare_person(pair["mentionB"], persons[pair["personIdA"]])

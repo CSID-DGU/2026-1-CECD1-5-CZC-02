@@ -67,7 +67,7 @@ def test_mention_keeps_original_and_contract():
     assert normalized["sourceRef"] == original["sourceRef"]
     assert normalized["channel"] == original["channel"]
     schema_path = Path(__file__).resolve().parents[3] / "contracts/identity_resolution.schema.json"
-    mention_schema = json.loads(schema_path.read_text())["properties"]["mention"]
+    mention_schema = json.loads(schema_path.read_text(encoding="utf-8"))["properties"]["mention"]
     Draft202012Validator(mention_schema).validate(normalized)
     assert set(normalized) == set(original)
 
@@ -84,10 +84,10 @@ def test_rejects_non_text_instead_of_guessing(normalizer):
 
 def test_generated_mentions_remain_valid_and_idempotent():
     root = Path(__file__).resolve().parents[2]
-    schema = json.loads((root.parent / "contracts/identity_resolution.schema.json").read_text())
+    schema = json.loads((root.parent / "contracts/identity_resolution.schema.json").read_text(encoding="utf-8"))
     validator = Draft202012Validator(schema["properties"]["mention"])
     for filename in ("pairs_train.json", "pairs_eval.json"):
-        pairs = json.loads((root / "ml/identity/data" / filename).read_text())
+        pairs = json.loads((root / "ml/identity/data" / filename).read_text(encoding="utf-8"))
         for pair in pairs:
             for key in ("mentionA", "mentionB"):
                 mention = pair[key]

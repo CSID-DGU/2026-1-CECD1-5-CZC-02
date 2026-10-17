@@ -57,13 +57,14 @@ Salesmap 영업 활동 자동화 에이전트 — 2026 종합설계2 팀 컴쫀�
 ## 코드 스타일
 
 - 주변 코드의 이름·주석 밀도·구조를 따른다. 백엔드 JSON은 camelCase, 파이썬 내부는 snake_case.
+- 파이썬에서 파일을 읽고 쓸 때는 `encoding="utf-8"`을 붙인다 (팀원 대부분이 한국어 Windows라 기본 인코딩이 cp949). 해시를 비교하는 데이터 파일은 `.gitattributes`로 줄바꿈을 LF로 고정한다.
 - 커밋 메시지: `feat(ai): …`, `fix(backend): …`, `docs: …` (한국어 설명 가능)
 - 브랜치: **`s2/<담당>-<주제>`** (2학기 작업 표시). 담당은 `a`·`b`·`c`·`d`·`common`, 주제는 영어 소문자 kebab-case. 예) `s2/a-identity-baseline`, `s2/common-ci-setup`. 규칙에 안 맞으면 PR 검사가 실패한다. `feature/…` 등 1학기 브랜치에서 새 작업을 시작하지 않는다.
 
 ## 테스트
 
 ```bash
-cd ai-module && python -m pytest tests          # AI 모듈 + 데이터 형식 검사
+cd ai-module && python -m pytest tests app ml   # AI 모듈 + 데이터 형식 검사 (담당 폴더 안 test_*.py 포함)
 cd backend && ./gradlew test --tests "*Test"                 # 단위 테스트 전부 (MySQL 불필요)
 ```
 

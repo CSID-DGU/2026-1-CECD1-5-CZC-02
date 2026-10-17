@@ -69,7 +69,7 @@ def model_metadata(model_path):
 def compare(data_dir, model_path, encoder_factory=LocalEncoder):
     start = time.perf_counter()
     paths = {name: data_dir / name for name in ("persons.json", "split.json", "pairs_train.json", "pairs_eval.json")}
-    data = {name: json.loads(path.read_text()) for name, path in paths.items()}
+    data = {name: json.loads(path.read_text(encoding="utf-8")) for name, path in paths.items()}
     dataset = {"persons": data["persons.json"], "split": data["split.json"],
                "trainPairs": data["pairs_train.json"], "evalPairs": data["pairs_eval.json"]}
     validate_dataset(dataset)
@@ -126,7 +126,7 @@ def main():
     args = parser.parse_args()
     report = compare(args.data_dir, args.model)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps({key: report.get(key) for key in ("status", "fallbackReason", "selectedConfig", "bestEmbeddingConfig", "recommendation", "elapsedSeconds")}, ensure_ascii=False, indent=2))
 
 
