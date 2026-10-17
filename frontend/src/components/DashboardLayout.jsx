@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Settings, Search, LayoutDashboard, ClipboardList, UsersRound, ChevronDown, ChevronRight, Wind, KanbanSquare, FlaskConical } from 'lucide-react';
+import { Settings, Search, LayoutDashboard, ClipboardList, UsersRound, ChevronDown, ChevronRight, Wind, KanbanSquare, FlaskConical, NotebookPen, ClipboardCheck } from 'lucide-react';
 import jandiLogo from '../assets/잔디 로고 이미지 .jpg';
 import gmailLogo from '../assets/gmail로고 이미지 spaced.png';
 import { getMe } from '../api/auth';
 import { getIntegrations } from '../api/integrations';
 import { getDemoStatus } from '../api/demo';
 import { getSchedules } from '../api/schedules';
+import { getMeetingNotes } from '../api/meetingNotes';
 import { ReminderModal } from './ReminderModal';
 import { ActivityProvider, ActivityToasts, AnalysisProgressChip } from './ActivityFeed';
 import { useActivityFeed } from './useActivityFeed';
@@ -74,6 +75,7 @@ export function DashboardLayout({ children }) {
   const [gmailCalendarConnected, setGmailCalendarConnected] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [demoEnabled, setDemoEnabled] = useState(false);
+  const [draftNoteCount, setDraftNoteCount] = useState(0);
   const [showReminder, setShowReminder] = useState(false);
   const [currentReminder, setCurrentReminder] = useState(null);
   const [reminderQueue, setReminderQueue] = useState([]);
@@ -164,6 +166,28 @@ export function DashboardLayout({ children }) {
       ignore = true;
     };
   }, []);
+
+  // 확인 대기함 배지: 아직 확정하지 않은 회의록 수 (화면을 옮기거나 회의록을 확정할 때 갱신)
+  useEffect(() => {
+    let ignore = false;
+    const refreshDraftNoteCount = () => {
+      getMeetingNotes('DRAFT')
+        .then((notes) => {
+          if (!ignore) {
+            setDraftNoteCount(notes.length);
+          }
+        })
+        .catch(() => {});
+    };
+
+    refreshDraftNoteCount();
+    window.addEventListener('meeting-notes:changed', refreshDraftNoteCount);
+
+    return () => {
+      ignore = true;
+      window.removeEventListener('meeting-notes:changed', refreshDraftNoteCount);
+    };
+  }, [location]);
 
   const fetchSchedulesForReminder = useCallback(async () => {
     try {
@@ -275,6 +299,8 @@ export function DashboardLayout({ children }) {
   };
 
   const menuItems = [
+    { path: '/meeting-notes', icon: NotebookPen, label: '미팅 기록' },
+    { path: '/meeting-notes/inbox', icon: ClipboardCheck, label: '확인 대기함', badge: draftNoteCount },
     { path: '/pipeline', icon: KanbanSquare, label: '딜 파이프라인' },
     { path: '/customers', icon: UsersRound, label: '고객 타임라인' },
     { path: '/dashboard', icon: LayoutDashboard, label: '대시보드' },
@@ -288,6 +314,9 @@ export function DashboardLayout({ children }) {
     }
     if (location.pathname.startsWith('/settings/gmail/callback')) {
       return 'Gmail 연동';
+    }
+    if (/^\/meeting-notes\/mn_/.test(location.pathname)) {
+      return '회의록 확인';
     }
     return menuItems.find(item => item.path === location.pathname)?.label || '대시보드';
   })();
@@ -358,6 +387,11 @@ export function DashboardLayout({ children }) {
                   >
                     <Icon className="w-4 h-4" />
                     <span>{item.label}</span>
+                    {item.badge > 0 && (
+                      <span className="ml-auto rounded-full bg-red-50 px-1.5 text-[11px] font-semibold text-red-600">
+                        {item.badge}
+                      </span>
+                    )}
                   </button>
                 );
               })}
