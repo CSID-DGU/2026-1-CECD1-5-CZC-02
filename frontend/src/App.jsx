@@ -9,6 +9,9 @@ import { GmailOAuthCallbackPage } from './components/GmailOAuthCallbackPage';
 import { ProcessingHistoryPage } from './components/ProcessingHistoryPage';
 import { CustomerTimelinePage } from './components/CustomerTimelinePage';
 import { PipelinePage } from './components/PipelinePage';
+import { MeetingNotePage } from './components/minutes/MeetingNotePage';
+import { MeetingNoteInboxPage } from './components/minutes/MeetingNoteInboxPage';
+import { MeetingNoteReviewPage } from './components/minutes/MeetingNoteReviewPage';
 
 function ProtectedRoute({ children }) {
   const accessToken = localStorage.getItem('accessToken');
@@ -73,6 +76,27 @@ export default function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <PipelinePage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/meeting-notes" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <MeetingNotePage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/meeting-notes/inbox" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <MeetingNoteInboxPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/meeting-notes/:noteId" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <MeetingNoteReviewPage />
               </DashboardLayout>
             </ProtectedRoute>
           } />

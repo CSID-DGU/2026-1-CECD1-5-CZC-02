@@ -1,0 +1,58 @@
+[
+  {
+    "resolutionId": "ir_001",
+    "mention": {
+      "name": "홍길동",
+      "company": "가상전자",
+      "title": "부장",
+      "email": "gildong.hong@gasang-elec.example",
+      "phone": null,
+      "channel": "EMAIL",
+      "sourceRef": "src_100"
+    },
+    "decision": "CONFIRMED",
+    "personId": "p_001",
+    "candidates": [
+      { "personId": "p_001", "score": null, "reasons": ["이메일 일치"] }
+    ],
+    "decidedBy": "RULE",
+    "modelVersion": "rule-baseline-0.1"
+  },
+  {
+    "resolutionId": "ir_002",
+    "mention": {
+      "name": "홍 부장",
+      "company": null,
+      "title": "부장",
+      "email": null,
+      "phone": null,
+      "channel": "MEETING",
+      "sourceRef": "src_101"
+    },
+    "decision": "CANDIDATES",
+    "personId": null,
+    "candidates": [
+      { "personId": "p_001", "score": null, "reasons": ["성·직함 일치", "최근 미팅 상대"] },
+      { "personId": "p_002", "score": null, "reasons": ["성 일치", "직함 다름"] }
+    ],
+    "decidedBy": "RULE",
+    "modelVersion": "rule-baseline-0.1"
+  },
+  {
+    "resolutionId": "ir_003",
+    "mention": {
+      "name": "박가상",
+      "company": "가상전자",
+      "title": "대리",
+      "email": null,
+      "phone": null,
+      "channel": "MEETING",
+      "sourceRef": "src_101"
+    },
+    "decision": "NEW",
+    "personId": null,
+    "candidates": [],
+    "decidedBy": "RULE",
+    "modelVersion": "rule-baseline-0.1"
+  }
+]
