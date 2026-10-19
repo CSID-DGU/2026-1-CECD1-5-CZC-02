@@ -1,4 +1,4 @@
-# C 할 일 추출기 1차
+# C 할 일 추출기·API
 
 `extract_tasks(note, assignee=None)`는 `meeting_note` 딕셔너리를 받아
 `task.schema.json`을 따르는 딕셔너리 목록을 반환한다. 입력·출력을 스키마로
@@ -22,7 +22,7 @@ print(json.dumps(tasks, ensure_ascii=False, indent=2))
   확인 날짜의 기본값은 합의되지 않아 null이다. 종류도 NONE으로 둔다.
 - 다른 항목은 EXPLICIT 초안이다. B가 후속 계획으로 정리한 항목을 입력으로 가정한다.
 - 담당자는 호출자가 명시한 값만 사용한다. FULL에서 참석자가 둘 이상이면 상대 ID는 null이다.
-- 근거는 입력 항목의 `evidence`를 그대로 보존한다. 같은 내용·근거·상대의 중복만 제거한다.
+- 근거는 입력 항목의 `evidence`를 그대로 보존한다. FULL에서 같은 내용·근거·상대의 중복만 제거한다. LIGHT는 사람이 달라도 ID가 null일 수 있어 사람별 항목을 각각 보존한다.
 - ID는 회의록 ID + 목록 번호다. DB 저장 시 D-008에 따라 DB PK 기반 ID로 치환해야 한다.
   초안 재생성 ID는 영구 ID가 아니므로 수정 기록이 생긴 저장본을 덮어쓰면 안 된다.
 - 모든 결과는 DRAFT다. 확정·저장·수정 기록·캘린더 등록은 수행하지 않는다.
@@ -39,7 +39,11 @@ print(json.dumps(tasks, ensure_ascii=False, indent=2))
 `taskTypeConfidence`는 일치 규칙이 하나면 1.0, NONE이면 0.0인 **규칙 신뢰도**이며
 통계적으로 보정된 확률이나 실측 정확도가 아니다. ML-2 성능 지표는 아직 측정하지 않았다.
 
-API 등록·백엔드·화면·학습 모델은 후속 작업이다. 공용 파일이나 계약은 변경하지 않았다.
+독립 API는 `python -m uvicorn app.tasks.api:app --port 8001`로 실행한다.
+POST `/tasks/extract?assignee=user_demo`의 본문은 meeting_note 계약이고 응답은 task 배열이다.
+입력 계약 오류나 잘못된 접촉 날짜는 422로 반환한다. 공용 main.py 라우트 등록은 아직 하지 않았다.
+백엔드 task·프론트 tasks·ML-2 실험도 추가했으며 자세한 역할별 연결은 HANDOFF.md를 참고한다.
+공용 파일이나 계약은 변경하지 않았다.
 
 ## 검증
 

@@ -18,7 +18,10 @@ def resolve_due_date(text: str, occurred_at: str | None) -> str | None:
         return values.pop() if len(values) == 1 else None
     if not occurred_at:
         return None
-    base = datetime.fromisoformat(occurred_at).date()
+    base_time = datetime.fromisoformat(occurred_at)
+    if base_time.tzinfo is not None:
+        raise ValueError("occurredAt은 시간대 표기 없는 KST여야 합니다.")
+    base = base_time.date()
     candidates = set()
     for token, offset in (("오늘", 0), ("내일", 1), ("모레", 2)):
         if token in text:
@@ -33,6 +36,7 @@ def resolve_due_date(text: str, occurred_at: str | None) -> str | None:
             delta = (target - base.weekday()) % 7
         candidates.add(base + timedelta(days=delta))
     if "월말" in text:
+        # '11월 말'을 이번 달 말로 오해하지 않는다.
         candidates.add(base.replace(day=calendar.monthrange(base.year, base.month)[1]))
     for month, day in re.findall(r"(?<!\d)(\d{1,2})월\s*(\d{1,2})일", text):
         try:

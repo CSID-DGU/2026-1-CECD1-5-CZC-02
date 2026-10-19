@@ -1,0 +1,442 @@
+[
+  {
+    "id": "eval_meeting_prep_0",
+    "text": "다음번 고객과의 미팅에서 논의할 안건을 준비한다",
+    "label": "MEETING_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_MEETING_PREP_0",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_meeting_prep_1",
+    "text": "목요일 고객사에 재방문해서 협의한다",
+    "label": "MEETING_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_MEETING_PREP_1",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_meeting_prep_2",
+    "text": "이번에는 고객을 뵙고 요구사항을 듣는다",
+    "label": "MEETING_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_MEETING_PREP_2",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_meeting_prep_3",
+    "text": "고객 면담 때 사용할 지난 기록을 확인한다",
+    "label": "MEETING_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_MEETING_PREP_3",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_meeting_prep_4",
+    "text": "고객과 만나 제품 도입을 논의하기로 했다",
+    "label": "MEETING_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_MEETING_PREP_4",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_visit_prep_0",
+    "text": "멀리 있는 현장 점검을 위해 이동 동선을 확인한다",
+    "label": "VISIT_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_VISIT_PREP_0",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_visit_prep_1",
+    "text": "고객사 출장에 필요한 교통편을 준비한다",
+    "label": "VISIT_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_VISIT_PREP_1",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_visit_prep_2",
+    "text": "다음 주 현장 방문을 앞두고 출입 절차를 확인한다",
+    "label": "VISIT_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_VISIT_PREP_2",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_visit_prep_3",
+    "text": "장거리 출장을 가기 전에 숙소를 알아본다",
+    "label": "VISIT_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_VISIT_PREP_3",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_visit_prep_4",
+    "text": "지역 이동이 필요한 방문 준비를 한다",
+    "label": "VISIT_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_VISIT_PREP_4",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_contract_prep_0",
+    "text": "합의된 조건을 반영하여 계약서 초안을 보낸다",
+    "label": "CONTRACT_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_CONTRACT_PREP_0",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_contract_prep_1",
+    "text": "서명 전에 계약서의 조항을 대조한다",
+    "label": "CONTRACT_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_CONTRACT_PREP_1",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_contract_prep_2",
+    "text": "새 계약 체결에 필요한 초안을 작성한다",
+    "label": "CONTRACT_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_CONTRACT_PREP_2",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_contract_prep_3",
+    "text": "변경된 투입일을 반영한 계약서를 송부한다",
+    "label": "CONTRACT_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_CONTRACT_PREP_3",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_contract_prep_4",
+    "text": "이번 주 계약서 작성 작업을 마친다",
+    "label": "CONTRACT_PREP",
+    "source": "separately_authored_evaluation",
+    "group": "eval_CONTRACT_PREP_4",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_renewal_interview_0",
+    "text": "계약 만료를 앞둔 인력과 면담 일정을 정한다",
+    "label": "RENEWAL_INTERVIEW",
+    "source": "separately_authored_evaluation",
+    "group": "eval_RENEWAL_INTERVIEW_0",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_renewal_interview_1",
+    "text": "계약 종료 전에 연장 의사를 확인하는 면담을 한다",
+    "label": "RENEWAL_INTERVIEW",
+    "source": "separately_authored_evaluation",
+    "group": "eval_RENEWAL_INTERVIEW_1",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_renewal_interview_2",
+    "text": "만료 대응 면담에서 확인할 질문을 정리한다",
+    "label": "RENEWAL_INTERVIEW",
+    "source": "separately_authored_evaluation",
+    "group": "eval_RENEWAL_INTERVIEW_2",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_renewal_interview_3",
+    "text": "계약 만료 예정자의 면담을 준비한다",
+    "label": "RENEWAL_INTERVIEW",
+    "source": "separately_authored_evaluation",
+    "group": "eval_RENEWAL_INTERVIEW_3",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_renewal_interview_4",
+    "text": "계약 종료 대응을 위한 면담을 진행한다",
+    "label": "RENEWAL_INTERVIEW",
+    "source": "separately_authored_evaluation",
+    "group": "eval_RENEWAL_INTERVIEW_4",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_proposal_submission_0",
+    "text": "요청한 후보들의 프로필을 정리해서 전달한다",
+    "label": "PROPOSAL_SUBMISSION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_PROPOSAL_SUBMISSION_0",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_proposal_submission_1",
+    "text": "공고 마감 전에 제안서를 제출한다",
+    "label": "PROPOSAL_SUBMISSION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_PROPOSAL_SUBMISSION_1",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_proposal_submission_2",
+    "text": "검토 대상 인력 리스트를 제출한다",
+    "label": "PROPOSAL_SUBMISSION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_PROPOSAL_SUBMISSION_2",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_proposal_submission_3",
+    "text": "선정 평가를 받을 제안서를 송부한다",
+    "label": "PROPOSAL_SUBMISSION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_PROPOSAL_SUBMISSION_3",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_proposal_submission_4",
+    "text": "인력 요청에 맞는 후보 리스트를 전달한다",
+    "label": "PROPOSAL_SUBMISSION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_PROPOSAL_SUBMISSION_4",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_rejection_notice_0",
+    "text": "선정되지 않은 후보에게 미채택 결과를 통보한다",
+    "label": "REJECTION_NOTICE",
+    "source": "separately_authored_evaluation",
+    "group": "eval_REJECTION_NOTICE_0",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_rejection_notice_1",
+    "text": "탈락한 후보에게 결과를 안내한다",
+    "label": "REJECTION_NOTICE",
+    "source": "separately_authored_evaluation",
+    "group": "eval_REJECTION_NOTICE_1",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_rejection_notice_2",
+    "text": "불합격 결과를 당사자에게 알림으로 전달한다",
+    "label": "REJECTION_NOTICE",
+    "source": "separately_authored_evaluation",
+    "group": "eval_REJECTION_NOTICE_2",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_rejection_notice_3",
+    "text": "이번 선정의 미채택 사유를 안내한다",
+    "label": "REJECTION_NOTICE",
+    "source": "separately_authored_evaluation",
+    "group": "eval_REJECTION_NOTICE_3",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_rejection_notice_4",
+    "text": "탈락 결과 통보 문안을 작성한다",
+    "label": "REJECTION_NOTICE",
+    "source": "separately_authored_evaluation",
+    "group": "eval_REJECTION_NOTICE_4",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_doc_collection_0",
+    "text": "이미 발송한 계약서의 서명본 회수를 독촉한다",
+    "label": "DOC_COLLECTION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_DOC_COLLECTION_0",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_doc_collection_1",
+    "text": "회신이 없는 서류를 다시 요청하여 회수한다",
+    "label": "DOC_COLLECTION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_DOC_COLLECTION_1",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_doc_collection_2",
+    "text": "미회수 계약서의 반환 여부를 확인한다",
+    "label": "DOC_COLLECTION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_DOC_COLLECTION_2",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_doc_collection_3",
+    "text": "필요한 서류를 담당자별로 취합한다",
+    "label": "DOC_COLLECTION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_DOC_COLLECTION_3",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_doc_collection_4",
+    "text": "지난번 보낸 계약서 회신 없음 건을 확인한다",
+    "label": "DOC_COLLECTION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_DOC_COLLECTION_4",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_end_evaluation_0",
+    "text": "투입 종료에 맞춰 담당 인력의 평가를 작성한다",
+    "label": "END_EVALUATION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_END_EVALUATION_0",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_end_evaluation_1",
+    "text": "프로젝트 종료 후 평가 결과를 기록한다",
+    "label": "END_EVALUATION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_END_EVALUATION_1",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_end_evaluation_2",
+    "text": "종료 평가 양식의 항목을 채운다",
+    "label": "END_EVALUATION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_END_EVALUATION_2",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_end_evaluation_3",
+    "text": "계약 종료 인력의 평가를 정리한다",
+    "label": "END_EVALUATION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_END_EVALUATION_3",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_end_evaluation_4",
+    "text": "투입 종료 시점의 평가를 남긴다",
+    "label": "END_EVALUATION",
+    "source": "separately_authored_evaluation",
+    "group": "eval_END_EVALUATION_4",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_profitability_review_0",
+    "text": "조건을 협의하기 전에 예상 마진을 계산한다",
+    "label": "PROFITABILITY_REVIEW",
+    "source": "separately_authored_evaluation",
+    "group": "eval_PROFITABILITY_REVIEW_0",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_profitability_review_1",
+    "text": "변경 단가를 기준으로 수익성을 검토한다",
+    "label": "PROFITABILITY_REVIEW",
+    "source": "separately_authored_evaluation",
+    "group": "eval_PROFITABILITY_REVIEW_1",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_profitability_review_2",
+    "text": "새 투입 조건의 마진을 확인한다",
+    "label": "PROFITABILITY_REVIEW",
+    "source": "separately_authored_evaluation",
+    "group": "eval_PROFITABILITY_REVIEW_2",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_profitability_review_3",
+    "text": "계약 조건별 수익성 분석을 수행한다",
+    "label": "PROFITABILITY_REVIEW",
+    "source": "separately_authored_evaluation",
+    "group": "eval_PROFITABILITY_REVIEW_3",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_profitability_review_4",
+    "text": "비용 상승을 반영해 마진 검토를 한다",
+    "label": "PROFITABILITY_REVIEW",
+    "source": "separately_authored_evaluation",
+    "group": "eval_PROFITABILITY_REVIEW_4",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_sourcing_start_0",
+    "text": "요청 직무에 맞는 신규 인력 탐색을 시작한다",
+    "label": "SOURCING_START",
+    "source": "separately_authored_evaluation",
+    "group": "eval_SOURCING_START_0",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_sourcing_start_1",
+    "text": "새 포지션의 후보를 물색한다",
+    "label": "SOURCING_START",
+    "source": "separately_authored_evaluation",
+    "group": "eval_SOURCING_START_1",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_sourcing_start_2",
+    "text": "채용 요청에 따라 소싱을 착수한다",
+    "label": "SOURCING_START",
+    "source": "separately_authored_evaluation",
+    "group": "eval_SOURCING_START_2",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_sourcing_start_3",
+    "text": "필요 기술을 갖춘 인력 모집을 시작한다",
+    "label": "SOURCING_START",
+    "source": "separately_authored_evaluation",
+    "group": "eval_SOURCING_START_3",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_sourcing_start_4",
+    "text": "새 요청에 대응할 후보 탐색을 진행한다",
+    "label": "SOURCING_START",
+    "source": "separately_authored_evaluation",
+    "group": "eval_SOURCING_START_4",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_none_0",
+    "text": "백업 설정 변경 방법을 메일로 안내한다",
+    "label": "NONE",
+    "source": "separately_authored_evaluation",
+    "group": "eval_NONE_0",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_none_1",
+    "text": "테스트용 계정 두 개를 발급한다",
+    "label": "NONE",
+    "source": "separately_authored_evaluation",
+    "group": "eval_NONE_1",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_none_2",
+    "text": "고객의 내부 검토 결과가 왔는지 확인한다",
+    "label": "NONE",
+    "source": "separately_authored_evaluation",
+    "group": "eval_NONE_2",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_none_3",
+    "text": "오늘 설명한 화면 자료를 다시 보낸다",
+    "label": "NONE",
+    "source": "separately_authored_evaluation",
+    "group": "eval_NONE_3",
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "eval_none_4",
+    "text": "보안 체크리스트 답변을 작성해서 전달한다",
+    "label": "NONE",
+    "source": "separately_authored_evaluation",
+    "group": "eval_NONE_4",
+    "reviewStatus": "PENDING"
+  }
+]

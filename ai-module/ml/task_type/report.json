@@ -1,0 +1,344 @@
+{
+  "data": {
+    "train": 660,
+    "trainFile": "train.json",
+    "trainSources": [
+      "local_ollama_training"
+    ],
+    "evaluation": 55,
+    "reviewStatus": "PENDING",
+    "independentReviewCompleted": false
+  },
+  "extraction": {
+    "cases": 31,
+    "truePositives": 33,
+    "falsePositives": 0,
+    "falseNegatives": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "dateAccuracyOnMatched": 1.0,
+    "typeAccuracyOnMatched": 1.0,
+    "kindAccuracyOnMatched": 1.0,
+    "counterpartAccuracyOnMatched": 1.0,
+    "schemaValidCount": 33,
+    "explicitRecall": 1.0
+  },
+  "rule": {
+    "macroF1": 0.9621212121212122,
+    "noneRecall": 1.0,
+    "perClass": {
+      "MEETING_PREP": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "VISIT_PREP": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "CONTRACT_PREP": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "RENEWAL_INTERVIEW": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "PROPOSAL_SUBMISSION": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "REJECTION_NOTICE": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "DOC_COLLECTION": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "END_EVALUATION": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "PROFITABILITY_REVIEW": {
+        "precision": 1.0,
+        "recall": 0.6,
+        "f1": 0.75,
+        "support": 5
+      },
+      "SOURCING_START": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "NONE": {
+        "precision": 0.7142857142857143,
+        "recall": 1.0,
+        "f1": 0.8333333333333334,
+        "support": 5
+      }
+    },
+    "errors": [
+      {
+        "gold": "PROFITABILITY_REVIEW",
+        "predicted": "NONE",
+        "index": 40
+      },
+      {
+        "gold": "PROFITABILITY_REVIEW",
+        "predicted": "NONE",
+        "index": 42
+      }
+    ]
+  },
+  "productionClassifier": "RULE",
+  "promotionAllowed": false,
+  "limitations": [
+    "합성 데이터, 별도 작성 평가 문장도 동일 작성자이며 교차 검수 전",
+    "이 결과만으로 실제 발화 성능 또는 90% 재현율 달성을 주장하지 않음",
+    "학습 모델은 운영에 자동 적용하지 않음",
+    "자동 생성 후보에는 부류 경계와 라벨 오류가 포함될 수 있어 교차 검수가 필수"
+  ],
+  "environment": {
+    "python": "3.13.9",
+    "sentenceTransformers": "6.1.0",
+    "scikitLearn": "1.9.1",
+    "numpy": "2.5.4"
+  },
+  "embeddingLogisticRegression": {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "seed": 42,
+    "maxIter": 2000,
+    "normalizedEmbeddings": true,
+    "macroF1": 0.4468385150203332,
+    "noneRecall": 0.2,
+    "perClass": {
+      "MEETING_PREP": {
+        "precision": 0.6,
+        "recall": 0.6,
+        "f1": 0.6,
+        "support": 5
+      },
+      "VISIT_PREP": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "CONTRACT_PREP": {
+        "precision": 0.5555555555555556,
+        "recall": 1.0,
+        "f1": 0.7142857142857143,
+        "support": 5
+      },
+      "RENEWAL_INTERVIEW": {
+        "precision": 0.4,
+        "recall": 0.4,
+        "f1": 0.4,
+        "support": 5
+      },
+      "PROPOSAL_SUBMISSION": {
+        "precision": 1.0,
+        "recall": 0.2,
+        "f1": 0.3333333333333333,
+        "support": 5
+      },
+      "REJECTION_NOTICE": {
+        "precision": 0.3333333333333333,
+        "recall": 0.4,
+        "f1": 0.36363636363636365,
+        "support": 5
+      },
+      "DOC_COLLECTION": {
+        "precision": 0.5,
+        "recall": 0.4,
+        "f1": 0.4444444444444444,
+        "support": 5
+      },
+      "END_EVALUATION": {
+        "precision": 0.3125,
+        "recall": 1.0,
+        "f1": 0.47619047619047616,
+        "support": 5
+      },
+      "PROFITABILITY_REVIEW": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 5
+      },
+      "SOURCING_START": {
+        "precision": 1.0,
+        "recall": 0.2,
+        "f1": 0.3333333333333333,
+        "support": 5
+      },
+      "NONE": {
+        "precision": 0.3333333333333333,
+        "recall": 0.2,
+        "f1": 0.25,
+        "support": 5
+      }
+    },
+    "errors": [
+      {
+        "gold": "MEETING_PREP",
+        "predicted": "DOC_COLLECTION",
+        "index": 1
+      },
+      {
+        "gold": "MEETING_PREP",
+        "predicted": "NONE",
+        "index": 3
+      },
+      {
+        "gold": "RENEWAL_INTERVIEW",
+        "predicted": "CONTRACT_PREP",
+        "index": 15
+      },
+      {
+        "gold": "RENEWAL_INTERVIEW",
+        "predicted": "END_EVALUATION",
+        "index": 17
+      },
+      {
+        "gold": "RENEWAL_INTERVIEW",
+        "predicted": "CONTRACT_PREP",
+        "index": 18
+      },
+      {
+        "gold": "PROPOSAL_SUBMISSION",
+        "predicted": "REJECTION_NOTICE",
+        "index": 20
+      },
+      {
+        "gold": "PROPOSAL_SUBMISSION",
+        "predicted": "END_EVALUATION",
+        "index": 22
+      },
+      {
+        "gold": "PROPOSAL_SUBMISSION",
+        "predicted": "END_EVALUATION",
+        "index": 23
+      },
+      {
+        "gold": "PROPOSAL_SUBMISSION",
+        "predicted": "REJECTION_NOTICE",
+        "index": 24
+      },
+      {
+        "gold": "REJECTION_NOTICE",
+        "predicted": "END_EVALUATION",
+        "index": 26
+      },
+      {
+        "gold": "REJECTION_NOTICE",
+        "predicted": "NONE",
+        "index": 27
+      },
+      {
+        "gold": "REJECTION_NOTICE",
+        "predicted": "END_EVALUATION",
+        "index": 29
+      },
+      {
+        "gold": "DOC_COLLECTION",
+        "predicted": "RENEWAL_INTERVIEW",
+        "index": 30
+      },
+      {
+        "gold": "DOC_COLLECTION",
+        "predicted": "CONTRACT_PREP",
+        "index": 32
+      },
+      {
+        "gold": "DOC_COLLECTION",
+        "predicted": "CONTRACT_PREP",
+        "index": 34
+      },
+      {
+        "gold": "PROFITABILITY_REVIEW",
+        "predicted": "END_EVALUATION",
+        "index": 40
+      },
+      {
+        "gold": "PROFITABILITY_REVIEW",
+        "predicted": "END_EVALUATION",
+        "index": 41
+      },
+      {
+        "gold": "PROFITABILITY_REVIEW",
+        "predicted": "END_EVALUATION",
+        "index": 42
+      },
+      {
+        "gold": "PROFITABILITY_REVIEW",
+        "predicted": "END_EVALUATION",
+        "index": 43
+      },
+      {
+        "gold": "PROFITABILITY_REVIEW",
+        "predicted": "END_EVALUATION",
+        "index": 44
+      },
+      {
+        "gold": "SOURCING_START",
+        "predicted": "REJECTION_NOTICE",
+        "index": 46
+      },
+      {
+        "gold": "SOURCING_START",
+        "predicted": "MEETING_PREP",
+        "index": 47
+      },
+      {
+        "gold": "SOURCING_START",
+        "predicted": "MEETING_PREP",
+        "index": 48
+      },
+      {
+        "gold": "SOURCING_START",
+        "predicted": "REJECTION_NOTICE",
+        "index": 49
+      },
+      {
+        "gold": "NONE",
+        "predicted": "RENEWAL_INTERVIEW",
+        "index": 50
+      },
+      {
+        "gold": "NONE",
+        "predicted": "END_EVALUATION",
+        "index": 52
+      },
+      {
+        "gold": "NONE",
+        "predicted": "RENEWAL_INTERVIEW",
+        "index": 53
+      },
+      {
+        "gold": "NONE",
+        "predicted": "DOC_COLLECTION",
+        "index": 54
+      }
+    ]
+  },
+  "artifactReadbackVerified": true,
+  "modelBeatsRuleOnThisSet": false
+}
