@@ -433,7 +433,7 @@
         "content": "다음 달 초 미팅",
         "evidence": "다음 달 초 미팅",
         "dueDate": null,
-        "taskType": "MEETING_PREP",
+        "taskType": "NONE",
         "commitmentKind": "EXPLICIT"
       }
     ],

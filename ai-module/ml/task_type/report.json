@@ -1,12 +1,28 @@
 {
   "data": {
-    "train": 660,
+    "train": 656,
+    "trainingCandidates": 720,
+    "excludedFromTraining": 64,
+    "trainingClassCounts": {
+      "MEETING_PREP": 63,
+      "VISIT_PREP": 21,
+      "CONTRACT_PREP": 62,
+      "RENEWAL_INTERVIEW": 58,
+      "NONE": 209,
+      "PROPOSAL_SUBMISSION": 60,
+      "REJECTION_NOTICE": 34,
+      "DOC_COLLECTION": 21,
+      "END_EVALUATION": 8,
+      "PROFITABILITY_REVIEW": 60,
+      "SOURCING_START": 60
+    },
     "trainFile": "train.json",
     "trainSources": [
       "local_ollama_training"
     ],
     "evaluation": 55,
-    "reviewStatus": "PENDING",
+    "reviewStatus": "TRAINING_PENDING",
+    "evaluationLabelsReviewed": true,
     "independentReviewCompleted": false
   },
   "extraction": {
@@ -24,7 +40,7 @@
     "explicitRecall": 1.0
   },
   "rule": {
-    "macroF1": 0.9621212121212122,
+    "macroF1": 1.0,
     "noneRecall": 1.0,
     "perClass": {
       "MEETING_PREP": {
@@ -77,8 +93,8 @@
       },
       "PROFITABILITY_REVIEW": {
         "precision": 1.0,
-        "recall": 0.6,
-        "f1": 0.75,
+        "recall": 1.0,
+        "f1": 1.0,
         "support": 5
       },
       "SOURCING_START": {
@@ -88,32 +104,22 @@
         "support": 5
       },
       "NONE": {
-        "precision": 0.7142857142857143,
+        "precision": 1.0,
         "recall": 1.0,
-        "f1": 0.8333333333333334,
+        "f1": 1.0,
         "support": 5
       }
     },
-    "errors": [
-      {
-        "gold": "PROFITABILITY_REVIEW",
-        "predicted": "NONE",
-        "index": 40
-      },
-      {
-        "gold": "PROFITABILITY_REVIEW",
-        "predicted": "NONE",
-        "index": 42
-      }
-    ]
+    "errors": []
   },
   "productionClassifier": "RULE",
   "promotionAllowed": false,
   "limitations": [
-    "합성 데이터, 별도 작성 평가 문장도 동일 작성자이며 교차 검수 전",
+    "학습 후보의 C 수정/재생성은 독립 교차 검수 전이며, 평가 라벨 검수와 구분함",
     "이 결과만으로 실제 발화 성능 또는 90% 재현율 달성을 주장하지 않음",
     "학습 모델은 운영에 자동 적용하지 않음",
-    "자동 생성 후보에는 부류 경계와 라벨 오류가 포함될 수 있어 교차 검수가 필수"
+    "자동 생성 후보에는 부류 경계와 라벨 오류가 포함될 수 있어 교차 검수가 필수",
+    "평가 55개는 개발 피드백에 사용되어 독립 최종 평가셋이 아니며 별도 최종 평가가 필요"
   ],
   "environment": {
     "python": "3.13.9",
@@ -125,32 +131,35 @@
     "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
     "seed": 42,
     "maxIter": 2000,
+    "classWeight": null,
     "normalizedEmbeddings": true,
-    "macroF1": 0.4468385150203332,
-    "noneRecall": 0.2,
+    "trainingAccuracy": 0.8871951219512195,
+    "trainingMacroF1": 0.748429671621366,
+    "macroF1": 0.3058608058608059,
+    "noneRecall": 1.0,
     "perClass": {
       "MEETING_PREP": {
-        "precision": 0.6,
-        "recall": 0.6,
-        "f1": 0.6,
+        "precision": 1.0,
+        "recall": 0.2,
+        "f1": 0.3333333333333333,
         "support": 5
       },
       "VISIT_PREP": {
         "precision": 1.0,
-        "recall": 1.0,
-        "f1": 1.0,
+        "recall": 0.2,
+        "f1": 0.3333333333333333,
         "support": 5
       },
       "CONTRACT_PREP": {
-        "precision": 0.5555555555555556,
+        "precision": 0.625,
         "recall": 1.0,
-        "f1": 0.7142857142857143,
+        "f1": 0.7692307692307693,
         "support": 5
       },
       "RENEWAL_INTERVIEW": {
-        "precision": 0.4,
+        "precision": 1.0,
         "recall": 0.4,
-        "f1": 0.4,
+        "f1": 0.5714285714285714,
         "support": 5
       },
       "PROPOSAL_SUBMISSION": {
@@ -160,21 +169,21 @@
         "support": 5
       },
       "REJECTION_NOTICE": {
-        "precision": 0.3333333333333333,
+        "precision": 0.6666666666666666,
         "recall": 0.4,
-        "f1": 0.36363636363636365,
+        "f1": 0.5,
         "support": 5
       },
       "DOC_COLLECTION": {
-        "precision": 0.5,
-        "recall": 0.4,
-        "f1": 0.4444444444444444,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
         "support": 5
       },
       "END_EVALUATION": {
-        "precision": 0.3125,
-        "recall": 1.0,
-        "f1": 0.47619047619047616,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
         "support": 5
       },
       "PROFITABILITY_REVIEW": {
@@ -184,15 +193,281 @@
         "support": 5
       },
       "SOURCING_START": {
+        "precision": 0.5,
+        "recall": 0.2,
+        "f1": 0.2857142857142857,
+        "support": 5
+      },
+      "NONE": {
+        "precision": 0.13513513513513514,
+        "recall": 1.0,
+        "f1": 0.23809523809523808,
+        "support": 5
+      }
+    },
+    "errors": [
+      {
+        "gold": "MEETING_PREP",
+        "predicted": "NONE",
+        "index": 1
+      },
+      {
+        "gold": "MEETING_PREP",
+        "predicted": "NONE",
+        "index": 2
+      },
+      {
+        "gold": "MEETING_PREP",
+        "predicted": "NONE",
+        "index": 3
+      },
+      {
+        "gold": "MEETING_PREP",
+        "predicted": "NONE",
+        "index": 4
+      },
+      {
+        "gold": "VISIT_PREP",
+        "predicted": "NONE",
+        "index": 5
+      },
+      {
+        "gold": "VISIT_PREP",
+        "predicted": "NONE",
+        "index": 6
+      },
+      {
+        "gold": "VISIT_PREP",
+        "predicted": "NONE",
+        "index": 7
+      },
+      {
+        "gold": "VISIT_PREP",
+        "predicted": "NONE",
+        "index": 8
+      },
+      {
+        "gold": "RENEWAL_INTERVIEW",
+        "predicted": "NONE",
+        "index": 16
+      },
+      {
+        "gold": "RENEWAL_INTERVIEW",
+        "predicted": "NONE",
+        "index": 17
+      },
+      {
+        "gold": "RENEWAL_INTERVIEW",
+        "predicted": "CONTRACT_PREP",
+        "index": 18
+      },
+      {
+        "gold": "PROPOSAL_SUBMISSION",
+        "predicted": "REJECTION_NOTICE",
+        "index": 20
+      },
+      {
+        "gold": "PROPOSAL_SUBMISSION",
+        "predicted": "NONE",
+        "index": 22
+      },
+      {
+        "gold": "PROPOSAL_SUBMISSION",
+        "predicted": "NONE",
+        "index": 23
+      },
+      {
+        "gold": "PROPOSAL_SUBMISSION",
+        "predicted": "SOURCING_START",
+        "index": 24
+      },
+      {
+        "gold": "REJECTION_NOTICE",
+        "predicted": "NONE",
+        "index": 26
+      },
+      {
+        "gold": "REJECTION_NOTICE",
+        "predicted": "NONE",
+        "index": 27
+      },
+      {
+        "gold": "REJECTION_NOTICE",
+        "predicted": "NONE",
+        "index": 29
+      },
+      {
+        "gold": "DOC_COLLECTION",
+        "predicted": "NONE",
+        "index": 30
+      },
+      {
+        "gold": "DOC_COLLECTION",
+        "predicted": "NONE",
+        "index": 31
+      },
+      {
+        "gold": "DOC_COLLECTION",
+        "predicted": "CONTRACT_PREP",
+        "index": 32
+      },
+      {
+        "gold": "DOC_COLLECTION",
+        "predicted": "NONE",
+        "index": 33
+      },
+      {
+        "gold": "DOC_COLLECTION",
+        "predicted": "CONTRACT_PREP",
+        "index": 34
+      },
+      {
+        "gold": "END_EVALUATION",
+        "predicted": "NONE",
+        "index": 35
+      },
+      {
+        "gold": "END_EVALUATION",
+        "predicted": "NONE",
+        "index": 36
+      },
+      {
+        "gold": "END_EVALUATION",
+        "predicted": "NONE",
+        "index": 37
+      },
+      {
+        "gold": "END_EVALUATION",
+        "predicted": "NONE",
+        "index": 38
+      },
+      {
+        "gold": "END_EVALUATION",
+        "predicted": "NONE",
+        "index": 39
+      },
+      {
+        "gold": "PROFITABILITY_REVIEW",
+        "predicted": "NONE",
+        "index": 40
+      },
+      {
+        "gold": "PROFITABILITY_REVIEW",
+        "predicted": "NONE",
+        "index": 41
+      },
+      {
+        "gold": "PROFITABILITY_REVIEW",
+        "predicted": "NONE",
+        "index": 42
+      },
+      {
+        "gold": "PROFITABILITY_REVIEW",
+        "predicted": "NONE",
+        "index": 43
+      },
+      {
+        "gold": "PROFITABILITY_REVIEW",
+        "predicted": "NONE",
+        "index": 44
+      },
+      {
+        "gold": "SOURCING_START",
+        "predicted": "NONE",
+        "index": 46
+      },
+      {
+        "gold": "SOURCING_START",
+        "predicted": "NONE",
+        "index": 47
+      },
+      {
+        "gold": "SOURCING_START",
+        "predicted": "NONE",
+        "index": 48
+      },
+      {
+        "gold": "SOURCING_START",
+        "predicted": "NONE",
+        "index": 49
+      }
+    ]
+  },
+  "balancedEmbeddingLogisticRegression": {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "seed": 42,
+    "maxIter": 2000,
+    "classWeight": "balanced",
+    "normalizedEmbeddings": true,
+    "trainingAccuracy": 0.8216463414634146,
+    "trainingMacroF1": 0.8036402348113789,
+    "macroF1": 0.4118992118992119,
+    "noneRecall": 0.0,
+    "perClass": {
+      "MEETING_PREP": {
+        "precision": 1.0,
+        "recall": 0.6,
+        "f1": 0.75,
+        "support": 5
+      },
+      "VISIT_PREP": {
+        "precision": 1.0,
+        "recall": 0.4,
+        "f1": 0.5714285714285714,
+        "support": 5
+      },
+      "CONTRACT_PREP": {
+        "precision": 0.625,
+        "recall": 1.0,
+        "f1": 0.7692307692307693,
+        "support": 5
+      },
+      "RENEWAL_INTERVIEW": {
+        "precision": 1.0,
+        "recall": 0.4,
+        "f1": 0.5714285714285714,
+        "support": 5
+      },
+      "PROPOSAL_SUBMISSION": {
         "precision": 1.0,
         "recall": 0.2,
         "f1": 0.3333333333333333,
         "support": 5
       },
-      "NONE": {
+      "REJECTION_NOTICE": {
+        "precision": 0.5,
+        "recall": 0.4,
+        "f1": 0.4444444444444444,
+        "support": 5
+      },
+      "DOC_COLLECTION": {
+        "precision": 0.19047619047619047,
+        "recall": 0.8,
+        "f1": 0.3076923076923077,
+        "support": 5
+      },
+      "END_EVALUATION": {
+        "precision": 0.4,
+        "recall": 0.8,
+        "f1": 0.5333333333333333,
+        "support": 5
+      },
+      "PROFITABILITY_REVIEW": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 5
+      },
+      "SOURCING_START": {
         "precision": 0.3333333333333333,
         "recall": 0.2,
         "f1": 0.25,
+        "support": 5
+      },
+      "NONE": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
         "support": 5
       }
     },
@@ -204,13 +479,28 @@
       },
       {
         "gold": "MEETING_PREP",
-        "predicted": "NONE",
+        "predicted": "DOC_COLLECTION",
         "index": 3
       },
       {
+        "gold": "VISIT_PREP",
+        "predicted": "DOC_COLLECTION",
+        "index": 6
+      },
+      {
+        "gold": "VISIT_PREP",
+        "predicted": "DOC_COLLECTION",
+        "index": 7
+      },
+      {
+        "gold": "VISIT_PREP",
+        "predicted": "DOC_COLLECTION",
+        "index": 8
+      },
+      {
         "gold": "RENEWAL_INTERVIEW",
-        "predicted": "CONTRACT_PREP",
-        "index": 15
+        "predicted": "DOC_COLLECTION",
+        "index": 16
       },
       {
         "gold": "RENEWAL_INTERVIEW",
@@ -229,17 +519,17 @@
       },
       {
         "gold": "PROPOSAL_SUBMISSION",
-        "predicted": "END_EVALUATION",
+        "predicted": "SOURCING_START",
         "index": 22
       },
       {
         "gold": "PROPOSAL_SUBMISSION",
-        "predicted": "END_EVALUATION",
+        "predicted": "DOC_COLLECTION",
         "index": 23
       },
       {
         "gold": "PROPOSAL_SUBMISSION",
-        "predicted": "REJECTION_NOTICE",
+        "predicted": "SOURCING_START",
         "index": 24
       },
       {
@@ -249,7 +539,7 @@
       },
       {
         "gold": "REJECTION_NOTICE",
-        "predicted": "NONE",
+        "predicted": "END_EVALUATION",
         "index": 27
       },
       {
@@ -259,22 +549,17 @@
       },
       {
         "gold": "DOC_COLLECTION",
-        "predicted": "RENEWAL_INTERVIEW",
-        "index": 30
-      },
-      {
-        "gold": "DOC_COLLECTION",
         "predicted": "CONTRACT_PREP",
         "index": 32
       },
       {
-        "gold": "DOC_COLLECTION",
-        "predicted": "CONTRACT_PREP",
-        "index": 34
+        "gold": "END_EVALUATION",
+        "predicted": "DOC_COLLECTION",
+        "index": 39
       },
       {
         "gold": "PROFITABILITY_REVIEW",
-        "predicted": "END_EVALUATION",
+        "predicted": "DOC_COLLECTION",
         "index": 40
       },
       {
@@ -284,17 +569,17 @@
       },
       {
         "gold": "PROFITABILITY_REVIEW",
-        "predicted": "END_EVALUATION",
+        "predicted": "DOC_COLLECTION",
         "index": 42
       },
       {
         "gold": "PROFITABILITY_REVIEW",
-        "predicted": "END_EVALUATION",
+        "predicted": "CONTRACT_PREP",
         "index": 43
       },
       {
         "gold": "PROFITABILITY_REVIEW",
-        "predicted": "END_EVALUATION",
+        "predicted": "DOC_COLLECTION",
         "index": 44
       },
       {
@@ -304,32 +589,37 @@
       },
       {
         "gold": "SOURCING_START",
-        "predicted": "MEETING_PREP",
+        "predicted": "DOC_COLLECTION",
         "index": 47
       },
       {
         "gold": "SOURCING_START",
-        "predicted": "MEETING_PREP",
+        "predicted": "DOC_COLLECTION",
         "index": 48
       },
       {
         "gold": "SOURCING_START",
-        "predicted": "REJECTION_NOTICE",
+        "predicted": "NONE",
         "index": 49
       },
       {
         "gold": "NONE",
-        "predicted": "RENEWAL_INTERVIEW",
+        "predicted": "DOC_COLLECTION",
         "index": 50
       },
       {
         "gold": "NONE",
         "predicted": "END_EVALUATION",
+        "index": 51
+      },
+      {
+        "gold": "NONE",
+        "predicted": "DOC_COLLECTION",
         "index": 52
       },
       {
         "gold": "NONE",
-        "predicted": "RENEWAL_INTERVIEW",
+        "predicted": "DOC_COLLECTION",
         "index": 53
       },
       {
@@ -340,5 +630,6 @@
     ]
   },
   "artifactReadbackVerified": true,
-  "modelBeatsRuleOnThisSet": false
+  "modelBeatsRuleOnThisSet": false,
+  "comparisonBaseCommit": "5fcb228"
 }

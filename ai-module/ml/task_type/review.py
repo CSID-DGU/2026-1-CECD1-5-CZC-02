@@ -40,10 +40,10 @@ if __name__ == '__main__':
     rows = load(args.data)
     if args.export:
         with args.export.open('w', encoding='utf-8', newline='') as handle:
-            writer = csv.DictWriter(handle, fieldnames=['id', 'text', 'proposedLabel', 'ruleLabel', 'ruleDisagrees', 'reviewerRole', 'label'])
+            writer = csv.DictWriter(handle, fieldnames=['id', 'text', 'proposedLabel', 'trainingEligible', 'ruleLabel', 'ruleDisagrees', 'reviewerRole', 'label'])
             writer.writeheader()
             for row in rows:
-                writer.writerow({'id': row['id'], 'text': row['text'], 'proposedLabel': row['label'], 'ruleLabel': classify_task(row['text'])[0], 'ruleDisagrees': classify_task(row['text'])[0] != row['label'], 'reviewerRole': '', 'label': ''})
+                writer.writerow({'id': row['id'], 'text': row['text'], 'proposedLabel': row['label'], 'trainingEligible': row.get('trainingEligible', True), 'ruleLabel': classify_task(row['text'])[0], 'ruleDisagrees': classify_task(row['text'])[0] != row['label'], 'reviewerRole': '', 'label': ''})
     if args.votes:
         with args.votes.open(encoding='utf-8', newline='') as handle:
             print(json.dumps(evaluate_review(rows, list(csv.DictReader(handle))), ensure_ascii=False, indent=2))

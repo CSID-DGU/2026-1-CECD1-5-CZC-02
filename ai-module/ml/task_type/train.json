@@ -2,12 +2,13 @@
   {
     "id": "ollama_meeting_prep_0",
     "text": "제품 가격 협상을 위한 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_0",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_1",
@@ -32,12 +33,13 @@
   {
     "id": "ollama_meeting_prep_3",
     "text": "주간 정리와 함께 다음 주 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_3",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_4",
@@ -62,12 +64,13 @@
   {
     "id": "ollama_meeting_prep_6",
     "text": "새로운 제품 출시를 위한 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_6",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_7",
@@ -82,22 +85,24 @@
   {
     "id": "ollama_meeting_prep_8",
     "text": "마케팅 전략을 수정하기 위해 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_8",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_9",
     "text": "판매 전략을 논의하기 위해 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_9",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_10",
@@ -122,12 +127,13 @@
   {
     "id": "ollama_meeting_prep_12",
     "text": "시장 점유율 향상을 위한 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_12",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_13",
@@ -162,12 +168,13 @@
   {
     "id": "ollama_meeting_prep_16",
     "text": "기존 계약 유지를 위한 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_16",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_17",
@@ -192,22 +199,24 @@
   {
     "id": "ollama_meeting_prep_19",
     "text": "마케팅 캠페인 성과 분석을 위한 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_19",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_20",
     "text": "새로운 제품 출시를 위한 시장 조사를 위한 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_20",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_21",
@@ -232,12 +241,13 @@
   {
     "id": "ollama_meeting_prep_23",
     "text": "마케팅 전략 수정을 위한 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_23",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_24",
@@ -252,12 +262,13 @@
   {
     "id": "ollama_meeting_prep_25",
     "text": "신규 사업 계획을 위한 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_25",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_26",
@@ -282,12 +293,13 @@
   {
     "id": "ollama_meeting_prep_28",
     "text": "시장 조사를 위한 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_28",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_29",
@@ -302,22 +314,24 @@
   {
     "id": "ollama_meeting_prep_30",
     "text": "제품 개선 방향을 정하기 위한 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_30",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_31",
     "text": "신규 사업 계획을 위한 시장 조사를 위한 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_31",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_32",
@@ -352,16 +366,17 @@
   {
     "id": "ollama_meeting_prep_35",
     "text": "제품 개선을 위한 시장 조사를 위한 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_35",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_36",
-    "text": "다음 달 데이타존 고객 미팅 준비",
+    "text": "가상조직_36 고객 미팅 준비",
     "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_36",
@@ -381,7 +396,7 @@
   },
   {
     "id": "ollama_meeting_prep_38",
-    "text": "월요일에 이노베이션 파트너스 미팅 준비",
+    "text": "가상조직_38 고객 미팅 준비",
     "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_38",
@@ -391,7 +406,7 @@
   },
   {
     "id": "ollama_meeting_prep_39",
-    "text": "다음 주 수요일 빅데이터 엑스 고객 미팅 준비",
+    "text": "가상조직_39 고객 미팅 준비",
     "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_39",
@@ -411,7 +426,7 @@
   },
   {
     "id": "ollama_meeting_prep_41",
-    "text": "이번 주 금요일 클라우드 인사이트 미팅 준비",
+    "text": "가상조직_41 고객 미팅 준비",
     "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_41",
@@ -462,12 +477,13 @@
   {
     "id": "ollama_meeting_prep_46",
     "text": "다음 달 15일 미팅 준비",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_46",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_47",
@@ -481,7 +497,7 @@
   },
   {
     "id": "ollama_meeting_prep_48",
-    "text": "다음 달 중순 클라우드 이노베이션 미팅 준비",
+    "text": "가상조직_48 고객 미팅 준비",
     "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_48",
@@ -501,7 +517,7 @@
   },
   {
     "id": "ollama_meeting_prep_50",
-    "text": "다음 달 초 데이타존 미팅 준비",
+    "text": "가상조직_50 고객 미팅 준비",
     "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_50",
@@ -521,7 +537,7 @@
   },
   {
     "id": "ollama_meeting_prep_52",
-    "text": "다음 달 초 빅데이터 엑스 미팅 준비",
+    "text": "가상조직_52 고객 미팅 준비",
     "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_52",
@@ -531,7 +547,7 @@
   },
   {
     "id": "ollama_meeting_prep_53",
-    "text": "다음 달 초 클라우드 인사이트 미팅 준비",
+    "text": "가상조직_53 고객 미팅 준비",
     "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_53",
@@ -542,12 +558,13 @@
   {
     "id": "ollama_meeting_prep_54",
     "text": "오늘의 회의를 위한 자료를 준비해야 합니다.",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_54",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_55",
@@ -562,12 +579,13 @@
   {
     "id": "ollama_meeting_prep_56",
     "text": "오는 목요일 미팅에서 보고할 데이터를 업데이트해야 합니다.",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_56",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_meeting_prep_57",
@@ -592,22 +610,24 @@
   {
     "id": "ollama_meeting_prep_59",
     "text": "다음 주 미팅을 위해 시장 동향 리포트를 다시 확인해야 합니다.",
-    "label": "MEETING_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "MEETING_PREP_candidate_59",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_0",
     "text": "방문 전 물품 정리 필요",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_0",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_1",
@@ -642,22 +662,24 @@
   {
     "id": "ollama_visit_prep_4",
     "text": "주말에 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_4",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_5",
     "text": "내일 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_5",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_6",
@@ -672,22 +694,24 @@
   {
     "id": "ollama_visit_prep_7",
     "text": "오늘 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_7",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_8",
     "text": "다음 주 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_8",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_9",
@@ -702,12 +726,13 @@
   {
     "id": "ollama_visit_prep_10",
     "text": "방문 일정 다시 한번 확인",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_10",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_11",
@@ -722,12 +747,13 @@
   {
     "id": "ollama_visit_prep_12",
     "text": "내일 미팅 장소 확인",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_12",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_13",
@@ -752,7 +778,7 @@
   {
     "id": "ollama_visit_prep_15",
     "text": "내일 고객 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_15",
     "reviewStatus": "PENDING",
@@ -782,12 +808,13 @@
   {
     "id": "ollama_visit_prep_18",
     "text": "내일 방문 장소 준비",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_18",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_19",
@@ -812,17 +839,18 @@
   {
     "id": "ollama_visit_prep_21",
     "text": "오늘 미팅 장소 확인",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_21",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_22",
     "text": "오늘 오후 고객 사무실 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_22",
     "reviewStatus": "PENDING",
@@ -832,12 +860,13 @@
   {
     "id": "ollama_visit_prep_23",
     "text": "내일 미팅 장소 확인해야",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_23",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_24",
@@ -862,7 +891,7 @@
   {
     "id": "ollama_visit_prep_26",
     "text": "내주 월요일 고객 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_26",
     "reviewStatus": "PENDING",
@@ -872,7 +901,7 @@
   {
     "id": "ollama_visit_prep_27",
     "text": "다음 주중 고객 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_27",
     "reviewStatus": "PENDING",
@@ -892,7 +921,7 @@
   {
     "id": "ollama_visit_prep_29",
     "text": "다음 주말 고객 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_29",
     "reviewStatus": "PENDING",
@@ -902,7 +931,7 @@
   {
     "id": "ollama_visit_prep_30",
     "text": "주말에 고객 사무실 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_30",
     "reviewStatus": "PENDING",
@@ -912,7 +941,7 @@
   {
     "id": "ollama_visit_prep_31",
     "text": "내주 월요일 고객 방문",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_31",
     "reviewStatus": "PENDING",
@@ -922,7 +951,7 @@
   {
     "id": "ollama_visit_prep_32",
     "text": "다음 주말 고객 방문",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_32",
     "reviewStatus": "PENDING",
@@ -932,7 +961,7 @@
   {
     "id": "ollama_visit_prep_33",
     "text": "주말에 고객 사무실 방문",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_33",
     "reviewStatus": "PENDING",
@@ -942,32 +971,35 @@
   {
     "id": "ollama_visit_prep_34",
     "text": "오늘 일정 확인하기",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_34",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_35",
     "text": "내일 고객 정보 다시 확인",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_35",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_36",
     "text": "내주 방문 준비 시작",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_36",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_37",
@@ -982,7 +1014,7 @@
   {
     "id": "ollama_visit_prep_38",
     "text": "출근 후 고객 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_38",
     "reviewStatus": "PENDING",
@@ -992,7 +1024,7 @@
   {
     "id": "ollama_visit_prep_39",
     "text": "오늘 고객 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_39",
     "reviewStatus": "PENDING",
@@ -1012,17 +1044,18 @@
   {
     "id": "ollama_visit_prep_41",
     "text": "오늘 방문 준비 완료",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_41",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_42",
     "text": "내일 고객 방문 준비하기",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_42",
     "reviewStatus": "PENDING",
@@ -1042,12 +1075,13 @@
   {
     "id": "ollama_visit_prep_44",
     "text": "오늘 방문 준비 진행",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_44",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_45",
@@ -1062,17 +1096,18 @@
   {
     "id": "ollama_visit_prep_46",
     "text": "내일 방문 준비 시작",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_46",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_47",
     "text": "오늘 오후 3시 고객 사무실 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_47",
     "reviewStatus": "PENDING",
@@ -1092,17 +1127,18 @@
   {
     "id": "ollama_visit_prep_49",
     "text": "금주 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_49",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_50",
     "text": "내일 고객 사무실 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_50",
     "reviewStatus": "PENDING",
@@ -1112,27 +1148,29 @@
   {
     "id": "ollama_visit_prep_51",
     "text": "다음 주 둘째 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_51",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_52",
     "text": "다음 주 금요일 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_52",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_53",
     "text": "오늘 아침 고객 사무실 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_53",
     "reviewStatus": "PENDING",
@@ -1142,7 +1180,7 @@
   {
     "id": "ollama_visit_prep_54",
     "text": "오늘 저녁 고객 사무실 방문 준비",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_54",
     "reviewStatus": "PENDING",
@@ -1152,17 +1190,18 @@
   {
     "id": "ollama_visit_prep_55",
     "text": "방문 일정을 다시 점검해야 합니다.",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_55",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_56",
     "text": "고객 사무실 방문을 위해 준비해야 합니다.",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_56",
     "reviewStatus": "PENDING",
@@ -1172,12 +1211,13 @@
   {
     "id": "ollama_visit_prep_57",
     "text": "이번 주말에 방문할 일정을 잡아야겠어요.",
-    "label": "VISIT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_57",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_visit_prep_58",
@@ -1192,7 +1232,7 @@
   {
     "id": "ollama_visit_prep_59",
     "text": "다음 주초에 고객 방문 준비를 해야 합니다.",
-    "label": "VISIT_PREP",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "VISIT_PREP_candidate_59",
     "reviewStatus": "PENDING",
@@ -1492,12 +1532,13 @@
   {
     "id": "ollama_contract_prep_29",
     "text": "오늘 서류 준비 시작해야 합니다.",
-    "label": "CONTRACT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "CONTRACT_PREP_candidate_29",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_contract_prep_30",
@@ -1702,12 +1743,13 @@
   {
     "id": "ollama_contract_prep_50",
     "text": "이번 주말까지 계약서 제안서 작성",
-    "label": "CONTRACT_PREP",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "CONTRACT_PREP_candidate_50",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_contract_prep_51",
@@ -1912,12 +1954,13 @@
   {
     "id": "ollama_renewal_interview_11",
     "text": "내년 말까지 계약을 위한 면담",
-    "label": "RENEWAL_INTERVIEW",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_11",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_renewal_interview_12",
@@ -1942,7 +1985,7 @@
   {
     "id": "ollama_renewal_interview_14",
     "text": "오늘의 고객 회의 내용 정리해야 합니다.",
-    "label": "RENEWAL_INTERVIEW",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_14",
     "reviewStatus": "PENDING",
@@ -2081,7 +2124,7 @@
   },
   {
     "id": "ollama_renewal_interview_28",
-    "text": "월드컵 후 계약 재협상 준비",
+    "text": "분기 말 계약 재협상 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_28",
@@ -2092,12 +2135,13 @@
   {
     "id": "ollama_renewal_interview_29",
     "text": "다음 달 말기까지 만료 계약 재요청",
-    "label": "RENEWAL_INTERVIEW",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_29",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_renewal_interview_30",
@@ -2211,7 +2255,7 @@
   },
   {
     "id": "ollama_renewal_interview_41",
-    "text": "오늘 블루스카이 계약 갱신 면담 준비",
+    "text": "가상조직_41 계약 갱신 면담 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_41",
@@ -2221,7 +2265,7 @@
   },
   {
     "id": "ollama_renewal_interview_42",
-    "text": "다음 주에 클라우드컴퍼니 계약 만료 면담",
+    "text": "가상조직_42 계약 갱신 면담 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_42",
@@ -2241,7 +2285,7 @@
   },
   {
     "id": "ollama_renewal_interview_44",
-    "text": "주말에 씽크웨어 계약 만료 대응 면담",
+    "text": "가상조직_44 계약 갱신 면담 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_44",
@@ -2251,7 +2295,7 @@
   },
   {
     "id": "ollama_renewal_interview_45",
-    "text": "오는 금요일 뉴스프레스 계약 갱신 면담",
+    "text": "가상조직_45 계약 갱신 면담 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_45",
@@ -2271,7 +2315,7 @@
   },
   {
     "id": "ollama_renewal_interview_47",
-    "text": "다음 주 월요일 프로젝트플러스 계약 갱신 면담",
+    "text": "가상조직_47 계약 갱신 면담 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_47",
@@ -2281,7 +2325,7 @@
   },
   {
     "id": "ollama_renewal_interview_48",
-    "text": "주말에 미디어텍 계약 만료 대응 면담",
+    "text": "가상조직_48 계약 갱신 면담 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_48",
@@ -2291,7 +2335,7 @@
   },
   {
     "id": "ollama_renewal_interview_49",
-    "text": "오는 금요일 네트워크비즈 계약 갱신 면담",
+    "text": "가상조직_49 계약 갱신 면담 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_49",
@@ -2311,7 +2355,7 @@
   },
   {
     "id": "ollama_renewal_interview_51",
-    "text": "본주에 스마트인사이트 계약 갱신 면담",
+    "text": "가상조직_51 계약 갱신 면담 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_51",
@@ -2321,7 +2365,7 @@
   },
   {
     "id": "ollama_renewal_interview_52",
-    "text": "오는 금요일 이노텍 계약 만료 대응 면담",
+    "text": "가상조직_52 계약 갱신 면담 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_52",
@@ -2331,7 +2375,7 @@
   },
   {
     "id": "ollama_renewal_interview_53",
-    "text": "주말에 디지털디바인 계약 갱신 면담",
+    "text": "가상조직_53 계약 갱신 면담 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_53",
@@ -2341,7 +2385,7 @@
   },
   {
     "id": "ollama_renewal_interview_54",
-    "text": "오늘 뉴스플러스 계약 만료 대응 면담",
+    "text": "가상조직_54 계약 갱신 면담 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_54",
@@ -2351,7 +2395,7 @@
   },
   {
     "id": "ollama_renewal_interview_55",
-    "text": "오늘 회사 계약 리ENEWAL 인터뷰 준비",
+    "text": "오늘 기존 계약 갱신 면담 준비",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_55",
@@ -2402,7 +2446,7 @@
   {
     "id": "ollama_proposal_submission_0",
     "text": "견적서 제출을 준비해야 합니다.",
-    "label": "PROPOSAL_SUBMISSION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "PROPOSAL_SUBMISSION_candidate_0",
     "reviewStatus": "PENDING",
@@ -2992,7 +3036,7 @@
   {
     "id": "ollama_proposal_submission_59",
     "text": "견적서 제출 준비",
-    "label": "PROPOSAL_SUBMISSION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "PROPOSAL_SUBMISSION_candidate_59",
     "reviewStatus": "PENDING",
@@ -3002,7 +3046,7 @@
   {
     "id": "ollama_rejection_notice_0",
     "text": "이번 달의 손실 가능 고객에게 다시 연락해보겠습니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_0",
     "reviewStatus": "PENDING",
@@ -3032,7 +3076,7 @@
   {
     "id": "ollama_rejection_notice_3",
     "text": "다음 주 미채택 후보들에 대해 연락을 취하겠습니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_3",
     "reviewStatus": "PENDING",
@@ -3062,7 +3106,7 @@
   {
     "id": "ollama_rejection_notice_6",
     "text": "다음 주 미채택 후보들에게 다시 연락해보겠습니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_6",
     "reviewStatus": "PENDING",
@@ -3082,7 +3126,7 @@
   {
     "id": "ollama_rejection_notice_8",
     "text": "다음 주 미채택 후보들에 대해 재연락을 시도하겠습니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_8",
     "reviewStatus": "PENDING",
@@ -3092,7 +3136,7 @@
   {
     "id": "ollama_rejection_notice_9",
     "text": "다음 달 이전 미채택 후보들에 대한 연락을 취하겠습니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_9",
     "reviewStatus": "PENDING",
@@ -3122,7 +3166,7 @@
   {
     "id": "ollama_rejection_notice_12",
     "text": "다음 달 이전 미채택 후보들에게 직접 연락해보겠습니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_12",
     "reviewStatus": "PENDING",
@@ -3132,7 +3176,7 @@
   {
     "id": "ollama_rejection_notice_13",
     "text": "다음 달 이전 미채택 후보들에게 재연락을 시도하겠습니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_13",
     "reviewStatus": "PENDING",
@@ -3152,7 +3196,7 @@
   {
     "id": "ollama_rejection_notice_15",
     "text": "내일 미채택 후보에게 연락",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_15",
     "reviewStatus": "PENDING",
@@ -3172,7 +3216,7 @@
   {
     "id": "ollama_rejection_notice_17",
     "text": "지난 주 미채택 후보에게 메일 보냄",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_17",
     "reviewStatus": "PENDING",
@@ -3202,7 +3246,7 @@
   {
     "id": "ollama_rejection_notice_20",
     "text": "오늘 미채택 후보에게 전화",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_20",
     "reviewStatus": "PENDING",
@@ -3252,7 +3296,7 @@
   {
     "id": "ollama_rejection_notice_25",
     "text": "오늘 미채택 후보에게 메일 보내기",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_25",
     "reviewStatus": "PENDING",
@@ -3262,7 +3306,7 @@
   {
     "id": "ollama_rejection_notice_26",
     "text": "오늘의 미채택 후보에게 연락해보겠습니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_26",
     "reviewStatus": "PENDING",
@@ -3322,7 +3366,7 @@
   {
     "id": "ollama_rejection_notice_32",
     "text": "오늘의 일정 중 하나로 미채택 후보에게 연락해야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_32",
     "reviewStatus": "PENDING",
@@ -3342,7 +3386,7 @@
   {
     "id": "ollama_rejection_notice_34",
     "text": "오늘의 업무 목록 중 하나로 미채택 후보에게 연락해야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_34",
     "reviewStatus": "PENDING",
@@ -3352,7 +3396,7 @@
   {
     "id": "ollama_rejection_notice_35",
     "text": "오늘 후보자를 미채택했습니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_35",
     "reviewStatus": "PENDING",
@@ -3372,12 +3416,13 @@
   {
     "id": "ollama_rejection_notice_37",
     "text": "미래의 기회를 위해 이번 주에 후보자에게 통보해야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_37",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_rejection_notice_38",
@@ -3412,12 +3457,13 @@
   {
     "id": "ollama_rejection_notice_41",
     "text": "미래 계획을 위해 이번 주에 후보자에게 통보해야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_41",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_rejection_notice_42",
@@ -3432,7 +3478,7 @@
   {
     "id": "ollama_rejection_notice_43",
     "text": "미래에 대한 계획을 위해 미채택 후보자에게 연락해야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_43",
     "reviewStatus": "PENDING",
@@ -3462,7 +3508,7 @@
   {
     "id": "ollama_rejection_notice_46",
     "text": "오늘의 미채택 후보들에게 연락해야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_46",
     "reviewStatus": "PENDING",
@@ -3472,7 +3518,7 @@
   {
     "id": "ollama_rejection_notice_47",
     "text": "주말에 미채택 후보들에게 메일 보내야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_47",
     "reviewStatus": "PENDING",
@@ -3492,7 +3538,7 @@
   {
     "id": "ollama_rejection_notice_49",
     "text": "미선택 후보들에게 연락해야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_49",
     "reviewStatus": "PENDING",
@@ -3512,7 +3558,7 @@
   {
     "id": "ollama_rejection_notice_51",
     "text": "내일 아침에 미채택 후보들에게 연락해야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_51",
     "reviewStatus": "PENDING",
@@ -3532,7 +3578,7 @@
   {
     "id": "ollama_rejection_notice_53",
     "text": "오늘 저녁에 미채택 후보들에게 연락해야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_53",
     "reviewStatus": "PENDING",
@@ -3562,7 +3608,7 @@
   {
     "id": "ollama_rejection_notice_56",
     "text": "오늘 밤에 미채택 후보들에게 연락해야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_56",
     "reviewStatus": "PENDING",
@@ -3582,7 +3628,7 @@
   {
     "id": "ollama_rejection_notice_58",
     "text": "오늘 아침에 미채택 후보들에게 연락해야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_58",
     "reviewStatus": "PENDING",
@@ -3592,7 +3638,7 @@
   {
     "id": "ollama_rejection_notice_59",
     "text": "주말 내내 미채택 후보들에게 연락해야 합니다.",
-    "label": "REJECTION_NOTICE",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_59",
     "reviewStatus": "PENDING",
@@ -3612,7 +3658,7 @@
   {
     "id": "ollama_doc_collection_1",
     "text": "다음 주에 수주 가능 여부 확인",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_1",
     "reviewStatus": "PENDING",
@@ -3722,7 +3768,7 @@
   {
     "id": "ollama_doc_collection_12",
     "text": "오늘의 방문 후 고객의 반응 정리",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_12",
     "reviewStatus": "PENDING",
@@ -3732,7 +3778,7 @@
   {
     "id": "ollama_doc_collection_13",
     "text": "내일의 미팅 준비를 위한 고객 정보 확인",
-    "label": "DOC_COLLECTION",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_13",
     "reviewStatus": "PENDING",
@@ -3742,7 +3788,7 @@
   {
     "id": "ollama_doc_collection_14",
     "text": "내주 월요일까지 대시보드 업데이트",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_14",
     "reviewStatus": "PENDING",
@@ -3752,7 +3798,7 @@
   {
     "id": "ollama_doc_collection_15",
     "text": "다음 주 중반까지 진행 상황 점검",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_15",
     "reviewStatus": "PENDING",
@@ -3762,7 +3808,7 @@
   {
     "id": "ollama_doc_collection_16",
     "text": "다음 달 말까지 계획 세우기",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_16",
     "reviewStatus": "PENDING",
@@ -3772,7 +3818,7 @@
   {
     "id": "ollama_doc_collection_17",
     "text": "현재 프로젝트의 진행 상황을 확인",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_17",
     "reviewStatus": "PENDING",
@@ -3782,7 +3828,7 @@
   {
     "id": "ollama_doc_collection_18",
     "text": "오늘의 회의 내용 정리",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_18",
     "reviewStatus": "PENDING",
@@ -3792,7 +3838,7 @@
   {
     "id": "ollama_doc_collection_19",
     "text": "내주 금요일까지 보고서 작성",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_19",
     "reviewStatus": "PENDING",
@@ -3802,7 +3848,7 @@
   {
     "id": "ollama_doc_collection_20",
     "text": "다음 주 일요일까지 마케팅 전략 검토",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_20",
     "reviewStatus": "PENDING",
@@ -3812,7 +3858,7 @@
   {
     "id": "ollama_doc_collection_21",
     "text": "내일의 고객 만족도 평가 실시",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_21",
     "reviewStatus": "PENDING",
@@ -3822,7 +3868,7 @@
   {
     "id": "ollama_doc_collection_22",
     "text": "내주 목요일까지 비즈니스 목표 설정",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_22",
     "reviewStatus": "PENDING",
@@ -3832,7 +3878,7 @@
   {
     "id": "ollama_doc_collection_23",
     "text": "다음 달 초까지 계획 검토",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_23",
     "reviewStatus": "PENDING",
@@ -3842,7 +3888,7 @@
   {
     "id": "ollama_doc_collection_24",
     "text": "내주 수요일까지 이메일 답변 작성",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_24",
     "reviewStatus": "PENDING",
@@ -3852,7 +3898,7 @@
   {
     "id": "ollama_doc_collection_25",
     "text": "다음 주 월요일까지 주요 업무 정리",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_25",
     "reviewStatus": "PENDING",
@@ -3862,7 +3908,7 @@
   {
     "id": "ollama_doc_collection_26",
     "text": "내주 토요일까지 프로젝트 진행 상황 점검",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_26",
     "reviewStatus": "PENDING",
@@ -3872,17 +3918,18 @@
   {
     "id": "ollama_doc_collection_27",
     "text": "오늘 미팅 준비해 봐야겠네요.",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_27",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_doc_collection_28",
     "text": "주말에 계약서를 다시 보내야겠습니다.",
-    "label": "DOC_COLLECTION",
+    "label": "CONTRACT_PREP",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_28",
     "reviewStatus": "PENDING",
@@ -3892,17 +3939,18 @@
   {
     "id": "ollama_doc_collection_29",
     "text": "다음 달에 다시 방문할 계획입니다.",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_29",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_doc_collection_30",
     "text": "새로운 고객 유치를 위해 준비해야겠어요.",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_30",
     "reviewStatus": "PENDING",
@@ -3912,7 +3960,7 @@
   {
     "id": "ollama_doc_collection_31",
     "text": "연장 검토를 위해 고객과 다시 만날 예정입니다.",
-    "label": "DOC_COLLECTION",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_31",
     "reviewStatus": "PENDING",
@@ -3922,7 +3970,7 @@
   {
     "id": "ollama_doc_collection_32",
     "text": "계약 만료 후 평가를 해야겠네요.",
-    "label": "DOC_COLLECTION",
+    "label": "END_EVALUATION",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_32",
     "reviewStatus": "PENDING",
@@ -3932,7 +3980,7 @@
   {
     "id": "ollama_doc_collection_33",
     "text": "이번 주에 고객에게 제안서를 제출해야겠습니다.",
-    "label": "DOC_COLLECTION",
+    "label": "PROPOSAL_SUBMISSION",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_33",
     "reviewStatus": "PENDING",
@@ -3942,7 +3990,7 @@
   {
     "id": "ollama_doc_collection_34",
     "text": "계약이 거절당한 고객에게 공식 통지를 해야하겠습니다.",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_34",
     "reviewStatus": "PENDING",
@@ -3962,7 +4010,7 @@
   {
     "id": "ollama_doc_collection_36",
     "text": "올해의 성과를 평가해야겠네요.",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_36",
     "reviewStatus": "PENDING",
@@ -3972,7 +4020,7 @@
   {
     "id": "ollama_doc_collection_37",
     "text": "매출 증대를 위해 고객과 인터뷰를 계획했습니다.",
-    "label": "DOC_COLLECTION",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_37",
     "reviewStatus": "PENDING",
@@ -3982,7 +4030,7 @@
   {
     "id": "ollama_doc_collection_38",
     "text": "다음 달에 고객에게 계약서를 다시 보내야겠습니다.",
-    "label": "DOC_COLLECTION",
+    "label": "CONTRACT_PREP",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_38",
     "reviewStatus": "PENDING",
@@ -3992,17 +4040,18 @@
   {
     "id": "ollama_doc_collection_39",
     "text": "내일 미팅을 위해 준비해야겠네요.",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_39",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_doc_collection_40",
     "text": "내년 계약을 위해 고객과 만나야하겠습니다.",
-    "label": "DOC_COLLECTION",
+    "label": "MEETING_PREP",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_40",
     "reviewStatus": "PENDING",
@@ -4012,7 +4061,7 @@
   {
     "id": "ollama_doc_collection_41",
     "text": "기회 분석을 위해 시장 조사를 시작해야겠습니다.",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_41",
     "reviewStatus": "PENDING",
@@ -4022,17 +4071,18 @@
   {
     "id": "ollama_doc_collection_42",
     "text": "오늘 편지로 계약서 요청",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_42",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_doc_collection_43",
     "text": "내일 전화해 보겠습니다",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_43",
     "reviewStatus": "PENDING",
@@ -4042,7 +4092,7 @@
   {
     "id": "ollama_doc_collection_44",
     "text": "주말 전에 메일 보내야겠네요",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_44",
     "reviewStatus": "PENDING",
@@ -4052,12 +4102,13 @@
   {
     "id": "ollama_doc_collection_45",
     "text": "주문 확인文书已失效，如需获取最新内容，请重新生成。",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_45",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_doc_collection_46",
@@ -4092,22 +4143,24 @@
   {
     "id": "ollama_doc_collection_49",
     "text": "오늘부터 다음 달까지 고객에게 필요한 서류를 미리 준비해야 합니다",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_49",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_doc_collection_50",
     "text": "내일 방문 전에 고객에게 필요한 서류를 미리 준비해야 합니다",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_50",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_doc_collection_51",
@@ -4162,17 +4215,18 @@
   {
     "id": "ollama_doc_collection_56",
     "text": "오늘부터 다음 주말까지 고객에게 필요한 서류를 미리 준비해야 합니다",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_56",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_doc_collection_57",
     "text": "이번 달의 매출 정리가 필요해요.",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_57",
     "reviewStatus": "PENDING",
@@ -4182,7 +4236,7 @@
   {
     "id": "ollama_doc_collection_58",
     "text": "다음 달 회계서류를 미리 준비해야겠네요.",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_58",
     "reviewStatus": "PENDING",
@@ -4192,7 +4246,7 @@
   {
     "id": "ollama_doc_collection_59",
     "text": "월말 보고서 작성에 필요한 정보들을 모아주세요.",
-    "label": "DOC_COLLECTION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "DOC_COLLECTION_candidate_59",
     "reviewStatus": "PENDING",
@@ -4202,7 +4256,7 @@
   {
     "id": "ollama_end_evaluation_0",
     "text": "올해의 손익 분석을 마무리합니다",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_0",
     "reviewStatus": "PENDING",
@@ -4212,7 +4266,7 @@
   {
     "id": "ollama_end_evaluation_1",
     "text": "기존 계약을 종료하고 후속 작업을 계획합니다",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_1",
     "reviewStatus": "PENDING",
@@ -4222,7 +4276,7 @@
   {
     "id": "ollama_end_evaluation_2",
     "text": "주말에 진행한 영업 결과를 종합 평가합니다",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_2",
     "reviewStatus": "PENDING",
@@ -4242,7 +4296,7 @@
   {
     "id": "ollama_end_evaluation_4",
     "text": "마지막으로 방문한 고객의 만족도를 평가합니다",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_4",
     "reviewStatus": "PENDING",
@@ -4252,7 +4306,7 @@
   {
     "id": "ollama_end_evaluation_5",
     "text": "오늘 진행한 영업 후기와 평가를 작성합니다",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_5",
     "reviewStatus": "PENDING",
@@ -4262,7 +4316,7 @@
   {
     "id": "ollama_end_evaluation_6",
     "text": "주말 동안 진행한 영업 활동을 종합 평가합니다",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_6",
     "reviewStatus": "PENDING",
@@ -4272,7 +4326,7 @@
   {
     "id": "ollama_end_evaluation_7",
     "text": "최근 방문 고객의 구매 의사 결정을 종합 평가합니다",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_7",
     "reviewStatus": "PENDING",
@@ -4282,7 +4336,7 @@
   {
     "id": "ollama_end_evaluation_8",
     "text": "주간 영업 활동을 종합 평가하여 보고서를 작성합니다",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_8",
     "reviewStatus": "PENDING",
@@ -4292,7 +4346,7 @@
   {
     "id": "ollama_end_evaluation_9",
     "text": "이번 주말 영업 후결을 종합 평가합니다",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_9",
     "reviewStatus": "PENDING",
@@ -4312,7 +4366,7 @@
   {
     "id": "ollama_end_evaluation_11",
     "text": "주말 동안 진행한 후속 업무를 종합 평가합니다",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_11",
     "reviewStatus": "PENDING",
@@ -4322,7 +4376,7 @@
   {
     "id": "ollama_end_evaluation_12",
     "text": "주말 동안 진행한 영업 후결을 종합 평가합니다",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_12",
     "reviewStatus": "PENDING",
@@ -4342,17 +4396,18 @@
   {
     "id": "ollama_end_evaluation_14",
     "text": "다음 달 평가 진행",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_14",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_end_evaluation_15",
     "text": "미팅 후 피드백 문서 작성",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_15",
     "reviewStatus": "PENDING",
@@ -4362,7 +4417,7 @@
   {
     "id": "ollama_end_evaluation_16",
     "text": "출근 후 평가 작성",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_16",
     "reviewStatus": "PENDING",
@@ -4372,7 +4427,7 @@
   {
     "id": "ollama_end_evaluation_17",
     "text": "내일 업무 종료 후 평가 작성",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_17",
     "reviewStatus": "PENDING",
@@ -4382,7 +4437,7 @@
   {
     "id": "ollama_end_evaluation_18",
     "text": "주간 성과 평가 문서 작성",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_18",
     "reviewStatus": "PENDING",
@@ -4392,12 +4447,13 @@
   {
     "id": "ollama_end_evaluation_19",
     "text": "종료 후 고객 의견 수집",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_19",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_end_evaluation_20",
@@ -4422,7 +4478,7 @@
   {
     "id": "ollama_end_evaluation_22",
     "text": "업무 종료 후 평가 작성",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_22",
     "reviewStatus": "PENDING",
@@ -4432,17 +4488,18 @@
   {
     "id": "ollama_end_evaluation_23",
     "text": "금주 내 평가 문서 작성",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_23",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_end_evaluation_24",
     "text": "주간 종료 후 평가 진행",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_24",
     "reviewStatus": "PENDING",
@@ -4452,17 +4509,18 @@
   {
     "id": "ollama_end_evaluation_25",
     "text": "주말 동안 평가 문서 작성",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_25",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_end_evaluation_26",
     "text": "이번 달의 영업 성과를 종합 평가해보세요.",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_26",
     "reviewStatus": "PENDING",
@@ -4472,17 +4530,18 @@
   {
     "id": "ollama_end_evaluation_27",
     "text": "다음 달 평가 준비를 시작해볼까요?",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_27",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_end_evaluation_28",
     "text": "월간 영업 평가를 진행할 시간이네요.",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_28",
     "reviewStatus": "PENDING",
@@ -4492,7 +4551,7 @@
   {
     "id": "ollama_end_evaluation_29",
     "text": "매월의 영업 활동을 종합적으로 평가해야 합니다.",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_29",
     "reviewStatus": "PENDING",
@@ -4502,7 +4561,7 @@
   {
     "id": "ollama_end_evaluation_30",
     "text": "이번 달의 영업 활동을 종합 평가해야 합니다.",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_30",
     "reviewStatus": "PENDING",
@@ -4512,7 +4571,7 @@
   {
     "id": "ollama_end_evaluation_31",
     "text": "영업 달성도를 종합적으로 평가해보세요.",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_31",
     "reviewStatus": "PENDING",
@@ -4522,7 +4581,7 @@
   {
     "id": "ollama_end_evaluation_32",
     "text": "다음 달 말까지 영업 성과를 종합 평가해야 합니다.",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_32",
     "reviewStatus": "PENDING",
@@ -4532,17 +4591,18 @@
   {
     "id": "ollama_end_evaluation_33",
     "text": "매월 영업 후속 절차 중 종료 평가를 진행해야 합니다.",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_33",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_end_evaluation_34",
     "text": "매달의 영업 성과를 종합적으로 평가해야 합니다.",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_34",
     "reviewStatus": "PENDING",
@@ -4552,7 +4612,7 @@
   {
     "id": "ollama_end_evaluation_35",
     "text": "이번 달의 영업 활동을 종합적으로 평가해야 합니다.",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_35",
     "reviewStatus": "PENDING",
@@ -4562,7 +4622,7 @@
   {
     "id": "ollama_end_evaluation_36",
     "text": "영업 달성도를 종합적으로 평가해야 합니다.",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_36",
     "reviewStatus": "PENDING",
@@ -4582,7 +4642,7 @@
   {
     "id": "ollama_end_evaluation_38",
     "text": "이번 달의 실적 요약 보고",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_38",
     "reviewStatus": "PENDING",
@@ -4592,7 +4652,7 @@
   {
     "id": "ollama_end_evaluation_39",
     "text": "다음 달 계획 세우기",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_39",
     "reviewStatus": "PENDING",
@@ -4602,7 +4662,7 @@
   {
     "id": "ollama_end_evaluation_40",
     "text": "판매 전략 재검토",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_40",
     "reviewStatus": "PENDING",
@@ -4612,7 +4672,7 @@
   {
     "id": "ollama_end_evaluation_41",
     "text": "주문 시스템 업데이트 검토",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_41",
     "reviewStatus": "PENDING",
@@ -4622,7 +4682,7 @@
   {
     "id": "ollama_end_evaluation_42",
     "text": "내년 예산 준비",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_42",
     "reviewStatus": "PENDING",
@@ -4632,7 +4692,7 @@
   {
     "id": "ollama_end_evaluation_43",
     "text": "마케팅 캠페인 결과 분석",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_43",
     "reviewStatus": "PENDING",
@@ -4642,7 +4702,7 @@
   {
     "id": "ollama_end_evaluation_44",
     "text": "고객 만족도 조사 실시",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_44",
     "reviewStatus": "PENDING",
@@ -4652,7 +4712,7 @@
   {
     "id": "ollama_end_evaluation_45",
     "text": "제품 개선 사항 모색",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_45",
     "reviewStatus": "PENDING",
@@ -4662,7 +4722,7 @@
   {
     "id": "ollama_end_evaluation_46",
     "text": "공급망 효율성 분석",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_46",
     "reviewStatus": "PENDING",
@@ -4672,7 +4732,7 @@
   {
     "id": "ollama_end_evaluation_47",
     "text": "새로운 소프트웨어 도입 검토",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_47",
     "reviewStatus": "PENDING",
@@ -4682,7 +4742,7 @@
   {
     "id": "ollama_end_evaluation_48",
     "text": "내부 프로세스 최적화",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_48",
     "reviewStatus": "PENDING",
@@ -4692,7 +4752,7 @@
   {
     "id": "ollama_end_evaluation_49",
     "text": "오늘 회의록 확인 및 평가",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_49",
     "reviewStatus": "PENDING",
@@ -4702,17 +4762,18 @@
   {
     "id": "ollama_end_evaluation_50",
     "text": "다음 달 방문 준비 시작",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_50",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_end_evaluation_51",
     "text": "계약 만료 후 인터뷰 예정",
-    "label": "END_EVALUATION",
+    "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_51",
     "reviewStatus": "PENDING",
@@ -4721,8 +4782,8 @@
   },
   {
     "id": "ollama_end_evaluation_52",
-    "text": "NewProposal 제출 준비",
-    "label": "END_EVALUATION",
+    "text": "신규 제안서 제출 준비",
+    "label": "PROPOSAL_SUBMISSION",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_52",
     "reviewStatus": "PENDING",
@@ -4742,7 +4803,7 @@
   {
     "id": "ollama_end_evaluation_54",
     "text": "문서 수집 작업 진행",
-    "label": "END_EVALUATION",
+    "label": "DOC_COLLECTION",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_54",
     "reviewStatus": "PENDING",
@@ -4752,7 +4813,7 @@
   {
     "id": "ollama_end_evaluation_55",
     "text": "마지막 고객 회의 후 평가",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_55",
     "reviewStatus": "PENDING",
@@ -4762,7 +4823,7 @@
   {
     "id": "ollama_end_evaluation_56",
     "text": "주말 동안 효율성 검토",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_56",
     "reviewStatus": "PENDING",
@@ -4772,7 +4833,7 @@
   {
     "id": "ollama_end_evaluation_57",
     "text": "업체 소싱을 시작합니다",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_57",
     "reviewStatus": "PENDING",
@@ -4782,7 +4843,7 @@
   {
     "id": "ollama_end_evaluation_58",
     "text": "오늘의 업무 종료 후 평가",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_58",
     "reviewStatus": "PENDING",
@@ -4792,7 +4853,7 @@
   {
     "id": "ollama_end_evaluation_59",
     "text": "비즈니스 만족도 조사 실시",
-    "label": "END_EVALUATION",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "END_EVALUATION_candidate_59",
     "reviewStatus": "PENDING",
@@ -5081,7 +5142,7 @@
   },
   {
     "id": "ollama_profitability_review_28",
-    "text": "월드시티의 수익성을 다시 확인해야 합니다.",
+    "text": "가상조직_28의 수익성을 다시 확인해야 합니다.",
     "label": "PROFITABILITY_REVIEW",
     "source": "local_ollama_training",
     "group": "PROFITABILITY_REVIEW_candidate_28",
@@ -5402,7 +5463,7 @@
   {
     "id": "ollama_sourcing_start_0",
     "text": "가까운 미래에 타공기 공급업체 탐색 시작할 계획입니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_0",
     "reviewStatus": "PENDING",
@@ -5412,7 +5473,7 @@
   {
     "id": "ollama_sourcing_start_1",
     "text": "다음 달 중순부터 새로운 원자재 공급업체를 찾을 예정입니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_1",
     "reviewStatus": "PENDING",
@@ -5422,7 +5483,7 @@
   {
     "id": "ollama_sourcing_start_2",
     "text": "올해 안에 원자재 공급업체 탐색을 시작할 계획입니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_2",
     "reviewStatus": "PENDING",
@@ -5432,7 +5493,7 @@
   {
     "id": "ollama_sourcing_start_3",
     "text": "수주 시즌 전에 신규 공급업체 탐색을 진행할 예정입니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_3",
     "reviewStatus": "PENDING",
@@ -5442,7 +5503,7 @@
   {
     "id": "ollama_sourcing_start_4",
     "text": "이번 달 말까지 신규 자재 공급업체 탐색을 시작하겠습니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_4",
     "reviewStatus": "PENDING",
@@ -5452,7 +5513,7 @@
   {
     "id": "ollama_sourcing_start_5",
     "text": "추가 공급업체 탐색을 통해 비용 절감을 목표로 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_5",
     "reviewStatus": "PENDING",
@@ -5462,7 +5523,7 @@
   {
     "id": "ollama_sourcing_start_6",
     "text": "다음 달 초부터 타공기 공급업체 탐색에 착수할 계획입니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_6",
     "reviewStatus": "PENDING",
@@ -5472,7 +5533,7 @@
   {
     "id": "ollama_sourcing_start_7",
     "text": "공급망 강화를 위해 새로운 공급업체 탐색을 시작합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_7",
     "reviewStatus": "PENDING",
@@ -5482,7 +5543,7 @@
   {
     "id": "ollama_sourcing_start_8",
     "text": "타공기 공급업체 탐색을 통해 효율성을 향상시키겠습니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_8",
     "reviewStatus": "PENDING",
@@ -5492,7 +5553,7 @@
   {
     "id": "ollama_sourcing_start_9",
     "text": "올해 안에 타공기 공급업체를 탐색하고 협상할 계획입니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_9",
     "reviewStatus": "PENDING",
@@ -5502,7 +5563,7 @@
   {
     "id": "ollama_sourcing_start_10",
     "text": "다음 달 중순부터 공급업체 탐색을 시작하여 대체 옵션을 찾겠습니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_10",
     "reviewStatus": "PENDING",
@@ -5512,7 +5573,7 @@
   {
     "id": "ollama_sourcing_start_11",
     "text": "신규 공급업체 탐색을 통해 비용 효율성을 높일 예정입니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_11",
     "reviewStatus": "PENDING",
@@ -5522,7 +5583,7 @@
   {
     "id": "ollama_sourcing_start_12",
     "text": "추가 공급업체 탐색을 통해 시장 다각화를 추진합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_12",
     "reviewStatus": "PENDING",
@@ -5532,7 +5593,7 @@
   {
     "id": "ollama_sourcing_start_13",
     "text": "타공기 공급업체 탐색을 통해 경쟁력을 강화하겠습니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_13",
     "reviewStatus": "PENDING",
@@ -5542,7 +5603,7 @@
   {
     "id": "ollama_sourcing_start_14",
     "text": "신규 공급자를 찾아야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_14",
     "reviewStatus": "PENDING",
@@ -5552,7 +5613,7 @@
   {
     "id": "ollama_sourcing_start_15",
     "text": "공급망을 재조정해야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_15",
     "reviewStatus": "PENDING",
@@ -5562,7 +5623,7 @@
   {
     "id": "ollama_sourcing_start_16",
     "text": "비즈니스 네트워크를 확장해야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_16",
     "reviewStatus": "PENDING",
@@ -5572,7 +5633,7 @@
   {
     "id": "ollama_sourcing_start_17",
     "text": "신규 공급자를 탐색해야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_17",
     "reviewStatus": "PENDING",
@@ -5582,7 +5643,7 @@
   {
     "id": "ollama_sourcing_start_18",
     "text": "신규 공급자를 찾으려고 노력해야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_18",
     "reviewStatus": "PENDING",
@@ -5592,7 +5653,7 @@
   {
     "id": "ollama_sourcing_start_19",
     "text": "우리 회사의 공급원을 재검토해야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_19",
     "reviewStatus": "PENDING",
@@ -5602,7 +5663,7 @@
   {
     "id": "ollama_sourcing_start_20",
     "text": "신규 공급업체를 찾는 작업이 필요합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_20",
     "reviewStatus": "PENDING",
@@ -5612,7 +5673,7 @@
   {
     "id": "ollama_sourcing_start_21",
     "text": "새로운 공급자를 찾아야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_21",
     "reviewStatus": "PENDING",
@@ -5622,7 +5683,7 @@
   {
     "id": "ollama_sourcing_start_22",
     "text": "공급망 관리를 위한 조사를 실시해야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_22",
     "reviewStatus": "PENDING",
@@ -5632,7 +5693,7 @@
   {
     "id": "ollama_sourcing_start_23",
     "text": "신규 공급업체 탐색을 시작해야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_23",
     "reviewStatus": "PENDING",
@@ -5642,7 +5703,7 @@
   {
     "id": "ollama_sourcing_start_24",
     "text": "비즈니스 네트워크 확장 계획을 세워야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_24",
     "reviewStatus": "PENDING",
@@ -5652,7 +5713,7 @@
   {
     "id": "ollama_sourcing_start_25",
     "text": "공급망 관리에 대한 연구가 필요합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_25",
     "reviewStatus": "PENDING",
@@ -5662,7 +5723,7 @@
   {
     "id": "ollama_sourcing_start_26",
     "text": "공급망 구조를 재구성해야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_26",
     "reviewStatus": "PENDING",
@@ -5672,7 +5733,7 @@
   {
     "id": "ollama_sourcing_start_27",
     "text": "신규 공급업체 탐색을 시작합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_27",
     "reviewStatus": "PENDING",
@@ -5682,7 +5743,7 @@
   {
     "id": "ollama_sourcing_start_28",
     "text": "주간 스케줄에 신규 공급업체 검색 계획 추가",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_28",
     "reviewStatus": "PENDING",
@@ -5692,7 +5753,7 @@
   {
     "id": "ollama_sourcing_start_29",
     "text": "새로운 공급업체 탐사를 위한 준비를 시작합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_29",
     "reviewStatus": "PENDING",
@@ -5702,7 +5763,7 @@
   {
     "id": "ollama_sourcing_start_30",
     "text": "당장 신규 공급업체를 탐색해야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_30",
     "reviewStatus": "PENDING",
@@ -5712,7 +5773,7 @@
   {
     "id": "ollama_sourcing_start_31",
     "text": "공급업체 탐색을 위한 시장조사 시작합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_31",
     "reviewStatus": "PENDING",
@@ -5722,7 +5783,7 @@
   {
     "id": "ollama_sourcing_start_32",
     "text": "새로운 공급업체를 찾아보기로 결정했습니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_32",
     "reviewStatus": "PENDING",
@@ -5732,7 +5793,7 @@
   {
     "id": "ollama_sourcing_start_33",
     "text": "본주에 신규 공급업체 탐색을 시작할 계획입니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_33",
     "reviewStatus": "PENDING",
@@ -5742,7 +5803,7 @@
   {
     "id": "ollama_sourcing_start_34",
     "text": "즉시 신규 공급업체 탐색을 시작합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_34",
     "reviewStatus": "PENDING",
@@ -5752,7 +5813,7 @@
   {
     "id": "ollama_sourcing_start_35",
     "text": "신규 공급업체 탐색을 위한 조사 시작합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_35",
     "reviewStatus": "PENDING",
@@ -5762,7 +5823,7 @@
   {
     "id": "ollama_sourcing_start_36",
     "text": "공급업체 탐색에 필요한 자료를 수집합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_36",
     "reviewStatus": "PENDING",
@@ -5772,7 +5833,7 @@
   {
     "id": "ollama_sourcing_start_37",
     "text": "즉시 신규 공급업체 탐색을 시작해야 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_37",
     "reviewStatus": "PENDING",
@@ -5782,7 +5843,7 @@
   {
     "id": "ollama_sourcing_start_38",
     "text": "공급업체 탐색을 위한 연락처를 확인합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_38",
     "reviewStatus": "PENDING",
@@ -5792,7 +5853,7 @@
   {
     "id": "ollama_sourcing_start_39",
     "text": "신규 공급업체 탐색을 위한 계획을 세웁니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_39",
     "reviewStatus": "PENDING",
@@ -5802,7 +5863,7 @@
   {
     "id": "ollama_sourcing_start_40",
     "text": "신규 공급업체 탐색을 위한 데이터 분석 시작합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_40",
     "reviewStatus": "PENDING",
@@ -5812,7 +5873,7 @@
   {
     "id": "ollama_sourcing_start_41",
     "text": "신규 공급자 탐색을 시작할 계획입니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_41",
     "reviewStatus": "PENDING",
@@ -5822,7 +5883,7 @@
   {
     "id": "ollama_sourcing_start_42",
     "text": "해외 공급망을 심사하려고 합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_42",
     "reviewStatus": "PENDING",
@@ -5832,7 +5893,7 @@
   {
     "id": "ollama_sourcing_start_43",
     "text": "신규 공급자를 검색할 예정입니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_43",
     "reviewStatus": "PENDING",
@@ -5842,7 +5903,7 @@
   {
     "id": "ollama_sourcing_start_44",
     "text": "다양한 공급원을 찾는 중입니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_44",
     "reviewStatus": "PENDING",
@@ -5852,7 +5913,7 @@
   {
     "id": "ollama_sourcing_start_45",
     "text": "신규 공급업체 발굴 작업을 진행합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_45",
     "reviewStatus": "PENDING",
@@ -5862,7 +5923,7 @@
   {
     "id": "ollama_sourcing_start_46",
     "text": "공급업체를 찾는 작업을 시작합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_46",
     "reviewStatus": "PENDING",
@@ -5872,7 +5933,7 @@
   {
     "id": "ollama_sourcing_start_47",
     "text": "신규 공급업체 발굴을 위한 연구를 시작합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_47",
     "reviewStatus": "PENDING",
@@ -5882,7 +5943,7 @@
   {
     "id": "ollama_sourcing_start_48",
     "text": "신규 공급자 탐색을 위한 조사 진행 중입니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_48",
     "reviewStatus": "PENDING",
@@ -5892,7 +5953,7 @@
   {
     "id": "ollama_sourcing_start_49",
     "text": "공급업체를 탐색하여 효율적인 공급망 구축을 계획합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_49",
     "reviewStatus": "PENDING",
@@ -5902,7 +5963,7 @@
   {
     "id": "ollama_sourcing_start_50",
     "text": "신규 공급업체 탐색 작업을 시작합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_50",
     "reviewStatus": "PENDING",
@@ -5912,7 +5973,7 @@
   {
     "id": "ollama_sourcing_start_51",
     "text": "신규 공급업체 탐색 작업을 진행합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_51",
     "reviewStatus": "PENDING",
@@ -5922,7 +5983,7 @@
   {
     "id": "ollama_sourcing_start_52",
     "text": "신규 공급업체 탐색을 위한 연구를 진행합니다.",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_52",
     "reviewStatus": "PENDING",
@@ -5932,7 +5993,7 @@
   {
     "id": "ollama_sourcing_start_53",
     "text": "신규 공급업체 검색 시작",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_53",
     "reviewStatus": "PENDING",
@@ -5942,7 +6003,7 @@
   {
     "id": "ollama_sourcing_start_54",
     "text": "신규 자원 탐색을 위한 준비",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_54",
     "reviewStatus": "PENDING",
@@ -5952,7 +6013,7 @@
   {
     "id": "ollama_sourcing_start_55",
     "text": "다음 달의 신규 공급업체 탐색 계획",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_55",
     "reviewStatus": "PENDING",
@@ -5962,7 +6023,7 @@
   {
     "id": "ollama_sourcing_start_56",
     "text": "시장에서 신규 공급업체 정보 수집",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_56",
     "reviewStatus": "PENDING",
@@ -5972,7 +6033,7 @@
   {
     "id": "ollama_sourcing_start_57",
     "text": "신규 공급업체를 위한 초기 연락 설정",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_57",
     "reviewStatus": "PENDING",
@@ -5982,7 +6043,7 @@
   {
     "id": "ollama_sourcing_start_58",
     "text": "가까운 장래에 신규 공급업체를 위한 탐색 시작",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_58",
     "reviewStatus": "PENDING",
@@ -5992,7 +6053,7 @@
   {
     "id": "ollama_sourcing_start_59",
     "text": "신규 공급업체를 위한 탐색과 협상 준비",
-    "label": "SOURCING_START",
+    "label": "NONE",
     "source": "local_ollama_training",
     "group": "SOURCING_START_candidate_59",
     "reviewStatus": "PENDING",
@@ -6052,7 +6113,7 @@
   {
     "id": "ollama_none_5",
     "text": "계약서를 다시 확인하였습니다.",
-    "label": "NONE",
+    "label": "CONTRACT_PREP",
     "source": "local_ollama_training",
     "group": "NONE_candidate_5",
     "reviewStatus": "PENDING",
@@ -6132,7 +6193,7 @@
   {
     "id": "ollama_none_13",
     "text": "가장 최근에 작성한 계약서를 다시 확인합니다.",
-    "label": "NONE",
+    "label": "CONTRACT_PREP",
     "source": "local_ollama_training",
     "group": "NONE_candidate_13",
     "reviewStatus": "PENDING",
@@ -6277,7 +6338,8 @@
     "group": "NONE_candidate_27",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_none_28",
@@ -6367,7 +6429,8 @@
     "group": "NONE_candidate_36",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_none_37",
@@ -6497,7 +6560,8 @@
     "group": "NONE_candidate_49",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
-    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "trainingEligible": false
   },
   {
     "id": "ollama_none_50",
@@ -6597,6 +6661,666 @@
     "group": "NONE_candidate_59",
     "reviewStatus": "PENDING",
     "generatorModel": "qwen2.5:7b",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_0",
+    "text": "채용 포털사이트에서 후보 검색",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_0",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_1",
+    "text": "업계 관련 포털사이트에서 잠재 후보 탐색.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_1",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_2",
+    "text": "사회 채용 포털사이트에서 검색 및 후보 수집.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_2",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_3",
+    "text": "소셜 미디어 플랫폼에서 관련 인재 검색.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_3",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_4",
+    "text": "온라인 커뮤니티에서 적합한 후보를 탐색한다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_4",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_5",
+    "text": "채용 게시판에서 요청 직무에 맞는 후보를 찾아본다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_5",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_6",
+    "text": "소셜 미디어에서 관련 인재를 탐색한다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_6",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_7",
+    "text": "고객이 요청한 개발 포지션의 후보 탐색을 시작합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_7",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_8",
+    "text": "개발 후보들을 검색하여 적합한 인력을 찾습니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_8",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_9",
+    "text": "개발 관련 인재들을 물색하여 후보 리스트를 만듭니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_9",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_10",
+    "text": "현재 포지션에 맞는 후보들을 소싱합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_10",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_11",
+    "text": "개발 직무에 필요한 인력을 찾기 위해 노력합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_11",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_12",
+    "text": "주요 포지션에 대한 후보 탐색을 진행합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_12",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_13",
+    "text": "개발 분야에서 적합한 인력을 찾아보겠습니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_13",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_14",
+    "text": "개발 직무에 필요한 후보들을 찾습니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_14",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_15",
+    "text": "포지션에 맞는 후보를 탐색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_15",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_16",
+    "text": "신규 개발 포지션에 맞는 인력 소싱을 시작합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_16",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_17",
+    "text": "고객의 기술 포지션을 위해 적합한 후보를 탐색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_17",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_18",
+    "text": "개발 직무에 맞는 후보를 찾는 작업을 시작합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_18",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_19",
+    "text": "기술적인 포지션에 적합한 인력을 소싱합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_19",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_20",
+    "text": "개발 포지션에 필요한 인력을 검색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_20",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_21",
+    "text": "기술평가 포지션에 적합한 후보를 물색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_21",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_22",
+    "text": "고객의 신규 프로그래머 포지션을 위한 인력을 소싱합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_22",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_23",
+    "text": "기술적 포지션에 맞는 후보를 찾습니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_23",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_24",
+    "text": "고객의 개발 포지션에 필요한 인력을 탐색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_24",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_25",
+    "text": "기술 포지션에 적합한 후보를 소싱합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_25",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_26",
+    "text": "고객의 개발 포지션에 적합한 후보를 탐색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_26",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_27",
+    "text": "개발 직무에 대한 경력이 있는 후보를 찾아봅니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_27",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_28",
+    "text": "적합한 후보를 개발 포지션에 맞춰 검색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_28",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_29",
+    "text": "개발 직무에 도전한 경험이 있는 후보를 찾습니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_29",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_30",
+    "text": "개발 직무에 대한 적합한 후보를 물색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_30",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_31",
+    "text": "개발 포지션에 필요한 후보를 소싱합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_31",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_32",
+    "text": "개발 직무에 대한 적합한 후보를 찾기 시작합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_32",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_33",
+    "text": "개발 직무에 필요한 후보를 탐색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_33",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_34",
+    "text": "고객의 개발 포지션에 맞는 후보를 찾아봅니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_34",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_35",
+    "text": "개발 직무에 대한 적합한 후보를 찾아보겠습니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_35",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_36",
+    "text": "고객의 긴급 개발 포지션에 맞는 인력 탐색을 시작합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_36",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_37",
+    "text": "개발 후보 물색을 위한 인터넷 검색을 진행합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_37",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_38",
+    "text": "고객의 프로젝트에 필요한 인재 소싱을 시작합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_38",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_39",
+    "text": "고객의 긴급 요청에 따른 개발 포지션 후보 탐색을 시작합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_39",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_40",
+    "text": "개발 후보를 찾기 위해 여러 채용 게시판을 검색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_40",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_41",
+    "text": "고객의 인력 요청을 받고 개발 포지션 소싱을 시작합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_41",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_42",
+    "text": "개발 후보를 찾기 위해 전문 네트워크를 활용합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_42",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_43",
+    "text": "고객의 긴급 개발 포지션을 위한 후보 탐색을 시작합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_43",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_44",
+    "text": "개발 후보를 찾기 위해 직업 커뮤니티를 검토합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_44",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_45",
+    "text": "고객의 요청에 따라 개발 포지션에 적합한 후보를 찾기 시작합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_45",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_46",
+    "text": "기술 역량에 맞는 후보를 물색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_46",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_47",
+    "text": "해당 직무에 적합한 인력을 검색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_47",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_48",
+    "text": "개발 직무의 후보를 소싱합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_48",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_49",
+    "text": "고객의 요구에 부합하는 인력을 찾아봅니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_49",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_50",
+    "text": "기술 역량에 맞는 후보를 찾습니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_50",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_51",
+    "text": "해당 포지션에 적합한 후보를 탐색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_51",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_52",
+    "text": "고객의 요구 사항에 부합하는 인력을 찾아봅니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_52",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_53",
+    "text": "기술 역량에 맞는 인력을 찾습니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_53",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_54",
+    "text": "개발 직무에 적합한 후보를 소싱합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_54",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_55",
+    "text": "개발 포지션에 적합한 후보를 채용 게시판에서 탐색합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_55",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_56",
+    "text": "기술팀에 필요한 인력을 검색하여 소싱합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_56",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_57",
+    "text": "프론트엔드 개발자를 위한 적합한 후보를 찾습니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_57",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_58",
+    "text": "소프트웨어 개발자 후보를 물색하여 연락처를 수집합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_58",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
+    "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  {
+    "id": "ollama_sourcing_start_v2_59",
+    "text": "데이터 분석가에 대한 인력 소싱을 시작합니다.",
+    "label": "SOURCING_START",
+    "source": "local_ollama_training",
+    "group": "SOURCING_START_v2_candidate_59",
+    "reviewStatus": "PENDING",
+    "generatorModel": "qwen2.5:7b",
+    "promptVersion": "task_type_domains_v2",
     "generatorModelDigest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
   }
 ]
