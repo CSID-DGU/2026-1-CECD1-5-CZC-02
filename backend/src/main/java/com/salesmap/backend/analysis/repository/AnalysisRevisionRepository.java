@@ -10,4 +10,6 @@ public interface AnalysisRevisionRepository extends JpaRepository<AnalysisRevisi
     List<AnalysisRevision> findByAnalysisIdOrderByIdAsc(Long analysisId);
 
     boolean existsByAnalysisId(Long analysisId);
+
+    List<AnalysisRevision> findByOwnerUserIdOrderByIdAsc(Long ownerUserId);
 }
