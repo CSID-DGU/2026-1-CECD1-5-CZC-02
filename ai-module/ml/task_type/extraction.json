@@ -1,0 +1,1508 @@
+[
+  {
+    "id": "extract_0",
+    "note": {
+      "noteId": "mn_c_eval_0",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "계약서 초안 이번 주 금요일까지 송부",
+            "evidence": "계약서 초안 이번 주 금요일까지 송부"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "계약서 초안 이번 주 금요일까지 송부",
+        "evidence": "계약서 초안 이번 주 금요일까지 송부",
+        "dueDate": "2026-10-23",
+        "taskType": "CONTRACT_PREP",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_1",
+    "note": {
+      "noteId": "mn_c_eval_1",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_1",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "제안서 다음 주 수요일까지 제출",
+            "evidence": "제안서 다음 주 수요일까지 제출"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "제안서 다음 주 수요일까지 제출",
+        "evidence": "제안서 다음 주 수요일까지 제출",
+        "dueDate": "2026-10-28",
+        "taskType": "PROPOSAL_SUBMISSION",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_2",
+    "note": {
+      "noteId": "mn_c_eval_2",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_2",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "테스트 계정 내일 발급",
+            "evidence": "테스트 계정 내일 발급"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "테스트 계정 내일 발급",
+        "evidence": "테스트 계정 내일 발급",
+        "dueDate": "2026-10-24",
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_3",
+    "note": {
+      "noteId": "mn_c_eval_3",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_3",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [],
+        "nextContact": [
+          {
+            "text": "고객 미팅 11월 2일 진행",
+            "evidence": "고객 미팅 11월 2일 진행"
+          }
+        ]
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "commitments"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "고객 미팅 11월 2일 진행",
+        "evidence": "고객 미팅 11월 2일 진행",
+        "dueDate": "2026-11-02",
+        "taskType": "MEETING_PREP",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_4",
+    "note": {
+      "noteId": "mn_c_eval_4",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_4",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [],
+        "nextContact": [
+          {
+            "text": "현장 방문 모레 준비",
+            "evidence": "현장 방문 모레 준비"
+          }
+        ]
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "commitments"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "현장 방문 모레 준비",
+        "evidence": "현장 방문 모레 준비",
+        "dueDate": "2026-10-25",
+        "taskType": "VISIT_PREP",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_5",
+    "note": {
+      "noteId": "mn_c_eval_5",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_5",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "미회수 서류 오늘 중 확인",
+            "evidence": "미회수 서류 오늘 중 확인"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "미회수 서류 오늘 중 확인",
+        "evidence": "미회수 서류 오늘 중 확인",
+        "dueDate": "2026-10-23",
+        "taskType": "DOC_COLLECTION",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_6",
+    "note": {
+      "noteId": "mn_c_eval_6",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_6",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "계약서 월말까지 송부",
+            "evidence": "계약서 월말까지 송부"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "계약서 월말까지 송부",
+        "evidence": "계약서 월말까지 송부",
+        "dueDate": "2026-10-31",
+        "taskType": "CONTRACT_PREP",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_7",
+    "note": {
+      "noteId": "mn_c_eval_7",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_7",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [],
+        "nextContact": [
+          {
+            "text": "예산 확정되면 연락",
+            "evidence": "예산 확정되면 연락"
+          }
+        ]
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "commitments"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "예산 확정되면 연락",
+        "evidence": "예산 확정되면 연락",
+        "dueDate": null,
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_8",
+    "note": {
+      "noteId": "mn_c_eval_8",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_8",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [],
+        "nextContact": [
+          {
+            "text": "11월 첫 주 재방문",
+            "evidence": "11월 첫 주 재방문"
+          }
+        ]
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "commitments"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "11월 첫 주 재방문",
+        "evidence": "11월 첫 주 재방문",
+        "dueDate": null,
+        "taskType": "MEETING_PREP",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_9",
+    "note": {
+      "noteId": "mn_c_eval_9",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_9",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [],
+        "nextContact": [
+          {
+            "text": "다음 달 초 미팅",
+            "evidence": "다음 달 초 미팅"
+          }
+        ]
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "commitments"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "다음 달 초 미팅",
+        "evidence": "다음 달 초 미팅",
+        "dueDate": null,
+        "taskType": "MEETING_PREP",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_10",
+    "note": {
+      "noteId": "mn_c_eval_10",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_10",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "투입 일정 검토 후 회신 (고객 측)",
+            "evidence": "투입 일정 검토 후 회신 (고객 측)"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "투입 일정 검토 후 회신 (고객 측) — 이행 여부 확인",
+        "evidence": "투입 일정 검토 후 회신 (고객 측)",
+        "dueDate": null,
+        "taskType": "NONE",
+        "commitmentKind": "IMPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_11",
+    "note": {
+      "noteId": "mn_c_eval_11",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_11",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "미채택 후보 통보",
+            "evidence": "미채택 후보 통보"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "미채택 후보 통보",
+        "evidence": "미채택 후보 통보",
+        "dueDate": null,
+        "taskType": "REJECTION_NOTICE",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_12",
+    "note": {
+      "noteId": "mn_c_eval_12",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_12",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "계약 만료 대응 면담",
+            "evidence": "계약 만료 대응 면담"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "계약 만료 대응 면담",
+        "evidence": "계약 만료 대응 면담",
+        "dueDate": null,
+        "taskType": "RENEWAL_INTERVIEW",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_13",
+    "note": {
+      "noteId": "mn_c_eval_13",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_13",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "투입 종료 평가 작성",
+            "evidence": "투입 종료 평가 작성"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "투입 종료 평가 작성",
+        "evidence": "투입 종료 평가 작성",
+        "dueDate": null,
+        "taskType": "END_EVALUATION",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_14",
+    "note": {
+      "noteId": "mn_c_eval_14",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_14",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "조건 협의 전 마진 검토",
+            "evidence": "조건 협의 전 마진 검토"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "조건 협의 전 마진 검토",
+        "evidence": "조건 협의 전 마진 검토",
+        "dueDate": null,
+        "taskType": "PROFITABILITY_REVIEW",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_15",
+    "note": {
+      "noteId": "mn_c_eval_15",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_15",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "신규 인력 소싱 착수",
+            "evidence": "신규 인력 소싱 착수"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "신규 인력 소싱 착수",
+        "evidence": "신규 인력 소싱 착수",
+        "dueDate": null,
+        "taskType": "SOURCING_START",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_16",
+    "note": {
+      "noteId": "mn_c_eval_16",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_16",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "오늘 자료 내일 송부",
+            "evidence": "오늘 자료 내일 송부"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "오늘 자료 내일 송부",
+        "evidence": "오늘 자료 내일 송부",
+        "dueDate": null,
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "extract_17",
+    "note": {
+      "noteId": "mn_c_eval_17",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_17",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "계약서 작성 및 신규 인력 소싱",
+            "evidence": "계약서 작성 및 신규 인력 소싱"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "계약서 작성 및 신규 인력 소싱",
+        "evidence": "계약서 작성 및 신규 인력 소싱",
+        "dueDate": null,
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "requests_only",
+    "note": {
+      "noteId": "mn_c_negative",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [
+          {
+            "text": "계약서 초안 이번 주 금요일까지 송부",
+            "evidence": "계약서 초안 이번 주 금요일까지 송부"
+          }
+        ],
+        "concerns": [],
+        "commitments": [],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "concerns",
+        "commitments",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "multi",
+    "note": {
+      "noteId": "mn_c_multi",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [
+        {
+          "displayName": "검증인물_A",
+          "resolutionId": null,
+          "personId": "p_demo_a"
+        },
+        {
+          "displayName": "검증인물_B",
+          "resolutionId": null,
+          "personId": "p_demo_b"
+        }
+      ],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "계약서 송부",
+            "evidence": "계약서 송부"
+          },
+          {
+            "text": "현장 방문",
+            "evidence": "현장 방문"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "계약서 송부",
+        "evidence": "계약서 송부",
+        "dueDate": null,
+        "taskType": "CONTRACT_PREP",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": null
+      },
+      {
+        "content": "현장 방문",
+        "evidence": "현장 방문",
+        "dueDate": null,
+        "taskType": "VISIT_PREP",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": null
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "one_person",
+    "note": {
+      "noteId": "mn_c_one_person",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [
+        {
+          "displayName": "검증인물_A",
+          "resolutionId": null,
+          "personId": "p_demo_a"
+        }
+      ],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "계약서 송부",
+            "evidence": "계약서 송부"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "계약서 송부",
+        "evidence": "계약서 송부",
+        "dueDate": null,
+        "taskType": "CONTRACT_PREP",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": "p_demo_a"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "repeated_full",
+    "note": {
+      "noteId": "mn_c_repeated_full",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "계약서 송부",
+            "evidence": "계약서 송부"
+          },
+          {
+            "text": "계약서 송부",
+            "evidence": "계약서 송부"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "계약서 송부",
+        "evidence": "계약서 송부",
+        "dueDate": null,
+        "taskType": "CONTRACT_PREP",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": null
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "shared_evidence",
+    "note": {
+      "noteId": "mn_c_shared_evidence",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "계약서 송부",
+            "evidence": "계약서를 보내고 계정을 발급하기로 함"
+          },
+          {
+            "text": "계정 발급",
+            "evidence": "계약서를 보내고 계정을 발급하기로 함"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "계약서 송부",
+        "evidence": "계약서를 보내고 계정을 발급하기로 함",
+        "dueDate": null,
+        "taskType": "CONTRACT_PREP",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": null
+      },
+      {
+        "content": "계정 발급",
+        "evidence": "계약서를 보내고 계정을 발급하기로 함",
+        "dueDate": null,
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": null
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "year_rollover",
+    "note": {
+      "noteId": "mn_c_year_rollover",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-12-31T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "내일 자료 송부",
+            "evidence": "내일 자료 송부"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "내일 자료 송부",
+        "evidence": "내일 자료 송부",
+        "dueDate": "2027-01-01",
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": null
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "next_year_week",
+    "note": {
+      "noteId": "mn_c_next_year_week",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-12-31T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "다음 주 월요일 자료 송부",
+            "evidence": "다음 주 월요일 자료 송부"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "다음 주 월요일 자료 송부",
+        "evidence": "다음 주 월요일 자료 송부",
+        "dueDate": "2027-01-04",
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": null
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "leap_day",
+    "note": {
+      "noteId": "mn_c_leap_day",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2028-02-01T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "월말 자료 송부",
+            "evidence": "월말 자료 송부"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "월말 자료 송부",
+        "evidence": "월말 자료 송부",
+        "dueDate": "2028-02-29",
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": null
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "unknown_reference",
+    "note": {
+      "noteId": "mn_c_unknown_reference",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": null,
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "내일 자료 송부",
+            "evidence": "내일 자료 송부"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "내일 자료 송부",
+        "evidence": "내일 자료 송부",
+        "dueDate": null,
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": null
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "absolute_without_reference",
+    "note": {
+      "noteId": "mn_c_absolute_without_reference",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": null,
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [
+          {
+            "text": "2026-11-02 자료 송부",
+            "evidence": "2026-11-02 자료 송부"
+          }
+        ],
+        "nextContact": []
+      },
+      "missingFields": [
+        "discussion",
+        "customerRequests",
+        "concerns",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [
+      {
+        "content": "2026-11-02 자료 송부",
+        "evidence": "2026-11-02 자료 송부",
+        "dueDate": "2026-11-02",
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": null
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "discussion_only",
+    "note": {
+      "noteId": "mn_c_discussion_only",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "FULL",
+      "participants": [],
+      "fields": {
+        "discussion": [
+          {
+            "text": "검토 중인 아이디어",
+            "evidence": "검토 중인 아이디어"
+          }
+        ],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [],
+        "nextContact": []
+      },
+      "missingFields": [
+        "customerRequests",
+        "concerns",
+        "commitments",
+        "nextContact"
+      ],
+      "status": "DRAFT"
+    },
+    "expected": [],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "light_known",
+    "note": {
+      "noteId": "mn_c_light",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "LIGHT",
+      "participants": [
+        {
+          "displayName": "검증인물_0",
+          "resolutionId": null,
+          "personId": "p_demo_a"
+        },
+        {
+          "displayName": "검증인물_1",
+          "resolutionId": null,
+          "personId": "p_demo_b"
+        },
+        {
+          "displayName": "검증인물_2",
+          "resolutionId": null,
+          "personId": null
+        }
+      ],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [],
+        "nextContact": []
+      },
+      "missingFields": [
+        "perPerson[0].status",
+        "perPerson[0].request",
+        "perPerson[1].status",
+        "perPerson[1].request",
+        "perPerson[2].status",
+        "perPerson[2].request",
+        "perPerson[2].followUp"
+      ],
+      "status": "DRAFT",
+      "perPerson": [
+        {
+          "displayName": "검증인물_0",
+          "personId": "p_demo_a",
+          "status": null,
+          "request": null,
+          "followUp": {
+            "text": "설정 안내 메일 송부",
+            "evidence": "설정 안내 메일을 보내기로 함"
+          }
+        },
+        {
+          "displayName": "검증인물_1",
+          "personId": "p_demo_b",
+          "status": null,
+          "request": null,
+          "followUp": {
+            "text": "설정 안내 메일 송부",
+            "evidence": "설정 안내 메일을 보내기로 함"
+          }
+        },
+        {
+          "displayName": "검증인물_2",
+          "personId": null,
+          "status": null,
+          "request": null,
+          "followUp": null
+        }
+      ]
+    },
+    "expected": [
+      {
+        "content": "설정 안내 메일 송부",
+        "evidence": "설정 안내 메일을 보내기로 함",
+        "dueDate": null,
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": "p_demo_a"
+      },
+      {
+        "content": "설정 안내 메일 송부",
+        "evidence": "설정 안내 메일을 보내기로 함",
+        "dueDate": null,
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": "p_demo_b"
+      }
+    ],
+    "reviewStatus": "PENDING"
+  },
+  {
+    "id": "light_unknown_same_followup",
+    "note": {
+      "noteId": "mn_c_light_unknown",
+      "sourceRefs": [
+        {
+          "sourceId": "src_c_eval_0",
+          "sourceType": "MEETING_NOTE"
+        }
+      ],
+      "occurredAt": "2026-10-23T10:00:00",
+      "mode": "LIGHT",
+      "participants": [
+        {
+          "displayName": "검증인물_0",
+          "resolutionId": null,
+          "personId": null
+        },
+        {
+          "displayName": "검증인물_1",
+          "resolutionId": null,
+          "personId": null
+        },
+        {
+          "displayName": "검증인물_2",
+          "resolutionId": null,
+          "personId": null
+        }
+      ],
+      "fields": {
+        "discussion": [],
+        "customerRequests": [],
+        "concerns": [],
+        "commitments": [],
+        "nextContact": []
+      },
+      "missingFields": [
+        "perPerson[0].status",
+        "perPerson[0].request",
+        "perPerson[1].status",
+        "perPerson[1].request",
+        "perPerson[2].status",
+        "perPerson[2].request",
+        "perPerson[2].followUp"
+      ],
+      "status": "DRAFT",
+      "perPerson": [
+        {
+          "displayName": "검증인물_0",
+          "personId": null,
+          "status": null,
+          "request": null,
+          "followUp": {
+            "text": "설정 안내 메일 송부",
+            "evidence": "설정 안내 메일을 보내기로 함"
+          }
+        },
+        {
+          "displayName": "검증인물_1",
+          "personId": null,
+          "status": null,
+          "request": null,
+          "followUp": {
+            "text": "설정 안내 메일 송부",
+            "evidence": "설정 안내 메일을 보내기로 함"
+          }
+        },
+        {
+          "displayName": "검증인물_2",
+          "personId": null,
+          "status": null,
+          "request": null,
+          "followUp": null
+        }
+      ]
+    },
+    "expected": [
+      {
+        "content": "설정 안내 메일 송부",
+        "evidence": "설정 안내 메일을 보내기로 함",
+        "dueDate": null,
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": null
+      },
+      {
+        "content": "설정 안내 메일 송부",
+        "evidence": "설정 안내 메일을 보내기로 함",
+        "dueDate": null,
+        "taskType": "NONE",
+        "commitmentKind": "EXPLICIT",
+        "counterpartPersonId": null
+      }
+    ],
+    "reviewStatus": "PENDING"
+  }
+]

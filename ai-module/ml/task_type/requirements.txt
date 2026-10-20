@@ -1,0 +1,4 @@
+# 명시적 ML 실험 전용. CI 테스트는 이 패키지들을 import하지 않는다.
+sentence-transformers
+scikit-learn
+numpy
