@@ -1,2 +1,5 @@
 local_model.npz
 generation-progress.json
+generation-v2-progress.json
+generated-train.json
+balanced_model.npz

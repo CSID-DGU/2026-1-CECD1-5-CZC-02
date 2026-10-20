@@ -1,0 +1,2556 @@
+{
+  "baseCommit": "5fcb228",
+  "evaluationLabelsReviewed": true,
+  "evaluationReviewBasis": "사용자 전달: #25 교차 검수에서 55개 라벨 모두 일치",
+  "trainingIndependentReviewCompleted": false,
+  "boundaryStatus": "C 제안, B/D·총괄 합의 전",
+  "changes": [
+    {
+      "id": "ollama_sourcing_start_0",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_1",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_2",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_3",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_4",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_5",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_6",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_7",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_8",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_9",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_10",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_11",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_12",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_13",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "USER_FEEDBACK"
+    },
+    {
+      "id": "ollama_sourcing_start_14",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_15",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_16",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_17",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_18",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_19",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_20",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_21",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_22",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_23",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_24",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_25",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_26",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_27",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_28",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_29",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "USER_FEEDBACK"
+    },
+    {
+      "id": "ollama_sourcing_start_30",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_31",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_32",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "USER_FEEDBACK"
+    },
+    {
+      "id": "ollama_sourcing_start_33",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_34",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_35",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_36",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_37",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_38",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_39",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_40",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_41",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_42",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_43",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_44",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_45",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_46",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_47",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_48",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_49",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_50",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_51",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_52",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_53",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_54",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_55",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_56",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_57",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_58",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_59",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "공급업체·공급망 또는 일반 사업 네트워크 탐색이며 인력 후보 탐색이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_0",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_1",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_2",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_4",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_5",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_6",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "USER_FEEDBACK"
+    },
+    {
+      "id": "ollama_end_evaluation_7",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_8",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_9",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_11",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_12",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_14",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_15",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_16",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_17",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_18",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_19",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_22",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_23",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_24",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_25",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_26",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_27",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_28",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_29",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_30",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_31",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_32",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_33",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_34",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_35",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_36",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_38",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_39",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_40",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_41",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_42",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_43",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_44",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_45",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_46",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_47",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_48",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_49",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_50",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_51",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약 만료 대응 인터뷰이며 투입 종료 평가 결과물 작성이 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_52",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "PROPOSAL_SUBMISSION",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "제안서 제출 준비. 불필요한 고유명사형 표현 제거",
+      "origin": "USER_FEEDBACK"
+    },
+    {
+      "id": "ollama_end_evaluation_54",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "DOC_COLLECTION",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "문서 수집·취합 업무",
+      "origin": "USER_FEEDBACK"
+    },
+    {
+      "id": "ollama_end_evaluation_55",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_56",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_57",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_58",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_end_evaluation_59",
+      "beforeLabel": "END_EVALUATION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "월간·영업·업무 평가 또는 일반 후속이며 인력/프로젝트 투입 종료 평가가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_1",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_12",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_13",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_14",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_15",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_16",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_17",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_18",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_19",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_20",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_21",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_22",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_23",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_24",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_25",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "USER_FEEDBACK"
+    },
+    {
+      "id": "ollama_doc_collection_26",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_27",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_28",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "CONTRACT_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_29",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_30",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_31",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_32",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "END_EVALUATION",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_33",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "PROPOSAL_SUBMISSION",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_34",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "USER_FEEDBACK"
+    },
+    {
+      "id": "ollama_doc_collection_36",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_37",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_38",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "CONTRACT_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "USER_FEEDBACK"
+    },
+    {
+      "id": "ollama_doc_collection_39",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_40",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_41",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_42",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_43",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_44",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_45",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_49",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_50",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_56",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_57",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_58",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_doc_collection_59",
+      "beforeLabel": "DOC_COLLECTION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 송부/고객 논의/제안서 제출 등 실제 목적에 맞춰 수정. 서류 회수·수집 근거가 없는 일반 준비는 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_0",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_3",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_6",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "USER_FEEDBACK"
+    },
+    {
+      "id": "ollama_rejection_notice_8",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_9",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_12",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_13",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_15",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_17",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_20",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_25",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_26",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_32",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_34",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_35",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_43",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_46",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_47",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_49",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_51",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_53",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_56",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_58",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_59",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "미채택 결과·사유를 알린다는 내용 없이 재접촉/연락/선정 사실만 있음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_37",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "통보 내용이 미채택 결과인지 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_rejection_notice_41",
+      "beforeLabel": "REJECTION_NOTICE",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "통보 내용이 미채택 결과인지 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_none_5",
+      "beforeLabel": "NONE",
+      "afterLabel": "CONTRACT_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 내용 재확인·대조",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_none_13",
+      "beforeLabel": "NONE",
+      "afterLabel": "CONTRACT_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "계약서 내용 재확인·대조",
+      "origin": "USER_FEEDBACK"
+    },
+    {
+      "id": "ollama_proposal_submission_0",
+      "beforeLabel": "PROPOSAL_SUBMISSION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "견적서 송부/제출은 인력 제안서·후보 리스트 제출로 추측하지 않음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_proposal_submission_59",
+      "beforeLabel": "PROPOSAL_SUBMISSION",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "견적서 송부/제출은 인력 제안서·후보 리스트 제출로 추측하지 않음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_15",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_22",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_26",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_27",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_29",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_30",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_31",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_32",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_33",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_38",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_39",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_42",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_47",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_50",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_53",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_54",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_56",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_59",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객사 사무실에 가서 만나는 방문이며 지역 이동·출장·현장 점검의 근거 없음",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_0",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_4",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_5",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_7",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_8",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_10",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_12",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_18",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_21",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_23",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_34",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_35",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_36",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_41",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_44",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_46",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_49",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_51",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_52",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_55",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_visit_prep_57",
+      "beforeLabel": "VISIT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "방문 목적·대상 또는 이동 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_0",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_3",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_6",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_8",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_9",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_12",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_16",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_19",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_20",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_23",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_25",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_28",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_30",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_31",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_35",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_46",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_54",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_56",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_59",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "고객 미팅/내부 회의 여부가 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_contract_prep_29",
+      "beforeLabel": "CONTRACT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "어떤 서류인지 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_contract_prep_50",
+      "beforeLabel": "CONTRACT_PREP",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "계약서와 제안서가 섞인 불명확한 결과물이므로 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_11",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "계약 만료/갱신 의사 면담인지 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_14",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "NONE",
+      "trainingEligible": true,
+      "textEdited": false,
+      "reason": "고객 회의 내용 정리는 만료 대응 면담 준비가 아님",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_29",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "만료 계약 재요청의 대상 행위가 불명확하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_28",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "업무와 무관한 행사명 제거",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_55",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "깨진 영문 혼합 표기를 일반 한국어로 정리",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_none_27",
+      "beforeLabel": "NONE",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "미팅/방문 대상·목적이 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_none_36",
+      "beforeLabel": "NONE",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "미팅/방문 대상·목적이 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_none_49",
+      "beforeLabel": "NONE",
+      "afterLabel": "NONE",
+      "trainingEligible": false,
+      "textEdited": false,
+      "reason": "미팅/방문 대상·목적이 불분명하여 검수 전 학습 제외",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_36",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_38",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_39",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_41",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_48",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_50",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_52",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_meeting_prep_53",
+      "beforeLabel": "MEETING_PREP",
+      "afterLabel": "MEETING_PREP",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_41",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_42",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_44",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_45",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_47",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_48",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_49",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_51",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_52",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_53",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_renewal_interview_54",
+      "beforeLabel": "RENEWAL_INTERVIEW",
+      "afterLabel": "RENEWAL_INTERVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "실제 회사처럼 보이는 이름을 명시적 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_profitability_review_28",
+      "beforeLabel": "PROFITABILITY_REVIEW",
+      "afterLabel": "PROFITABILITY_REVIEW",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "회사명처럼 보이는 표현을 가상조직 식별자로 교체",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_v2_5",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "SOURCING_START",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "생성된 플랫폼 고유명사를 일반 표현으로 교체하거나 포지션 탐색을 인력 후보 탐색으로 명확화",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_v2_7",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "SOURCING_START",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "생성된 플랫폼 고유명사를 일반 표현으로 교체하거나 포지션 탐색을 인력 후보 탐색으로 명확화",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_v2_36",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "SOURCING_START",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "생성된 플랫폼 고유명사를 일반 표현으로 교체하거나 포지션 탐색을 인력 후보 탐색으로 명확화",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_v2_39",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "SOURCING_START",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "생성된 플랫폼 고유명사를 일반 표현으로 교체하거나 포지션 탐색을 인력 후보 탐색으로 명확화",
+      "origin": "C_PRELIMINARY_REVIEW"
+    },
+    {
+      "id": "ollama_sourcing_start_v2_16",
+      "beforeLabel": "SOURCING_START",
+      "afterLabel": "SOURCING_START",
+      "trainingEligible": true,
+      "textEdited": true,
+      "reason": "포지션만 찾는 표현이 아니라 인력 소싱임을 명시",
+      "origin": "C_PRELIMINARY_REVIEW"
+    }
+  ],
+  "newSourcingCandidateIds": [
+    "ollama_sourcing_start_v2_0",
+    "ollama_sourcing_start_v2_1",
+    "ollama_sourcing_start_v2_2",
+    "ollama_sourcing_start_v2_3",
+    "ollama_sourcing_start_v2_4",
+    "ollama_sourcing_start_v2_5",
+    "ollama_sourcing_start_v2_6",
+    "ollama_sourcing_start_v2_7",
+    "ollama_sourcing_start_v2_8",
+    "ollama_sourcing_start_v2_9",
+    "ollama_sourcing_start_v2_10",
+    "ollama_sourcing_start_v2_11",
+    "ollama_sourcing_start_v2_12",
+    "ollama_sourcing_start_v2_13",
+    "ollama_sourcing_start_v2_14",
+    "ollama_sourcing_start_v2_15",
+    "ollama_sourcing_start_v2_16",
+    "ollama_sourcing_start_v2_17",
+    "ollama_sourcing_start_v2_18",
+    "ollama_sourcing_start_v2_19",
+    "ollama_sourcing_start_v2_20",
+    "ollama_sourcing_start_v2_21",
+    "ollama_sourcing_start_v2_22",
+    "ollama_sourcing_start_v2_23",
+    "ollama_sourcing_start_v2_24",
+    "ollama_sourcing_start_v2_25",
+    "ollama_sourcing_start_v2_26",
+    "ollama_sourcing_start_v2_27",
+    "ollama_sourcing_start_v2_28",
+    "ollama_sourcing_start_v2_29",
+    "ollama_sourcing_start_v2_30",
+    "ollama_sourcing_start_v2_31",
+    "ollama_sourcing_start_v2_32",
+    "ollama_sourcing_start_v2_33",
+    "ollama_sourcing_start_v2_34",
+    "ollama_sourcing_start_v2_35",
+    "ollama_sourcing_start_v2_36",
+    "ollama_sourcing_start_v2_37",
+    "ollama_sourcing_start_v2_38",
+    "ollama_sourcing_start_v2_39",
+    "ollama_sourcing_start_v2_40",
+    "ollama_sourcing_start_v2_41",
+    "ollama_sourcing_start_v2_42",
+    "ollama_sourcing_start_v2_43",
+    "ollama_sourcing_start_v2_44",
+    "ollama_sourcing_start_v2_45",
+    "ollama_sourcing_start_v2_46",
+    "ollama_sourcing_start_v2_47",
+    "ollama_sourcing_start_v2_48",
+    "ollama_sourcing_start_v2_49",
+    "ollama_sourcing_start_v2_50",
+    "ollama_sourcing_start_v2_51",
+    "ollama_sourcing_start_v2_52",
+    "ollama_sourcing_start_v2_53",
+    "ollama_sourcing_start_v2_54",
+    "ollama_sourcing_start_v2_55",
+    "ollama_sourcing_start_v2_56",
+    "ollama_sourcing_start_v2_57",
+    "ollama_sourcing_start_v2_58",
+    "ollama_sourcing_start_v2_59"
+  ],
+  "oldSourcingPolicy": "기존 60개는 인력 탐색이 아니므로 기존 ID를 유지하여 NONE 음성 예제로 교정"
+}

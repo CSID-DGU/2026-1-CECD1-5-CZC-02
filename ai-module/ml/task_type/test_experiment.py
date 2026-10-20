@@ -6,7 +6,9 @@ from ml.task_type.experiment import classification_metrics, extraction_metrics, 
 def test_dataset_sources_groups_and_labels():
     train, evaluation = load('train.json'), load('evaluation.json')
     validate_splits(train, evaluation)
-    assert set(Counter(r['label'] for r in train).values()) == {60}
+    active = [row for row in train if row.get('trainingEligible', True)]
+    assert all(Counter(row['label'] for row in active).values())
+    assert len(active) < len(train)  # 모호한 후보를 정답으로 강제하지 않는다.
     assert set(Counter(r['label'] for r in evaluation).values()) == {5}
     assert all(r['reviewStatus'] == 'PENDING' for r in train + evaluation)
 
