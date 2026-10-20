@@ -2231,7 +2231,7 @@
   },
   {
     "id": "ollama_renewal_interview_43",
-    "text": "내일 퀄리테크 계약 갱신 면담 진행",
+    "text": "내일 가상테크 계약 갱신 면담 진행",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_43",
@@ -2261,7 +2261,7 @@
   },
   {
     "id": "ollama_renewal_interview_46",
-    "text": "본주에 텔레콤아이 계약 만료 대응 면담",
+    "text": "본주에 가상통신 계약 만료 대응 면담",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_46",
@@ -2301,7 +2301,7 @@
   },
   {
     "id": "ollama_renewal_interview_50",
-    "text": "주말에 디지털솔루션 계약 만료 대응 면담",
+    "text": "주말에 가상솔루션 계약 만료 대응 면담",
     "label": "RENEWAL_INTERVIEW",
     "source": "local_ollama_training",
     "group": "RENEWAL_INTERVIEW_candidate_50",
@@ -3281,7 +3281,7 @@
   },
   {
     "id": "ollama_rejection_notice_28",
-    "text": "미래에셋증권의 제안을 미채택한 후보에게 알릴 일이 있습니다.",
+    "text": "가상증권의 제안을 미채택한 후보에게 알릴 일이 있습니다.",
     "label": "REJECTION_NOTICE",
     "source": "local_ollama_training",
     "group": "REJECTION_NOTICE_candidate_28",
