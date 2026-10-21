@@ -58,11 +58,15 @@ def test_person_split_and_pair_labels_have_no_leakage(dataset):
     for key, allowed, count in (("trainPairs", train, 2400), ("evalPairs", evaluation, 600)):
         pairs = dataset[key]
         assert len(pairs) == count
-        assert Counter(p["label"] for p in pairs) == {0: count // 2, 1: count // 2}
+        assert Counter(int(p["personIdA"] == p["personIdB"]) for p in pairs) == {0: count // 2, 1: count // 2}
         assert {p["caseType"] for p in pairs} == set(POSITIVE_CASES + NEGATIVE_CASES)
         for pair in pairs:
             assert {pair["personIdA"], pair["personIdB"]} <= allowed
-            assert pair["label"] == int(pair["personIdA"] == pair["personIdB"])
+            if pair["label"] is None:
+                assert pair["expected"]["kind"] == "AMBIGUOUS"
+                assert set(pair["expected"]["targetPersonIds"]) <= allowed
+            else:
+                assert pair["label"] == int(pair["personIdA"] == pair["personIdB"])
             assert pair["pairId"] not in all_pair_ids
             all_pair_ids.add(pair["pairId"])
             for side in ("mentionA", "mentionB"):
@@ -139,7 +143,8 @@ def test_validation_rejects_leakage_and_wrong_labels_before_writing(dataset, tmp
         write_dataset(invalid, tmp_path)
     assert not list(tmp_path.iterdir())
     invalid = deepcopy(dataset)
-    invalid["trainPairs"][0]["label"] = 1 - invalid["trainPairs"][0]["label"]
+    pair = next(p for p in invalid["trainPairs"] if p["label"] is not None)
+    pair["label"] = 1 - pair["label"]
     with pytest.raises(ValueError):
         validate_dataset(invalid)
 

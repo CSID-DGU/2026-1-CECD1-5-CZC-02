@@ -1,11 +1,19 @@
 # A — 인물 식별 내부 구현·합성 데이터·실험
 
 이 폴더만으로 가짜 인물 300명과 비교 쌍 3,000개를 생성한다.
-다른 담당 코드·공용 파일·contracts를 수정하지 않으며 네트워크·LLM·유료 API를 사용하지 않는다.
-내부 비교·후보 검색·순위와 실험을 구현했다. 확률 점수·최종 판정·API·화면·백엔드 연결은 아직 없다.
+생성기·실험은 네트워크·LLM·유료 API를 사용하지 않는다.
+내부 비교·후보 검색·순위와 실험, D-022 식별 API를 구현했다. 화면·백엔드 연결은 남아 있다.
+API 사용법과 공용 라우트 등록 두 줄의 변경은 [API.md](../../app/identity/API.md)에 정리했다.
 
 독립 작업 1~4의 완료 범위와 팀 검토 요청은 [HANDOFF.md](HANDOFF.md)를 먼저 읽는다.
 새 검증 자료·임베딩 비교·실패/속도 분석·인수인계 정리는 완료했으며, A 기능 전체 완료를 뜻하지 않는다.
+
+## 2026-10-20 데이터 교차 검수 반영
+
+[DATA_REVIEW.md](DATA_REVIEW.md)에 수정 근거·정답 형식·평가 방법을 정리했다.
+학습 same_name 53개와 missing_company 11개를 label=null, expected.kind=AMBIGUOUS로 수정했다.
+인물·분할·평가 쌍과 학습 관측 원문은 유지했다. API는 해당 64건을 CANDIDATES로 반환하는 회귀 검사를 포함한다.
+데이터 수정 단계 371개, API 포함 최신 검사 **406 passed, 5 warnings**. 과거 0/1 비율·평가 수치는 아래보다 이 절과 DATA_REVIEW.md를 우선한다.
 
 ## 내부 구현과 검토 상태
 
@@ -14,8 +22,8 @@ A의 비교 단서·충돌 처리·팀 검토 사항은 [../../app/identity/RULE
 이름의 편집 거리·문자열 유사도는 app/identity/similarity.py에서 계산하며 확률로 해석하지 않는다.
 정확한 이름/별칭·연락처 일치에 따른 내부 검토 후보 선별은 app/identity/candidates.py에 구현했다.
 유사도 기반 내부 검색·순위는 app/identity/ranking.py에 구현했다.
-외부 API용 확률·최종 판정은 아직 없으며,
-판별 규칙 자체는 팀 검토 전 설계 초안이다. A 폴더 밖은 수정하지 않았다.
+외부 응답의 확률 score는 D-022에 따라 null이다. API의 세 판정은 engine.py에 구현했으며
+사람 선택·인물 저장·병합은 하지 않는다. 공용 파일은 app/main.py 라우트 등록 두 줄만 추가했다.
 
 ## 실행
 
@@ -47,7 +55,7 @@ python ml/identity/generate_dataset.py --seed 7 --output-dir /tmp/identity-seed7
 | 파일 | 내용 |
 | --- | --- |
 | data/persons.json | Person 계약을 따르는 인물 300명 |
-| data/pairs_train.json | 학습용 2,400쌍: 같은 사람 1,200 / 다른 사람 1,200 |
+| data/pairs_train.json | 학습용 2,400쌍: 같은 사람 1,189 / 다른 사람 1,147 / 애매함 64 |
 | data/pairs_eval.json | 평가용 600쌍: 같은 사람 300 / 다른 사람 300 |
 | data/split.json | seed와 학습 인물 240명·평가 인물 60명의 ID 목록 |
 
@@ -72,9 +80,9 @@ python ml/identity/generate_dataset.py --seed 7 --output-dir /tmp/identity-seed7
 | 같은 사람 | english | 등록된 Synthetic Person 영문 별칭 | 200 / 50 |
 | 같은 사람 | typo | 이름의 가상 표기 한 글자 오타 | 200 / 50 |
 | 같은 사람 | company_change | 대장 이력에 있는 이전 회사·직함으로 언급 | 200 / 50 |
-| 같은 사람 | missing_company | 회사가 빠진 언급 | 200 / 50 |
+| 같음/애매함 | missing_company | 회사가 빠진 언급 | 200 / 50 |
 | 다른 사람 | random | 서로 다른 인물을 무작위 비교 | 400 / 100 |
-| 다른 사람 | same_name | 이름은 같고 회사는 다른 두 사람 | 400 / 100 |
+| 다름/애매함 | same_name | 이름은 같고 회사는 다른 두 사람 | 400 / 100 |
 | 다른 사람 | same_company | 회사는 같고 이름은 다른 두 사람 | 400 / 100 |
 
 같은 사람의 변형 언급에서는 이메일·전화를 비워 이름·소속 비교도 필요하게 만든다.
@@ -93,13 +101,14 @@ python ml/identity/generate_dataset.py --seed 7 --output-dir /tmp/identity-seed7
 | 비교 쌍 필드 | 용도 |
 | --- | --- |
 | pairId | 실험 내부의 비교 쌍 ID |
-| label | 같은 사람 1 / 다른 사람 0. 인물 ID로 생성한 정답 |
+| label | 같은 사람 1 / 다른 사람 0 / 애매함 null. 생성 ID만으로 애매함을 단정하지 않음 |
+| expected | 애매한 쌍의 kind=AMBIGUOUS·가능한 인물 집합·출처·이유 |
 | caseType | 어떤 변형·반례로 만들었는지 |
 | personIdA / personIdB | 양쪽 언급의 정답 인물 ID, 분할 검사용 |
 | mentionA / mentionB | 모델이 비교할 관측 단서 |
 | evidence | 각 언급에 대응하는 가짜 관측 원문 |
 
-pairId·label·caseType·정답 인물 ID·sourceRef·evidence를 모델 입력 특성으로 사용하지 않는다.
+pairId·label·expected·caseType·정답 인물 ID·sourceRef·evidence를 모델 입력 특성으로 사용하지 않는다.
 evidence는 관측 단서로 만든 가짜 텍스트이며 실제 메모·추출기를 검증한 자료가 아니다.
 채워진 단서의 출처를 추적하고 교차 검수할 수 있도록 원문을 함께 남긴 것이다.
 
@@ -110,18 +119,17 @@ evidence는 관측 단서로 만든 가짜 텍스트이며 실제 메모·추출
 2026-10-15 검증: 표기 정리·단서 비교·이름 유사도·후보 검색/순위/평가와 기존 테스트를 포함해 **256 passed, 5 warnings**.
 새 저장소에 가상환경은 자동 생성하지 않았으며 검증에는 기존 테스트용 Python 환경을 사용했다.
 
-현재 CI의 `python -m pytest tests`에는 이 폴더의 테스트가 포함되지 않는다.
-총괄과 공유하기 전에는 공용 CI나 tests/를 수정하지 않는다.
-로컬에서는 위의 `python -m pytest tests ml/identity app/identity -q`를 실행한다.
+D-021에 따라 공용 CI는 이제 `python -m pytest tests app ml`로 A 폴더 테스트도 실행한다.
+이번 데이터 수정에서 공용 CI나 tests/는 수정하지 않았다. 로컬도 같은 명령을 사용할 수 있다.
 
 남은 검토:
 
-- 생성자가 아닌 팀원의 정답·변형 교차 검수. 아직 사람 검수는 하지 않았다.
+- 총괄의 정답 교차 검수에서 나온 64건 수정은 반영했다. 추가 데이터의 교차 검수는 계속 필요하다.
 - 유형별 비율·동명이인 개수와 관측 단서의 적절성. 고정 비율은 실제 사용 빈도가 아니다.
 - 같은 관측 단서가 반복될 수 있어 3,000쌍이 모두 독립적인 관측을 뜻하지 않는다.
 - 번호 기반 가상 이름과 한 종류의 오타는 실제 이름의 복잡성을 대표하지 않는다.
 - 평가 인물은 모두 대장 안에 있다. 신규 인물 탐지 성능을 평가하는 데이터는 아니다.
-- 공용 CI에 A의 검사를 포함하는 방법과 필요 시 사용자가 동의한 후속 범위.
+- 교차 검수의 두 지적 사항은 DATA_REVIEW.md에 반영했다. 추가 유형의 정답 검수는 계속 필요하다.
 
 팀 공유 후 decisions.md에 추가할 문장 제안:
 “A의 ML-1 가짜 데이터는 인물을 먼저 학습/평가로 분리한 뒤 집합 내부에서 비교 쌍을 만들고,

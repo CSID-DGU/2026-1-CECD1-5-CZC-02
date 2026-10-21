@@ -30,7 +30,7 @@
   },
   {
     "pairId": "pair_train_0804",
-    "label": 1,
+    "label": null,
     "caseType": "missing_company",
     "personIdA": "p_001",
     "personIdB": "p_001",
@@ -55,6 +55,17 @@
     "evidence": {
       "mentionA": "이름: 가상인물_1825 | 회사: 가상회사_008 | 직함: 대리 | 이메일: synthetic-p_001@people.example | 채널: MEETING",
       "mentionB": "이름: 가상인물_1825 | 직함: 대리 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_001",
+        "p_002"
+      ],
+      "relatedPersonIds": [
+        "p_001"
+      ],
+      "reason": "HOMONYM_WITHOUT_COMPANY"
     }
   },
   {
@@ -117,7 +128,7 @@
   },
   {
     "pairId": "pair_train_0258",
-    "label": 1,
+    "label": null,
     "caseType": "missing_company",
     "personIdA": "p_020",
     "personIdB": "p_020",
@@ -142,6 +153,17 @@
     "evidence": {
       "mentionA": "이름: 가상인물_9675 | 회사: 가상회사_005 | 직함: 팀장 | 이메일: synthetic-p_020@people.example | 채널: PHONE",
       "mentionB": "이름: 가상인물_9675 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_019",
+        "p_020"
+      ],
+      "relatedPersonIds": [
+        "p_020"
+      ],
+      "reason": "HOMONYM_WITHOUT_COMPANY"
     }
   },
   {
@@ -1828,7 +1850,7 @@
   },
   {
     "pairId": "pair_train_2267",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -1853,6 +1875,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -6410,7 +6444,7 @@
   },
   {
     "pairId": "pair_train_2072",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -6435,6 +6469,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -7657,7 +7703,7 @@
   },
   {
     "pairId": "pair_train_1925",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -7682,6 +7728,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -7715,7 +7773,7 @@
   },
   {
     "pairId": "pair_train_2216",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -7740,6 +7798,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -7773,7 +7843,7 @@
   },
   {
     "pairId": "pair_train_1685",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -7798,6 +7868,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -8469,7 +8551,7 @@
   },
   {
     "pairId": "pair_train_0816",
-    "label": 1,
+    "label": null,
     "caseType": "missing_company",
     "personIdA": "p_015",
     "personIdB": "p_015",
@@ -8494,6 +8576,17 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 전화: 000-0000-0015 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015"
+      ],
+      "reason": "HOMONYM_WITHOUT_COMPANY"
     }
   },
   {
@@ -8991,7 +9084,7 @@
   },
   {
     "pairId": "pair_train_1583",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -9016,6 +9109,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -9629,7 +9734,7 @@
   },
   {
     "pairId": "pair_train_1062",
-    "label": 1,
+    "label": null,
     "caseType": "missing_company",
     "personIdA": "p_007",
     "personIdB": "p_007",
@@ -9654,11 +9759,22 @@
     "evidence": {
       "mentionA": "이름: 가상인물_4013 | 회사: 가상회사_003 | 직함: 부장 | 이메일: synthetic-p_007@people.example | 전화: 000-0000-0007 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_4013 | 직함: 부장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_007",
+        "p_008"
+      ],
+      "relatedPersonIds": [
+        "p_007"
+      ],
+      "reason": "HOMONYM_WITHOUT_COMPANY"
     }
   },
   {
     "pairId": "pair_train_0552",
-    "label": 1,
+    "label": null,
     "caseType": "missing_company",
     "personIdA": "p_007",
     "personIdB": "p_007",
@@ -9683,6 +9799,17 @@
     "evidence": {
       "mentionA": "이름: 가상인물_4013 | 회사: 가상회사_003 | 직함: 부장 | 전화: 000-0000-0007 | 채널: PHONE",
       "mentionB": "이름: 가상인물_4013 | 직함: 부장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_007",
+        "p_008"
+      ],
+      "relatedPersonIds": [
+        "p_007"
+      ],
+      "reason": "HOMONYM_WITHOUT_COMPANY"
     }
   },
   {
@@ -10499,7 +10626,7 @@
   },
   {
     "pairId": "pair_train_2006",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -10524,6 +10651,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -11543,7 +11682,7 @@
   },
   {
     "pairId": "pair_train_2069",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -11568,6 +11707,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -12471,7 +12622,7 @@
   },
   {
     "pairId": "pair_train_1250",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -12496,6 +12647,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -14385,7 +14548,7 @@
   },
   {
     "pairId": "pair_train_2114",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -14410,6 +14573,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -14820,7 +14995,7 @@
   },
   {
     "pairId": "pair_train_2099",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -14845,6 +15020,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: PHONE",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -15023,7 +15210,7 @@
   },
   {
     "pairId": "pair_train_1940",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -15048,6 +15235,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: PHONE",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -15835,7 +16034,7 @@
   },
   {
     "pairId": "pair_train_1799",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -15860,6 +16059,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: PHONE",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -18909,7 +19120,7 @@
   },
   {
     "pairId": "pair_train_2342",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -18934,6 +19145,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -22563,7 +22786,7 @@
   },
   {
     "pairId": "pair_train_2081",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -22588,6 +22811,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -22824,7 +23059,7 @@
   },
   {
     "pairId": "pair_train_1523",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -22849,6 +23084,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: PHONE",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -23317,7 +23564,7 @@
   },
   {
     "pairId": "pair_train_1445",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -23342,6 +23589,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -25405,7 +25664,7 @@
   },
   {
     "pairId": "pair_train_1598",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -25430,6 +25689,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -26623,7 +26894,7 @@
   },
   {
     "pairId": "pair_train_0468",
-    "label": 1,
+    "label": null,
     "caseType": "missing_company",
     "personIdA": "p_013",
     "personIdB": "p_013",
@@ -26648,6 +26919,17 @@
     "evidence": {
       "mentionA": "이름: 가상인물_1680 | 회사: 가상회사_010 | 직함: 과장 | 이메일: synthetic-p_013@people.example | 전화: 000-0000-0013 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_1680 | 직함: 과장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_013",
+        "p_014"
+      ],
+      "relatedPersonIds": [
+        "p_013"
+      ],
+      "reason": "HOMONYM_WITHOUT_COMPANY"
     }
   },
   {
@@ -26884,7 +27166,7 @@
   },
   {
     "pairId": "pair_train_1424",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -26909,6 +27191,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -27116,7 +27410,7 @@
   },
   {
     "pairId": "pair_train_2132",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -27141,6 +27435,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: PHONE",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -27464,7 +27770,7 @@
   },
   {
     "pairId": "pair_train_1748",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -27489,6 +27795,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -28073,7 +28391,7 @@
   },
   {
     "pairId": "pair_train_2048",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -28098,6 +28416,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: PHONE",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -28653,7 +28983,7 @@
   },
   {
     "pairId": "pair_train_0432",
-    "label": 1,
+    "label": null,
     "caseType": "missing_company",
     "personIdA": "p_010",
     "personIdB": "p_010",
@@ -28678,6 +29008,17 @@
     "evidence": {
       "mentionA": "이름: 가상인물_3658 | 회사: 가상회사_009 | 직함: 과장 | 전화: 000-0000-0010 | 채널: MEETING",
       "mentionB": "이름: 가상인물_3658 | 직함: 과장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_009",
+        "p_010"
+      ],
+      "relatedPersonIds": [
+        "p_010"
+      ],
+      "reason": "HOMONYM_WITHOUT_COMPANY"
     }
   },
   {
@@ -28740,7 +29081,7 @@
   },
   {
     "pairId": "pair_train_1580",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -28765,6 +29106,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -29900,7 +30253,7 @@
   },
   {
     "pairId": "pair_train_1409",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -29925,6 +30278,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: PHONE",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -31350,7 +31715,7 @@
   },
   {
     "pairId": "pair_train_1232",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -31375,6 +31740,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -31524,7 +31901,7 @@
   },
   {
     "pairId": "pair_train_2345",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -31549,6 +31926,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -31814,7 +32203,7 @@
   },
   {
     "pairId": "pair_train_2294",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -31839,6 +32228,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -32162,7 +32563,7 @@
   },
   {
     "pairId": "pair_train_1937",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -32187,6 +32588,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -33583,7 +33996,7 @@
   },
   {
     "pairId": "pair_train_1613",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -33608,6 +34021,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -33786,7 +34211,7 @@
   },
   {
     "pairId": "pair_train_1349",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -33811,6 +34236,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -35323,7 +35760,7 @@
   },
   {
     "pairId": "pair_train_0690",
-    "label": 1,
+    "label": null,
     "caseType": "missing_company",
     "personIdA": "p_010",
     "personIdB": "p_010",
@@ -35348,6 +35785,17 @@
     "evidence": {
       "mentionA": "이름: 가상인물_3658 | 회사: 가상회사_009 | 직함: 과장 | 이메일: synthetic-p_010@people.example | 채널: PHONE",
       "mentionB": "이름: 가상인물_3658 | 직함: 과장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_009",
+        "p_010"
+      ],
+      "relatedPersonIds": [
+        "p_010"
+      ],
+      "reason": "HOMONYM_WITHOUT_COMPANY"
     }
   },
   {
@@ -35555,7 +36003,7 @@
   },
   {
     "pairId": "pair_train_2087",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -35580,6 +36028,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -36338,7 +36798,7 @@
   },
   {
     "pairId": "pair_train_1421",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -36363,6 +36823,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -37672,7 +38144,7 @@
   },
   {
     "pairId": "pair_train_1661",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -37697,6 +38169,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -39296,7 +39780,7 @@
   },
   {
     "pairId": "pair_train_1292",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -39321,6 +39805,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -43443,7 +43939,7 @@
   },
   {
     "pairId": "pair_train_1469",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -43468,6 +43964,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -44922,7 +45430,7 @@
   },
   {
     "pairId": "pair_train_1823",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -44947,6 +45455,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -46923,7 +47443,7 @@
   },
   {
     "pairId": "pair_train_1134",
-    "label": 1,
+    "label": null,
     "caseType": "missing_company",
     "personIdA": "p_008",
     "personIdB": "p_008",
@@ -46948,6 +47468,17 @@
     "evidence": {
       "mentionA": "이름: 가상인물_4013 | 회사: 가상회사_001 | 직함: 대리 | 이메일: synthetic-p_008@people.example | 전화: 000-0000-0008 | 채널: PHONE",
       "mentionB": "이름: 가상인물_4013 | 직함: 대리 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_007",
+        "p_008"
+      ],
+      "relatedPersonIds": [
+        "p_008"
+      ],
+      "reason": "HOMONYM_WITHOUT_COMPANY"
     }
   },
   {
@@ -47271,7 +47802,7 @@
   },
   {
     "pairId": "pair_train_1565",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -47296,6 +47827,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -47880,7 +48423,7 @@
   },
   {
     "pairId": "pair_train_1724",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -47905,6 +48448,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -49011,7 +49566,7 @@
   },
   {
     "pairId": "pair_train_2213",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -49036,6 +49591,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -49446,7 +50013,7 @@
   },
   {
     "pairId": "pair_train_2276",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -49471,6 +50038,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -49504,7 +50083,7 @@
   },
   {
     "pairId": "pair_train_1676",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -49529,6 +50108,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: PHONE",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -51563,7 +52154,7 @@
   },
   {
     "pairId": "pair_train_1604",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -51588,6 +52179,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -51737,7 +52340,7 @@
   },
   {
     "pairId": "pair_train_1547",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -51762,6 +52365,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -52578,7 +53193,7 @@
   },
   {
     "pairId": "pair_train_1643",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -52603,6 +53218,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -52694,7 +53321,7 @@
   },
   {
     "pairId": "pair_train_1223",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -52719,6 +53346,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -56464,7 +57103,7 @@
   },
   {
     "pairId": "pair_train_1865",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -56489,6 +57128,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -56841,7 +57492,7 @@
   },
   {
     "pairId": "pair_train_1235",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -56866,6 +57517,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: PHONE",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -59567,7 +60230,7 @@
   },
   {
     "pairId": "pair_train_0126",
-    "label": 1,
+    "label": null,
     "caseType": "missing_company",
     "personIdA": "p_001",
     "personIdB": "p_001",
@@ -59592,6 +60255,17 @@
     "evidence": {
       "mentionA": "이름: 가상인물_1825 | 회사: 가상회사_008 | 직함: 대리 | 이메일: synthetic-p_001@people.example | 채널: EMAIL",
       "mentionB": "이름: 가상인물_1825 | 직함: 대리 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_001",
+        "p_002"
+      ],
+      "relatedPersonIds": [
+        "p_001"
+      ],
+      "reason": "HOMONYM_WITHOUT_COMPANY"
     }
   },
   {
@@ -59770,7 +60444,7 @@
   },
   {
     "pairId": "pair_train_1631",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -59795,6 +60469,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -62554,7 +63240,7 @@
   },
   {
     "pairId": "pair_train_1754",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -62579,6 +63265,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: EMAIL",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: EMAIL"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -63308,7 +64006,7 @@
   },
   {
     "pairId": "pair_train_1514",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -63333,6 +64031,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: PHONE",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -64236,7 +64946,7 @@
   },
   {
     "pairId": "pair_train_1202",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -64261,6 +64971,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -65918,7 +66640,7 @@
   },
   {
     "pairId": "pair_train_1020",
-    "label": 1,
+    "label": null,
     "caseType": "missing_company",
     "personIdA": "p_002",
     "personIdB": "p_002",
@@ -65943,6 +66665,17 @@
     "evidence": {
       "mentionA": "이름: 가상인물_1825 | 회사: 가상회사_013 | 직함: 팀장 | 이메일: synthetic-p_002@people.example | 전화: 000-0000-0002 | 채널: MEETING",
       "mentionB": "이름: 가상인물_1825 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_001",
+        "p_002"
+      ],
+      "relatedPersonIds": [
+        "p_002"
+      ],
+      "reason": "HOMONYM_WITHOUT_COMPANY"
     }
   },
   {
@@ -66324,7 +67057,7 @@
   },
   {
     "pairId": "pair_train_1814",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -66349,6 +67082,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: MEETING"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {
@@ -67165,7 +67910,7 @@
   },
   {
     "pairId": "pair_train_1757",
-    "label": 0,
+    "label": null,
     "caseType": "same_name",
     "personIdA": "p_016",
     "personIdB": "p_015",
@@ -67190,6 +67935,18 @@
     "evidence": {
       "mentionA": "이름: 가상인물_8936 | 회사: 가상회사_010 | 직함: 과장 | 채널: MEETING",
       "mentionB": "이름: 가상인물_8936 | 회사: 가상회사_009 | 직함: 팀장 | 채널: PHONE"
+    },
+    "expected": {
+      "kind": "AMBIGUOUS",
+      "targetPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "relatedPersonIds": [
+        "p_015",
+        "p_016"
+      ],
+      "reason": "HOMONYM_WITH_HISTORY_OVERLAP"
     }
   },
   {

@@ -3,6 +3,9 @@
 작성: 2026-10-15. 상태: **설계 초안·내부 비교/검색/순위/평가 구현·팀 검토 전**.
 기준: AGENTS.md, 최신 decisions.md, person.schema.json, identity_resolution.schema.json.
 
+2026-10-20: 아래는 10/15 내부 설계 기록이다. 현재 외부 판정 정책은 D-022와
+[API.md](API.md)를 우선한다. engine.py에서 세 판정·score=null·최대 3명 응답을 구현했다.
+
 ## 1. 무엇을 비교하는가
 
 메일·메모의 인물 단서 하나를 Person 대장과 비교해 연결할 사람을 찾는다.

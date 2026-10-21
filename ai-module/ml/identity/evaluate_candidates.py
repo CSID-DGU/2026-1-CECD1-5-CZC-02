@@ -8,6 +8,8 @@ from pathlib import Path
 
 from app.identity.features import compare_people
 from app.identity.ranking import rank_comparisons
+from ml.identity.ambiguity import check_ambiguous_response
+from ml.identity.generate_dataset import validate_dataset
 
 THRESHOLDS = (0.80, 0.85, 0.88, 0.90, 0.95)
 DEFAULT_DATA = Path(__file__).resolve().parent / "data"
@@ -38,12 +40,27 @@ def rank_bounds(ranked, target):
     return better + 1, better + equal
 
 
-def measure(prepared, threshold, *, ranker=None):
+def measure(prepared, threshold, *, ranker=None, ambiguous_responses=None):
     rows = []
     tp = fp = fn = tn = 0
+    ambiguity = {"queries": 0, "allTargetsIncluded": 0, "allTargetsInFirstThree": 0,
+                 "responsesEvaluated": 0, "correctResponses": 0}
+    ambiguity_by_case = defaultdict(int)
     for pair, comparisons in prepared:
         ranked = ranker(comparisons) if ranker is not None else rank_comparisons(comparisons, fuzzy_threshold=threshold)
-        # 검색의 정답은 label과 무관하게 mentionB의 실제 사람이다.
+        if pair.get("expected", {}).get("kind") == "AMBIGUOUS":
+            targets = set(pair["expected"]["targetPersonIds"])
+            ambiguity["queries"] += 1
+            ambiguity_by_case[pair["caseType"]] += 1
+            ambiguity["allTargetsIncluded"] += targets <= {r.person_id for r in ranked}
+            ambiguity["allTargetsInFirstThree"] += targets <= {r.person_id for r in ranked[:3]}
+            if ambiguous_responses is not None and pair["pairId"] in ambiguous_responses:
+                ambiguity["responsesEvaluated"] += 1
+                ambiguity["correctResponses"] += check_ambiguous_response(pair, ambiguous_responses[pair["pairId"]])
+            continue
+        if pair["label"] not in (0, 1):
+            raise ValueError("미지원 정답을 0/1로 자동 변환할 수 없습니다")
+        # 애매하지 않은 언급만 단일 personIdB로 평가한다.
         bounds = rank_bounds(ranked, pair["personIdB"])
         row = {"caseType": pair["caseType"], "included": bounds is not None,
                "top1Guaranteed": bounds is not None and bounds[1] <= 1,
@@ -68,9 +85,13 @@ def measure(prepared, threshold, *, ranker=None):
     groups = defaultdict(list)
     for row in rows:
         groups[row["caseType"]].append(row)
-    return {"retrieval": summarize(rows),
+    ambiguity["expectedDecision"] = "CANDIDATES"
+    ambiguity["byCase"] = dict(ambiguity_by_case)
+    ambiguity["responseAccuracy"] = (ambiguity["correctResponses"] / ambiguity["responsesEvaluated"]
+                                      if ambiguity["responsesEvaluated"] else None)
+    return {"retrieval": summarize(rows), "ambiguity": ambiguity,
             "byCase": {key: summarize(value) for key, value in sorted(groups.items())},
-            "pairCandidateInclusion": {"tp": tp, "fp": fp, "fn": fn, "tn": tn,
+            "pairCandidateInclusion": {"queries": len(rows), "excludedAmbiguous": ambiguity["queries"], "tp": tp, "fp": fp, "fn": fn, "tn": tn,
                 "precision": tp / (tp + fp) if tp + fp else None,
                 "recall": tp / (tp + fn) if tp + fn else None}}
 
@@ -79,8 +100,8 @@ def select_threshold(train_prepared):
     trials = [{"threshold": threshold, "metrics": measure(train_prepared, threshold)} for threshold in THRESHOLDS]
     # 동점 최악 순위 기준 top-3 → 후보 수 적음 → 더 엄격한 임계값 순으로 선택한다.
     selected = max(trials, key=lambda t: (
-        t["metrics"]["retrieval"]["top3Guaranteed"],
-        -t["metrics"]["retrieval"]["candidateCount"], t["threshold"],
+        (t["metrics"]["retrieval"]["top3Guaranteed"] or 0),
+        -(t["metrics"]["retrieval"]["candidateCount"] or 0), t["threshold"],
     ))
     return selected["threshold"], trials
 
@@ -88,20 +109,14 @@ def select_threshold(train_prepared):
 def evaluate(data_dir):
     paths = [data_dir / filename for filename in ("persons.json", "split.json", "pairs_train.json", "pairs_eval.json")]
     persons, split, train, evaluation = [json.loads(path.read_text(encoding="utf-8")) for path in paths]
+    validate_dataset({"persons": persons, "split": split, "trainPairs": train, "evalPairs": evaluation})
     train_ids, eval_ids = set(split["trainPersonIds"]), set(split["evalPersonIds"])
-    ids = [p["personId"] for p in persons]
-    if train_ids & eval_ids or train_ids | eval_ids != set(ids) or len(ids) != len(set(ids)):
-        raise ValueError("인물 분할이 유효하지 않습니다")
-    for pairs, allowed in ((train, train_ids), (evaluation, eval_ids)):
-        if not pairs or any(p["personIdA"] not in allowed or p["personIdB"] not in allowed
-                            or p["label"] != int(p["personIdA"] == p["personIdB"]) for p in pairs):
-            raise ValueError("비교 쌍의 분할 또는 정답이 유효하지 않습니다")
     train_queries, train_unique = prepare_queries(train, [p for p in persons if p["personId"] in train_ids])
     threshold, trials = select_threshold(train_queries)
     # 임계값을 선택한 뒤 평가 언급을 처음 계산한다. 평가로 재선택하지 않는다.
     eval_queries, eval_unique = prepare_queries(evaluation, [p for p in persons if p["personId"] in eval_ids])
     return {
-        "version": "candidate-ranking-0.1", "selectedThreshold": threshold,
+        "version": "candidate-ranking-0.2-reviewed-labels", "selectedThreshold": threshold,
         "selectionData": "train_only", "trainTrials": trials,
         "train": {"persons": len(train_ids), "uniqueQueries": train_unique},
         "eval": {"persons": len(eval_ids), "uniqueQueries": eval_unique,
