@@ -16,6 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import AI_ENGINE, OLLAMA_BASE_URL, OLLAMA_MODEL, SERVER_HOST, SERVER_PORT, BACKEND_URL, EMBEDDING_CLASSIFIER_ENABLED, EMBEDDING_MODEL_NAME, GLINER_ENABLED, GLINER_MODEL_NAME
 from app.routes.analyze import router as analyze_router
 from app.routes.minutes import router as minutes_router
+from app.identity.api import router as identity_router
 from app.schemas.models import AiErrorResponse
 
 # FastAPI 앱 생성
@@ -37,6 +38,7 @@ app.add_middleware(
 # 라우터 등록
 app.include_router(analyze_router)
 app.include_router(minutes_router)
+app.include_router(identity_router)
 
 
 @app.exception_handler(RequestValidationError)
