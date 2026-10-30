@@ -407,7 +407,7 @@ export function MeetingNoteReviewPage() {
               </span>
             ) : (
               <span>
-                확정하면: 회의록이 확정되고 <b>다음 접촉</b>은 일정(D)으로 넘어가요 · 고친 내용은 <b>학습용으로 기록</b>
+                확정하면: 회의록이 확정되고 고친 내용은 <b>학습용으로 기록</b>돼요 · 다음 접촉의 일정 등록은 <b>연결 예정</b>
                 {isDirty && <span className="ml-2 text-amber-700">· 저장 안 한 수정 있음</span>}
                 {confirmBlockedReason && <span className="mt-1 block text-xs text-amber-700">{confirmBlockedReason}</span>}
               </span>
