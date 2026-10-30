@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Settings, Search, LayoutDashboard, ClipboardList, UsersRound, ChevronDown, ChevronRight, Wind, KanbanSquare, FlaskConical, NotebookPen, ClipboardCheck } from 'lucide-react';
+import { Settings, Search, LayoutDashboard, ClipboardList, UsersRound, ChevronDown, ChevronRight, Wind, KanbanSquare, FlaskConical, NotebookPen, ClipboardCheck, ListChecks } from 'lucide-react';
 import jandiLogo from '../assets/잔디 로고 이미지 .jpg';
 import gmailLogo from '../assets/gmail로고 이미지 spaced.png';
 import { getMe } from '../api/auth';
@@ -301,6 +301,7 @@ export function DashboardLayout({ children }) {
   const menuItems = [
     { path: '/meeting-notes', icon: NotebookPen, label: '미팅 기록' },
     { path: '/meeting-notes/inbox', icon: ClipboardCheck, label: '확인 대기함', badge: draftNoteCount },
+    { path: '/tasks', icon: ListChecks, label: '할 일' },
     { path: '/pipeline', icon: KanbanSquare, label: '딜 파이프라인' },
     { path: '/customers', icon: UsersRound, label: '고객 타임라인' },
     { path: '/dashboard', icon: LayoutDashboard, label: '대시보드' },
