@@ -2,10 +2,16 @@
 import argparse
 import json
 import random
-from collections import Counter, defaultdict
+from collections import defaultdict
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
+
+# 모듈 실행과 기존 `python ml/identity/generate_dataset.py` 실행을 모두 지원한다.
+if __package__ in (None, ""):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from ml.identity.ambiguity import ambiguous_expectation
 
 PERSON_COUNT = 300
 TRAIN_PAIR_COUNT = 2400
@@ -126,6 +132,11 @@ def make_pairs(persons, count, split_name, rng):
             "evidence": {"mentionA": source_text(mention_a), "mentionB": source_text(mention_b)},
         })
     rng.shuffle(pairs)
+    for pair in pairs:
+        expected = ambiguous_expectation(pair, persons)
+        if expected is not None:
+            pair["label"] = None
+            pair["expected"] = expected
     return pairs
 
 
@@ -163,15 +174,25 @@ def validate_dataset(dataset, contracts_dir=CONTRACTS_DIR):
     seen_pairs, seen_sources = set(), set()
     for key, allowed_ids, expected in (("trainPairs", train_ids, TRAIN_PAIR_COUNT), ("evalPairs", eval_ids, EVAL_PAIR_COUNT)):
         pairs = dataset[key]
-        if len(pairs) != expected or Counter(pair["label"] for pair in pairs) != {0: expected // 2, 1: expected // 2}:
+        if any(pair["personIdA"] not in allowed_ids or pair["personIdB"] not in allowed_ids for pair in pairs):
+            raise ValueError("비교 쌍의 인물 소속이 올바르지 않습니다")
+        if len(pairs) != expected or sum(pair["personIdA"] == pair["personIdB"] for pair in pairs) != expected // 2:
             raise ValueError("비교 쌍 개수 또는 정답 비율이 올바르지 않습니다")
         for pair in pairs:
             if pair["pairId"] in seen_pairs:
                 raise ValueError("비교 쌍 ID가 중복됩니다")
             seen_pairs.add(pair["pairId"])
             left, right = pair["personIdA"], pair["personIdB"]
-            if not {left, right} <= allowed_ids or pair["label"] != int(left == right):
-                raise ValueError("비교 쌍의 인물 소속 또는 정답이 올바르지 않습니다")
+            if not {left, right} <= allowed_ids:
+                raise ValueError("비교 쌍의 인물 소속이 올바르지 않습니다")
+            ambiguity = ambiguous_expectation(pair, [by_id[pid] for pid in sorted(allowed_ids)])
+            if ambiguity is not None:
+                if pair["label"] is not None or pair.get("expected") != ambiguity:
+                    raise ValueError("애매한 쌍은 label=null과 AMBIGUOUS 정답 집합이 필요합니다")
+                if not set(ambiguity["targetPersonIds"]) <= allowed_ids:
+                    raise ValueError("애매한 정답 집합에 다른 분할의 인물이 있습니다")
+            elif pair["label"] not in (0, 1) or pair["label"] != int(left == right) or "expected" in pair:
+                raise ValueError("비교 쌍의 정답이 올바르지 않습니다")
             for side, pid in (("mentionA", left), ("mentionB", right)):
                 mention = pair[side]
                 mention_validator.validate(mention)

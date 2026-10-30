@@ -24,11 +24,15 @@ def candidate_reason(candidate):
 
 def analyze(prepared, threshold, *, sample_limit=5):
     totals = Counter()
+    ambiguous_queries = 0
     reasons, event_types, by_case = Counter(), Counter(), defaultdict(Counter)
     samples = defaultdict(list)
     unique_queries = set()
     for pair, comparisons in prepared:
         ranked = rank_comparisons(comparisons, fuzzy_threshold=threshold)
+        if pair.get("expected", {}).get("kind") == "AMBIGUOUS":
+            ambiguous_queries += 1
+            continue
         target = pair["personIdB"]
         bounds = rank_bounds(ranked, target)
         row = {"queries": 1, "missed": int(bounds is None),
@@ -69,7 +73,7 @@ def analyze(prepared, threshold, *, sample_limit=5):
                                   registeredName=c.name.registered,
                                   companyMatchedPaths=c.company.matched_paths)
                 samples[kind].append(sample)
-    return {"counts": dict(totals), "uniqueObservedQueries": len(unique_queries),
+    return {"excludedAmbiguous": ambiguous_queries, "counts": dict(totals), "uniqueObservedQueries": len(unique_queries),
             "extraCandidateReasons": dict(reasons), "eventCounts": dict(event_types),
             "byCase": {k: dict(v) for k, v in sorted(by_case.items())},
             "samples": dict(samples)}
@@ -81,9 +85,9 @@ def run(data_dir, threshold):
     dataset = {"persons": loaded["persons.json"], "split": loaded["split.json"],
                "trainPairs": loaded["pairs_train.json"], "evalPairs": loaded["pairs_eval.json"]}
     validate_dataset(dataset)
-    report = {"version": "failure-analysis-0.1", "fixedThreshold": threshold, "freshHoldoutUsed": False,
+    report = {"version": "failure-analysis-0.2-reviewed-labels", "fixedThreshold": threshold, "freshHoldoutUsed": False,
               "inputSha256": {name: hashlib.sha256(path.read_bytes()).hexdigest() for name, path in paths.items()},
-              "countingUnit": "pair_rows_including_repeats", "splits": {}}
+              "countingUnit": "unambiguous_pair_rows_including_repeats", "splits": {}}
     for split_name, pair_key, id_key in (("train", "trainPairs", "trainPersonIds"), ("eval", "evalPairs", "evalPersonIds")):
         people = [p for p in dataset["persons"] if p["personId"] in dataset["split"][id_key]]
         prepared, _ = prepare_queries(dataset[pair_key], people)

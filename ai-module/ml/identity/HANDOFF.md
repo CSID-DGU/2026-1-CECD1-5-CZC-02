@@ -4,6 +4,22 @@
 독립 작업 완료가 A 기능 전체나 10/23 통합 기준 모델의 완료를 뜻하지는 않는다.
 아래는 팀 검토용 정리이며 팀 합의나 다른 담당자의 승인을 대신하지 않는다.
 
+## 2026-10-20 후속 작업 — 현재 상태
+
+위 10/15 상태와 아래 실험·검토 기록은 당시 결과다. 현재는 PR #22/#23과 D-021/D-022를 반영했다.
+
+- 학습의 애매한 정답 64건을 수정했다. [DATA_REVIEW.md](DATA_REVIEW.md) 참고.
+- `POST /identity/resolve`를 구현했다. 요청·판정·연결 제약은 [API 설명](../../app/identity/API.md) 참고.
+- D-022의 CONFIRMED/CANDIDATES/NEW, RULE score=null, 후보 최대 3명·reasons를 반환한다.
+- 64건 모두 정답 정보를 입력하지 않고 CANDIDATES·가능한 두 후보·이유를 반환하는 회귀 검사를 통과했다.
+- **공용 파일 수정:** app/main.py의 라우터 import·등록 두 줄만 추가했다.
+  contracts·다른 담당 폴더·백엔드·프론트·공용 CI는 수정하지 않았다.
+- D-021에 따라 기존 공용 CI는 이미 `python -m pytest tests app ml`로 담당 폴더까지 검사한다.
+- 남은 작업: 사용자 범위 대장 조회를 포함한 B 백엔드 실제 클라이언트 연결(10/28),
+  참석자 후보 화면·직접 검색·신규 등록·사람 선택 후 HUMAN/Revision 연결.
+- 전체 검사: **406 passed, 5 warnings** (`python -m pytest tests app ml -q`).
+- 새 holdout은 미사용이며 BGE-M3는 기본값에 적용하지 않았다. 이번 작업은 커밋·push하지 않았다.
+
 ## 먼저 볼 내용
 
 - 내부 비교·후보 검색·순위·검사는 구현했다. 확률 점수·최종 판정은 아직 없다.
@@ -53,8 +69,8 @@ python -m pip install -r requirements-test.txt
 python -m pytest tests ml/identity app/identity -q
 ```
 
-공용 CI의 `python -m pytest tests`에는 A 폴더의 추가 테스트가 포함되지 않는다.
-총괄에게 검사 경로 확장을 검토 요청하며 CI 파일은 수정하지 않았다.
+10/15 당시 CI에는 A 폴더 테스트가 빠져 있었다. 현재는 D-021/PR #22로
+`python -m pytest tests app ml`에 포함된다. 이번 작업에서 CI 파일은 수정하지 않았다.
 
 기존 결과를 보존하려면 다른 위치에 보고서를 쓴다.
 
