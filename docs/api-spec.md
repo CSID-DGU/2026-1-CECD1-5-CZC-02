@@ -826,6 +826,60 @@ Response data: `enabled`, `demoAccountEmail`, `anchorDate`, `deliveredStage`, `l
 
 1학기 초기 사용자 생성·조회 API (회원가입은 `/api/auth/signup` 사용). Authorization: 필요
 
+## Tasks (할 일, C)
+
+모두 Authorization 필요. 응답 data는 `contracts/task.schema.json` 형식, 할 일 ID는 `t_<PK>`. 자세한 규칙은 `backend/.../task/README.md`.
+
+### GET /api/tasks
+
+본인 소유 할 일 목록.
+
+### GET /api/tasks/{taskId}
+
+할 일 하나 + `ETag` 헤더 (수정할 때 `If-Match`로 돌려보냄).
+
+### POST /api/tasks/from-note/{noteId}
+
+회의록(`mn_<PK>`)의 소유권을 확인한 뒤 AI 모듈 `POST /tasks/extract`로 할 일을 뽑아 DRAFT로 저장.
+
+### POST /api/tasks
+
+사람이 직접 추가. `noteId=null`, `status=DRAFT`, `taskTypeSource=HUMAN`.
+
+### PUT /api/tasks/{taskId}
+
+사람 수정·확정. task 본문 전체 + `If-Match` 헤더 필수. 버전이 다르면 409 (새로고침 후 다시 확인). 수정한 값은 수정 기록 대기열에 함께 저장 (D-023).
+
+### GET /api/tasks/revisions/pending
+
+본인 할 일 수정 기록 중 D로 아직 넘기지 않은 것 (`revision` 형식 배열, 임시 ID `rv_task_<PK>`).
+
+## Revisions (수정 기록, D)
+
+모두 Authorization 필요. 형식은 `contracts/revision.schema.json`. ID는 `rv_<PK>`.
+
+### POST /api/revisions
+
+사람이 AI 제안을 승인·수정·거절한 기록 저장. `actorId`와 `decidedAt`(KST)은 서버가 채운다. `screen`·`targetType`·`action`·`proposedBy`는 contracts의 값만 받는다.
+
+```json
+{ "screen": "TASK_REVIEW", "targetType": "TASK", "targetId": "t_001", "fieldName": "taskType",
+  "proposedValue": "DOC_COLLECTION", "finalValue": "CONTRACT_PREP", "action": "EDITED",
+  "proposedBy": "MODEL", "modelVersion": "task-type-lr-0.1" }
+```
+
+> 기존 DB에는 `ALTER TABLE analysis_revisions MODIFY analysis_id BIGINT NULL;`이 필요하다 (`ddl-auto=update`는 NOT NULL을 풀지 않음).
+
+### GET /api/revisions
+
+본인 수정 기록, 오래된 순.
+
+## Briefings (브리핑, D)
+
+### GET /api/briefings/morning?date=YYYY-MM-DD
+
+아침 묶음 브리핑 (규칙 6: 하루 1회 묶음). `CONFIRMED` 할 일 중 그날·다음 날이 기한인 것을 준비 항목과 함께 묶어 반환한다. 날짜를 빼면 KST 오늘. 조회만 하고 발송하지 않는다. Authorization 필요.
+
 ## Status Codes
 
 | Status | 의미 |

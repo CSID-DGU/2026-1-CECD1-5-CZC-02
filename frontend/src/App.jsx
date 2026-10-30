@@ -12,6 +12,7 @@ import { PipelinePage } from './components/PipelinePage';
 import { MeetingNotePage } from './components/minutes/MeetingNotePage';
 import { MeetingNoteInboxPage } from './components/minutes/MeetingNoteInboxPage';
 import { MeetingNoteReviewPage } from './components/minutes/MeetingNoteReviewPage';
+import { TasksPage } from './components/tasks/TasksPage';
 
 function ProtectedRoute({ children }) {
   const accessToken = localStorage.getItem('accessToken');
@@ -90,6 +91,13 @@ export default function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <MeetingNoteInboxPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/tasks" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <TasksPage />
               </DashboardLayout>
             </ProtectedRoute>
           } />

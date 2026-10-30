@@ -37,6 +37,9 @@ tests/               단위 테스트 + contracts 형식 검사 (네트워크 �
 | `POST /analyze` | 백엔드 `HttpAiClient` | 메일 묶음(스레드)과 기존 일정을 받아 분석 결과 반환 |
 | `POST /analyze/schedule` | 단독 확인용 | 문장 하나에서 일정만 추출 |
 | `POST /reply-draft` | 백엔드 | 분석 결과로 답장 초안 생성 |
+| `POST /minutes` | 백엔드 회의록(B) | 메모·메일 → `meeting_note` 초안 (`app/minutes/`) |
+| `POST /identity/resolve` | 백엔드 식별(A) | 인물 언급 + 인물 대장 → `identity_resolution` 배열 (`app/identity/API.md`, D-022) |
+| `POST /tasks/extract` | 백엔드 할 일(C) | `meeting_note` → `task` 배열 (`app/tasks/README.md`) |
 | `GET /`, `GET /health` | - | 상태 확인 |
 
 요청·응답 필드는 `app/schemas/request.py`, `app/schemas/response.py`가 기준입니다.
