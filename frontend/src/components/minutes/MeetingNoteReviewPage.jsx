@@ -60,6 +60,17 @@ function SourcePanel({ content, evidence }) {
   );
 }
 
+// 메일은 인용·서명을 포함한 원문 그대로 보여 준다 (AI는 인용·서명을 뺀 본문만 근거로 씀)
+function sourceLabel(sourceType, sourceCount) {
+  if (sourceType === 'MEETING_NOTE') {
+    return '미팅 메모';
+  }
+  if (sourceType === 'EMAIL') {
+    return sourceCount > 1 ? `메일 ${sourceCount}통 · 인용·서명은 근거에서 제외` : '메일 · 인용·서명은 근거에서 제외';
+  }
+  return sourceType;
+}
+
 function hasEmptyText(fields, perPerson) {
   const items = [
     ...FIELD_DEFS.flatMap(({ key }) => fields?.[key] || []),
@@ -275,6 +286,12 @@ export function MeetingNoteReviewPage() {
           </p>
         </div>
 
+        {draftExtras.notice && (
+          <p className="mb-4 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-left text-xs text-blue-800">
+            {draftExtras.notice}
+          </p>
+        )}
+
         {note.llmFallbackReason && (
           <p className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-left text-xs text-amber-800">
             {note.llmProvider === 'mock'
@@ -287,7 +304,7 @@ export function MeetingNoteReviewPage() {
           {/* 아래 문항을 고치는 동안에도 강조된 근거가 보이도록 원문은 붙어 있게 */}
           <Card
             title="원문"
-            subtitle={note.source.sourceType === 'MEETING_NOTE' ? '미팅 메모' : note.source.sourceType}
+            subtitle={sourceLabel(note.source.sourceType, meetingNote.sourceRefs.length)}
             className="xl:sticky xl:top-0 xl:max-h-[calc(100vh-11rem)] xl:overflow-y-auto"
           >
             <SourcePanel content={content} evidence={selectedEvidence} />

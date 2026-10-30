@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +26,12 @@ import java.time.LocalDateTime;
  * 원본(메모·메일)은 sources에 두고 지우지 않는다. API에서 ID는 "mn_" + PK.
  */
 @Entity
-@Table(name = "meeting_notes", indexes = @Index(name = "idx_meeting_notes_user", columnList = "user_id"))
+@Table(
+        name = "meeting_notes",
+        indexes = @Index(name = "idx_meeting_notes_user", columnList = "user_id"),
+        // 같은 메일(스레드)로 회의록을 두 번 만들지 않는다 (B-5). 메모 회의록은 origin_key가 null이라 제한 없음
+        uniqueConstraints = @UniqueConstraint(name = "uk_meeting_notes_user_origin", columnNames = {"user_id", "origin_key"})
+)
 public class MeetingNote extends BaseEntity {
 
     @Id
@@ -99,6 +105,20 @@ public class MeetingNote extends BaseEntity {
 
     @Column
     private LocalDateTime confirmedAt;
+
+    // 메일에서 만든 회의록의 출처: "group-<스레드 PK>" 또는 "source-<메일 PK>". 메모는 null
+    @Column(name = "origin_key", length = 100)
+    private String originKey;
+
+    // 원본 여러 개(메일 스레드)일 때 sourceRefs 배열 JSON. null이면 source 하나로 만든다
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String sourceRefsJson;
+
+    // AI 모듈에 보낸 원문 그대로(스레드면 메일 구분 줄 포함, 인용·서명 제거 전). null이면 source.content
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String sourceText;
 
     // 한 번도 고치지 않고 확정했는지
     @Column
@@ -214,6 +234,25 @@ public class MeetingNote extends BaseEntity {
 
     public Boolean getConfirmedWithoutEdit() {
         return confirmedWithoutEdit;
+    }
+
+    public String getOriginKey() {
+        return originKey;
+    }
+
+    public String getSourceRefsJson() {
+        return sourceRefsJson;
+    }
+
+    public String getSourceText() {
+        return sourceText;
+    }
+
+    /** 메일에서 만든 회의록의 출처를 남긴다 (저장 전에 부른다). */
+    public void linkOrigin(String originKey, String sourceRefsJson, String sourceText) {
+        this.originKey = originKey;
+        this.sourceRefsJson = sourceRefsJson;
+        this.sourceText = sourceText;
     }
 
     public void recordAiSnapshot(String aiSnapshot) {

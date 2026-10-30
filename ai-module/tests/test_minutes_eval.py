@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
+from app.minutes.preprocess import prepare_source
 from eval.minutes.score import FIELD_NAMES, PER_PERSON_FIELDS, is_perfect, load_cases, match_items, score
 
 SCHEMA = json.loads(
@@ -27,9 +28,12 @@ def gold_predictions():
 
 
 def test_case_set_covers_required_situations():
-    assert len(CASES) == 10
+    # 메모 10건(B-1) + 메일 3건(B-5)
+    assert sum(case["input"]["sourceType"] == "MEETING_NOTE" for case in CASES) == 10
+    assert sum(case["input"]["sourceType"] == "EMAIL" for case in CASES) == 3
     tags = [tag for case in CASES for tag in case["tags"]]
-    for required in ("multi_commitment", "no_concerns", "deadline_expression", "multi_counterpart", "chitchat"):
+    for required in ("multi_commitment", "no_concerns", "deadline_expression", "multi_counterpart", "chitchat",
+                     "email_quote", "email_signature", "email_thread", "multi_recipient"):
         assert required in tags, required
     assert 1 <= sum(case["gold"]["mode"] == "LIGHT" for case in CASES) <= 2
 
@@ -42,8 +46,11 @@ def test_gold_matches_schema(case):
 
 @pytest.mark.parametrize("case", CASES, ids=CASE_IDS)
 def test_gold_evidence_is_verbatim_in_memo(case):
+    # 메일은 엔진과 같은 전처리(인용·서명 제거) 뒤 원문에도 있어야 한다 — 인용된 이전 메일·서명은 근거가 될 수 없다
+    source = prepare_source(case["text"], is_email=case["input"]["sourceType"] == "EMAIL")
     for item in all_items(case["gold"]):
         assert item["evidence"] in case["text"], item
+        assert item["evidence"] in source, item
 
 
 @pytest.mark.parametrize("case", CASES, ids=CASE_IDS)
@@ -96,10 +103,10 @@ def test_scorer_penalizes_missed_fabricated_and_wrong_missing_fields():
 
     report = score(CASES, predictions)
 
-    assert report["predicted"] == 9
+    assert report["predicted"] == len(CASES) - 1
     assert report["fields"]["commitments"]["recall"] < 1
     assert report["fields"]["concerns"]["precision"] < 1
     assert report["fields"]["perPerson.status"]["recall"] < 1
     assert report["evidenceInSourceRate"] < 1
-    assert report["missingFields"]["exactMatchRate"] == 0.8  # m04, m05 불일치
+    assert report["missingFields"]["exactMatchRate"] == round((len(CASES) - 2) / len(CASES), 4)  # m04, m05 불일치
     assert not is_perfect(report)

@@ -58,5 +58,23 @@
     "title": "샘플제약 킥오프 (상대 3명)",
     "tags": ["multi_commitment", "multi_counterpart", "deadline_expression", "chitchat"],
     "input": { "sourceType": "MEETING_NOTE", "occurredAt": "2026-10-29T14:00:00", "location": "샘플제약 본사 대회의실", "attendees": ["임샘플 상무", "노샘플 차장", "문샘플 주임"] }
+  },
+  {
+    "caseId": "e01",
+    "title": "모의물산 견적 요청 메일 (참조·서명·이전 메일 인용)",
+    "tags": ["email_quote", "email_signature", "multi_recipient", "deadline_expression"],
+    "input": { "sourceType": "EMAIL", "occurredAt": "2026-10-22T08:40:00", "location": null, "attendees": ["김모의 과장", "이모의 대리"] }
+  },
+  {
+    "caseId": "e02",
+    "title": "샘플유통 시범 적용 문의·회신 스레드 (메일 2통)",
+    "tags": ["email_thread", "email_quote", "email_signature", "deadline_expression"],
+    "input": { "sourceType": "EMAIL", "occurredAt": "2026-10-21T14:10:00", "location": null, "attendees": ["정샘플 팀장"] }
+  },
+  {
+    "caseId": "e03",
+    "title": "가상전자 보안 조건 전달 메일 (전달 메일·참조·잡담)",
+    "tags": ["email_forward", "multi_recipient", "chitchat", "deadline_expression"],
+    "input": { "sourceType": "EMAIL", "occurredAt": "2026-10-23T11:05:00", "location": null, "attendees": ["홍길동 부장", "박가상 대리"] }
   }
 ]

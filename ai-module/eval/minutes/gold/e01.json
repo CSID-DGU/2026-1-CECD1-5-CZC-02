@@ -1,0 +1,62 @@
+{
+  "noteId": "mn_eval_e01",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_e01",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-22T08:40:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "김모의 과장",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "이모의 대리",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "협업툴 도입 검토 진행",
+        "evidence": "어제 통화에서 말씀드린 대로 협업툴 도입 검토를 진행하려고 합니다."
+      },
+      {
+        "text": "다음 달 초 예산 회의 상정 예정 (이번 달 말까지 견적 필요)",
+        "evidence": "이번 달 말까지 받으면 다음 달 초 예산 회의에 올릴 수 있습니다."
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "사용자 120명 기준 연간 구독 견적 요청",
+        "evidence": "사용자 120명 기준으로 연간 구독 견적서를 보내주실 수 있을까요?"
+      },
+      {
+        "text": "기존 그룹웨어 계정 연동 여부 확인 요청",
+        "evidence": "기존 그룹웨어와 계정 연동이 되는지도 같이 알려주시면 좋겠습니다."
+      }
+    ],
+    "concerns": [
+      {
+        "text": "데이터 이전 문제 우려 (작년 다른 업체 도입 경험)",
+        "evidence": "다만 작년에 다른 업체 도입하다가 데이터 이전에서 문제가 있어서 그 부분이 조금 걱정됩니다."
+      }
+    ],
+    "commitments": [],
+    "nextContact": []
+  },
+  "missingFields": [
+    "commitments",
+    "nextContact"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

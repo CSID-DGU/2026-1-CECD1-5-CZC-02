@@ -1,13 +1,13 @@
 # 회의록 평가셋 (B-1)
 
-회의록 엔진(`app/minutes/`, B-2)을 만들기 전에 정해 둔 "잘 만들었다"의 기준. 가짜 미팅 메모 10개와 사람이 직접 쓴 정답 `meeting_note`, 채점 스크립트로 이뤄진다. **데이터는 전부 가짜**다.
+회의록 엔진(`app/minutes/`, B-2)을 만들기 전에 정해 둔 "잘 만들었다"의 기준. 가짜 미팅 메모 10개·메일 3개(B-5)와 사람이 직접 쓴 정답 `meeting_note`, 채점 스크립트로 이뤄진다. **데이터는 전부 가짜**다.
 
 ## 파일
 
 | 경로 | 내용 |
 | --- | --- |
 | `cases.json` | 케이스 목록. `caseId`, 제목, 상황 태그, 엔진 입력(`input`: 원본 종류·시각·장소·만난 사람) |
-| `memos/<caseId>.txt` | 영업 담당자가 쓴 메모 원문 (엔진 입력 텍스트) |
+| `memos/<caseId>.txt` | 영업 담당자가 쓴 메모 원문, 메일 케이스(`e…`)는 메일 원문 그대로 — 인용·서명 포함 (엔진 입력 텍스트) |
 | `gold/<caseId>.json` | 정답 회의록. `contracts/meeting_note.schema.json`을 그대로 따른다 |
 | `score.py` | 채점 스크립트 |
 
@@ -23,11 +23,14 @@
 | m08 | 우려·요청만 있고 약속·다음 접촉 없음 |
 | m09 | 화상회의, 회의와 무관한 기록 섞임 |
 | m10 | 상대 3명, 모든 문항 채워짐 + 잡담 |
+| e01 | **메일** 견적 요청, 참조 2명, 서명·`-----Original Message-----` 인용 |
+| e02 | **메일 스레드 2통**(문의 → 우리 회신), 메일마다 서명·`…님이 작성:` 인용 |
+| e03 | **메일** 보안 조건 전달, 참조, `Forwarded message` 아래 전달 본문, 잡담 |
 
 ## 실행 (ai-module 폴더에서)
 
 ```bash
-python -m eval.minutes.run --verbose                                 # 엔진(app/minutes)을 10건에 돌리고 채점 (로컬 Ollama 필요)
+python -m eval.minutes.run --verbose                                 # 엔진(app/minutes)을 13건에 돌리고 채점 (로컬 Ollama 필요)
 python -m eval.minutes.score --self                                  # 정답끼리 → 만점이어야 정상
 python -m eval.minutes.score --pred eval/results/minutes_<실행이름>    # 엔진 결과 채점
 python -m eval.minutes.score --pred <폴더> --verbose --json <폴더>/report.json
@@ -59,6 +62,7 @@ python -m eval.minutes.score --pred <폴더> --verbose --json <폴더>/report.js
 - `status`는 `DRAFT`, `generatedBy`는 `HUMAN`(정답이므로)
 - **FULL**: 빈 문항 이름을 `missingFields`에 (`["concerns"]`)
 - **LIGHT** (여러 사람을 짧게 차례로 만난 방문): `fields` 5문항은 모두 빈 배열이고 `missingFields`에 넣지 않는다. 사람별 빈 칸만 `perPerson[<순서>].<칸>` 형식으로 적는다 (`["perPerson[1].request"]`). 채점할 때는 순서 대신 사람 이름으로 맞춰 본다
+- **메일**: 인용된 이전 메일·전달 메일·서명(`--` 아래)은 근거가 될 수 없다. 근거는 엔진 전처리(`app/minutes/preprocess.py`) 뒤 남는 본문에서만 고른다. 스레드는 메일 사이에 `------ 메일 i/n · 시각 · 보낸 사람 ------` 구분 줄이 있다 (백엔드가 넣는 형식). 우리 쪽 회신에 쓴 약속은 `commitments`, 고객 메일에 쓴 고객 약속은 `(고객 측)`
 - `perPerson[n]`의 `n`은 `perPerson` 배열의 순서이며 **0부터** 센다 (첫 사람이 `perPerson[0]`)
 
 정답을 고치거나 케이스를 추가하면 `python -m pytest tests/test_minutes_eval.py`로 스키마·근거·missingFields 규칙을 확인한다. 정답은 만든 사람이 아닌 팀원이 한 번 검수한다 (roles.md 공통 과업).
