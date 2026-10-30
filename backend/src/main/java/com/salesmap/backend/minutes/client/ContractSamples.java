@@ -17,7 +17,6 @@ import java.util.List;
 final class ContractSamples {
 
     static final String IDENTITY_RESOLUTION = "contracts-examples/identity_resolution.example.json";
-    static final String TASK = "contracts-examples/task.example.json";
 
     private ContractSamples() {
     }

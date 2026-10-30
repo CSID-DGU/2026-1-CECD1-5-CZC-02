@@ -9,7 +9,6 @@ import com.salesmap.backend.ai.client.AiClient;
 import com.salesmap.backend.ai.dto.AiMinutesRequest;
 import com.salesmap.backend.ai.dto.AiMinutesResponse;
 import com.salesmap.backend.ai.exception.AiClientException;
-import com.salesmap.backend.minutes.client.CalendarHandoffClient;
 import com.salesmap.backend.minutes.client.IdentityResolutionClient;
 import com.salesmap.backend.minutes.client.RevisionClient;
 import com.salesmap.backend.minutes.client.RevisionRecord;
@@ -32,6 +31,7 @@ import com.salesmap.backend.user.entity.User;
 import com.salesmap.backend.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,7 +72,7 @@ public class MeetingNoteService {
     private final IdentityResolutionClient identityResolutionClient;
     private final TaskDraftClient taskDraftClient;
     private final RevisionClient revisionClient;
-    private final CalendarHandoffClient calendarHandoffClient;
+    private final ApplicationEventPublisher eventPublisher;
     private final ObjectMapper objectMapper;
 
     public MeetingNoteService(
@@ -83,7 +83,7 @@ public class MeetingNoteService {
             IdentityResolutionClient identityResolutionClient,
             TaskDraftClient taskDraftClient,
             RevisionClient revisionClient,
-            CalendarHandoffClient calendarHandoffClient,
+            ApplicationEventPublisher eventPublisher,
             ObjectMapper objectMapper
     ) {
         this.meetingNoteRepository = meetingNoteRepository;
@@ -93,7 +93,7 @@ public class MeetingNoteService {
         this.identityResolutionClient = identityResolutionClient;
         this.taskDraftClient = taskDraftClient;
         this.revisionClient = revisionClient;
-        this.calendarHandoffClient = calendarHandoffClient;
+        this.eventPublisher = eventPublisher;
         this.objectMapper = objectMapper;
     }
 
@@ -222,21 +222,29 @@ public class MeetingNoteService {
         return toResponse(note, after);
     }
 
-    /** 확정. 고치지 않은 값은 ACCEPTED로 기록하고, 할 일 확정은 C, 일정은 D로 넘긴다. */
+    /**
+     * 확정. 할 일은 사람이 하나씩 확정하므로 남은 DRAFT 할 일이 있으면 C가 거부한다 (D-023 ⑤, 일괄 확정 안 함).
+     * 고치지 않은 값은 ACCEPTED로 기록한다(D 수정 기록, 같은 트랜잭션). 일정(D)은 커밋된 뒤에 넘긴다.
+     */
     @Transactional
     public MeetingNoteResponse confirmMeetingNote(String noteId, Long authenticatedUserId) {
         MeetingNote note = findOwnedNote(noteId, authenticatedUserId);
         if (note.getStatus() == MeetingNoteStatus.CONFIRMED) {
             throw new IllegalArgumentException("이미 확정된 회의록입니다.");
         }
+        MeetingNoteDocument draft = toDocument(note);
+        taskDraftClient.confirmTasks(draft, authenticatedUserId);
 
         Map<String, JsonNode> aiValues = readAiSnapshot(note);
-        Map<String, JsonNode> finalValues = MeetingNoteEditableFields.valuesOf(toDocument(note), objectMapper);
+        Map<String, JsonNode> finalValues = MeetingNoteEditableFields.valuesOf(draft, objectMapper);
         boolean withoutEdit = true;
         for (Map.Entry<String, JsonNode> entry : finalValues.entrySet()) {
             JsonNode aiValue = aiValues.get(entry.getKey());
             if (Objects.equals(aiValue, entry.getValue())) {
-                revisionClient.record(toRevision(note, entry.getKey(), aiValue, entry.getValue(), "ACCEPTED", authenticatedUserId));
+                revisionClient.record(
+                        toRevision(note, entry.getKey(), aiValue, entry.getValue(), "ACCEPTED", authenticatedUserId),
+                        authenticatedUserId
+                );
             } else {
                 withoutEdit = false;
             }
@@ -244,8 +252,8 @@ public class MeetingNoteService {
 
         note.markConfirmed(withoutEdit);
         MeetingNoteDocument document = toDocument(note);
-        taskDraftClient.confirmTasks(document, authenticatedUserId);
-        calendarHandoffClient.onMeetingNoteConfirmed(document, authenticatedUserId);
+        // 캘린더 같은 외부 효과는 커밋 뒤에 (MeetingNoteHandoffListener)
+        eventPublisher.publishEvent(new MeetingNoteConfirmedEvent(document, authenticatedUserId));
 
         return toResponse(note, document);
     }
@@ -482,7 +490,7 @@ public class MeetingNoteService {
             if (Objects.equals(beforeValues.get(fieldName), finalValue)) {
                 return;
             }
-            revisionClient.record(toRevision(note, fieldName, aiValues.get(fieldName), finalValue, "EDITED", userId));
+            revisionClient.record(toRevision(note, fieldName, aiValues.get(fieldName), finalValue, "EDITED", userId), userId);
         });
     }
 

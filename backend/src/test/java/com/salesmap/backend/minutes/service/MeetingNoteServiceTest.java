@@ -1,13 +1,12 @@
 package com.salesmap.backend.minutes.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmap.backend.ai.client.AiClient;
 import com.salesmap.backend.ai.client.MockAiClient;
 import com.salesmap.backend.ai.config.AiModuleProperties;
 import com.salesmap.backend.ai.exception.AiClientException;
-import com.salesmap.backend.minutes.client.CalendarHandoffClient;
 import com.salesmap.backend.minutes.client.FakeIdentityResolutionClient;
-import com.salesmap.backend.minutes.client.FakeTaskDraftClient;
 import com.salesmap.backend.minutes.client.RevisionClient;
 import com.salesmap.backend.minutes.client.RevisionRecord;
 import com.salesmap.backend.minutes.client.TaskDraftClient;
@@ -17,6 +16,7 @@ import com.salesmap.backend.minutes.dto.MeetingNoteDraftResponse;
 import com.salesmap.backend.minutes.dto.MeetingNoteResponse;
 import com.salesmap.backend.minutes.dto.MeetingNoteUpdateRequest;
 import com.salesmap.backend.minutes.entity.MeetingNote;
+import com.salesmap.backend.minutes.entity.MeetingNoteStatus;
 import com.salesmap.backend.minutes.repository.MeetingNoteRepository;
 import com.salesmap.backend.source.entity.Source;
 import com.salesmap.backend.source.entity.SourceType;
@@ -27,6 +27,7 @@ import com.salesmap.backend.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -38,10 +39,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,8 +63,9 @@ class MeetingNoteServiceTest {
     private final SourceRepository sourceRepository = mock(SourceRepository.class);
     private final UserRepository userRepository = mock(UserRepository.class);
     private final RevisionClient revisionClient = mock(RevisionClient.class);
-    private final CalendarHandoffClient calendarHandoffClient = mock(CalendarHandoffClient.class);
-    private final TaskDraftClient taskDraftClient = spy(new FakeTaskDraftClient(objectMapper));
+    private final ApplicationEventPublisher eventPublisher = mock(ApplicationEventPublisher.class);
+    // C 할 일은 C 패키지 테스트가 따로 검사한다. 여기서는 B가 부르는 순서·결과 전달만 본다
+    private final TaskDraftClient taskDraftClient = mock(TaskDraftClient.class);
     private final AtomicReference<MeetingNote> savedNote = new AtomicReference<>();
     private final AtomicReference<Source> savedSource = new AtomicReference<>();
     private User user;
@@ -85,6 +88,8 @@ class MeetingNoteServiceTest {
             return note;
         });
         when(meetingNoteRepository.findById(NOTE_ID)).thenAnswer(invocation -> Optional.ofNullable(savedNote.get()));
+        JsonNode task = objectMapper.createObjectNode().put("taskId", "t_1").put("noteId", "mn_7").put("status", "DRAFT");
+        when(taskDraftClient.draftTasks(any(), anyLong())).thenReturn(List.of(task));
     }
 
     @Test
@@ -113,13 +118,22 @@ class MeetingNoteServiceTest {
         assertThat(response.note().source().content()).isEqualTo(MEMO);
         assertThat(response.note().llmProvider()).isEqualTo("mock");
 
-        // C 가짜: 샘플 할 일 3건, noteId를 저장된 회의록 ID로
-        assertThat(response.tasks()).hasSize(3);
-        assertThat(response.tasks()).allSatisfy(task -> {
-            assertThat(task.path("noteId").asText()).isEqualTo("mn_7");
-            assertThat(task.path("status").asText()).isEqualTo("DRAFT");
-        });
-        verify(revisionClient, never()).record(any());
+        // C: 저장된 회의록(mn_7)으로 할 일 초안을 만들고 결과를 그대로 묶어 준다
+        ArgumentCaptor<MeetingNoteDocument> noteCaptor = ArgumentCaptor.forClass(MeetingNoteDocument.class);
+        verify(taskDraftClient).draftTasks(noteCaptor.capture(), eq(USER_ID));
+        assertThat(noteCaptor.getValue().noteId()).isEqualTo("mn_7");
+        assertThat(response.tasks()).extracting(task -> task.path("taskId").asText()).containsExactly("t_1");
+        verify(revisionClient, never()).record(any(), any());
+    }
+
+    @Test
+    void C_할_일_초안이_실패해도_회의록은_저장한다() {
+        when(taskDraftClient.draftTasks(any(), anyLong())).thenThrow(new IllegalStateException("할 일 API 응답이 없습니다."));
+
+        MeetingNoteDraftResponse response = service(mockAiClient()).createDraft(fullRequest(List.of()), USER_ID);
+
+        assertThat(response.note().meetingNote().noteId()).isEqualTo("mn_7");
+        assertThat(response.tasks()).isEmpty();
     }
 
     @Test
@@ -159,7 +173,7 @@ class MeetingNoteServiceTest {
         assertThat(response.meetingNote().missingFields()).isEmpty();
 
         ArgumentCaptor<RevisionRecord> captor = ArgumentCaptor.forClass(RevisionRecord.class);
-        verify(revisionClient, times(1)).record(captor.capture());
+        verify(revisionClient, times(1)).record(captor.capture(), eq(USER_ID));
         RevisionRecord revision = captor.getValue();
         assertThat(revision.screen()).isEqualTo("MEETING_NOTE_REVIEW");
         assertThat(revision.targetType()).isEqualTo("MEETING_NOTE");
@@ -185,7 +199,7 @@ class MeetingNoteServiceTest {
                 USER_ID
         );
 
-        verify(revisionClient, never()).record(any());
+        verify(revisionClient, never()).record(any(), any());
     }
 
     @Test
@@ -218,7 +232,7 @@ class MeetingNoteServiceTest {
         assertThat(response.confirmedWithoutEdit()).isFalse();
 
         ArgumentCaptor<RevisionRecord> captor = ArgumentCaptor.forClass(RevisionRecord.class);
-        verify(revisionClient, times(5)).record(captor.capture());
+        verify(revisionClient, times(5)).record(captor.capture(), eq(USER_ID));
         List<RevisionRecord> accepted = captor.getAllValues().stream()
                 .filter(revision -> "ACCEPTED".equals(revision.action()))
                 .toList();
@@ -227,7 +241,27 @@ class MeetingNoteServiceTest {
         assertThat(accepted).allSatisfy(revision -> assertThat(revision.finalValue()).isEqualTo(revision.proposedValue()));
 
         verify(taskDraftClient).confirmTasks(any(), eq(USER_ID));
-        verify(calendarHandoffClient).onMeetingNoteConfirmed(any(), eq(USER_ID));
+        ArgumentCaptor<MeetingNoteConfirmedEvent> event = ArgumentCaptor.forClass(MeetingNoteConfirmedEvent.class);
+        verify(eventPublisher).publishEvent(event.capture());
+        assertThat(event.getValue().note().status()).isEqualTo("CONFIRMED");
+        assertThat(event.getValue().userId()).isEqualTo(USER_ID);
+    }
+
+    @Test
+    void 확인_안_한_할_일이_남아_있으면_C가_거부해_회의록을_확정하지_않는다() {
+        MeetingNoteService service = service(mockAiClient());
+        service.createDraft(fullRequest(List.of()), USER_ID);
+        doThrow(new IllegalArgumentException("회의록의 할 일을 먼저 확인하여 확정하거나 취소해 주세요."))
+                .when(taskDraftClient).confirmTasks(any(), eq(USER_ID));
+
+        assertThatThrownBy(() -> service.confirmMeetingNote("mn_7", USER_ID))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("할 일을 먼저 확인");
+
+        // C 확인이 가장 먼저라 기록·상태 변경·일정 전달이 하나도 일어나지 않는다
+        assertThat(savedNote.get().getStatus()).isEqualTo(MeetingNoteStatus.DRAFT);
+        verify(revisionClient, never()).record(any(), any());
+        verify(eventPublisher, never()).publishEvent(any());
     }
 
     @Test
@@ -238,7 +272,7 @@ class MeetingNoteServiceTest {
         MeetingNoteResponse response = service.confirmMeetingNote("mn_7", USER_ID);
 
         assertThat(response.confirmedWithoutEdit()).isTrue();
-        verify(revisionClient, times(5)).record(any());
+        verify(revisionClient, times(5)).record(any(), eq(USER_ID));
     }
 
     @Test
@@ -280,7 +314,7 @@ class MeetingNoteServiceTest {
         assertThat(response.meetingNote().missingFields()).hasSize(5).doesNotContain("perPerson[0].status");
 
         ArgumentCaptor<RevisionRecord> captor = ArgumentCaptor.forClass(RevisionRecord.class);
-        verify(revisionClient).record(captor.capture());
+        verify(revisionClient).record(captor.capture(), eq(USER_ID));
         assertThat(captor.getValue().fieldName()).isEqualTo("perPerson[0].status");
         assertThat(captor.getValue().proposedValue().isNull()).isTrue();
     }
@@ -328,7 +362,7 @@ class MeetingNoteServiceTest {
                 new FakeIdentityResolutionClient(objectMapper),
                 taskDraftClient,
                 revisionClient,
-                calendarHandoffClient,
+                eventPublisher,
                 objectMapper
         );
     }

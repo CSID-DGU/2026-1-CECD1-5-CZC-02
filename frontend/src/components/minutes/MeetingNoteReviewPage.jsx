@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, RefreshCw } from 'lucide-react';
 import { confirmMeetingNote, getMeetingNote, updateMeetingNote } from '../../api/meetingNotes';
 import { getApiErrorMessage } from '../../api/errors';
+import { getMe } from '../../api/auth';
+import { importTasks, listTasks, loadTask, saveTask } from '../tasks/taskApi';
 import {
   FIELD_DEFS,
   PER_PERSON_SLOTS,
@@ -16,7 +18,6 @@ import { FieldSection, PerPersonCard } from './MeetingNoteItemEditor';
 import { ParticipantCandidatesPanel } from './ParticipantCandidatesPanel';
 import { TaskDraftPanel } from './TaskDraftPanel';
 import { StatusBadge } from './MeetingNotePage';
-import taskSamples from './samples/task.example.json';
 
 function Card({ title, subtitle, className = '', children }) {
   return (
@@ -72,7 +73,7 @@ export function MeetingNoteReviewPage() {
   const { noteId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  // 초안 만들기 직후에만 있는 A·C 결과 (없으면 각 영역이 샘플을 쓴다)
+  // 초안 만들기 직후에만 있는 A 식별 결과·검증에서 뺀 항목 (없으면 A 영역이 샘플을 쓴다)
   const draftExtras = location.state || {};
 
   const [note, setNote] = useState(null);
@@ -82,6 +83,12 @@ export function MeetingNoteReviewPage() {
   const [loadMessage, setLoadMessage] = useState('');
   const [actionMessage, setActionMessage] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  // C 할 일: null이면 불러오는 중
+  const [tasks, setTasks] = useState(null);
+  const [taskMessage, setTaskMessage] = useState('');
+  const [isLoadingTasks, setIsLoadingTasks] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const taskVersions = useRef(new Map());
 
   const applyNote = useCallback((response) => {
     setNote(response);
@@ -107,6 +114,66 @@ export function MeetingNoteReviewPage() {
     };
   }, [noteId, applyNote]);
 
+  // 이 회의록에서 나온 할 일만, 수정할 때 쓸 버전(ETag)과 함께 불러온다
+  const fetchNoteTasks = useCallback(async () => {
+    const owned = await listTasks();
+    const details = await Promise.all(owned.filter((task) => task.noteId === noteId).map((task) => loadTask(task.taskId)));
+    taskVersions.current = new Map(details.map(({ task, etag }) => [task.taskId, etag]));
+    return details.map(({ task }) => task);
+  }, [noteId]);
+
+  useEffect(() => {
+    let ignore = false;
+    fetchNoteTasks()
+      .then((result) => {
+        if (!ignore) {
+          setTasks(result);
+        }
+      })
+      .catch((error) => {
+        if (!ignore) {
+          setTasks([]);
+          setTaskMessage(getApiErrorMessage(error));
+        }
+      });
+    getMe()
+      .then((user) => {
+        if (!ignore && user?.id != null) {
+          setCurrentUserId(`user_${user.id}`);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      ignore = true;
+    };
+  }, [fetchNoteTasks]);
+
+  const runTaskAction = async (action) => {
+    setIsLoadingTasks(true);
+    setTaskMessage('');
+    try {
+      await action();
+      setTasks(await fetchNoteTasks());
+    } catch (error) {
+      setTaskMessage(getApiErrorMessage(error));
+    } finally {
+      setIsLoadingTasks(false);
+    }
+  };
+
+  // C 패널의 onSave: 저장·수정 기록이 끝난 뒤 resolve한다. 거절하면 C 패널이 입력을 유지하고 오류를 보인다
+  const saveNoteTask = async (task) => {
+    try {
+      await saveTask(task, taskVersions.current.get(task.taskId));
+    } catch (error) {
+      if (error.response?.status === 409) {
+        throw new Error('다른 화면에서 이 할 일이 바뀌었어요. "할 일 새로고침"을 눌러 최신 내용을 본 뒤 다시 저장해 주세요.', { cause: error });
+      }
+      throw error;
+    }
+    setTasks(await fetchNoteTasks());
+  };
+
   const meetingNote = note?.meetingNote;
   const content = note?.source?.content || '';
   const sentences = useMemo(() => splitSentences(content), [content]);
@@ -121,6 +188,18 @@ export function MeetingNoteReviewPage() {
   }, [meetingNote, fields]);
   const perPersonChanged = Boolean(meetingNote && perPerson && !sameJson(perPerson, meetingNote.perPerson));
   const isDirty = changedFieldKeys.length > 0 || perPersonChanged;
+
+  // 확인 안 한(DRAFT) 할 일이 남아 있으면 회의록을 확정할 수 없다 (D-023 ⑤, 서버도 거부함)
+  const draftTaskCount = (tasks || []).filter((task) => task.status === 'DRAFT').length;
+  const confirmBlockedReason = tasks === null
+    ? '할 일을 불러오는 중이에요.'
+    : draftTaskCount > 0
+      ? `확인 안 한 할 일 ${draftTaskCount}건이 있어요. 할 일을 하나씩 확정하거나 취소한 뒤 회의록을 확정할 수 있어요.`
+      : null;
+  // 할 일 담당 상대 고르기용: A가 사람을 확정한 참석자만
+  const people = useMemo(() => (meetingNote?.participants || [])
+    .filter((participant) => participant.personId)
+    .map((participant) => ({ personId: participant.personId, name: participant.displayName })), [meetingNote]);
 
   // 고친 문항만 보낸다. 서버가 바뀐 값마다 수정 기록(revision)을 남긴다.
   const saveChanges = async () => {
@@ -272,13 +351,48 @@ export function MeetingNoteReviewPage() {
             </div>
           </Card>
 
-          <Card title="할 일" subtitle={`${(draftExtras.tasks || taskSamples).length}건 추출 · 샘플`}>
-            <TaskDraftPanel
-              tasks={draftExtras.tasks}
-              selectedEvidence={selectedEvidence}
-              readOnly={readOnly}
-              onSelectEvidence={setSelectedEvidence}
-            />
+          <Card title="할 일" subtitle={tasks ? `${tasks.length}건 · 확인 안 함 ${draftTaskCount}건` : null}>
+            <div className="mb-3 flex flex-wrap items-center justify-end gap-2">
+              {meetingNote.status === 'DRAFT' && tasks?.length === 0 && (
+                <button
+                  type="button"
+                  onClick={() => runTaskAction(() => importTasks(noteId))}
+                  disabled={isLoadingTasks}
+                  className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+                >
+                  회의록에서 할 일 가져오기
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => runTaskAction(async () => {})}
+                disabled={isLoadingTasks}
+                className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+              >
+                <RefreshCw className={`h-3 w-3 ${isLoadingTasks ? 'animate-spin' : ''}`} /> 할 일 새로고침
+              </button>
+            </div>
+            {taskMessage && <p className="mb-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{taskMessage}</p>}
+            {tasks === null ? (
+              <p className="flex items-center gap-2 text-sm text-slate-400">
+                <Loader2 className="h-4 w-4 animate-spin" /> 할 일을 불러오는 중…
+              </p>
+            ) : (
+              <TaskDraftPanel
+                tasks={tasks}
+                selectedEvidence={selectedEvidence}
+                readOnly={meetingNote.status === 'CONFIRMED' || isSaving}
+                onSelectEvidence={setSelectedEvidence}
+                onSave={saveNoteTask}
+                people={people}
+                currentUserId={currentUserId}
+              />
+            )}
+            <p className="mt-2 text-[11px] text-slate-400">
+              {meetingNote.status === 'CONFIRMED'
+                ? '확정된 할 일의 완료·취소는 할 일 메뉴에서 해요.'
+                : '할 일은 하나씩 확정하거나 취소해요. 회의록을 확정해도 할 일이 한꺼번에 확정되지 않아요.'}
+            </p>
           </Card>
         </div>
       </div>
@@ -293,8 +407,9 @@ export function MeetingNoteReviewPage() {
               </span>
             ) : (
               <span>
-                확정하면: <b>할 일</b>은 C로, <b>다음 접촉</b>은 일정(D)으로 넘어가요 · 고친 내용은 <b>학습용으로 기록</b>
+                확정하면: 회의록이 확정되고 <b>다음 접촉</b>은 일정(D)으로 넘어가요 · 고친 내용은 <b>학습용으로 기록</b>
                 {isDirty && <span className="ml-2 text-amber-700">· 저장 안 한 수정 있음</span>}
+                {confirmBlockedReason && <span className="mt-1 block text-xs text-amber-700">{confirmBlockedReason}</span>}
               </span>
             )}
             {actionMessage && <p className="mt-1 text-xs text-blue-700">{actionMessage}</p>}
@@ -320,7 +435,8 @@ export function MeetingNoteReviewPage() {
               <button
                 type="button"
                 onClick={handleConfirm}
-                disabled={isSaving}
+                disabled={isSaving || Boolean(confirmBlockedReason)}
+                title={confirmBlockedReason || undefined}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 disabled:opacity-50"
               >
                 {isSaving && <Loader2 className="h-4 w-4 animate-spin" />}
