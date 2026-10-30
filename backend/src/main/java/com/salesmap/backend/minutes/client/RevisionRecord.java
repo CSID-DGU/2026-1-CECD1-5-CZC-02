@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * contracts/revision.schema.json 한 줄에서 revisionId를 뺀 값. revisionId(rv_ + PK)는 저장하는 D가 붙인다.
+ * D에 저장할 때 actorId·decidedAt은 D가 소유자·서버 시각으로 다시 채운다 (여기 값은 같은 내용의 참고값).
  */
 public record RevisionRecord(
         // MEETING_NOTE_REVIEW

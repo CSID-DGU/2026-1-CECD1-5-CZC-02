@@ -7,9 +7,8 @@ import com.salesmap.backend.ai.client.AiClient;
 import com.salesmap.backend.ai.client.MockAiClient;
 import com.salesmap.backend.ai.config.AiModuleProperties;
 import com.salesmap.backend.ai.exception.AiClientException;
-import com.salesmap.backend.minutes.client.CalendarHandoffClient;
 import com.salesmap.backend.minutes.client.FakeIdentityResolutionClient;
-import com.salesmap.backend.minutes.client.FakeTaskDraftClient;
+import com.salesmap.backend.minutes.client.TaskDraftClient;
 import com.salesmap.backend.minutes.client.RevisionRecord;
 import com.salesmap.backend.minutes.dto.MeetingNoteCreateRequest;
 import com.salesmap.backend.minutes.dto.MeetingNoteDocument;
@@ -25,6 +24,7 @@ import com.salesmap.backend.user.entity.UserStatus;
 import com.salesmap.backend.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
@@ -38,7 +38,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/** 백엔드가 내보내는 회의록·수정 기록·가짜 A/C 결과가 contracts/*.schema.json을 통과하는지. */
+/** 백엔드가 내보내는 회의록·수정 기록·가짜 A 결과가 contracts/*.schema.json을 통과하는지. */
 class MeetingNoteContractTest {
 
     private static final Long USER_ID = 1L;
@@ -92,9 +92,6 @@ class MeetingNoteContractTest {
 
         for (JsonNode resolution : draft.identityResolutions()) {
             assertValid("identity_resolution.schema.json", resolution);
-        }
-        for (JsonNode task : draft.tasks()) {
-            assertValid("task.schema.json", task);
         }
     }
 
@@ -160,9 +157,10 @@ class MeetingNoteContractTest {
                 userRepository,
                 aiClient,
                 new FakeIdentityResolutionClient(objectMapper),
-                new FakeTaskDraftClient(objectMapper),
-                revisions::add,
-                mock(CalendarHandoffClient.class),
+                // 할 일 형식은 C 패키지 테스트가 검사한다
+                mock(TaskDraftClient.class),
+                (revision, userId) -> revisions.add(revision),
+                mock(ApplicationEventPublisher.class),
                 objectMapper
         );
     }
