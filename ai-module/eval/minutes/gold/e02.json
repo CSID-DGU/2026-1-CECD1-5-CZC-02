@@ -1,0 +1,53 @@
+{
+  "noteId": "mn_eval_e02",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_e02",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-21T14:10:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "정샘플 팀장",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [],
+    "customerRequests": [
+      {
+        "text": "물류센터 2곳 시범 적용 희망",
+        "evidence": "지난주 보내주신 제안서 내부 검토했는데 물류센터 2곳에 먼저 시범 적용해 보고 싶습니다."
+      },
+      {
+        "text": "시범 기간 비용 문의",
+        "evidence": "시범 기간 비용이 어떻게 되는지 궁금합니다."
+      }
+    ],
+    "concerns": [],
+    "commitments": [
+      {
+        "text": "시범 적용 비용 포함 견적서 다음 주 화요일까지 송부",
+        "evidence": "시범 적용 비용 포함한 견적서는 다음 주 화요일까지 보내드리겠습니다."
+      }
+    ],
+    "nextContact": [
+      {
+        "text": "견적 확인 후 통화로 설치 일정 협의",
+        "evidence": "설치 일정은 견적 확인하시고 나서 통화로 잡으면 될 것 같습니다."
+      }
+    ]
+  },
+  "missingFields": [
+    "discussion",
+    "concerns"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

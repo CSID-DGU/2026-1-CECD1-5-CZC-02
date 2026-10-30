@@ -4,6 +4,7 @@ import com.salesmap.backend.global.response.ApiResponse;
 import com.salesmap.backend.global.security.CustomUserPrincipal;
 import com.salesmap.backend.minutes.dto.MeetingNoteCreateRequest;
 import com.salesmap.backend.minutes.dto.MeetingNoteDraftResponse;
+import com.salesmap.backend.minutes.dto.MeetingNoteFromSourceResponse;
 import com.salesmap.backend.minutes.dto.MeetingNoteResponse;
 import com.salesmap.backend.minutes.dto.MeetingNoteSummaryResponse;
 import com.salesmap.backend.minutes.dto.MeetingNoteUpdateRequest;
@@ -38,6 +39,19 @@ public class MeetingNoteController {
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         return ApiResponse.success("회의록 초안을 만들었습니다.", meetingNoteService.createDraft(request, principal.getUserId()));
+    }
+
+    /** 메일(같은 스레드 전체)로 회의록 초안 만들기. sourceId는 메일함의 원본 PK. 이미 만든 메일이면 기존 회의록을 알려 준다. */
+    @PostMapping("/from-source/{sourceId}")
+    public ApiResponse<MeetingNoteFromSourceResponse> createDraftFromSource(
+            @PathVariable Long sourceId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        MeetingNoteFromSourceResponse response = meetingNoteService.createDraftFromSource(sourceId, principal.getUserId());
+        return ApiResponse.success(
+                response.created() ? "회의록 초안을 만들었습니다." : "이미 이 메일로 만든 회의록이 있습니다.",
+                response
+        );
     }
 
     @GetMapping

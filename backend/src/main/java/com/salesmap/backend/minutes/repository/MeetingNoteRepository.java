@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MeetingNoteRepository extends JpaRepository<MeetingNote, Long> {
 
@@ -28,4 +29,7 @@ public interface MeetingNoteRepository extends JpaRepository<MeetingNote, Long> 
             order by n.id desc
             """)
     List<MeetingNote> findByUserIdAndStatus(@Param("userId") Long userId, @Param("status") MeetingNoteStatus status);
+
+    /** 같은 메일(스레드)로 이미 만든 회의록 */
+    Optional<MeetingNote> findFirstByUserIdAndOriginKeyOrderByIdDesc(Long userId, String originKey);
 }

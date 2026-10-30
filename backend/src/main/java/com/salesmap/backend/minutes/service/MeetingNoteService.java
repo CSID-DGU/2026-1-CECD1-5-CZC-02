@@ -9,6 +9,7 @@ import com.salesmap.backend.ai.client.AiClient;
 import com.salesmap.backend.ai.dto.AiMinutesRequest;
 import com.salesmap.backend.ai.dto.AiMinutesResponse;
 import com.salesmap.backend.ai.exception.AiClientException;
+import com.salesmap.backend.minutes.client.AttendeeMention;
 import com.salesmap.backend.minutes.client.IdentityResolutionClient;
 import com.salesmap.backend.minutes.client.RevisionClient;
 import com.salesmap.backend.minutes.client.RevisionRecord;
@@ -16,6 +17,7 @@ import com.salesmap.backend.minutes.client.TaskDraftClient;
 import com.salesmap.backend.minutes.dto.MeetingNoteCreateRequest;
 import com.salesmap.backend.minutes.dto.MeetingNoteDocument;
 import com.salesmap.backend.minutes.dto.MeetingNoteDraftResponse;
+import com.salesmap.backend.minutes.dto.MeetingNoteFromSourceResponse;
 import com.salesmap.backend.minutes.dto.MeetingNoteResponse;
 import com.salesmap.backend.minutes.dto.MeetingNoteSummaryResponse;
 import com.salesmap.backend.minutes.dto.MeetingNoteUpdateRequest;
@@ -32,6 +34,7 @@ import com.salesmap.backend.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,10 +43,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -119,19 +124,90 @@ public class MeetingNoteService {
                 SourceStatus.CREATED,
                 null
         ));
-        String sourceId = toSourceId(source.getId());
+        List<AttendeeMention> mentions = attendees.stream()
+                .map(name -> new AttendeeMention(name, null, "MEETING"))
+                .toList();
 
-        // 1) A 식별
-        List<JsonNode> identityResolutions = resolveIdentities(sourceId, attendees, authenticatedUserId);
-
-        // 2) B 회의록 (AI 모듈)
-        AiMinutesRequest aiRequest = new AiMinutesRequest(
-                DRAFT_NOTE_ID,
-                List.of(new AiMinutesRequest.SourceRef(sourceId, SourceType.MEETING_NOTE.name())),
+        return draftNote(new DraftInput(
+                user,
+                source,
+                List.of(new AiMinutesRequest.SourceRef(toSourceId(source.getId()), SourceType.MEETING_NOTE.name())),
                 request.text(),
-                formatContractDateTime(occurredAt),
+                occurredAt,
                 location,
                 requestedMode,
+                mentions,
+                null
+        ), authenticatedUserId);
+    }
+
+    /**
+     * 메일(같은 스레드 전체) → 회의록 초안 (B-5). 새 원본을 만들지 않고 기존 EMAIL 원본을 sourceRefs로 참조한다.
+     * 같은 메일(스레드)로 이미 만든 회의록이 있으면 새로 만들지 않고 그 회의록을 알려 준다 (스레드당 회의록 하나).
+     * createDraft와 같은 이유로 트랜잭션을 걸지 않는다.
+     */
+    public MeetingNoteFromSourceResponse createDraftFromSource(Long sourceId, Long authenticatedUserId) {
+        Source selected = sourceRepository.findById(sourceId)
+                .filter(source -> source.getStatus() != SourceStatus.DELETED)
+                .orElseThrow(() -> new NoSuchElementException("메일을 찾을 수 없습니다."));
+        if (!selected.getUser().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("해당 메일에 접근할 권한이 없습니다.");
+        }
+        if (selected.getSourceType() != SourceType.EMAIL) {
+            throw new IllegalArgumentException("메일에서만 회의록을 만들 수 있습니다. 메모는 미팅 기록 화면에서 입력하세요.");
+        }
+
+        Long groupId = selected.getSourceGroup() == null ? null : selected.getSourceGroup().getId();
+        String originKey = groupId == null ? "source-" + selected.getId() : "group-" + groupId;
+        Optional<MeetingNote> existing = meetingNoteRepository.findFirstByUserIdAndOriginKeyOrderByIdDesc(authenticatedUserId, originKey);
+        if (existing.isPresent()) {
+            return new MeetingNoteFromSourceResponse(false, toNoteId(existing.get().getId()), null);
+        }
+
+        User user = userRepository.findById(authenticatedUserId)
+                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
+        List<Source> messages = groupId == null ? List.of(selected) : threadMessages(groupId, selected, authenticatedUserId);
+        LocalDateTime lastSentAt = MailThreadText.sentAt(messages.get(messages.size() - 1));
+
+        try {
+            MeetingNoteDraftResponse draft = draftNote(new DraftInput(
+                    user,
+                    selected,
+                    messages.stream()
+                            .map(message -> new AiMinutesRequest.SourceRef(toSourceId(message.getId()), SourceType.EMAIL.name()))
+                            .toList(),
+                    MailThreadText.build(messages),
+                    lastSentAt == null ? null : lastSentAt.truncatedTo(ChronoUnit.SECONDS),
+                    null,
+                    null,
+                    mailAttendees(messages, user.getEmail()),
+                    originKey
+            ), authenticatedUserId);
+            return new MeetingNoteFromSourceResponse(true, draft.note().meetingNote().noteId(), draft);
+        } catch (DataIntegrityViolationException exception) {
+            // 같은 메일로 거의 동시에 두 번 만들기를 눌러 먼저 저장된 회의록이 있다 (uk_meeting_notes_user_origin)
+            return meetingNoteRepository.findFirstByUserIdAndOriginKeyOrderByIdDesc(authenticatedUserId, originKey)
+                    .map(note -> new MeetingNoteFromSourceResponse(false, toNoteId(note.getId()), null))
+                    .orElseThrow(() -> exception);
+        }
+    }
+
+    /** A 식별 → AI 모듈 /minutes → 저장 → C 할 일. 메모·메일 공통. */
+    private MeetingNoteDraftResponse draftNote(DraftInput input, Long authenticatedUserId) {
+        String sourceId = toSourceId(input.source().getId());
+        List<String> attendees = input.mentions().stream().map(AttendeeMention::displayName).toList();
+
+        // 1) A 식별
+        List<JsonNode> identityResolutions = resolveIdentities(sourceId, input.mentions(), authenticatedUserId);
+
+        // 2) B 회의록 (AI 모듈). sourceType=EMAIL이면 엔진이 메일마다 인용·서명을 줄 단위로 뺀다
+        AiMinutesRequest aiRequest = new AiMinutesRequest(
+                DRAFT_NOTE_ID,
+                input.sourceRefs(),
+                input.text(),
+                formatContractDateTime(input.occurredAt()),
+                input.location(),
+                input.mode(),
                 attendees,
                 identityResolutions
         );
@@ -139,10 +215,10 @@ public class MeetingNoteService {
         MeetingNoteDocument aiNote = draft.document();
 
         MeetingNote note = new MeetingNote(
-                user,
-                source,
-                occurredAt,
-                location,
+                input.user(),
+                input.source(),
+                input.occurredAt(),
+                input.location(),
                 MeetingNoteMode.valueOf(aiNote.mode()),
                 writeJson(aiNote.participants()),
                 writeJson(aiNote.fields()),
@@ -154,6 +230,15 @@ public class MeetingNoteService {
                 truncate(aiNote.llmModel(), 100),
                 truncate(draft.llmFallbackReason(), 1000)
         );
+        if (input.originKey() != null) {
+            // 스레드면 원본 목록과 엔진에 보낸 원문(메일 구분 줄 포함)을 남긴다. 메일 한 통이면 source 하나로 충분
+            boolean thread = input.sourceRefs().size() > 1;
+            note.linkOrigin(
+                    input.originKey(),
+                    thread ? writeJson(input.sourceRefs()) : null,
+                    thread ? input.text() : null
+            );
+        }
         note.recordAiSnapshot(writeJson(MeetingNoteEditableFields.valuesOf(aiNote, objectMapper)));
         MeetingNote savedNote = meetingNoteRepository.save(note);
         MeetingNoteDocument document = toDocument(savedNote);
@@ -167,6 +252,57 @@ public class MeetingNoteService {
                 tasks,
                 draft.droppedItems()
         );
+    }
+
+    /** 스레드의 메일(보낸·받은 모두, 시간순). 지운 메일과 남의 메일은 뺀다. */
+    private List<Source> threadMessages(Long groupId, Source selected, Long userId) {
+        List<Source> messages = sourceRepository.findBySourceGroupIdOrderBySentAtAscIdAsc(groupId).stream()
+                .filter(message -> message.getStatus() != SourceStatus.DELETED)
+                .filter(message -> message.getSourceType() == SourceType.EMAIL)
+                .filter(message -> message.getUser().getId().equals(userId))
+                .toList();
+        return messages.isEmpty() ? List.of(selected) : messages;
+    }
+
+    /**
+     * 메일의 상대: 발신자·수신자 이름과 주소. 내 주소는 빼고, 같은 주소는 한 번만 (이름을 아는 쪽을 남김).
+     * 수신자 이름·주소는 쉼표로 이어 저장돼 있어 개수가 같을 때만 짝짓는다 — 다르면 이름은 모름(null).
+     */
+    private List<AttendeeMention> mailAttendees(List<Source> messages, String ownEmail) {
+        Map<String, AttendeeMention> byAddress = new LinkedHashMap<>();
+        for (Source message : messages) {
+            addMailAttendee(byAddress, message.getSenderName(), message.getSenderEmail(), ownEmail);
+            List<String> names = splitList(message.getReceiverNames());
+            List<String> emails = splitList(message.getReceiverEmails());
+            for (int index = 0; index < emails.size(); index++) {
+                String name = names.size() == emails.size() ? names.get(index) : null;
+                addMailAttendee(byAddress, name, emails.get(index), ownEmail);
+            }
+        }
+        return List.copyOf(byAddress.values());
+    }
+
+    private void addMailAttendee(Map<String, AttendeeMention> byAddress, String name, String email, String ownEmail) {
+        String cleanName = blankToNull(name);
+        String cleanEmail = blankToNull(email);
+        if (cleanEmail == null && cleanName == null) {
+            return;
+        }
+        if (cleanEmail != null && cleanEmail.equalsIgnoreCase(ownEmail)) {
+            return;
+        }
+        String key = cleanEmail != null ? cleanEmail.toLowerCase() : "name:" + cleanName;
+        AttendeeMention current = byAddress.get(key);
+        if (current == null || (current.name() == null && cleanName != null)) {
+            byAddress.put(key, new AttendeeMention(cleanName, cleanEmail, "EMAIL"));
+        }
+    }
+
+    private List<String> splitList(String value) {
+        if (value == null || value.isBlank()) {
+            return List.of();
+        }
+        return List.of(value.split(",")).stream().map(String::trim).filter(item -> !item.isEmpty()).toList();
     }
 
     @Transactional(readOnly = true)
@@ -260,12 +396,12 @@ public class MeetingNoteService {
 
     // ---------- 초안 만들기 단계 ----------
 
-    private List<JsonNode> resolveIdentities(String sourceId, List<String> attendees, Long userId) {
-        if (attendees.isEmpty()) {
+    private List<JsonNode> resolveIdentities(String sourceId, List<AttendeeMention> mentions, Long userId) {
+        if (mentions.isEmpty()) {
             return List.of();
         }
         try {
-            return identityResolutionClient.resolve(sourceId, attendees, userId);
+            return identityResolutionClient.resolve(sourceId, mentions, userId);
         } catch (RuntimeException exception) {
             // 식별 실패는 회의록을 막지 않는다. 참석자는 이름만 두고 personId는 null.
             log.warn("[MINUTES] identity resolution failed. sourceId={}", sourceId, exception);
@@ -534,9 +670,14 @@ public class MeetingNoteService {
 
     private MeetingNoteDocument toDocument(MeetingNote note) {
         Source source = note.getSource();
+        // 메일 스레드면 만들 때 남긴 원본 목록, 아니면 원본 하나
+        List<MeetingNoteDocument.SourceRef> sourceRefs = note.getSourceRefsJson() == null
+                ? List.of(new MeetingNoteDocument.SourceRef(toSourceId(source.getId()), source.getSourceType().name()))
+                : readJson(note.getSourceRefsJson(), new TypeReference<List<MeetingNoteDocument.SourceRef>>() {
+                });
         return new MeetingNoteDocument(
                 toNoteId(note.getId()),
-                List.of(new MeetingNoteDocument.SourceRef(toSourceId(source.getId()), source.getSourceType().name())),
+                sourceRefs,
                 formatContractDateTime(note.getOccurredAt()),
                 note.getLocation(),
                 note.getMode().name(),
@@ -565,7 +706,8 @@ public class MeetingNoteService {
                         toSourceId(source.getId()),
                         source.getSourceType().name(),
                         source.getTitle(),
-                        source.getContent()
+                        // 스레드면 엔진에 보낸 원문(메일 구분 줄 포함), 아니면 원본 본문. 둘 다 인용·서명 제거 전
+                        note.getSourceText() != null ? note.getSourceText() : source.getContent()
                 ),
                 note.getLlmProvider(),
                 note.getLlmFallbackReason(),
@@ -705,6 +847,21 @@ public class MeetingNoteService {
             return value;
         }
         return value.substring(0, maxLength);
+    }
+
+    private record DraftInput(
+            User user,
+            // 회의록이 붙는 원본 (메모, 또는 메일에서 회의록 만들기를 누른 메일)
+            Source source,
+            List<AiMinutesRequest.SourceRef> sourceRefs,
+            String text,
+            LocalDateTime occurredAt,
+            String location,
+            String mode,
+            List<AttendeeMention> mentions,
+            // 메일이면 "group-<PK>"·"source-<PK>", 메모는 null
+            String originKey
+    ) {
     }
 
     private record MinutesDraft(

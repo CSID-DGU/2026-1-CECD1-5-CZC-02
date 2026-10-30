@@ -9,7 +9,7 @@ from jsonschema import Draft202012Validator
 from app.llm import LLMResponse, LLMUnavailable
 from app.minutes import engine
 from app.minutes.engine import build_meeting_note, detect_mode
-from app.minutes.preprocess import clean_email_body
+from app.minutes.preprocess import clean_email_body, prepare_source
 from app.minutes.prompts import FIELD_NAMES, PER_PERSON_FIELDS
 from app.minutes.schemas import MinutesRequest
 from eval.minutes.score import is_perfect, load_cases, score
@@ -219,6 +219,39 @@ def test_email_source_drops_quote_and_signature(monkeypatch):
 
     assert result.note["fields"]["customerRequests"] == []  # 인용된 이전 메일은 근거가 될 수 없다
     assert result.dropped_items[0]["reason"] == "근거가 원문에 없음"
+
+
+def test_email_thread_is_cleaned_per_message(monkeypatch):
+    """스레드는 메일마다 인용·서명을 따로 뺀다. 첫 메일의 인용 머리에서 끊겨 뒤 메일을 잃으면 안 된다 (B-5)."""
+    thread = """------ 메일 1/2 · 2026-10-14 09:00 · 홍길동 ------
+견적서 언제 받을 수 있을까요?
+--
+가상전자 홍길동
+------ 메일 2/2 · 2026-10-14 10:00 · 김예시 ------
+견적서는 금요일까지 보내드리겠습니다.
+
+2026년 10월 14일 (화) 오전 9:00, 홍길동 <gildong@example.com>님이 작성:
+> 견적서 언제 받을 수 있을까요?"""
+    cleaned = prepare_source(thread, is_email=True)
+
+    assert cleaned == (
+        "------ 메일 1/2 · 2026-10-14 09:00 · 홍길동 ------\n\n견적서 언제 받을 수 있을까요?\n\n"
+        "------ 메일 2/2 · 2026-10-14 10:00 · 김예시 ------\n\n견적서는 금요일까지 보내드리겠습니다."
+    )
+    assert "가상전자 홍길동" not in cleaned  # 서명
+    assert prepare_source("메모\r\n둘째 줄", is_email=False) == "메모\n둘째 줄"
+
+    fake_llm(monkeypatch, full_output(
+        customerRequests=[item("견적 일정 문의", "견적서 언제 받을 수 있을까요?")],
+        commitments=[item("견적서 금요일까지 송부", "견적서는 금요일까지 보내드리겠습니다.")],
+    ))
+    result = build_meeting_note(request_for(text=thread, sourceRefs=[
+        {"sourceId": "src_1", "sourceType": "EMAIL"}, {"sourceId": "src_2", "sourceType": "EMAIL"},
+    ]))
+
+    assert [i["text"] for i in result.note["fields"]["customerRequests"]] == ["견적 일정 문의"]
+    assert [i["text"] for i in result.note["fields"]["commitments"]] == ["견적서 금요일까지 송부"]
+    assert [ref["sourceId"] for ref in result.note["sourceRefs"]] == ["src_1", "src_2"]
 
 
 def test_route_returns_schema_valid_note(monkeypatch):

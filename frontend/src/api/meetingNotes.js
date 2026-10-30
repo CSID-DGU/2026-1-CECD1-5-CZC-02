@@ -9,6 +9,14 @@ export async function createMeetingNoteDraft(payload) {
   return response.data.data;
 }
 
+// 메일(같은 스레드 전체) → 회의록 초안. sourceId는 메일함의 원본 숫자 ID.
+// 이미 만든 메일이면 { created: false, noteId } 만 온다.
+export async function createMeetingNoteFromSource(sourceId) {
+  const response = await api.post(`/api/meeting-notes/from-source/${sourceId}`);
+
+  return response.data.data;
+}
+
 // status: 'DRAFT' | 'CONFIRMED' | undefined(전체)
 export async function getMeetingNotes(status) {
   const response = await api.get('/api/meeting-notes', {

@@ -12,11 +12,11 @@ import java.util.List;
 public interface IdentityResolutionClient {
 
     /**
-     * 만난 사람 이름을 인물 대장과 맞춘다.
+     * 만난 사람(메일이면 발신·수신자)을 인물 대장과 맞춘다.
      *
-     * @param sourceId  메모 원본 ID (예: src_101). identity_resolution의 mention.sourceRef가 된다
-     * @param attendees 사용자가 입력한 만난 사람 이름
-     * @return contracts/identity_resolution.schema.json 형식 배열. 식별하지 못한 이름은 빠질 수 있다
+     * @param sourceId 원본 ID (예: src_101). identity_resolution의 mention.sourceRef가 된다
+     * @param mentions 상대 단서 (이름, 메일이면 이메일도)
+     * @return contracts/identity_resolution.schema.json 형식 배열. 식별하지 못한 단서는 빠질 수 있다
      */
-    List<JsonNode> resolve(String sourceId, List<String> attendees, Long userId);
+    List<JsonNode> resolve(String sourceId, List<AttendeeMention> mentions, Long userId);
 }

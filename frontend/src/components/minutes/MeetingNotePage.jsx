@@ -154,12 +154,14 @@ export function MeetingNotePage() {
             <span className="rounded-xl border border-blue-400 bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-700">
               메모로 입력
             </span>
-            <span
-              title="메일을 골라 회의록을 만드는 기능은 다음 단계(B-5)에서 연결합니다."
-              className="cursor-not-allowed rounded-xl border border-slate-200 px-3 py-1.5 text-sm text-slate-400"
+            <button
+              type="button"
+              onClick={() => navigate('/messages/gmail')}
+              title="메일함에서 메일을 열고 '회의록 만들기'를 누르면 같은 대화의 메일들로 회의록을 만들어요."
+              className="rounded-xl border border-slate-200 px-3 py-1.5 text-sm text-slate-600 hover:border-blue-300 hover:text-blue-700"
             >
-              메일함에서 가져오기 · 준비 중
-            </span>
+              메일함에서 가져오기 →
+            </button>
           </div>
 
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">

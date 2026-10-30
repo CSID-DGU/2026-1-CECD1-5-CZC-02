@@ -104,6 +104,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="회의록 엔진 평가 (로컬 LLM 필요)")
     parser.add_argument("--engine", default="ollama", choices=["ollama"])
     parser.add_argument("--limit", type=int, default=None, help="앞에서부터 N건만 실행 (유료 API 시험용)")
+    parser.add_argument("--cases", default=None, help="쉼표로 고른 caseId만 실행 (예: e01,e02,e03 — 메일 케이스만)")
     parser.add_argument("--allow-paid", action="store_true",
                         help="LLM_PROVIDER=openai일 때 유료 API 호출을 허용 (--limit 필수)")
     parser.add_argument("--output", default=None, help="결과 JSON 경로 (기본: eval/results/minutes_<시각>.json)")
@@ -118,7 +119,11 @@ def main() -> None:
 
     output = Path(args.output) if args.output else RESULTS_DIR / f"minutes_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     output.parent.mkdir(parents=True, exist_ok=True)
-    cases = load_cases()[: args.limit]
+    cases = load_cases()
+    if args.cases:
+        wanted = {case_id.strip() for case_id in args.cases.split(",") if case_id.strip()}
+        cases = [case for case in cases if case["caseId"] in wanted]
+    cases = cases[: args.limit]
 
     print(f"회의록 평가 {len(cases)}건 · 모델 {config.OLLAMA_MODEL if config.LLM_PROVIDER != 'openai' else config.OPENAI_MODEL_ANALYSIS}")
     payload = evaluate(cases, args.engine, output.with_suffix(""))

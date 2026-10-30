@@ -8,6 +8,7 @@ import { collectGmailMessages } from '../api/integrations';
 import { getAutoPipelineStatus } from '../api/autoPipeline';
 import { startBulkAnalysis } from '../api/analysisJobs';
 import { useActivity } from './useActivityFeed';
+import { CreateMeetingNoteFromMailButton } from './minutes/CreateMeetingNoteFromMailButton';
 
 const EMPTY_TEXT = '해당 없음';
 
@@ -889,6 +890,9 @@ export function MessageView() {
                   <span className="text-xs text-slate-500">{formatSourceType(selectedSourceDetail.sourceType)}</span>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-gray-500">{formatSourceStatus(selectedSourceDetail.status)}</span>
+                    {selectedSourceDetail.sourceType === 'EMAIL' && (
+                      <CreateMeetingNoteFromMailButton sourceId={selectedSourceDetail.sourceId} />
+                    )}
                     <button
                       onClick={() => handleDeleteSource(selectedSourceDetail.sourceId)}
                       disabled={isDeletingSource}
