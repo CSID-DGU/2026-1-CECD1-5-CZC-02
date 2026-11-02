@@ -21,6 +21,9 @@ OLLAMA_TIMEOUT_SECONDS = float(os.getenv("OLLAMA_TIMEOUT_SECONDS", "300"))
 OLLAMA_TEMPERATURE = float(os.getenv("OLLAMA_TEMPERATURE", "0.1"))
 # 비우면 고정하지 않는다(서버 기본). 평가는 같은 입력에 같은 답이 나오도록 숫자를 넣는다 (eval/bench.py는 42로 고정)
 OLLAMA_SEED = int(os.getenv("OLLAMA_SEED", "").strip()) if os.getenv("OLLAMA_SEED", "").strip() else None
+# 생각 모드(thinking) 모델(qwen3.5·gemma4 등)은 Ollama가 기본으로 생각을 켜서 출력 한도·CPU 시간을 먹는다.
+# 비우면 think 값을 보내지 않는다(모델 기본, qwen2.5 등 지금 동작 그대로). false면 끄고 true면 켠다
+OLLAMA_THINK = {"true": True, "false": False}.get(os.getenv("OLLAMA_THINK", "").strip().lower())
 
 # LLM provider
 # ollama: 로컬 Ollama만 사용 (기본값, 무료)

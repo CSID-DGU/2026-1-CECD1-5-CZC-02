@@ -206,6 +206,7 @@ def runtime_settings(engine: str) -> Dict[str, Any]:
         "llmProvider": config.LLM_PROVIDER if llm else None,
         "ollamaModel": config.OLLAMA_MODEL if llm else None,
         "ollamaSeed": config.OLLAMA_SEED if llm else None,
+        "ollamaThink": config.OLLAMA_THINK if llm else None,
         "openaiModelAnalysis": config.OPENAI_MODEL_ANALYSIS if paid else None,
         "openaiReasoningEffort": (config.OPENAI_REASONING_EFFORT or None) if paid else None,
         "embeddingEnabled": config.EMBEDDING_CLASSIFIER_ENABLED,
