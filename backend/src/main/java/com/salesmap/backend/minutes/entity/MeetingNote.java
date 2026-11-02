@@ -106,6 +106,18 @@ public class MeetingNote extends BaseEntity {
     @Column
     private LocalDateTime confirmedAt;
 
+    // 사용자가 보관(숨김)한 시각. null이면 보관 안 함. 영구 삭제는 하지 않는다 (D-025 ③)
+    @Column
+    private LocalDateTime archivedAt;
+
+    // 마지막 보관·해제를 누가·언제 결정했나 (감사 기록, D-026). AI 제안이 없는 결정이라 수정 기록(revision)에는 넣지 않는다.
+    // 지금 보관 상태인지는 archivedAt으로 보고, 보관 중이면 보관한 사람, 아니면 해제한 사람이다
+    @Column
+    private Long archiveDecidedBy;
+
+    @Column
+    private LocalDateTime archiveDecidedAt;
+
     // 메일에서 만든 회의록의 출처: "group-<스레드 PK>" 또는 "source-<메일 PK>". 메모는 null
     @Column(name = "origin_key", length = 100)
     private String originKey;
@@ -234,6 +246,36 @@ public class MeetingNote extends BaseEntity {
 
     public Boolean getConfirmedWithoutEdit() {
         return confirmedWithoutEdit;
+    }
+
+    public LocalDateTime getArchivedAt() {
+        return archivedAt;
+    }
+
+    public boolean isArchived() {
+        return archivedAt != null;
+    }
+
+    public Long getArchiveDecidedBy() {
+        return archiveDecidedBy;
+    }
+
+    public LocalDateTime getArchiveDecidedAt() {
+        return archiveDecidedAt;
+    }
+
+    /** 보관: 기본 목록·확인 대기함에서 숨긴다. 상태(DRAFT/CONFIRMED)와 내용은 그대로 둔다. */
+    public void archive(Long decidedBy) {
+        LocalDateTime now = LocalDateTime.now();
+        this.archivedAt = now;
+        this.archiveDecidedBy = decidedBy;
+        this.archiveDecidedAt = now;
+    }
+
+    public void unarchive(Long decidedBy) {
+        this.archivedAt = null;
+        this.archiveDecidedBy = decidedBy;
+        this.archiveDecidedAt = LocalDateTime.now();
     }
 
     public String getOriginKey() {

@@ -1,11 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Loader2, RefreshCw } from 'lucide-react';
-import { confirmMeetingNote, getMeetingNote, updateMeetingNote } from '../../api/meetingNotes';
+import {
+  archiveMeetingNote,
+  confirmMeetingNote,
+  getMeetingNote,
+  unarchiveMeetingNote,
+  updateMeetingNote,
+} from '../../api/meetingNotes';
 import { getApiErrorMessage } from '../../api/errors';
 import { getMe } from '../../api/auth';
 import { importTasks, listTasks, loadTask, saveTask } from '../tasks/taskApi';
 import {
+  ARCHIVE_CONFIRM_MESSAGE,
   FIELD_DEFS,
   PER_PERSON_SLOTS,
   cloneFields,
@@ -17,7 +24,7 @@ import {
 import { FieldSection, PerPersonCard } from './MeetingNoteItemEditor';
 import { ParticipantCandidatesPanel } from './ParticipantCandidatesPanel';
 import { TaskDraftPanel } from './TaskDraftPanel';
-import { StatusBadge } from './MeetingNotePage';
+import { ArchivedBadge, StatusBadge } from './MeetingNotePage';
 
 function Card({ title, subtitle, className = '', children }) {
   return (
@@ -189,7 +196,9 @@ export function MeetingNoteReviewPage() {
   const content = note?.source?.content || '';
   const sentences = useMemo(() => splitSentences(content), [content]);
   const isLight = meetingNote?.mode === 'LIGHT';
-  const readOnly = meetingNote?.status === 'CONFIRMED' || isSaving;
+  // 보관한 회의록은 해제하기 전까지 읽기만 한다 (서버도 수정·확정을 거부함)
+  const archived = Boolean(note?.archivedAt);
+  const readOnly = meetingNote?.status === 'CONFIRMED' || archived || isSaving;
 
   const changedFieldKeys = useMemo(() => {
     if (!meetingNote || !fields) {
@@ -253,6 +262,27 @@ export function MeetingNoteReviewPage() {
     window.dispatchEvent(new Event('meeting-notes:changed'));
   });
 
+  // 보관(숨김)·해제. 지우지 않고, 이 회의록의 할 일도 그대로 둔다 (D-025)
+  const handleArchive = () => {
+    const message = isDirty
+      ? `${ARCHIVE_CONFIRM_MESSAGE}\n저장 안 한 수정은 반영되지 않아요.`
+      : ARCHIVE_CONFIRM_MESSAGE;
+    if (!window.confirm(message)) {
+      return;
+    }
+    runAction(async () => {
+      applyNote(await archiveMeetingNote(noteId));
+      setActionMessage('보관했어요. 미팅 기록의 "보관함"에서 다시 꺼낼 수 있어요.');
+      window.dispatchEvent(new Event('meeting-notes:changed'));
+    });
+  };
+
+  const handleUnarchive = () => runAction(async () => {
+    applyNote(await unarchiveMeetingNote(noteId));
+    setActionMessage('보관을 해제했어요.');
+    window.dispatchEvent(new Event('meeting-notes:changed'));
+  });
+
   if (loadMessage) {
     return (
       <div className="p-6">
@@ -279,6 +309,7 @@ export function MeetingNoteReviewPage() {
             확인하고 확정하기
           </h2>
           <StatusBadge status={meetingNote.status} />
+          {archived && <ArchivedBadge />}
           <p className="text-sm text-slate-500">
             {formatMeetingDateTime(meetingNote.occurredAt)}
             {meetingNote.location ? ` · ${meetingNote.location}` : ''}
@@ -290,6 +321,22 @@ export function MeetingNoteReviewPage() {
           <p className="mb-4 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-left text-xs text-blue-800">
             {draftExtras.notice}
           </p>
+        )}
+
+        {archived && (
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-300 bg-slate-50 px-4 py-2 text-left text-xs text-slate-700">
+            <span>
+              {formatMeetingDateTime(note.archivedAt)}에 보관한 회의록이에요. 목록·확인 대기함에서 숨겨져 있고, 고치거나 확정하려면 보관을 해제해 주세요.
+            </span>
+            <button
+              type="button"
+              onClick={handleUnarchive}
+              disabled={isSaving}
+              className="rounded-lg border border-slate-300 bg-white px-3 py-1 font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50"
+            >
+              보관 해제
+            </button>
+          </div>
         )}
 
         {note.llmFallbackReason && (
@@ -370,7 +417,7 @@ export function MeetingNoteReviewPage() {
 
           <Card title="할 일" subtitle={tasks ? `${tasks.length}건 · 확인 안 함 ${draftTaskCount}건` : null}>
             <div className="mb-3 flex flex-wrap items-center justify-end gap-2">
-              {meetingNote.status === 'DRAFT' && tasks?.length === 0 && (
+              {meetingNote.status === 'DRAFT' && !archived && tasks?.length === 0 && (
                 <button
                   type="button"
                   onClick={() => runTaskAction(() => importTasks(noteId))}
@@ -398,7 +445,7 @@ export function MeetingNoteReviewPage() {
               <TaskDraftPanel
                 tasks={tasks}
                 selectedEvidence={selectedEvidence}
-                readOnly={meetingNote.status === 'CONFIRMED' || isSaving}
+                readOnly={readOnly}
                 onSelectEvidence={setSelectedEvidence}
                 onSave={saveNoteTask}
                 people={people}
@@ -417,7 +464,11 @@ export function MeetingNoteReviewPage() {
       <div className="border-t border-slate-200 bg-white/90 px-6 py-3 backdrop-blur">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-left text-sm text-slate-600">
-            {meetingNote.status === 'CONFIRMED' ? (
+            {archived ? (
+              <span>
+                <b className="text-slate-700">보관한 회의록</b> · 지워지지 않았고, 이 회의록의 할 일은 그대로 남아 있어요
+              </span>
+            ) : meetingNote.status === 'CONFIRMED' ? (
               <span>
                 <b className="text-emerald-700">확정된 회의록</b>
                 {note.confirmedWithoutEdit ? ' · AI 결과를 고치지 않고 확정' : ' · 고친 내용은 학습용으로 기록됨'}
@@ -431,16 +482,52 @@ export function MeetingNoteReviewPage() {
             )}
             {actionMessage && <p className="mt-1 text-xs text-blue-700">{actionMessage}</p>}
           </div>
-          {meetingNote.status === 'CONFIRMED' ? (
-            <button
-              type="button"
-              onClick={() => navigate('/meeting-notes')}
-              className="rounded-xl border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
-            >
-              미팅 기록으로
-            </button>
+          {archived ? (
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => navigate('/meeting-notes')}
+                className="rounded-xl border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+              >
+                미팅 기록으로
+              </button>
+              <button
+                type="button"
+                onClick={handleUnarchive}
+                disabled={isSaving}
+                className="rounded-xl bg-slate-700 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50"
+              >
+                보관 해제
+              </button>
+            </div>
+          ) : meetingNote.status === 'CONFIRMED' ? (
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleArchive}
+                disabled={isSaving}
+                className="rounded-xl px-3 py-2 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50"
+              >
+                보관
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/meeting-notes')}
+                className="rounded-xl border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+              >
+                미팅 기록으로
+              </button>
+            </div>
           ) : (
             <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleArchive}
+                disabled={isSaving}
+                className="rounded-xl px-3 py-2 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50"
+              >
+                보관
+              </button>
               <button
                 type="button"
                 onClick={handleLater}

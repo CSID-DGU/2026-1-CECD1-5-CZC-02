@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Loader2, Mic, X } from 'lucide-react';
-import { createMeetingNoteDraft, getMeetingNotes } from '../../api/meetingNotes';
+import {
+  archiveMeetingNote,
+  createMeetingNoteDraft,
+  getMeetingNotes,
+  unarchiveMeetingNote,
+} from '../../api/meetingNotes';
 import { getApiErrorMessage } from '../../api/errors';
 import {
+  ARCHIVE_CONFIRM_MESSAGE,
   MODE_OPTIONS,
   formatMeetingDateTime,
   noteTitle,
@@ -25,28 +31,48 @@ export function StatusBadge({ status }) {
   );
 }
 
-export function MeetingNoteListItem({ note, onClick }) {
+export function ArchivedBadge() {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`w-full rounded-xl border p-3 text-left transition-colors ${
-        note.status === 'CONFIRMED'
-          ? 'border-slate-200 bg-white hover:border-blue-300'
-          : 'border-amber-200 bg-amber-50/60 hover:border-amber-300'
-      }`}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <p className="truncate text-sm font-semibold text-slate-800">{noteTitle(note)}</p>
-        <StatusBadge status={note.status} />
-      </div>
-      <p className="mt-1 truncate text-xs text-slate-500">
-        {formatMeetingDateTime(note.occurredAt)}
-        {note.location ? ` · ${note.location}` : ''}
-        {note.mode === 'LIGHT' ? ' · 사람별 간단 양식' : ''}
-        {note.status !== 'CONFIRMED' && note.missingFieldCount > 0 ? ` · 확인 필요 ${note.missingFieldCount}칸` : ''}
-      </p>
-    </button>
+    <span className="shrink-0 rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+      보관됨
+    </span>
+  );
+}
+
+// actionLabel·onAction을 주면 오른쪽에 작은 버튼(보관·보관 해제)을 함께 둔다
+export function MeetingNoteListItem({ note, onClick, actionLabel, onAction, actionDisabled = false }) {
+  const archived = Boolean(note.archivedAt);
+  const tone = archived || note.status === 'CONFIRMED'
+    ? 'border-slate-200 bg-white hover:border-blue-300'
+    : 'border-amber-200 bg-amber-50/60 hover:border-amber-300';
+  return (
+    <div className={`flex items-stretch rounded-xl border transition-colors ${tone}`}>
+      <button type="button" onClick={onClick} className="min-w-0 flex-1 p-3 text-left">
+        <div className="flex items-start justify-between gap-2">
+          <p className="truncate text-sm font-semibold text-slate-800">{noteTitle(note)}</p>
+          <div className="flex shrink-0 gap-1">
+            {archived && <ArchivedBadge />}
+            <StatusBadge status={note.status} />
+          </div>
+        </div>
+        <p className="mt-1 truncate text-xs text-slate-500">
+          {formatMeetingDateTime(note.occurredAt)}
+          {note.location ? ` · ${note.location}` : ''}
+          {note.mode === 'LIGHT' ? ' · 사람별 간단 양식' : ''}
+          {!archived && note.status !== 'CONFIRMED' && note.missingFieldCount > 0 ? ` · 확인 필요 ${note.missingFieldCount}칸` : ''}
+        </p>
+      </button>
+      {onAction && (
+        <button
+          type="button"
+          onClick={onAction}
+          disabled={actionDisabled}
+          className="shrink-0 border-l border-slate-200 px-3 text-xs font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-800 disabled:opacity-50"
+        >
+          {actionLabel}
+        </button>
+      )}
+    </div>
   );
 }
 
@@ -63,13 +89,18 @@ export function MeetingNotePage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [recentNotes, setRecentNotes] = useState([]);
   const [recentMessage, setRecentMessage] = useState('');
+  // 'recent' = 최근 회의록(보관 안 한 것), 'archived' = 보관함
+  const [listView, setListView] = useState('recent');
+  const [reloadKey, setReloadKey] = useState(0);
+  const [busyNoteId, setBusyNoteId] = useState(null);
 
   useEffect(() => {
     let ignore = false;
-    getMeetingNotes()
+    getMeetingNotes(listView === 'archived' ? 'ARCHIVED' : undefined)
       .then((notes) => {
         if (!ignore) {
-          setRecentNotes(notes.slice(0, 8));
+          setRecentMessage('');
+          setRecentNotes(listView === 'archived' ? notes : notes.slice(0, 8));
         }
       })
       .catch((error) => {
@@ -80,7 +111,28 @@ export function MeetingNotePage() {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [listView, reloadKey]);
+
+  const handleListAction = async (note) => {
+    const archiving = listView !== 'archived';
+    if (archiving && !window.confirm(ARCHIVE_CONFIRM_MESSAGE)) {
+      return;
+    }
+    setBusyNoteId(note.noteId);
+    try {
+      if (archiving) {
+        await archiveMeetingNote(note.noteId);
+      } else {
+        await unarchiveMeetingNote(note.noteId);
+      }
+      window.dispatchEvent(new Event('meeting-notes:changed'));
+      setReloadKey((key) => key + 1);
+    } catch (error) {
+      setRecentMessage(getApiErrorMessage(error));
+    } finally {
+      setBusyNoteId(null);
+    }
+  };
 
   const addAttendee = (value) => {
     const name = value.trim().replace(/,$/, '').trim();
@@ -268,7 +320,25 @@ export function MeetingNotePage() {
 
         <div className="h-fit rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm">
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-base font-bold text-slate-800" style={{ fontFamily: 'var(--display)' }}>최근 회의록</h3>
+            <div className="flex gap-1 rounded-lg bg-slate-100 p-0.5" role="tablist">
+              {[
+                { value: 'recent', label: '최근 회의록' },
+                { value: 'archived', label: '보관함' },
+              ].map((tab) => (
+                <button
+                  key={tab.value}
+                  type="button"
+                  role="tab"
+                  aria-selected={listView === tab.value}
+                  onClick={() => setListView(tab.value)}
+                  className={`rounded-md px-2.5 py-1 text-xs font-semibold ${
+                    listView === tab.value ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
             <button
               type="button"
               onClick={() => navigate('/meeting-notes/inbox')}
@@ -277,9 +347,14 @@ export function MeetingNotePage() {
               확인 대기함 →
             </button>
           </div>
+          {listView === 'archived' && (
+            <p className="mb-2 text-xs text-slate-500">보관한 회의록은 목록·확인 대기함에서 숨겨질 뿐 지워지지 않아요.</p>
+          )}
           {recentMessage && <p className="text-sm text-red-600">{recentMessage}</p>}
           {!recentMessage && recentNotes.length === 0 && (
-            <p className="text-sm text-slate-400">아직 회의록이 없어요.</p>
+            <p className="text-sm text-slate-400">
+              {listView === 'archived' ? '보관한 회의록이 없어요.' : '아직 회의록이 없어요.'}
+            </p>
           )}
           <div className="space-y-2">
             {recentNotes.map((note) => (
@@ -287,6 +362,9 @@ export function MeetingNotePage() {
                 key={note.noteId}
                 note={note}
                 onClick={() => navigate(`/meeting-notes/${note.noteId}`)}
+                actionLabel={listView === 'archived' ? '보관 해제' : '보관'}
+                onAction={() => handleListAction(note)}
+                actionDisabled={busyNoteId === note.noteId}
               />
             ))}
           </div>

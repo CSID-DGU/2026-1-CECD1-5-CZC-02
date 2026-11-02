@@ -67,6 +67,7 @@ public class MeetingNoteService {
     private static final String DRAFT_NOTE_ID = "mn_draft";
     private static final String REVIEW_SCREEN = "MEETING_NOTE_REVIEW";
     private static final String TARGET_TYPE = "MEETING_NOTE";
+    private static final String ARCHIVED_FILTER = "ARCHIVED";
     private static final List<String> FIELD_NAMES =
             List.of("discussion", "customerRequests", "concerns", "commitments", "nextContact");
 
@@ -161,7 +162,8 @@ public class MeetingNoteService {
         String originKey = groupId == null ? "source-" + selected.getId() : "group-" + groupId;
         Optional<MeetingNote> existing = meetingNoteRepository.findFirstByUserIdAndOriginKeyOrderByIdDesc(authenticatedUserId, originKey);
         if (existing.isPresent()) {
-            return new MeetingNoteFromSourceResponse(false, toNoteId(existing.get().getId()), null);
+            // 보관된 회의록이어도 새로 만들지 않는다 — 보관 해제로 다시 쓰게 안내 (스레드당 회의록 하나)
+            return new MeetingNoteFromSourceResponse(false, toNoteId(existing.get().getId()), existing.get().isArchived(), null);
         }
 
         User user = userRepository.findById(authenticatedUserId)
@@ -183,11 +185,11 @@ public class MeetingNoteService {
                     mailAttendees(messages, user.getEmail()),
                     originKey
             ), authenticatedUserId);
-            return new MeetingNoteFromSourceResponse(true, draft.note().meetingNote().noteId(), draft);
+            return new MeetingNoteFromSourceResponse(true, draft.note().meetingNote().noteId(), false, draft);
         } catch (DataIntegrityViolationException exception) {
             // 같은 메일로 거의 동시에 두 번 만들기를 눌러 먼저 저장된 회의록이 있다 (uk_meeting_notes_user_origin)
             return meetingNoteRepository.findFirstByUserIdAndOriginKeyOrderByIdDesc(authenticatedUserId, originKey)
-                    .map(note -> new MeetingNoteFromSourceResponse(false, toNoteId(note.getId()), null))
+                    .map(note -> new MeetingNoteFromSourceResponse(false, toNoteId(note.getId()), note.isArchived(), null))
                     .orElseThrow(() -> exception);
         }
     }
@@ -307,9 +309,15 @@ public class MeetingNoteService {
 
     @Transactional(readOnly = true)
     public List<MeetingNoteSummaryResponse> getMeetingNotes(String status, Long authenticatedUserId) {
-        List<MeetingNote> notes = status == null || status.isBlank()
-                ? meetingNoteRepository.findByUserId(authenticatedUserId)
-                : meetingNoteRepository.findByUserIdAndStatus(authenticatedUserId, parseStatus(status));
+        // 기본 목록·DRAFT·CONFIRMED는 보관한 회의록을 뺀다. 보관함은 status=ARCHIVED로만 본다
+        List<MeetingNote> notes;
+        if (status == null || status.isBlank()) {
+            notes = meetingNoteRepository.findByUserId(authenticatedUserId);
+        } else if (ARCHIVED_FILTER.equalsIgnoreCase(status.trim())) {
+            notes = meetingNoteRepository.findArchivedByUserId(authenticatedUserId);
+        } else {
+            notes = meetingNoteRepository.findByUserIdAndStatus(authenticatedUserId, parseStatus(status));
+        }
 
         return notes.stream()
                 .map(this::toSummary)
@@ -329,6 +337,7 @@ public class MeetingNoteService {
         if (note.getStatus() != MeetingNoteStatus.DRAFT) {
             throw new IllegalArgumentException("확정된 회의록은 고칠 수 없습니다.");
         }
+        rejectIfArchived(note);
 
         MeetingNoteDocument before = toDocument(note);
         MeetingNoteDocument.Fields fields = before.fields();
@@ -368,6 +377,7 @@ public class MeetingNoteService {
         if (note.getStatus() == MeetingNoteStatus.CONFIRMED) {
             throw new IllegalArgumentException("이미 확정된 회의록입니다.");
         }
+        rejectIfArchived(note);
         MeetingNoteDocument draft = toDocument(note);
         taskDraftClient.confirmTasks(draft, authenticatedUserId);
 
@@ -392,6 +402,32 @@ public class MeetingNoteService {
         eventPublisher.publishEvent(new MeetingNoteConfirmedEvent(document, authenticatedUserId));
 
         return toResponse(note, document);
+    }
+
+    /**
+     * 보관(숨김). 사용자가 결정하는 일이고(D-025 ①) 영구 삭제는 하지 않는다 (D-025 ③).
+     * DRAFT·CONFIRMED 둘 다 보관할 수 있고 상태·내용은 그대로 둔다. 이 회의록의 할 일(C)도 상태를 바꾸지 않는다 —
+     * 할 일을 몰래 취소·확정하지 않기 위해서다. 할 일은 할 일 화면에서 사람이 따로 정리한다.
+     * AI 제안이 없는 결정이라 수정 기록(revision)에는 넣지 않고, 누가·언제를 회의록에 남긴다 (D-026).
+     */
+    @Transactional
+    public MeetingNoteResponse archiveMeetingNote(String noteId, Long authenticatedUserId) {
+        MeetingNote note = findOwnedNote(noteId, authenticatedUserId);
+        if (note.isArchived()) {
+            throw new IllegalArgumentException("이미 보관된 회의록입니다.");
+        }
+        note.archive(authenticatedUserId);
+        return toResponse(note, toDocument(note));
+    }
+
+    @Transactional
+    public MeetingNoteResponse unarchiveMeetingNote(String noteId, Long authenticatedUserId) {
+        MeetingNote note = findOwnedNote(noteId, authenticatedUserId);
+        if (!note.isArchived()) {
+            throw new IllegalArgumentException("보관된 회의록이 아닙니다.");
+        }
+        note.unarchive(authenticatedUserId);
+        return toResponse(note, toDocument(note));
     }
 
     // ---------- 초안 만들기 단계 ----------
@@ -713,6 +749,7 @@ public class MeetingNoteService {
                 note.getLlmFallbackReason(),
                 note.getConfirmedAt(),
                 note.getConfirmedWithoutEdit(),
+                note.getArchivedAt(),
                 note.getCreatedAt(),
                 note.getUpdatedAt()
         );
@@ -737,7 +774,8 @@ public class MeetingNoteService {
                 note.getSource().getTitle(),
                 missingFields.size(),
                 note.getCreatedAt(),
-                note.getConfirmedAt()
+                note.getConfirmedAt(),
+                note.getArchivedAt()
         );
     }
 
@@ -767,6 +805,12 @@ public class MeetingNoteService {
         return "src_" + id;
     }
 
+    private void rejectIfArchived(MeetingNote note) {
+        if (note.isArchived()) {
+            throw new IllegalArgumentException("보관된 회의록입니다. 보관 해제한 뒤 고치거나 확정할 수 있습니다.");
+        }
+    }
+
     private MeetingNote findOwnedNote(String noteId, Long authenticatedUserId) {
         MeetingNote note = meetingNoteRepository.findById(parseNoteId(noteId))
                 .orElseThrow(() -> new NoSuchElementException("회의록을 찾을 수 없습니다."));
@@ -788,7 +832,7 @@ public class MeetingNoteService {
         try {
             return MeetingNoteStatus.valueOf(status.trim().toUpperCase());
         } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("status는 DRAFT, CONFIRMED 중 하나여야 합니다.");
+            throw new IllegalArgumentException("status는 DRAFT, CONFIRMED, ARCHIVED 중 하나여야 합니다.");
         }
     }
 

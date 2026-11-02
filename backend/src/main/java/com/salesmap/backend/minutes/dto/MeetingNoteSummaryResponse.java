@@ -17,6 +17,7 @@ public record MeetingNoteSummaryResponse(
         String sourceTitle,
         int missingFieldCount,
         LocalDateTime createdAt,
-        LocalDateTime confirmedAt
+        LocalDateTime confirmedAt,
+        LocalDateTime archivedAt
 ) {
 }
