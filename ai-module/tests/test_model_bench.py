@@ -256,3 +256,18 @@ def test_bench_runs_rule_engine_end_to_end_in_subprocess(tmp_path):
     assert rows[0]["status"] == "ok", rows[0].get("error")
     assert rows[0]["items"] == 2
     assert rows[0]["sentToExternalApi"] is False
+
+
+def test_child_env_fixes_ollama_seed_unless_config_overrides():
+    env = bench.build_child_env(config("a"), {}, 1.0)
+    assert env["OLLAMA_SEED"] == bench.DEFAULT_OLLAMA_SEED
+    override = bench.build_child_env(config("b", env={"OLLAMA_SEED": "7"}), {}, 1.0)
+    assert override["OLLAMA_SEED"] == "7"
+
+
+def test_minutes_task_is_registered_with_overall_f1_headline():
+    configs = bench.load_configs()
+    bench.validate_configs(configs)
+    minutes = [item for item in configs if item.task == "minutes"]
+    assert minutes and not any(item.default for item in minutes)
+    assert bench.TASKS["minutes"].headline == "overallF1"

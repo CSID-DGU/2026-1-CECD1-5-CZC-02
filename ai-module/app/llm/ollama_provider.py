@@ -3,8 +3,9 @@ import json
 import time
 import urllib.error
 import urllib.request
+from typing import Optional
 
-from app.config import OLLAMA_BASE_URL, OLLAMA_MODEL, OLLAMA_TIMEOUT_SECONDS
+from app.config import OLLAMA_BASE_URL, OLLAMA_MODEL, OLLAMA_SEED, OLLAMA_TIMEOUT_SECONDS
 from app.llm.base import LLMError, LLMRequest, LLMResponse, parse_json_object
 
 
@@ -12,10 +13,11 @@ class OllamaProvider:
     name = "ollama"
 
     def __init__(self, base_url: str = OLLAMA_BASE_URL, model: str = OLLAMA_MODEL,
-                 timeout_seconds: float = OLLAMA_TIMEOUT_SECONDS):
+                 timeout_seconds: float = OLLAMA_TIMEOUT_SECONDS, seed: Optional[int] = OLLAMA_SEED):
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.timeout_seconds = timeout_seconds
+        self.seed = seed
 
     def model_for(self, task: str) -> str:
         return self.model
@@ -31,6 +33,9 @@ class OllamaProvider:
                 "num_predict": request.max_output_tokens,
             },
         }
+        if self.seed is not None:
+            # 같은 입력 → 같은 답 (평가 재현용). 서버 기본은 None이라 넣지 않는다
+            payload["options"]["seed"] = self.seed
         if request.json_schema is not None:
             payload["format"] = "json"
 

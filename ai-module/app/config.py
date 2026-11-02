@@ -19,6 +19,8 @@ OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:7b")
 OLLAMA_TIMEOUT_SECONDS = float(os.getenv("OLLAMA_TIMEOUT_SECONDS", "300"))
 OLLAMA_TEMPERATURE = float(os.getenv("OLLAMA_TEMPERATURE", "0.1"))
+# 비우면 고정하지 않는다(서버 기본). 평가는 같은 입력에 같은 답이 나오도록 숫자를 넣는다 (eval/bench.py는 42로 고정)
+OLLAMA_SEED = int(os.getenv("OLLAMA_SEED", "").strip()) if os.getenv("OLLAMA_SEED", "").strip() else None
 
 # LLM provider
 # ollama: 로컬 Ollama만 사용 (기본값, 무료)

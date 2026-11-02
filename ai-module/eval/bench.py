@@ -43,6 +43,7 @@ ALLOWED_ENV_KEYS = {
     "OLLAMA_MODEL",
     "OLLAMA_TIMEOUT_SECONDS",
     "OLLAMA_TEMPERATURE",
+    "OLLAMA_SEED",
     "OPENAI_MODEL_ANALYSIS",
     "OPENAI_REASONING_EFFORT",
     "OPENAI_TIMEOUT_SECONDS",
@@ -66,6 +67,8 @@ def code_defaults(path: Path = CONFIG_PY) -> Dict[str, str]:
     pairs = re.findall(r'os\.getenv\(\s*"(\w+)"\s*,\s*"([^"]*)"\s*\)', path.read_text(encoding="utf-8"))
     return {key: value for key, value in pairs if key in ALLOWED_ENV_KEYS}
 
+# 같은 입력에 같은 답이 나오게 Ollama seed를 고정한다 (설정 파일 env로 바꿀 수 있음). 고정 안 하면 같은 프롬프트도 F1이 ±0.04 흔들림
+DEFAULT_OLLAMA_SEED = "42"
 DEFAULT_PAID_BUDGET_USD = 1.0
 CHILD_TIMEOUT_SECONDS = 60 * 60
 
@@ -79,7 +82,7 @@ class TaskSpec:
     headline: str
 
 
-# 회의록(B-1 평가셋)·개체명(L-3)·할 일 분류(C)는 각 평가 스크립트가 생기면 여기에 추가한다.
+# 개체명(L-3)·할 일 분류(C)는 각 평가 스크립트가 bench 형식을 맞추면 여기에 추가한다.
 TASKS: Dict[str, TaskSpec] = {
     "mail": TaskSpec(
         label="메일 분석 (eval/dataset.jsonl, 가짜 메일 21통)",
@@ -95,6 +98,20 @@ TASKS: Dict[str, TaskSpec] = {
             ("scheduleDate", "일정 날짜"),
         ),
         headline="allFieldsCorrect",
+    ),
+    "minutes": TaskSpec(
+        label="회의록 (eval/minutes, 가짜 메모 10건 + 메일 3건)",
+        module="eval.minutes.run",
+        columns=(
+            ("overallF1", "전체 F1"),
+            ("overallPrecision", "정밀도"),
+            ("overallRecall", "재현율"),
+            ("commitmentsF1", "약속 F1"),
+            ("nextContactF1", "다음 접촉 F1"),
+            ("evidenceInSource", "근거 일치율"),
+            ("missingFieldsSlotAccuracy", "빈 칸 정확도"),
+        ),
+        headline="overallF1",
     ),
 }
 
@@ -165,6 +182,7 @@ def check_paid_options(configs: Sequence[BenchConfig], allow_paid: bool, limit: 
 def build_child_env(config: BenchConfig, base_env: Dict[str, str], budget_usd: float) -> Dict[str, str]:
     env = dict(base_env)
     env.update(code_defaults())
+    env["OLLAMA_SEED"] = DEFAULT_OLLAMA_SEED
     env.update(config.env)
     env["PYTHONIOENCODING"] = "utf-8"
     if config.paid:
