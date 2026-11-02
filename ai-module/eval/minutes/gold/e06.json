@@ -1,0 +1,71 @@
+{
+  "noteId": "mn_eval_e06",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_e06",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-29T14:30:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "신모의",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "강모의",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "임모의",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "QR 출결 전환을 이번 학기 안에 결정 예정",
+        "evidence": "강의실 출결을 QR로 바꾸는 건 이번 학기 안에 결정하려고 합니다."
+      },
+      {
+        "text": "다음 주 중간고사 기간이라 회신 지연 가능",
+        "evidence": "참고로 다음 주는 중간고사 기간이라 회신이 조금 늦을 수 있습니다."
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "학사 시스템과 출결 데이터 자동 통합 여부 확인",
+        "evidence": "강모의 팀장님은 기존 학사 시스템과 출결 데이터가 자동으로 합쳐지는지 확인을 원하시고"
+      },
+      {
+        "text": "교수님용 사용 안내서 여부 문의",
+        "evidence": "임모의 주임님은 교수님용 사용 안내서가 있는지 궁금해하십니다."
+      },
+      {
+        "text": "강의실 40개 기준 견적 요청",
+        "evidence": "견적은 강의실 40개 기준으로 부탁드립니다."
+      }
+    ],
+    "concerns": [],
+    "commitments": [
+      {
+        "text": "학사 시스템 연동 규격 문서 이번 주 목요일까지 전달 (고객 측)",
+        "evidence": "저희 쪽 학사 시스템 연동 규격 문서는 임모의 주임님이 이번 주 목요일까지 전달드릴 예정입니다."
+      }
+    ],
+    "nextContact": []
+  },
+  "missingFields": [
+    "concerns",
+    "nextContact"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}
