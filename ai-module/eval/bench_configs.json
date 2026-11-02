@@ -39,6 +39,13 @@
       "note": "L-2 후보. Google Gemma 4(Apache-2.0), Qwen 외 다른 계열. 생각 모드 끔"
     },
     {
+      "name": "ollama-kanana-1.5-8b",
+      "task": "mail",
+      "engine": "ollama",
+      "env": {"OLLAMA_MODEL": "hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M"},
+      "note": "L-2 후보. 카카오 한국어 특화(원본 Apache-2.0). 비공식 변환본(DevQuasar) — 비교 평가용만"
+    },
+    {
       "name": "openai-analysis",
       "task": "mail",
       "engine": "ollama",
@@ -86,6 +93,13 @@
       "engine": "ollama",
       "env": {"OLLAMA_MODEL": "gemma4:e4b", "OLLAMA_THINK": "false"},
       "note": "회의록 엔진, L-2 후보 gemma4:e4b (생각 모드 끔)"
+    },
+    {
+      "name": "minutes-ollama-kanana-1.5-8b",
+      "task": "minutes",
+      "engine": "ollama",
+      "env": {"OLLAMA_MODEL": "hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M"},
+      "note": "회의록 엔진, L-2 후보 kanana 1.5 8B (비공식 변환본, 비교 평가용만)"
     }
   ]
 }
