@@ -63,7 +63,7 @@ tests/               단위 테스트 + contracts 형식 검사 (네트워크 �
 | --- | --- | --- |
 | 분석 엔진 | `AI_ENGINE` (`rule` / `ollama`) | `rule` |
 | LLM 공급자 | `LLM_PROVIDER` (`ollama` / `openai`) | `ollama` |
-| Ollama | `OLLAMA_BASE_URL`, `OLLAMA_MODEL`, `OLLAMA_TIMEOUT_SECONDS`, `OLLAMA_TEMPERATURE` | `qwen2.5:7b`, 300초 (D-019) |
+| Ollama | `OLLAMA_BASE_URL`, `OLLAMA_MODEL`, `OLLAMA_TIMEOUT_SECONDS`, `OLLAMA_TEMPERATURE`, `OLLAMA_SEED` | `qwen2.5:7b`, 300초 (D-019), seed는 비움(평가 때 `eval/bench.py`가 42로 고정) |
 | OpenAI | `OPENAI_API_KEY`, `OPENAI_MODEL_ANALYSIS`, `OPENAI_MODEL_REPLY`, `OPENAI_MONTHLY_BUDGET_USD` | 키 없음 → 호출 안 함 |
 | 임베딩 | `EMBEDDING_CLASSIFIER_ENABLED`, `EMBEDDING_MODEL_NAME` | 꺼짐, `BAAI/bge-m3` |
 | 개체명 인식 | `GLINER_ENABLED`, `GLINER_MODEL_NAME`, `GLINER_THRESHOLD` | 꺼짐, `urchade/gliner_multi-v2.1` |
