@@ -10,7 +10,14 @@ from app.llm import LLMResponse, LLMUnavailable
 from app.minutes import engine
 from app.minutes.engine import build_meeting_note, detect_mode
 from app.minutes.preprocess import clean_email_body, prepare_source
-from app.minutes.prompts import FIELD_NAMES, PER_PERSON_FIELDS
+from app.minutes.prompts import (
+    FIELD_NAMES,
+    FULL_SYSTEM_PROMPT,
+    MAIL_EXAMPLE_OUTPUT,
+    MAIL_EXAMPLE_TEXT,
+    MAIL_FULL_SYSTEM_PROMPT,
+    PER_PERSON_FIELDS,
+)
 from app.minutes.schemas import MinutesRequest
 from eval.minutes.score import is_perfect, load_cases, score
 
@@ -277,3 +284,33 @@ def test_route_returns_schema_valid_note(monkeypatch):
     assert client.post("/minutes", json={"sourceRefs": [{"sourceId": "src_1", "sourceType": "MEETING_NOTE"}],
                                          "text": "   "}).status_code == 400
     assert client.post("/minutes", json={"sourceRefs": [], "text": MEMO}).status_code == 422
+
+
+# ---------- 메일 지시문 (재현율 개선) ----------
+
+def test_email_uses_mail_prompt_and_memo_prompt_is_unchanged(monkeypatch):
+    calls = []
+    fake_llm(monkeypatch, full_output(), calls)
+
+    build_meeting_note(request_for(text="견적서 언제 받을 수 있을까요?", attendees=["홍길동 부장"],
+                                   sourceRefs=[{"sourceId": "src_7", "sourceType": "EMAIL"}]))
+    build_meeting_note(request_for())
+
+    mail, memo = calls
+    assert mail.system == MAIL_FULL_SYSTEM_PROMPT
+    assert "상대(고객 측): 홍길동 부장" in mail.user and "\n메일:\n" in mail.user
+    assert memo.system == FULL_SYSTEM_PROMPT  # 메모는 지시문·입력 모양 그대로
+    assert "만난 사람: 홍길동 부장" in memo.user and "\n메모:\n" in memo.user
+
+
+def test_mail_prompt_example_quotes_its_own_text_and_not_eval_or_dev_mails():
+    source = prepare_source(MAIL_EXAMPLE_TEXT, is_email=True)
+    assert list(MAIL_EXAMPLE_OUTPUT) == list(FIELD_NAMES)
+    for items in MAIL_EXAMPLE_OUTPUT.values():
+        for item in items:
+            assert item["evidence"] in source, item
+    # 예시는 개발용·평가용 메일을 베끼지 않는다 (평가셋에 맞춘 튜닝 방지)
+    other_texts = "\n".join(case["text"] for case in load_cases() + load_cases("dev"))
+    example_lines = [line.strip() for line in MAIL_EXAMPLE_TEXT.splitlines() if not line.startswith("------")]
+    assert not [line for line in example_lines if line and line in other_texts]
+    assert "마예제" not in other_texts and "노가상" not in other_texts

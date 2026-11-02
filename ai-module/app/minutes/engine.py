@@ -21,6 +21,7 @@ from app.minutes.prompts import (
     FULL_SYSTEM_PROMPT,
     LIGHT_OUTPUT_SCHEMA,
     LIGHT_SYSTEM_PROMPT,
+    MAIL_FULL_SYSTEM_PROMPT,
     PER_PERSON_FIELDS,
     build_user_prompt,
 )
@@ -41,7 +42,8 @@ class MinutesResult:
 
 
 def build_meeting_note(request: MinutesRequest) -> MinutesResult:
-    source = prepare_source(request.text, is_email=any(ref.sourceType == "EMAIL" for ref in request.sourceRefs))
+    is_email = any(ref.sourceType == "EMAIL" for ref in request.sourceRefs)
+    source = prepare_source(request.text, is_email=is_email)
     participants = link_participants(request)
     names = [participant["displayName"] for participant in participants]
     mode = request.mode or detect_mode(source, names)
@@ -58,8 +60,9 @@ def build_meeting_note(request: MinutesRequest) -> MinutesResult:
     try:
         response = generate(LLMRequest(
             task="minutes",
-            system=FULL_SYSTEM_PROMPT if full else LIGHT_SYSTEM_PROMPT,
-            user=build_user_prompt(source, request.occurredAt, request.location, names),
+            # 메일은 메일용 지시문 (누가 쓴 메일인지·공손한 질문·상황 공유). LIGHT(여러 명 방문)는 메모 전용
+            system=(MAIL_FULL_SYSTEM_PROMPT if is_email else FULL_SYSTEM_PROMPT) if full else LIGHT_SYSTEM_PROMPT,
+            user=build_user_prompt(source, request.occurredAt, request.location, names, is_email=is_email),
             json_schema=FULL_OUTPUT_SCHEMA if full else LIGHT_OUTPUT_SCHEMA,
             schema_name="meeting_note_full" if full else "meeting_note_light",
             max_output_tokens=2000,

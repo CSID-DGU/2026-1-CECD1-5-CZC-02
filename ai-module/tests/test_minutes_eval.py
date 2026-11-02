@@ -110,3 +110,39 @@ def test_scorer_penalizes_missed_fabricated_and_wrong_missing_fields():
     assert report["evidenceInSourceRate"] < 1
     assert report["missingFields"]["exactMatchRate"] == round((len(CASES) - 2) / len(CASES), 4)  # m04, m05 불일치
     assert not is_perfect(report)
+
+
+# ---------- 개발용 메일 세트 (eval/minutes/dev) ----------
+# 프롬프트를 고칠 때는 이 세트만 보고, 평가셋(e01~e03 포함)은 고친 뒤 마지막에 한 번만 잰다.
+
+DEV_CASES = load_cases("dev")
+DEV_IDS = [case["caseId"] for case in DEV_CASES]
+
+
+def test_dev_set_is_separate_from_eval_set():
+    assert len(DEV_CASES) == 5
+    assert set(DEV_IDS).isdisjoint(CASE_IDS)
+    assert all(case_id.startswith("d") for case_id in DEV_IDS)
+    assert all("dev" in case["tags"] and case["title"].startswith("[dev]") for case in DEV_CASES)
+    assert all(case["input"]["sourceType"] == "EMAIL" for case in DEV_CASES)
+    # 평가셋 원문과 같은 문장을 정답 근거로 쓰지 않는다 (개발용으로 평가셋을 흉내 내지 않음)
+    eval_text = "\n".join(case["text"] for case in CASES)
+    overlaps = [item["evidence"] for case in DEV_CASES for item in all_items(case["gold"]) if item["evidence"] in eval_text]
+    assert not overlaps, overlaps
+
+
+@pytest.mark.parametrize("case", DEV_CASES, ids=DEV_IDS)
+def test_dev_gold_matches_schema_and_rules(case):
+    gold = case["gold"]
+    errors = [f"{list(error.path)}: {error.message}" for error in Draft202012Validator(SCHEMA).iter_errors(gold)]
+    assert not errors, errors
+    source = prepare_source(case["text"], is_email=True)
+    for item in all_items(gold):
+        assert item["evidence"] in source, item  # 인용·서명이 아닌 본문에서만
+    assert gold["missingFields"] == [name for name in FIELD_NAMES if not gold["fields"][name]]
+    assert [p["displayName"] for p in gold["participants"]] == case["input"]["attendees"]
+
+
+def test_dev_gold_against_gold_is_perfect():
+    predictions = {case["caseId"]: copy.deepcopy(case["gold"]) for case in DEV_CASES}
+    assert is_perfect(score(DEV_CASES, predictions))

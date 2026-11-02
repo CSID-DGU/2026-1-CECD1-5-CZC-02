@@ -1,0 +1,61 @@
+{
+  "noteId": "mn_eval_d03",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_d03",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-30T09:12:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "서모의 차장",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "현장 출입 관리를 태블릿으로 전환 검토",
+        "evidence": "현장 출입 관리를 태블릿으로 바꾸려고 하는데, 현장이 산간 지역이라 인터넷이 자주 끊깁니다."
+      },
+      {
+        "text": "오프라인 저장 후 연결 시 자동 업로드 방식으로 기록 유지 안내",
+        "evidence": "오프라인 저장 후 연결되면 자동으로 올라가는 방식이라 끊겨도 기록은 남습니다."
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "오프라인 출입 기록 가능 여부 문의",
+        "evidence": "오프라인에서도 출입 기록이 남는지 알려주실 수 있을까요?"
+      },
+      {
+        "text": "태블릿 거치대 제공 여부 문의",
+        "evidence": "그리고 태블릿 거치대도 같이 제공되는지 궁금합니다."
+      }
+    ],
+    "concerns": [],
+    "commitments": [
+      {
+        "text": "현장 조건 맞춤 구성안 이번 주 금요일까지 송부",
+        "evidence": "현장 조건에 맞는 구성안을 이번 주 금요일까지 보내드리겠습니다."
+      },
+      {
+        "text": "구성안 내부 검토 후 다음 주 중 회신 (고객 측)",
+        "evidence": "구성안 받으면 내부 검토해서 다음 주 중에 회신드리겠습니다."
+      }
+    ],
+    "nextContact": []
+  },
+  "missingFields": [
+    "concerns",
+    "nextContact"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

@@ -1,0 +1,95 @@
+[
+  {
+    "caseId": "d01",
+    "title": "[dev] 예시물류 여러 문의를 한 문단에 (참조·서명·영문 인용)",
+    "tags": [
+      "dev",
+      "email_quote",
+      "email_signature",
+      "multi_recipient",
+      "dense_paragraph"
+    ],
+    "input": {
+      "sourceType": "EMAIL",
+      "occurredAt": "2026-10-27T16:20:00",
+      "location": null,
+      "attendees": [
+        "오예시 팀장",
+        "한예시 매니저"
+      ]
+    }
+  },
+  {
+    "caseId": "d02",
+    "title": "[dev] 우리가 보낸 미팅 후속 메일 (약속 여러 개·다음 미팅)",
+    "tags": [
+      "dev",
+      "outgoing",
+      "multi_commitment",
+      "deadline_expression"
+    ],
+    "input": {
+      "sourceType": "EMAIL",
+      "occurredAt": "2026-10-28T18:05:00",
+      "location": null,
+      "attendees": [
+        "문가상 부장"
+      ]
+    }
+  },
+  {
+    "caseId": "d03",
+    "title": "[dev] 모의건설 스레드 3통 (문의 → 회신 약속 → 고객 일정 확정·추가 요청)",
+    "tags": [
+      "dev",
+      "email_thread",
+      "email_quote",
+      "deadline_expression"
+    ],
+    "input": {
+      "sourceType": "EMAIL",
+      "occurredAt": "2026-10-30T09:12:00",
+      "location": null,
+      "attendees": [
+        "서모의 차장"
+      ]
+    }
+  },
+  {
+    "caseId": "d04",
+    "title": "[dev] 샘플식품 상황 공유 메일 (조직 변경·예산·고객 측 약속·다음 연락)",
+    "tags": [
+      "dev",
+      "customer_commitment",
+      "deadline_expression",
+      "chitchat"
+    ],
+    "input": {
+      "sourceType": "EMAIL",
+      "occurredAt": "2026-10-31T10:45:00",
+      "location": null,
+      "attendees": [
+        "유샘플 과장"
+      ]
+    }
+  },
+  {
+    "caseId": "d05",
+    "title": "[dev] 테스트전자 스레드 2통 (우리 요약 → 고객 정정·추가, Original Message 인용)",
+    "tags": [
+      "dev",
+      "email_thread",
+      "email_quote",
+      "outgoing",
+      "multi_commitment"
+    ],
+    "input": {
+      "sourceType": "EMAIL",
+      "occurredAt": "2026-11-01T13:50:00",
+      "location": null,
+      "attendees": [
+        "진테스트 책임"
+      ]
+    }
+  }
+]

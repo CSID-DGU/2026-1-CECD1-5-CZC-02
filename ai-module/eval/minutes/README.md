@@ -27,10 +27,23 @@
 | e02 | **메일 스레드 2통**(문의 → 우리 회신), 메일마다 서명·`…님이 작성:` 인용 |
 | e03 | **메일** 보안 조건 전달, 참조, `Forwarded message` 아래 전달 본문, 잡담 |
 
+### 개발용 메일 (`dev/`, d01~d05)
+
+프롬프트를 고칠 때 보는 가짜 메일 5건 (정답 포함, 형식은 위와 같음). **평가셋(위 13건)을 보고 고치지 않는다** — 고치는 동안에는 `--split dev`만 돌리고, 평가셋은 고친 뒤 마지막에 한 번만 잰다. 개발용은 평가셋과 다른 회사·문장으로 쓰고, 근거 문장이 겹치지 않는지 `tests/test_minutes_eval.py`가 검사한다.
+
+| 케이스 | 상황 |
+| --- | --- |
+| d01 | 한 문단에 문의 3개 + 우려, 참조, 서명·영문 `On … wrote:` 인용 |
+| d02 | 우리가 보낸 미팅 후속 메일, 번호 목록 안에 약속 3개(고객 측 1)·다음 미팅 |
+| d03 | 스레드 3통 (문의 → 우리 약속 → 고객 검토 회신 약속·추가 문의), 메일마다 인용 |
+| d04 | 상황 공유(조직 변경·예산 진행), 다른 부서 우려, 고객 측 약속, "연락드리겠습니다", 잡담 |
+| d05 | 스레드 2통 (우리 요약 → 고객 정정·추가 요청·고객 측 약속·다음 회의 제안), `Original Message` 인용 |
+
 ## 실행 (ai-module 폴더에서)
 
 ```bash
 python -m eval.minutes.run --verbose                                 # 엔진(app/minutes)을 13건에 돌리고 채점 (로컬 Ollama 필요)
+python -m eval.minutes.run --split dev --verbose                     # 개발용 메일 5건 (프롬프트 고칠 때)
 python -m eval.minutes.score --self                                  # 정답끼리 → 만점이어야 정상
 python -m eval.minutes.score --pred eval/results/minutes_<실행이름>    # 엔진 결과 채점
 python -m eval.minutes.score --pred <폴더> --verbose --json <폴더>/report.json

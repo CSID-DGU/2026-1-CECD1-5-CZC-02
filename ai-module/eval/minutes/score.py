@@ -29,6 +29,9 @@ MINUTES_DIR = Path(__file__).resolve().parent
 CASES_FILE = MINUTES_DIR / "cases.json"
 MEMOS_DIR = MINUTES_DIR / "memos"
 GOLD_DIR = MINUTES_DIR / "gold"
+# 개발용 세트: 프롬프트를 고치면서 보는 가짜 메일. 평가셋(위)은 고친 뒤 마지막에 한 번만 잰다
+DEV_DIR = MINUTES_DIR / "dev"
+SPLITS = ("eval", "dev")
 SCHEMA_FILE = MINUTES_DIR.parents[2] / "contracts" / "meeting_note.schema.json"
 
 FIELD_NAMES = ("discussion", "customerRequests", "concerns", "commitments", "nextContact")
@@ -42,15 +45,16 @@ def load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def load_cases() -> List[Dict[str, Any]]:
-    """cases.json 목록에 원문(text)과 정답(gold)을 붙여 돌려준다."""
+def load_cases(split: str = "eval") -> List[Dict[str, Any]]:
+    """cases.json 목록에 원문(text)과 정답(gold)을 붙여 돌려준다. split="dev"면 개발용 세트(dev/)."""
+    base = DEV_DIR if split == "dev" else MINUTES_DIR
     cases = []
-    for entry in load_json(CASES_FILE):
+    for entry in load_json(base / "cases.json"):
         case_id = entry["caseId"]
         cases.append({
             **entry,
-            "text": (MEMOS_DIR / f"{case_id}.txt").read_text(encoding="utf-8"),
-            "gold": load_json(GOLD_DIR / f"{case_id}.json"),
+            "text": (base / "memos" / f"{case_id}.txt").read_text(encoding="utf-8"),
+            "gold": load_json(base / "gold" / f"{case_id}.json"),
         })
     return cases
 
@@ -316,10 +320,11 @@ def main() -> int:
     source.add_argument("--pred", type=Path, help="<caseId>.json 예측 파일이 있는 폴더")
     source.add_argument("--self", action="store_true", help="정답끼리 채점 (채점기 점검용)")
     parser.add_argument("--json", type=Path, help="리포트를 JSON으로 저장할 경로")
+    parser.add_argument("--split", default="eval", choices=SPLITS, help="eval=평가셋(기본), dev=개발용 메일")
     parser.add_argument("--verbose", action="store_true", help="케이스별 놓친·초과 항목 출력")
     args = parser.parse_args()
 
-    cases = load_cases()
+    cases = load_cases(args.split)
     if args.self:
         predictions = {case["caseId"]: case["gold"] for case in cases}
     else:
