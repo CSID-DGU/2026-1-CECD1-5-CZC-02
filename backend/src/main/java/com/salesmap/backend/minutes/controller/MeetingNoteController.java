@@ -86,4 +86,21 @@ public class MeetingNoteController {
     ) {
         return ApiResponse.success("회의록을 확정했습니다.", meetingNoteService.confirmMeetingNote(noteId, principal.getUserId()));
     }
+
+    /** 보관(숨김). 기본 목록·확인 대기함에서 빠지고 ?status=ARCHIVED로만 보인다. 영구 삭제 API는 두지 않는다 (D-025) */
+    @PostMapping("/{noteId}/archive")
+    public ApiResponse<MeetingNoteResponse> archiveMeetingNote(
+            @PathVariable String noteId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success("회의록을 보관했습니다.", meetingNoteService.archiveMeetingNote(noteId, principal.getUserId()));
+    }
+
+    @PostMapping("/{noteId}/unarchive")
+    public ApiResponse<MeetingNoteResponse> unarchiveMeetingNote(
+            @PathVariable String noteId,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        return ApiResponse.success("회의록 보관을 해제했습니다.", meetingNoteService.unarchiveMeetingNote(noteId, principal.getUserId()));
+    }
 }

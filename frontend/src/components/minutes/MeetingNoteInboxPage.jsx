@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
-import { getMeetingNotes } from '../../api/meetingNotes';
+import { archiveMeetingNote, getMeetingNotes } from '../../api/meetingNotes';
 import { getApiErrorMessage } from '../../api/errors';
 import { MeetingNoteListItem } from './MeetingNotePage';
+import { ARCHIVE_CONFIRM_MESSAGE } from './meetingNoteUtils';
 
 /**
  * 확인 대기함: 아직 확정하지 않은 회의록(DRAFT). 할 일(C)·식별 후보(A)는 각 담당이 API를 만든 뒤 여기에 붙인다.
@@ -13,6 +14,7 @@ export function MeetingNoteInboxPage() {
   const navigate = useNavigate();
   const [notes, setNotes] = useState(null);
   const [message, setMessage] = useState('');
+  const [busyNoteId, setBusyNoteId] = useState(null);
 
   useEffect(() => {
     let ignore = false;
@@ -31,6 +33,23 @@ export function MeetingNoteInboxPage() {
       ignore = true;
     };
   }, []);
+
+  // 보관(숨김): 지우지 않고 대기함에서만 뺀다. 미팅 기록의 "보관함"에서 해제할 수 있다 (D-025)
+  const handleArchive = async (note) => {
+    if (!window.confirm(ARCHIVE_CONFIRM_MESSAGE)) {
+      return;
+    }
+    setBusyNoteId(note.noteId);
+    try {
+      await archiveMeetingNote(note.noteId);
+      setNotes((prev) => (prev || []).filter((item) => item.noteId !== note.noteId));
+      window.dispatchEvent(new Event('meeting-notes:changed'));
+    } catch (error) {
+      setMessage(getApiErrorMessage(error));
+    } finally {
+      setBusyNoteId(null);
+    }
+  };
 
   return (
     <div className="h-full overflow-auto p-6">
@@ -67,6 +86,9 @@ export function MeetingNoteInboxPage() {
                 key={note.noteId}
                 note={note}
                 onClick={() => navigate(`/meeting-notes/${note.noteId}`)}
+                actionLabel="보관"
+                onAction={() => handleArchive(note)}
+                actionDisabled={busyNoteId === note.noteId}
               />
             ))}
           </div>

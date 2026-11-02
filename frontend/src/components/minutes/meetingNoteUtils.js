@@ -95,6 +95,11 @@ export function cloneFields(fields) {
   return FIELD_DEFS.reduce((result, { key }) => ({ ...result, [key]: [...(fields?.[key] || [])] }), {});
 }
 
+// 보관 전에 한 번 묻는 문구 (D-025: 사용자가 결정, 지우지 않고 숨김)
+export const ARCHIVE_CONFIRM_MESSAGE = '이 회의록을 보관할까요?\n'
+  + '목록·확인 대기함에서 숨겨지고, 미팅 기록의 "보관함"에서 언제든 다시 꺼낼 수 있어요.\n'
+  + '지워지지 않고, 이 회의록의 할 일은 그대로 남아요.';
+
 export function sameJson(left, right) {
   return JSON.stringify(left) === JSON.stringify(right);
 }

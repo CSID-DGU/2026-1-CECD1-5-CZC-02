@@ -17,7 +17,7 @@ export async function createMeetingNoteFromSource(sourceId) {
   return response.data.data;
 }
 
-// status: 'DRAFT' | 'CONFIRMED' | undefined(전체)
+// status: 'DRAFT' | 'CONFIRMED' | 'ARCHIVED'(보관함) | undefined(보관 안 한 전체)
 export async function getMeetingNotes(status) {
   const response = await api.get('/api/meeting-notes', {
     params: status ? { status } : {},
@@ -35,6 +35,19 @@ export async function getMeetingNote(noteId) {
 // 고친 문항만 보낸다. 바뀐 값마다 서버가 수정 기록(revision)을 남긴다.
 export async function updateMeetingNote(noteId, payload) {
   const response = await api.patch(`/api/meeting-notes/${noteId}`, payload);
+
+  return response.data.data;
+}
+
+// 보관(숨김)·해제. 영구 삭제 API는 없다 (D-025)
+export async function archiveMeetingNote(noteId) {
+  const response = await api.post(`/api/meeting-notes/${noteId}/archive`);
+
+  return response.data.data;
+}
+
+export async function unarchiveMeetingNote(noteId) {
+  const response = await api.post(`/api/meeting-notes/${noteId}/unarchive`);
 
   return response.data.data;
 }

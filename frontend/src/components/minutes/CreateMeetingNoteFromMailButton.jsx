@@ -6,7 +6,7 @@ import { getApiErrorMessage } from '../../api/errors';
 
 /**
  * 메일 상세(MessageView)의 "회의록 만들기" (B-5). 그 메일의 스레드 전체로 회의록 초안을 만들고 확인 화면으로 간다.
- * 같은 메일(스레드)로 이미 만든 회의록이 있으면 새로 만들지 않고 그 회의록을 연다.
+ * 같은 메일(스레드)로 이미 만든 회의록이 있으면(보관한 것 포함) 새로 만들지 않고 그 회의록을 연다.
  */
 export function CreateMeetingNoteFromMailButton({ sourceId }) {
   const navigate = useNavigate();
@@ -24,7 +24,12 @@ export function CreateMeetingNoteFromMailButton({ sourceId }) {
             identityResolutions: result.draft.identityResolutions,
             droppedItems: result.draft.droppedItems,
           }
-          : { notice: '이 메일(대화)로 이미 만든 회의록이 있어서 그 회의록을 열었어요.' },
+          : {
+            // 보관한 회의록이면 새로 만들지 않고 그 회의록을 연다. 확인 화면 위쪽에 "보관 해제" 버튼이 있다
+            notice: result.archived
+              ? '이 메일(대화)로 만든 회의록을 보관해 두었어요. 새로 만들지 않고 보관된 회의록을 열었어요. 다시 쓰려면 "보관 해제"를 눌러 주세요.'
+              : '이 메일(대화)로 이미 만든 회의록이 있어서 그 회의록을 열었어요.',
+          },
       });
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error));

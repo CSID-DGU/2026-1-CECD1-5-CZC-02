@@ -10,6 +10,8 @@ public record MeetingNoteResponse(
         String llmFallbackReason,
         LocalDateTime confirmedAt,
         Boolean confirmedWithoutEdit,
+        // 보관(숨김)한 시각, 보관 안 했으면 null. 계약 status(DRAFT/CONFIRMED)와 따로 둔다
+        LocalDateTime archivedAt,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {

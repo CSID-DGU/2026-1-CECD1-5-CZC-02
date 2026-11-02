@@ -488,6 +488,7 @@ Response data 예시:
     "llmFallbackReason": null,
     "confirmedAt": null,
     "confirmedWithoutEdit": null,
+    "archivedAt": null,
     "createdAt": "2026-10-14T15:30:00",
     "updatedAt": "2026-10-14T15:30:00"
   },
@@ -512,19 +513,19 @@ Authorization: 필요
 - **참석자**: 메일들의 발신자·수신자 이름과 주소에서 내 주소를 뺀 사람들. A 식별에 이름과 이메일을 함께 넘깁니다 (주소가 맞으면 CONFIRMED가 나올 수 있음, D-022).
 - **시각**: `occurredAt`은 스레드 마지막 메일의 발송 시각, `location`은 `null`, `mode`는 자동.
 - **확인 화면 원문**(`note.source.content`): 메일 한 통이면 메일 본문, 스레드면 엔진에 보낸 원문(구분 줄 포함). 둘 다 인용·서명 제거 **전**.
-- **중복 방지**: 같은 사용자가 같은 스레드(스레드가 없으면 같은 메일)로 만든 회의록이 있으면 새로 만들지 않고 `created: false`와 기존 `noteId`를 돌려줍니다 (상태가 DRAFT든 CONFIRMED든). 스레드 안 다른 메일에서 눌러도 같은 회의록입니다. DB에도 `(user_id, origin_key)` 유일 제약이 있어 동시에 두 번 눌러도 하나만 생깁니다.
+- **중복 방지**: 같은 사용자가 같은 스레드(스레드가 없으면 같은 메일)로 만든 회의록이 있으면 새로 만들지 않고 `created: false`와 기존 `noteId`를 돌려줍니다 (상태가 DRAFT든 CONFIRMED든, 보관했든). 보관한 회의록이면 `archived: true` — 화면은 그 회의록을 열고 "보관 해제"를 안내합니다. 스레드 안 다른 메일에서 눌러도 같은 회의록입니다. DB에도 `(user_id, origin_key)` 유일 제약이 있어 동시에 두 번 눌러도 하나만 생깁니다.
 - 남의 메일이면 `403`, 없거나 지운 메일이면 `404`, 메일이 아닌 원본(메모 등)이면 `400`.
 
 Response data 예시:
 
 ```json
-{ "created": true, "noteId": "mn_12", "draft": { /* POST /api/meeting-notes 응답 data와 같음 */ } }
-{ "created": false, "noteId": "mn_9", "draft": null }
+{ "created": true, "noteId": "mn_12", "archived": false, "draft": { /* POST /api/meeting-notes 응답 data와 같음 */ } }
+{ "created": false, "noteId": "mn_9", "archived": true, "draft": null }
 ```
 
 ### GET /api/meeting-notes
 
-로그인 사용자의 회의록 목록을 최신순으로 조회합니다 (② 미팅 기록 오른쪽 목록, 확인 대기함).
+로그인 사용자의 회의록 목록을 최신순으로 조회합니다 (② 미팅 기록 오른쪽 목록·보관함, 확인 대기함).
 
 Authorization: 필요
 
@@ -532,7 +533,7 @@ Query:
 
 | Name | Default | 설명 |
 | --- | --- | --- |
-| `status` | 없음(전체) | `DRAFT` / `CONFIRMED`. 그 밖의 값은 400 |
+| `status` | 없음(보관 안 한 전체) | `DRAFT` / `CONFIRMED` (보관한 것 제외) / `ARCHIVED` (보관함, 보관한 순 최신순). 그 밖의 값은 400 |
 
 Response data 예시:
 
@@ -548,7 +549,8 @@ Response data 예시:
     "sourceTitle": "미팅 메모 2026-10-14 15:00 · 가상전자 본사",
     "missingFieldCount": 3,
     "createdAt": "2026-10-14T15:30:00",
-    "confirmedAt": null
+    "confirmedAt": null,
+    "archivedAt": null
   }
 ]
 ```
@@ -602,6 +604,29 @@ Authorization: 필요
 
 - 한 번도 고치지 않고 확정하면 `confirmedWithoutEdit: true`.
 - 이미 확정된 회의록이면 400. Response data는 `GET /api/meeting-notes/{noteId}`와 같습니다.
+
+### POST /api/meeting-notes/{noteId}/archive
+
+회의록을 보관(숨김)합니다. 지우지 않습니다 — 영구 삭제 API는 없습니다 (D-025 ③). 요청 본문은 없습니다.
+
+Authorization: 필요
+
+- DRAFT·CONFIRMED 모두 보관할 수 있습니다. `meetingNote.status`(계약 값)는 바꾸지 않고, 백엔드에만 보관 시각(`archivedAt`)을 남깁니다.
+- 보관한 회의록은 `GET /api/meeting-notes`의 기본 목록·`status=DRAFT`(확인 대기함·메뉴 배지)·`status=CONFIRMED`에서 빠지고, `status=ARCHIVED`로만 보입니다. `GET /api/meeting-notes/{noteId}`로는 계속 열 수 있습니다.
+- 보관한 회의록은 해제하기 전까지 고치거나(`PATCH`) 확정할(`confirm`) 수 없습니다(400).
+- **할 일은 그대로 둡니다.** DRAFT 회의록을 보관해도 그 회의록의 할 일(C)을 확정·취소하지 않습니다. 할 일은 할 일 메뉴에서 따로 정리합니다.
+- AI 제안이 없는 사람의 결정이라 수정 기록(revision)에는 넣지 않고, 누가·언제 보관·해제했는지를 회의록에 남깁니다 (D-026 감사 기록, 응답에는 넣지 않음).
+- 이미 보관한 회의록이면 400, 소유자가 아니면 403, 없으면 404.
+- Response data는 `GET /api/meeting-notes/{noteId}`와 같고 `archivedAt`이 채워집니다.
+
+### POST /api/meeting-notes/{noteId}/unarchive
+
+보관을 해제합니다. 원래 목록(상태에 따라 확인 대기함 또는 확정 목록)으로 돌아갑니다.
+
+Authorization: 필요
+
+- 보관하지 않은 회의록이면 400, 소유자가 아니면 403, 없으면 404.
+- Response data는 `GET /api/meeting-notes/{noteId}`와 같고 `archivedAt`은 `null`입니다.
 
 ## Schedules
 
