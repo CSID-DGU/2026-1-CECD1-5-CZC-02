@@ -5,7 +5,7 @@ import urllib.error
 import urllib.request
 from typing import Optional
 
-from app.config import OLLAMA_BASE_URL, OLLAMA_MODEL, OLLAMA_SEED, OLLAMA_TIMEOUT_SECONDS
+from app.config import OLLAMA_BASE_URL, OLLAMA_MODEL, OLLAMA_SEED, OLLAMA_THINK, OLLAMA_TIMEOUT_SECONDS
 from app.llm.base import LLMError, LLMRequest, LLMResponse, parse_json_object
 
 
@@ -13,11 +13,13 @@ class OllamaProvider:
     name = "ollama"
 
     def __init__(self, base_url: str = OLLAMA_BASE_URL, model: str = OLLAMA_MODEL,
-                 timeout_seconds: float = OLLAMA_TIMEOUT_SECONDS, seed: Optional[int] = OLLAMA_SEED):
+                 timeout_seconds: float = OLLAMA_TIMEOUT_SECONDS, seed: Optional[int] = OLLAMA_SEED,
+                 think: Optional[bool] = OLLAMA_THINK):
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.timeout_seconds = timeout_seconds
         self.seed = seed
+        self.think = think
 
     def model_for(self, task: str) -> str:
         return self.model
@@ -36,6 +38,9 @@ class OllamaProvider:
         if self.seed is not None:
             # 같은 입력 → 같은 답 (평가 재현용). 서버 기본은 None이라 넣지 않는다
             payload["options"]["seed"] = self.seed
+        if self.think is not None:
+            # 생각 모드 모델만 설정한다. None이면 보내지 않아 생각 기능이 없는 모델도 그대로 동작
+            payload["think"] = self.think
         if request.json_schema is not None:
             payload["format"] = "json"
 

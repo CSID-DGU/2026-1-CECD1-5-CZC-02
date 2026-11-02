@@ -35,3 +35,9 @@ def test_seed_is_sent_when_configured(monkeypatch):
 def test_seed_is_omitted_by_default(monkeypatch):
     sent = capture_payload(monkeypatch, OllamaProvider(seed=None))
     assert "seed" not in sent["options"]
+
+
+def test_think_is_sent_only_when_configured(monkeypatch):
+    # 생각 모드 모델(qwen3.5·gemma4)은 OLLAMA_THINK=false로 끈다. 비우면 보내지 않아 qwen2.5 등은 지금 동작 그대로
+    assert capture_payload(monkeypatch, OllamaProvider(think=False))["think"] is False
+    assert "think" not in capture_payload(monkeypatch, OllamaProvider(think=None))
