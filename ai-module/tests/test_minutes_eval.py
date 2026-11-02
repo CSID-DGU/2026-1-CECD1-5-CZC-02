@@ -28,14 +28,22 @@ def gold_predictions():
 
 
 def test_case_set_covers_required_situations():
-    # 메모 10건(B-1) + 메일 3건(B-5)
+    # 메모 10건(B-1) + 메일 10건(B-5 e01~e03, 평가셋 확장 e04~e10)
     assert sum(case["input"]["sourceType"] == "MEETING_NOTE" for case in CASES) == 10
-    assert sum(case["input"]["sourceType"] == "EMAIL" for case in CASES) == 3
+    assert sum(case["input"]["sourceType"] == "EMAIL" for case in CASES) == 10
     tags = [tag for case in CASES for tag in case["tags"]]
     for required in ("multi_commitment", "no_concerns", "deadline_expression", "multi_counterpart", "chitchat",
-                     "email_quote", "email_signature", "email_thread", "multi_recipient"):
+                     "email_quote", "email_signature", "email_thread", "multi_recipient",
+                     "short_inquiry", "sparse", "customer_commitment", "outgoing", "complaint", "ad_footer"):
         assert required in tags, required
     assert 1 <= sum(case["gold"]["mode"] == "LIGHT" for case in CASES) <= 2
+
+
+def test_new_gold_carries_review_status():
+    # 정답 교차 검수 표시. 값은 "검수 전" 또는 "검수 완료"만
+    for case in CASES:
+        assert case.get("reviewStatus", "검수 완료") in ("검수 전", "검수 완료"), case["caseId"]
+    assert {case["caseId"] for case in CASES if case.get("reviewStatus") == "검수 전"} >= {f"e{n:02d}" for n in range(4, 11)}
 
 
 @pytest.mark.parametrize("case", CASES, ids=CASE_IDS)
@@ -129,6 +137,10 @@ def test_dev_set_is_separate_from_eval_set():
     eval_text = "\n".join(case["text"] for case in CASES)
     overlaps = [item["evidence"] for case in DEV_CASES for item in all_items(case["gold"]) if item["evidence"] in eval_text]
     assert not overlaps, overlaps
+    # 반대로 평가셋 정답 근거도 개발용 메일에 없어야 한다 (평가용 메일을 개발용에서 미리 보지 않음)
+    dev_text = "\n".join(case["text"] for case in DEV_CASES)
+    reverse = [item["evidence"] for case in CASES for item in all_items(case["gold"]) if item["evidence"] in dev_text]
+    assert not reverse, reverse
 
 
 @pytest.mark.parametrize("case", DEV_CASES, ids=DEV_IDS)

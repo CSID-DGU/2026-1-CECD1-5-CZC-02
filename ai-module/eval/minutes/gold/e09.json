@@ -1,0 +1,53 @@
+{
+  "noteId": "mn_eval_e09",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_e09",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-31T08:50:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "홍가상",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [],
+    "customerRequests": [
+      {
+        "text": "원인·재발 방지 대책 이번 주 안 서면 요청",
+        "evidence": "원인과 재발 방지 대책을 이번 주 안에 서면으로 받아보고 싶습니다."
+      }
+    ],
+    "concerns": [
+      {
+        "text": "주말 카드키 인식 불가 객실 12곳, 손님 불만",
+        "evidence": "주말에 카드키 인식이 안 되는 객실이 12곳이나 나와서 손님들 불만이 컸습니다."
+      },
+      {
+        "text": "야간 담당자 연결 안 돼 수동으로 문을 엶",
+        "evidence": "야간에 연락드렸는데 담당자 연결이 안 돼서 저희가 수동으로 문을 열어 드려야 했습니다."
+      },
+      {
+        "text": "재발 시 계약 재검토 분위기",
+        "evidence": "같은 일이 또 생기면 계약을 다시 검토할 수밖에 없다는 게 내부 분위기입니다."
+      }
+    ],
+    "commitments": [],
+    "nextContact": []
+  },
+  "missingFields": [
+    "discussion",
+    "commitments",
+    "nextContact"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

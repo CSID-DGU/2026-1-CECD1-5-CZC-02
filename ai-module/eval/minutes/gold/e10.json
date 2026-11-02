@@ -1,0 +1,41 @@
+{
+  "noteId": "mn_eval_e10",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_e10",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-31T19:30:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "고예제",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "지난번 건은 아직 내부 논의 없음",
+        "evidence": "지난번 말씀하신 건은 아직 내부에서 따로 논의된 게 없어서 특별히 전해드릴 내용은 없습니다."
+      }
+    ],
+    "customerRequests": [],
+    "concerns": [],
+    "commitments": [],
+    "nextContact": []
+  },
+  "missingFields": [
+    "customerRequests",
+    "concerns",
+    "commitments",
+    "nextContact"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

@@ -1,0 +1,45 @@
+{
+  "noteId": "mn_eval_e04",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_e04",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-26T09:10:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "조예제",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "직원 약 80명 규모",
+        "evidence": "직원은 80명 정도입니다."
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "회의실 예약 시스템 소개 자료 요청",
+        "evidence": "회의실 예약 시스템 소개 자료를 받아볼 수 있을까요?"
+      }
+    ],
+    "concerns": [],
+    "commitments": [],
+    "nextContact": []
+  },
+  "missingFields": [
+    "concerns",
+    "commitments",
+    "nextContact"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

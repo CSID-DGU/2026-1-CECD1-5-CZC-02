@@ -1,0 +1,60 @@
+{
+  "noteId": "mn_eval_e05",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_e05",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-28T09:05:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "하가상 팀장",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "월별 사용량 보고서 기본 제공 안내",
+        "evidence": "팀장님, 월별 사용량 보고서는 기본 기능으로 제공됩니다."
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "화학물질별 월별 사용량 기능 문의",
+        "evidence": "화학물질별 사용량을 월별로 뽑을 수 있는 기능이 있는지 알려주세요."
+      }
+    ],
+    "concerns": [
+      {
+        "text": "유해물질 취급 기록을 종이로 관리해 감사 때 찾기 어려움",
+        "evidence": "유해물질 취급 기록을 종이로 관리하고 있는데 감사 때마다 찾느라 힘듭니다."
+      },
+      {
+        "text": "보고서 양식이 감사 양식과 달라 맞춤 가능 여부가 관건",
+        "evidence": "보고서 양식이 저희 감사 양식과 조금 달라서 맞춤이 가능한지가 관건일 것 같습니다."
+      }
+    ],
+    "commitments": [
+      {
+        "text": "샘플 보고서 2종 내일 오전까지 송부",
+        "evidence": "샘플 보고서 두 가지를 내일 오전까지 보내드리겠습니다."
+      }
+    ],
+    "nextContact": [
+      {
+        "text": "다음 주 화요일 오후 방문 설명 요청",
+        "evidence": "다음 주 화요일 오후에 방문해서 설명해 주실 수 있을까요?"
+      }
+    ]
+  },
+  "missingFields": [],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

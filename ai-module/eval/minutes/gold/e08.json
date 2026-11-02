@@ -1,0 +1,57 @@
+{
+  "noteId": "mn_eval_e08",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_e08",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-30T17:45:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "오테스트",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [],
+    "customerRequests": [
+      {
+        "text": "가공 라인 6대 가동률 실시간 확인 희망",
+        "evidence": "가공 라인 6대의 가동률을 실시간으로 보고 싶다고 하신 점 잘 기억하고 있습니다."
+      }
+    ],
+    "concerns": [],
+    "commitments": [
+      {
+        "text": "장비별 센서 부착 위치 도면 이번 주 금요일까지 송부",
+        "evidence": "요청하신 장비별 센서 부착 위치 도면은 이번 주 금요일까지 보내드리겠습니다."
+      },
+      {
+        "text": "PLC 연동 가능 여부 기술팀 확인 후 다음 주 월요일 답변",
+        "evidence": "PLC 연동 가능 여부는 저희 기술팀 확인 후 다음 주 월요일에 답변드리겠습니다."
+      },
+      {
+        "text": "설치 중 라인 무중단 방법 정리",
+        "evidence": "설치 기간 동안 라인을 멈추지 않는 방법도 함께 정리해 드리겠습니다."
+      }
+    ],
+    "nextContact": [
+      {
+        "text": "다음 달 첫째 주 기술팀과 재방문",
+        "evidence": "다음 달 첫째 주에 기술팀과 다시 방문드리겠습니다."
+      }
+    ]
+  },
+  "missingFields": [
+    "discussion",
+    "concerns"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

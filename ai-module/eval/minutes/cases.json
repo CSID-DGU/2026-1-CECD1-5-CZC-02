@@ -76,5 +76,54 @@
     "title": "가상전자 보안 조건 전달 메일 (전달 메일·참조·잡담)",
     "tags": ["email_forward", "multi_recipient", "chitchat", "deadline_expression"],
     "input": { "sourceType": "EMAIL", "occurredAt": "2026-10-23T11:05:00", "location": null, "attendees": ["홍길동 부장", "박가상 대리"] }
+  },
+  {
+    "caseId": "e04",
+    "title": "예제통상 짧은 자료 문의 (메일 1통, 빈 칸 많음)",
+    "tags": ["short_inquiry", "sparse", "email_signature"],
+    "reviewStatus": "검수 전",
+    "input": { "sourceType": "EMAIL", "occurredAt": "2026-10-26T09:10:00", "location": null, "attendees": ["조예제"] }
+  },
+  {
+    "caseId": "e05",
+    "title": "가상화학 스레드 3통 (문의 → 우리 약속 → 고객 우려·방문 요청)",
+    "tags": ["email_thread", "email_quote", "deadline_expression"],
+    "reviewStatus": "검수 전",
+    "input": { "sourceType": "EMAIL", "occurredAt": "2026-10-28T09:05:00", "location": null, "attendees": ["하가상 팀장"] }
+  },
+  {
+    "caseId": "e06",
+    "title": "모의교육 여러 수신자 메일 (사람별 요청 + 고객 측 약속)",
+    "tags": ["multi_recipient", "multi_request", "customer_commitment"],
+    "reviewStatus": "검수 전",
+    "input": { "sourceType": "EMAIL", "occurredAt": "2026-10-29T14:30:00", "location": null, "attendees": ["신모의", "강모의", "임모의"] }
+  },
+  {
+    "caseId": "e07",
+    "title": "샘플에너지 고객이 약속하는 메일 (고객 측 약속 3개)",
+    "tags": ["customer_commitment", "multi_commitment", "deadline_expression"],
+    "reviewStatus": "검수 전",
+    "input": { "sourceType": "EMAIL", "occurredAt": "2026-10-30T11:20:00", "location": null, "attendees": ["문샘플"] }
+  },
+  {
+    "caseId": "e08",
+    "title": "테스트기계 우리가 약속하는 후속 메일 (우리 약속 3개 + 재방문)",
+    "tags": ["outgoing", "multi_commitment", "deadline_expression"],
+    "reviewStatus": "검수 전",
+    "input": { "sourceType": "EMAIL", "occurredAt": "2026-10-30T17:45:00", "location": null, "attendees": ["오테스트"] }
+  },
+  {
+    "caseId": "e09",
+    "title": "가상리조트 불만 메일 (우려 위주 + 서면 대책 요청)",
+    "tags": ["complaint", "concerns_heavy", "email_signature"],
+    "reviewStatus": "검수 전",
+    "input": { "sourceType": "EMAIL", "occurredAt": "2026-10-31T08:50:00", "location": null, "attendees": ["홍가상"] }
+  },
+  {
+    "caseId": "e10",
+    "title": "예제미디어 안부·광고 메일 (내용 거의 없음)",
+    "tags": ["sparse", "chitchat", "ad_footer"],
+    "reviewStatus": "검수 전",
+    "input": { "sourceType": "EMAIL", "occurredAt": "2026-10-31T19:30:00", "location": null, "attendees": ["고예제"] }
   }
 ]

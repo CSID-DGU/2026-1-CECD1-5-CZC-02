@@ -1,0 +1,53 @@
+{
+  "noteId": "mn_eval_e07",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_e07",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-30T11:20:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "문샘플",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [],
+    "customerRequests": [
+      {
+        "text": "원격 감시 화면 시안 받을 시점 문의",
+        "evidence": "그쪽에서 준비하실 원격 감시 화면 시안은 언제쯤 받을 수 있을지 알려주세요."
+      }
+    ],
+    "concerns": [],
+    "commitments": [
+      {
+        "text": "발전소 3곳 인버터 모델 목록 내일까지 송부 (고객 측)",
+        "evidence": "태양광 발전소 3곳의 인버터 모델 목록은 내일까지 보내드리겠습니다."
+      },
+      {
+        "text": "지난 1년 고장 이력 다음 주 수요일까지 전달 (고객 측)",
+        "evidence": "지난 1년 치 고장 이력은 정리하는 데 시간이 걸려서 다음 주 수요일까지 드리겠습니다."
+      },
+      {
+        "text": "현장 방문 출입 신청 이번 주 안에 처리 (고객 측)",
+        "evidence": "현장 방문 출입 신청은 제가 이번 주 안에 처리해 두겠습니다."
+      }
+    ],
+    "nextContact": []
+  },
+  "missingFields": [
+    "discussion",
+    "concerns",
+    "nextContact"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}
