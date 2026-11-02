@@ -69,7 +69,7 @@
 | 상대 식별 | 후보 3명 안에 정답이 있는 비율, 평가 600건 | 100% (정확 일치만 91.7%) |
 | 할 일 분류 | 규칙 vs 학습 모델, 같은 평가셋 | 학습 모델이 기준을 넘지 못해 규칙 유지 |
 
-결정 기록은 [decisions.md](docs/project/decisions.md) (D-001~D-024), 모델 비교는 [ai-module/eval/MODELS.md](ai-module/eval/MODELS.md).
+결정 기록은 [decisions.md](docs/project/decisions.md) (D-001~D-025), 모델 비교는 [ai-module/eval/MODELS.md](ai-module/eval/MODELS.md).
 
 ## 팀원이라면 먼저
 
