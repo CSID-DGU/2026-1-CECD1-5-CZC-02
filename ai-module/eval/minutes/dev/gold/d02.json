@@ -1,0 +1,61 @@
+{
+  "noteId": "mn_eval_d02",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_d02",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-28T18:05:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "문가상 부장",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "품질팀 문서가 부서별로 흩어져 통합 저장소 필요",
+        "evidence": "가상제약 품질팀 문서 관리가 부서별로 흩어져 있어 통합 저장소가 필요하다는 점 확인했습니다."
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "감사 대응용 이력 보관 기능 확인 희망",
+        "evidence": "부장님께서 감사 대응용 이력 보관 기능을 꼭 보고 싶다고 하셔서"
+      }
+    ],
+    "concerns": [],
+    "commitments": [
+      {
+        "text": "이력 보관 화면 시연 영상 이번 주 목요일까지 송부",
+        "evidence": "해당 화면 시연 영상을 이번 주 목요일까지 보내드리겠습니다."
+      },
+      {
+        "text": "50명 기준 견적·도입 일정안 다음 주 화요일까지 전달",
+        "evidence": "50명 기준 견적과 도입 일정안은 다음 주 화요일까지 정리해서 드리겠습니다."
+      },
+      {
+        "text": "IT팀 보안 체크리스트 공유 (고객 측)",
+        "evidence": "부장님께서 IT팀 보안 체크리스트를 공유해 주시기로 하셨습니다."
+      }
+    ],
+    "nextContact": [
+      {
+        "text": "11월 둘째 주 IT팀과 2차 미팅",
+        "evidence": "11월 둘째 주에 IT팀과 함께 2차 미팅을 잡기로 했습니다."
+      }
+    ]
+  },
+  "missingFields": [
+    "concerns"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

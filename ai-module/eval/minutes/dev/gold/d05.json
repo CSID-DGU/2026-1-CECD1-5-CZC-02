@@ -1,0 +1,57 @@
+{
+  "noteId": "mn_eval_d05",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_d05",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-11-01T13:50:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "진테스트 책임",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "설비 점검표 모바일 전환 범위 3개 공장으로 정정 (천안 공장 포함)",
+        "evidence": "한 가지 정정하면, 범위는 2개 공장이 아니라 3개 공장입니다."
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "점검 결과 본사 ERP 연동 검토 요청",
+        "evidence": "그리고 점검 결과를 본사 ERP로 넘길 수 있는지도 같이 검토 부탁드립니다."
+      }
+    ],
+    "concerns": [],
+    "commitments": [
+      {
+        "text": "점검 사진 저장 용량 기준 계산해 월요일까지 공유",
+        "evidence": "점검 사진 저장 용량 기준은 저희가 계산해서 월요일까지 공유드리겠습니다."
+      },
+      {
+        "text": "공장별 점검 항목 엑셀 화요일 오전까지 송부 (고객 측)",
+        "evidence": "점검 항목 엑셀은 화요일 오전까지 보내드리겠습니다."
+      }
+    ],
+    "nextContact": [
+      {
+        "text": "다음 주 목요일 3개 공장 담당자와 화상회의 제안",
+        "evidence": "3개 공장 담당자 일정 맞춰서 다음 주 목요일에 화상회의 하면 어떨까요?"
+      }
+    ]
+  },
+  "missingFields": [
+    "concerns"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

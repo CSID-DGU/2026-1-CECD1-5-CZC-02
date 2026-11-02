@@ -104,6 +104,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="회의록 엔진 평가 (로컬 LLM 필요)")
     parser.add_argument("--engine", default="ollama", choices=["ollama"])
     parser.add_argument("--limit", type=int, default=None, help="앞에서부터 N건만 실행 (유료 API 시험용)")
+    parser.add_argument("--split", default="eval", choices=["eval", "dev"],
+                        help="eval=평가셋(기본, 고친 뒤 마지막에만), dev=개발용 메일(프롬프트 고칠 때)")
     parser.add_argument("--cases", default=None, help="쉼표로 고른 caseId만 실행 (예: e01,e02,e03 — 메일 케이스만)")
     parser.add_argument("--allow-paid", action="store_true",
                         help="LLM_PROVIDER=openai일 때 유료 API 호출을 허용 (--limit 필수)")
@@ -119,7 +121,7 @@ def main() -> None:
 
     output = Path(args.output) if args.output else RESULTS_DIR / f"minutes_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     output.parent.mkdir(parents=True, exist_ok=True)
-    cases = load_cases()
+    cases = load_cases(args.split)
     if args.cases:
         wanted = {case_id.strip() for case_id in args.cases.split(",") if case_id.strip()}
         cases = [case for case in cases if case["caseId"] in wanted]

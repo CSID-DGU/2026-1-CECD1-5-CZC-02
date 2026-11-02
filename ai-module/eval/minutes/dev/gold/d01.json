@@ -1,0 +1,66 @@
+{
+  "noteId": "mn_eval_d01",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_d01",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-27T16:20:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "오예시 팀장",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "한예시 매니저",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "지난주 데모 후 기사용 앱 현장 반응 양호",
+        "evidence": "배송 기사용 모바일 앱이 생각보다 가벼워서 현장 반응이 괜찮았습니다."
+      },
+      {
+        "text": "실무 담당 한예시 매니저 참조, 기술 질문은 한 매니저와 직접 진행",
+        "evidence": "한예시 매니저가 실무 담당이라 참조로 넣었습니다."
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "안드로이드 최소 지원 버전 문의",
+        "evidence": "기사님들이 대부분 안드로이드 구형 폰을 써서 최소 지원 버전이 어떻게 되는지 알려주시고"
+      },
+      {
+        "text": "기존 배차 엑셀 양식 업로드 가능 여부 문의",
+        "evidence": "기존 배차 엑셀 양식을 그대로 올릴 수 있는지도 궁금합니다."
+      },
+      {
+        "text": "월 단위 계약 가능 여부 확인 요청",
+        "evidence": "계약 단위가 연 단위만 되는지 월 단위도 되는지 확인 부탁드립니다."
+      }
+    ],
+    "concerns": [
+      {
+        "text": "업데이트 때 앱 멈춤 재발 우려 (작년 다른 솔루션 경험)",
+        "evidence": "솔직히 작년에 도입한 다른 솔루션이 업데이트 때마다 앱이 멈춰서 기사님들 불만이 많았습니다."
+      }
+    ],
+    "commitments": [],
+    "nextContact": []
+  },
+  "missingFields": [
+    "commitments",
+    "nextContact"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

@@ -1,0 +1,60 @@
+{
+  "noteId": "mn_eval_d04",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_d04",
+      "sourceType": "EMAIL"
+    }
+  ],
+  "occurredAt": "2026-10-31T10:45:00",
+  "location": null,
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "유샘플 과장",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "구매팀·생산관리팀 통합, 유샘플 과장이 두 팀 업무 담당",
+        "evidence": "이번 달부터 구매팀과 생산관리팀이 합쳐져서 제가 두 팀 업무를 같이 보게 됐습니다."
+      },
+      {
+        "text": "내년 예산 1차 심사 통과, 12월 중순 최종 확정",
+        "evidence": "내년 예산은 1차 심사를 통과했고 12월 중순에 최종 확정됩니다."
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "초기 구축비 분할 납부 가능 여부 문의",
+        "evidence": "분할 납부가 가능한지 알려주시면 설득에 도움이 될 것 같습니다."
+      }
+    ],
+    "concerns": [
+      {
+        "text": "재무팀이 초기 구축비가 높다고 봄",
+        "evidence": "다만 재무팀에서 초기 구축비가 높다고 보고 있어서"
+      }
+    ],
+    "commitments": [
+      {
+        "text": "협력사 품목 코드 목록 다음 주 월요일까지 송부 (고객 측)",
+        "evidence": "기존 협력사 품목 코드 목록은 제가 정리해서 다음 주 월요일까지 보내드리겠습니다."
+      }
+    ],
+    "nextContact": [
+      {
+        "text": "예산 확정되면 고객이 연락",
+        "evidence": "예산 확정되면 바로 연락드리겠습니다."
+      }
+    ]
+  },
+  "missingFields": [],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}
