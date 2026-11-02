@@ -100,7 +100,7 @@ TASKS: Dict[str, TaskSpec] = {
         headline="allFieldsCorrect",
     ),
     "minutes": TaskSpec(
-        label="회의록 (eval/minutes, 가짜 메모 10건 + 메일 3건)",
+        label="회의록 (eval/minutes, 가짜 메모 10건 + 메일 10건)",
         module="eval.minutes.run",
         columns=(
             ("overallF1", "전체 F1"),

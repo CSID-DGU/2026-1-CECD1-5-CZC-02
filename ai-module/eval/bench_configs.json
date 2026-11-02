@@ -50,7 +50,7 @@
       "task": "minutes",
       "engine": "ollama",
       "env": {},
-      "note": "회의록 엔진, 로컬 LLM 기본값(OLLAMA_MODEL). CPU에서 13건 약 25분이라 기본 실행에서 뺌 — --only로 돌린다"
+      "note": "회의록 엔진, 로컬 LLM 기본값(OLLAMA_MODEL). CPU에서 20건 약 30분이라 기본 실행에서 뺌 — --only로 돌린다"
     },
     {
       "name": "minutes-ollama-qwen2.5-3b",
