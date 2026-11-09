@@ -19,6 +19,7 @@ Salesmap 영업 활동 자동화 에이전트 — 2026 종합설계2 팀 컴쫀�
 | 할 일 11부류 | `docs/project/task-types.md` |
 | 최근 결정 (다른 문서와 충돌하면 이것이 우선) | `docs/project/decisions.md` |
 | 용어 | `docs/project/glossary.md` |
+| 시스템별 관여 범위·필수 vs 확장·새 회사 도입 설정 | `docs/project/scope.md` |
 | 기존 API·DB | `docs/api-spec.md`, `docs/db-design.md`, `docs/domain-enums.md` |
 
 사용자가 자기 역할(A/B/C/D)을 말하면 `roles.md`에서 담당 폴더를 확인하고 그 범위 안에서 작업한다.
