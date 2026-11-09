@@ -1,0 +1,1692 @@
+{
+  "llm": {
+    "provider": "ollama",
+    "model": "qwen2.5:7b",
+    "seed": 42,
+    "think": null,
+    "temperature": 0.0,
+    "promptSha256": "995ab78445d9",
+    "promptSource": "docs/project/task-types.md"
+  },
+  "embeddingRetrained": {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "train": 656,
+    "seed": 42,
+    "maxIter": 2000,
+    "classWeight": null,
+    "sentenceTransformers": "5.5.1",
+    "scikitLearn": "1.9.0"
+  },
+  "embeddingFromCReport": {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "reportedMacroF1": 0.3058608058608059
+  },
+  "python": "3.13.7",
+  "sets": {
+    "c55": {
+      "size": 55,
+      "rule": {
+        "macroF1": 1.0,
+        "accuracy": 1.0,
+        "noneRecall": 1.0,
+        "perClassF1": {
+          "MEETING_PREP": 1.0,
+          "VISIT_PREP": 1.0,
+          "CONTRACT_PREP": 1.0,
+          "RENEWAL_INTERVIEW": 1.0,
+          "PROPOSAL_SUBMISSION": 1.0,
+          "REJECTION_NOTICE": 1.0,
+          "DOC_COLLECTION": 1.0,
+          "END_EVALUATION": 1.0,
+          "PROFITABILITY_REVIEW": 1.0,
+          "SOURCING_START": 1.0,
+          "NONE": 1.0
+        },
+        "confusion": {
+          "MEETING_PREP": {
+            "MEETING_PREP": 5
+          },
+          "VISIT_PREP": {
+            "VISIT_PREP": 5
+          },
+          "CONTRACT_PREP": {
+            "CONTRACT_PREP": 5
+          },
+          "RENEWAL_INTERVIEW": {
+            "RENEWAL_INTERVIEW": 5
+          },
+          "PROPOSAL_SUBMISSION": {
+            "PROPOSAL_SUBMISSION": 5
+          },
+          "REJECTION_NOTICE": {
+            "REJECTION_NOTICE": 5
+          },
+          "DOC_COLLECTION": {
+            "DOC_COLLECTION": 5
+          },
+          "END_EVALUATION": {
+            "END_EVALUATION": 5
+          },
+          "PROFITABILITY_REVIEW": {
+            "PROFITABILITY_REVIEW": 5
+          },
+          "SOURCING_START": {
+            "SOURCING_START": 5
+          },
+          "NONE": {
+            "NONE": 5
+          }
+        },
+        "errorCount": 0,
+        "secondsPerItem": 0.0002
+      },
+      "llm": {
+        "macroF1": 0.9816,
+        "accuracy": 0.9818,
+        "noneRecall": 1.0,
+        "perClassF1": {
+          "MEETING_PREP": 0.8889,
+          "VISIT_PREP": 0.9091,
+          "CONTRACT_PREP": 1.0,
+          "RENEWAL_INTERVIEW": 1.0,
+          "PROPOSAL_SUBMISSION": 1.0,
+          "REJECTION_NOTICE": 1.0,
+          "DOC_COLLECTION": 1.0,
+          "END_EVALUATION": 1.0,
+          "PROFITABILITY_REVIEW": 1.0,
+          "SOURCING_START": 1.0,
+          "NONE": 1.0
+        },
+        "confusion": {
+          "MEETING_PREP": {
+            "MEETING_PREP": 4,
+            "VISIT_PREP": 1
+          },
+          "VISIT_PREP": {
+            "VISIT_PREP": 5
+          },
+          "CONTRACT_PREP": {
+            "CONTRACT_PREP": 5
+          },
+          "RENEWAL_INTERVIEW": {
+            "RENEWAL_INTERVIEW": 5
+          },
+          "PROPOSAL_SUBMISSION": {
+            "PROPOSAL_SUBMISSION": 5
+          },
+          "REJECTION_NOTICE": {
+            "REJECTION_NOTICE": 5
+          },
+          "DOC_COLLECTION": {
+            "DOC_COLLECTION": 5
+          },
+          "END_EVALUATION": {
+            "END_EVALUATION": 5
+          },
+          "PROFITABILITY_REVIEW": {
+            "PROFITABILITY_REVIEW": 5
+          },
+          "SOURCING_START": {
+            "SOURCING_START": 5
+          },
+          "NONE": {
+            "NONE": 5
+          }
+        },
+        "errorCount": 1,
+        "secondsPerItem": 14.109,
+        "formatFailures": 0
+      },
+      "hybridRuleThenLlm": {
+        "macroF1": 1.0,
+        "accuracy": 1.0,
+        "noneRecall": 1.0,
+        "perClassF1": {
+          "MEETING_PREP": 1.0,
+          "VISIT_PREP": 1.0,
+          "CONTRACT_PREP": 1.0,
+          "RENEWAL_INTERVIEW": 1.0,
+          "PROPOSAL_SUBMISSION": 1.0,
+          "REJECTION_NOTICE": 1.0,
+          "DOC_COLLECTION": 1.0,
+          "END_EVALUATION": 1.0,
+          "PROFITABILITY_REVIEW": 1.0,
+          "SOURCING_START": 1.0,
+          "NONE": 1.0
+        },
+        "confusion": {
+          "MEETING_PREP": {
+            "MEETING_PREP": 5
+          },
+          "VISIT_PREP": {
+            "VISIT_PREP": 5
+          },
+          "CONTRACT_PREP": {
+            "CONTRACT_PREP": 5
+          },
+          "RENEWAL_INTERVIEW": {
+            "RENEWAL_INTERVIEW": 5
+          },
+          "PROPOSAL_SUBMISSION": {
+            "PROPOSAL_SUBMISSION": 5
+          },
+          "REJECTION_NOTICE": {
+            "REJECTION_NOTICE": 5
+          },
+          "DOC_COLLECTION": {
+            "DOC_COLLECTION": 5
+          },
+          "END_EVALUATION": {
+            "END_EVALUATION": 5
+          },
+          "PROFITABILITY_REVIEW": {
+            "PROFITABILITY_REVIEW": 5
+          },
+          "SOURCING_START": {
+            "SOURCING_START": 5
+          },
+          "NONE": {
+            "NONE": 5
+          }
+        },
+        "errorCount": 0
+      },
+      "embeddingLR": {
+        "macroF1": 0.3059,
+        "accuracy": 0.3273,
+        "noneRecall": 1.0,
+        "perClassF1": {
+          "MEETING_PREP": 0.3333,
+          "VISIT_PREP": 0.3333,
+          "CONTRACT_PREP": 0.7692,
+          "RENEWAL_INTERVIEW": 0.5714,
+          "PROPOSAL_SUBMISSION": 0.3333,
+          "REJECTION_NOTICE": 0.5,
+          "DOC_COLLECTION": 0.0,
+          "END_EVALUATION": 0.0,
+          "PROFITABILITY_REVIEW": 0.0,
+          "SOURCING_START": 0.2857,
+          "NONE": 0.2381
+        },
+        "confusion": {
+          "MEETING_PREP": {
+            "MEETING_PREP": 1,
+            "NONE": 4
+          },
+          "VISIT_PREP": {
+            "NONE": 4,
+            "VISIT_PREP": 1
+          },
+          "CONTRACT_PREP": {
+            "CONTRACT_PREP": 5
+          },
+          "RENEWAL_INTERVIEW": {
+            "RENEWAL_INTERVIEW": 2,
+            "NONE": 2,
+            "CONTRACT_PREP": 1
+          },
+          "PROPOSAL_SUBMISSION": {
+            "REJECTION_NOTICE": 1,
+            "PROPOSAL_SUBMISSION": 1,
+            "NONE": 2,
+            "SOURCING_START": 1
+          },
+          "REJECTION_NOTICE": {
+            "REJECTION_NOTICE": 2,
+            "NONE": 3
+          },
+          "DOC_COLLECTION": {
+            "NONE": 3,
+            "CONTRACT_PREP": 2
+          },
+          "END_EVALUATION": {
+            "NONE": 5
+          },
+          "PROFITABILITY_REVIEW": {
+            "NONE": 5
+          },
+          "SOURCING_START": {
+            "SOURCING_START": 1,
+            "NONE": 4
+          },
+          "NONE": {
+            "NONE": 5
+          }
+        },
+        "errorCount": 37,
+        "secondsPerItem": 0.0088
+      },
+      "items": [
+        {
+          "id": "eval_meeting_prep_0",
+          "text": "다음번 고객과의 미팅에서 논의할 안건을 준비한다",
+          "gold": "MEETING_PREP",
+          "rule": "MEETING_PREP",
+          "embeddingLR": "MEETING_PREP",
+          "llm": "MEETING_PREP",
+          "llmReason": " 고객과 만나는 일정이 잡힘",
+          "llmFailure": null,
+          "llmLatencyMs": 11244
+        },
+        {
+          "id": "eval_meeting_prep_1",
+          "text": "목요일 고객사에 재방문해서 협의한다",
+          "gold": "MEETING_PREP",
+          "rule": "MEETING_PREP",
+          "embeddingLR": "NONE",
+          "llm": "VISIT_PREP",
+          "llmReason": "재방문 일정이 잡힘",
+          "llmFailure": null,
+          "llmLatencyMs": 10366
+        },
+        {
+          "id": "eval_meeting_prep_2",
+          "text": "이번에는 고객을 뵙고 요구사항을 듣는다",
+          "gold": "MEETING_PREP",
+          "rule": "MEETING_PREP",
+          "embeddingLR": "NONE",
+          "llm": "MEETING_PREP",
+          "llmReason": " 고객을 뵙고 요구사항을 듣는 일정이 잡힘",
+          "llmFailure": null,
+          "llmLatencyMs": 12587
+        },
+        {
+          "id": "eval_meeting_prep_3",
+          "text": "고객 면담 때 사용할 지난 기록을 확인한다",
+          "gold": "MEETING_PREP",
+          "rule": "MEETING_PREP",
+          "embeddingLR": "NONE",
+          "llm": "MEETING_PREP",
+          "llmReason": " 고객 면담 때 사용할 지난 기록을 확인하는 행위는 고객 미팅 준비 브리핑에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 15964
+        },
+        {
+          "id": "eval_meeting_prep_4",
+          "text": "고객과 만나 제품 도입을 논의하기로 했다",
+          "gold": "MEETING_PREP",
+          "rule": "MEETING_PREP",
+          "embeddingLR": "NONE",
+          "llm": "MEETING_PREP",
+          "llmReason": " 고객과 만나 제품 도입을 논의하기로 했다",
+          "llmFailure": null,
+          "llmLatencyMs": 12578
+        },
+        {
+          "id": "eval_visit_prep_0",
+          "text": "멀리 있는 현장 점검을 위해 이동 동선을 확인한다",
+          "gold": "VISIT_PREP",
+          "rule": "VISIT_PREP",
+          "embeddingLR": "NONE",
+          "llm": "VISIT_PREP",
+          "llmReason": "현장 점검을 위한 이동 동선 확인이 명시되어 있습니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 16024
+        },
+        {
+          "id": "eval_visit_prep_1",
+          "text": "고객사 출장에 필요한 교통편을 준비한다",
+          "gold": "VISIT_PREP",
+          "rule": "VISIT_PREP",
+          "embeddingLR": "NONE",
+          "llm": "VISIT_PREP",
+          "llmReason": "출장 준비에 해당",
+          "llmFailure": null,
+          "llmLatencyMs": 9508
+        },
+        {
+          "id": "eval_visit_prep_2",
+          "text": "다음 주 현장 방문을 앞두고 출입 절차를 확인한다",
+          "gold": "VISIT_PREP",
+          "rule": "VISIT_PREP",
+          "embeddingLR": "NONE",
+          "llm": "VISIT_PREP",
+          "llmReason": "현장 방문을 앞두고 관련 절차를 확인하는 작업은 현장 방문 준비에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 17342
+        },
+        {
+          "id": "eval_visit_prep_3",
+          "text": "장거리 출장을 가기 전에 숙소를 알아본다",
+          "gold": "VISIT_PREP",
+          "rule": "VISIT_PREP",
+          "embeddingLR": "NONE",
+          "llm": "VISIT_PREP",
+          "llmReason": "장거리 출장을 가기 전에 숙소를 알아보는 행위는 지역 이동이 있는 방문 준비에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 19902
+        },
+        {
+          "id": "eval_visit_prep_4",
+          "text": "지역 이동이 필요한 방문 준비를 한다",
+          "gold": "VISIT_PREP",
+          "rule": "VISIT_PREP",
+          "embeddingLR": "VISIT_PREP",
+          "llm": "VISIT_PREP",
+          "llmReason": "지역 이동이 있는 방문 준비가 명시되어 있습니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 13172
+        },
+        {
+          "id": "eval_contract_prep_0",
+          "text": "합의된 조건을 반영하여 계약서 초안을 보낸다",
+          "gold": "CONTRACT_PREP",
+          "rule": "CONTRACT_PREP",
+          "embeddingLR": "CONTRACT_PREP",
+          "llm": "CONTRACT_PREP",
+          "llmReason": "계약서 초안을 송부하는 행위는 계약 준비 과정에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 13766
+        },
+        {
+          "id": "eval_contract_prep_1",
+          "text": "서명 전에 계약서의 조항을 대조한다",
+          "gold": "CONTRACT_PREP",
+          "rule": "CONTRACT_PREP",
+          "embeddingLR": "CONTRACT_PREP",
+          "llm": "CONTRACT_PREP",
+          "llmReason": "계약서의 조항 대조는 계약 관련 작업에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 12106
+        },
+        {
+          "id": "eval_contract_prep_2",
+          "text": "새 계약 체결에 필요한 초안을 작성한다",
+          "gold": "CONTRACT_PREP",
+          "rule": "CONTRACT_PREP",
+          "embeddingLR": "CONTRACT_PREP",
+          "llm": "CONTRACT_PREP",
+          "llmReason": "계약서 초안 작성은 계약 체결 준비의 일환입니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 14417
+        },
+        {
+          "id": "eval_contract_prep_3",
+          "text": "변경된 투입일을 반영한 계약서를 송부한다",
+          "gold": "CONTRACT_PREP",
+          "rule": "CONTRACT_PREP",
+          "embeddingLR": "CONTRACT_PREP",
+          "llm": "CONTRACT_PREP",
+          "llmReason": "계약서 송부 행위와 관련",
+          "llmFailure": null,
+          "llmLatencyMs": 11895
+        },
+        {
+          "id": "eval_contract_prep_4",
+          "text": "이번 주 계약서 작성 작업을 마친다",
+          "gold": "CONTRACT_PREP",
+          "rule": "CONTRACT_PREP",
+          "embeddingLR": "CONTRACT_PREP",
+          "llm": "CONTRACT_PREP",
+          "llmReason": "계약서 작성 작업을 마친다는 내용은 계약 준비 행위에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 13268
+        },
+        {
+          "id": "eval_renewal_interview_0",
+          "text": "계약 만료를 앞둔 인력과 면담 일정을 정한다",
+          "gold": "RENEWAL_INTERVIEW",
+          "rule": "RENEWAL_INTERVIEW",
+          "embeddingLR": "RENEWAL_INTERVIEW",
+          "llm": "RENEWAL_INTERVIEW",
+          "llmReason": "면담 일정 정하는 행위는 계약 만료 대응 면담에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 15270
+        },
+        {
+          "id": "eval_renewal_interview_1",
+          "text": "계약 종료 전에 연장 의사를 확인하는 면담을 한다",
+          "gold": "RENEWAL_INTERVIEW",
+          "rule": "RENEWAL_INTERVIEW",
+          "embeddingLR": "NONE",
+          "llm": "RENEWAL_INTERVIEW",
+          "llmReason": "면담의 목적은 계약 종료 전 연장 의사를 확인하는 것이므로 계약 만료 대응 면담에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 17325
+        },
+        {
+          "id": "eval_renewal_interview_2",
+          "text": "만료 대응 면담에서 확인할 질문을 정리한다",
+          "gold": "RENEWAL_INTERVIEW",
+          "rule": "RENEWAL_INTERVIEW",
+          "embeddingLR": "NONE",
+          "llm": "RENEWAL_INTERVIEW",
+          "llmReason": "萬過皆因準備不足，確認將要進行的續約對應面談中需要提出的问题進行整理，符合續約對應面談的定義。",
+          "llmFailure": null,
+          "llmLatencyMs": 17581
+        },
+        {
+          "id": "eval_renewal_interview_3",
+          "text": "계약 만료 예정자의 면담을 준비한다",
+          "gold": "RENEWAL_INTERVIEW",
+          "rule": "RENEWAL_INTERVIEW",
+          "embeddingLR": "CONTRACT_PREP",
+          "llm": "RENEWAL_INTERVIEW",
+          "llmReason": "면담을 준비하는 내용은 계약 만료 대응 면담에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 16292
+        },
+        {
+          "id": "eval_renewal_interview_4",
+          "text": "계약 종료 대응을 위한 면담을 진행한다",
+          "gold": "RENEWAL_INTERVIEW",
+          "rule": "RENEWAL_INTERVIEW",
+          "embeddingLR": "RENEWAL_INTERVIEW",
+          "llm": "RENEWAL_INTERVIEW",
+          "llmReason": "면담은 계약 종료 대응을 위한 것으로, 계약 만료 대응 면담 범주에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 16023
+        },
+        {
+          "id": "eval_proposal_submission_0",
+          "text": "요청한 후보들의 프로필을 정리해서 전달한다",
+          "gold": "PROPOSAL_SUBMISSION",
+          "rule": "PROPOSAL_SUBMISSION",
+          "embeddingLR": "REJECTION_NOTICE",
+          "llm": "PROPOSAL_SUBMISSION",
+          "llmReason": "후보 프로필 전달은 제안서 제출의 일부로 분류됩니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 13932
+        },
+        {
+          "id": "eval_proposal_submission_1",
+          "text": "공고 마감 전에 제안서를 제출한다",
+          "gold": "PROPOSAL_SUBMISSION",
+          "rule": "PROPOSAL_SUBMISSION",
+          "embeddingLR": "PROPOSAL_SUBMISSION",
+          "llm": "PROPOSAL_SUBMISSION",
+          "llmReason": "제안서 제출",
+          "llmFailure": null,
+          "llmLatencyMs": 9914
+        },
+        {
+          "id": "eval_proposal_submission_2",
+          "text": "검토 대상 인력 리스트를 제출한다",
+          "gold": "PROPOSAL_SUBMISSION",
+          "rule": "PROPOSAL_SUBMISSION",
+          "embeddingLR": "NONE",
+          "llm": "PROPOSAL_SUBMISSION",
+          "llmReason": "제출 준비 및 송부 행위가 포함되어 있습니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 11685
+        },
+        {
+          "id": "eval_proposal_submission_3",
+          "text": "선정 평가를 받을 제안서를 송부한다",
+          "gold": "PROPOSAL_SUBMISSION",
+          "rule": "PROPOSAL_SUBMISSION",
+          "embeddingLR": "NONE",
+          "llm": "PROPOSAL_SUBMISSION",
+          "llmReason": "제안서를 송부하는 행위가 명시되어 있습니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 12538
+        },
+        {
+          "id": "eval_proposal_submission_4",
+          "text": "인력 요청에 맞는 후보 리스트를 전달한다",
+          "gold": "PROPOSAL_SUBMISSION",
+          "rule": "PROPOSAL_SUBMISSION",
+          "embeddingLR": "SOURCING_START",
+          "llm": "PROPOSAL_SUBMISSION",
+          "llmReason": "제안서·인력 리스트 제출에 해당",
+          "llmFailure": null,
+          "llmLatencyMs": 10952
+        },
+        {
+          "id": "eval_rejection_notice_0",
+          "text": "선정되지 않은 후보에게 미채택 결과를 통보한다",
+          "gold": "REJECTION_NOTICE",
+          "rule": "REJECTION_NOTICE",
+          "embeddingLR": "REJECTION_NOTICE",
+          "llm": "REJECTION_NOTICE",
+          "llmReason": "미채택 결과를 통보하는 내용이 명시되어 있습니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 12240
+        },
+        {
+          "id": "eval_rejection_notice_1",
+          "text": "탈락한 후보에게 결과를 안내한다",
+          "gold": "REJECTION_NOTICE",
+          "rule": "REJECTION_NOTICE",
+          "embeddingLR": "NONE",
+          "llm": "REJECTION_NOTICE",
+          "llmReason": "미채택 결과·사유를 알려야_REJECTION",
+          "llmFailure": null,
+          "llmLatencyMs": 12559
+        },
+        {
+          "id": "eval_rejection_notice_2",
+          "text": "불합격 결과를 당사자에게 알림으로 전달한다",
+          "gold": "REJECTION_NOTICE",
+          "rule": "REJECTION_NOTICE",
+          "embeddingLR": "NONE",
+          "llm": "REJECTION_NOTICE",
+          "llmReason": "미채택 결과를 알리는 통보를 수행한다",
+          "llmFailure": null,
+          "llmLatencyMs": 10857
+        },
+        {
+          "id": "eval_rejection_notice_3",
+          "text": "이번 선정의 미채택 사유를 안내한다",
+          "gold": "REJECTION_NOTICE",
+          "rule": "REJECTION_NOTICE",
+          "embeddingLR": "REJECTION_NOTICE",
+          "llm": "REJECTION_NOTICE",
+          "llmReason": "미채택 사유 안내는 미채택 결과를 알려주는 행위에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 13214
+        },
+        {
+          "id": "eval_rejection_notice_4",
+          "text": "탈락 결과 통보 문안을 작성한다",
+          "gold": "REJECTION_NOTICE",
+          "rule": "REJECTION_NOTICE",
+          "embeddingLR": "NONE",
+          "llm": "REJECTION_NOTICE",
+          "llmReason": "미채택 결과·사유를 알려야_REJECTION",
+          "llmFailure": null,
+          "llmLatencyMs": 11449
+        },
+        {
+          "id": "eval_doc_collection_0",
+          "text": "이미 발송한 계약서의 서명본 회수를 독촉한다",
+          "gold": "DOC_COLLECTION",
+          "rule": "DOC_COLLECTION",
+          "embeddingLR": "NONE",
+          "llm": "DOC_COLLECTION",
+          "llmReason": "받아야 할 서류의 수집·반환·독촉은 DOC_COLLECTION에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 15111
+        },
+        {
+          "id": "eval_doc_collection_1",
+          "text": "회신이 없는 서류를 다시 요청하여 회수한다",
+          "gold": "DOC_COLLECTION",
+          "rule": "DOC_COLLECTION",
+          "embeddingLR": "NONE",
+          "llm": "DOC_COLLECTION",
+          "llmReason": "서류를 다시 요청하여 회수하는 행위는 문서의 회수 또는 독촉에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 16926
+        },
+        {
+          "id": "eval_doc_collection_2",
+          "text": "미회수 계약서의 반환 여부를 확인한다",
+          "gold": "DOC_COLLECTION",
+          "rule": "DOC_COLLECTION",
+          "embeddingLR": "CONTRACT_PREP",
+          "llm": "DOC_COLLECTION",
+          "llmReason": "미회수 계약서의 반환 여부를 확인하는 행위는 보낸 서류의 수집·반환·독촉에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 18163
+        },
+        {
+          "id": "eval_doc_collection_3",
+          "text": "필요한 서류를 담당자별로 취합한다",
+          "gold": "DOC_COLLECTION",
+          "rule": "DOC_COLLECTION",
+          "embeddingLR": "NONE",
+          "llm": "DOC_COLLECTION",
+          "llmReason": "서류를 취합하는 행위는 DOC_COLLECTION에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 12029
+        },
+        {
+          "id": "eval_doc_collection_4",
+          "text": "지난번 보낸 계약서 회신 없음 건을 확인한다",
+          "gold": "DOC_COLLECTION",
+          "rule": "DOC_COLLECTION",
+          "embeddingLR": "CONTRACT_PREP",
+          "llm": "DOC_COLLECTION",
+          "llmReason": "받은 계약서 회신이 없음으로 서류 취합 및 독촉이 필요",
+          "llmFailure": null,
+          "llmLatencyMs": 12890
+        },
+        {
+          "id": "eval_end_evaluation_0",
+          "text": "투입 종료에 맞춰 담당 인력의 평가를 작성한다",
+          "gold": "END_EVALUATION",
+          "rule": "END_EVALUATION",
+          "embeddingLR": "NONE",
+          "llm": "END_EVALUATION",
+          "llmReason": "투입 종료 후 평가 작성",
+          "llmFailure": null,
+          "llmLatencyMs": 11266
+        },
+        {
+          "id": "eval_end_evaluation_1",
+          "text": "프로젝트 종료 후 평가 결과를 기록한다",
+          "gold": "END_EVALUATION",
+          "rule": "END_EVALUATION",
+          "embeddingLR": "NONE",
+          "llm": "END_EVALUATION",
+          "llmReason": "투입 종료 평가 작성",
+          "llmFailure": null,
+          "llmLatencyMs": 10321
+        },
+        {
+          "id": "eval_end_evaluation_2",
+          "text": "종료 평가 양식의 항목을 채운다",
+          "gold": "END_EVALUATION",
+          "rule": "END_EVALUATION",
+          "embeddingLR": "NONE",
+          "llm": "END_EVALUATION",
+          "llmReason": "투입 종료 후 평가 작성",
+          "llmFailure": null,
+          "llmLatencyMs": 10689
+        },
+        {
+          "id": "eval_end_evaluation_3",
+          "text": "계약 종료 인력의 평가를 정리한다",
+          "gold": "END_EVALUATION",
+          "rule": "END_EVALUATION",
+          "embeddingLR": "NONE",
+          "llm": "END_EVALUATION",
+          "llmReason": "투입 종료 후 평가 작성",
+          "llmFailure": null,
+          "llmLatencyMs": 10439
+        },
+        {
+          "id": "eval_end_evaluation_4",
+          "text": "투입 종료 시점의 평가를 남긴다",
+          "gold": "END_EVALUATION",
+          "rule": "END_EVALUATION",
+          "embeddingLR": "NONE",
+          "llm": "END_EVALUATION",
+          "llmReason": "투입 종료 평가 작성",
+          "llmFailure": null,
+          "llmLatencyMs": 14119
+        },
+        {
+          "id": "eval_profitability_review_0",
+          "text": "조건을 협의하기 전에 예상 마진을 계산한다",
+          "gold": "PROFITABILITY_REVIEW",
+          "rule": "PROFITABILITY_REVIEW",
+          "embeddingLR": "NONE",
+          "llm": "PROFITABILITY_REVIEW",
+          "llmReason": "마진 계산은 계약 조건 배경下的划线部分翻译为：判断规则：仅根据句子中描述的内容进行判断。如果不清楚是客户方还是内部事务，或者是否有出行等情况，则不要猜测，选择NONE。如果多项行为混杂在一起没有分开，则选择NONE。如果明确不属于任何一个类别，则不要强行归类，选择NONE。",
+          "llmFailure": null,
+          "llmLatencyMs": 40768
+        },
+        {
+          "id": "eval_profitability_review_1",
+          "text": "변경 단가를 기준으로 수익성을 검토한다",
+          "gold": "PROFITABILITY_REVIEW",
+          "rule": "PROFITABILITY_REVIEW",
+          "embeddingLR": "NONE",
+          "llm": "PROFITABILITY_REVIEW",
+          "llmReason": "마진·마argin·수익률 계산은 계약 조건이 배경이어도 PROFITABILITY_REVIEW에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 22315
+        },
+        {
+          "id": "eval_profitability_review_2",
+          "text": "새 투입 조건의 마진을 확인한다",
+          "gold": "PROFITABILITY_REVIEW",
+          "rule": "PROFITABILITY_REVIEW",
+          "embeddingLR": "NONE",
+          "llm": "PROFITABILITY_REVIEW",
+          "llmReason": "마진 확인은 수익성 검토의 일환입니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 14743
+        },
+        {
+          "id": "eval_profitability_review_3",
+          "text": "계약 조건별 수익성 분석을 수행한다",
+          "gold": "PROFITABILITY_REVIEW",
+          "rule": "PROFITABILITY_REVIEW",
+          "embeddingLR": "NONE",
+          "llm": "PROFITABILITY_REVIEW",
+          "llmReason": "마진·마argin率·收益率计算是基于合同条件的",
+          "llmFailure": null,
+          "llmLatencyMs": 15609
+        },
+        {
+          "id": "eval_profitability_review_4",
+          "text": "비용 상승을 반영해 마진 검토를 한다",
+          "gold": "PROFITABILITY_REVIEW",
+          "rule": "PROFITABILITY_REVIEW",
+          "embeddingLR": "NONE",
+          "llm": "PROFITABILITY_REVIEW",
+          "llmReason": "마진 검토는 조건 협의 전 수익성 검토에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 14583
+        },
+        {
+          "id": "eval_sourcing_start_0",
+          "text": "요청 직무에 맞는 신규 인력 탐색을 시작한다",
+          "gold": "SOURCING_START",
+          "rule": "SOURCING_START",
+          "embeddingLR": "SOURCING_START",
+          "llm": "SOURCING_START",
+          "llmReason": "인력 요청 후 후보 탐색 착수",
+          "llmFailure": null,
+          "llmLatencyMs": 12047
+        },
+        {
+          "id": "eval_sourcing_start_1",
+          "text": "새 포지션의 후보를 물색한다",
+          "gold": "SOURCING_START",
+          "rule": "SOURCING_START",
+          "embeddingLR": "NONE",
+          "llm": "SOURCING_START",
+          "llmReason": "인력 요청 후 후보 탐색 착수",
+          "llmFailure": null,
+          "llmLatencyMs": 11621
+        },
+        {
+          "id": "eval_sourcing_start_2",
+          "text": "채용 요청에 따라 소싱을 착수한다",
+          "gold": "SOURCING_START",
+          "rule": "SOURCING_START",
+          "embeddingLR": "NONE",
+          "llm": "SOURCING_START",
+          "llmReason": "인력 요청 후 후보 탐색 착수",
+          "llmFailure": null,
+          "llmLatencyMs": 11726
+        },
+        {
+          "id": "eval_sourcing_start_3",
+          "text": "필요 기술을 갖춘 인력 모집을 시작한다",
+          "gold": "SOURCING_START",
+          "rule": "SOURCING_START",
+          "embeddingLR": "NONE",
+          "llm": "SOURCING_START",
+          "llmReason": "인력 요청 후 후보 탐색 착수",
+          "llmFailure": null,
+          "llmLatencyMs": 11929
+        },
+        {
+          "id": "eval_sourcing_start_4",
+          "text": "새 요청에 대응할 후보 탐색을 진행한다",
+          "gold": "SOURCING_START",
+          "rule": "SOURCING_START",
+          "embeddingLR": "NONE",
+          "llm": "SOURCING_START",
+          "llmReason": "인력 요청 후 후보 탐색 착수",
+          "llmFailure": null,
+          "llmLatencyMs": 12253
+        },
+        {
+          "id": "eval_none_0",
+          "text": "백업 설정 변경 방법을 메일로 안내한다",
+          "gold": "NONE",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "NONE",
+          "llmReason": "메일로 안내하는 행위와 관련된 부류가 명확히 매칭되지 않음",
+          "llmFailure": null,
+          "llmLatencyMs": 13183
+        },
+        {
+          "id": "eval_none_1",
+          "text": "테스트용 계정 두 개를 발급한다",
+          "gold": "NONE",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "NONE",
+          "llmReason": "该任务与提供的分类标准无关，未涉及任何销售相关的工作内容。",
+          "llmFailure": null,
+          "llmLatencyMs": 13013
+        },
+        {
+          "id": "eval_none_2",
+          "text": "고객의 내부 검토 결과가 왔는지 확인한다",
+          "gold": "NONE",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "NONE",
+          "llmReason": "내용은 고객의 검토 결과 확인에 불과하여 다른 부류에 포함되지 않음",
+          "llmFailure": null,
+          "llmLatencyMs": 12901
+        },
+        {
+          "id": "eval_none_3",
+          "text": "오늘 설명한 화면 자료를 다시 보낸다",
+          "gold": "NONE",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "NONE",
+          "llmReason": " 어디에도 확실히 맞지 않음.",
+          "llmFailure": null,
+          "llmLatencyMs": 10906
+        },
+        {
+          "id": "eval_none_4",
+          "text": "보안 체크리스트 답변을 작성해서 전달한다",
+          "gold": "NONE",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "NONE",
+          "llmReason": "該任务描述中并未明确涉及会议、现场访问、合同准备、续约面谈、提案提交、拒绝通知、文件收集、结束评估、盈利能力审查或新人才招聘等具体行为，因此不符合任何给定的类别。",
+          "llmFailure": null,
+          "llmLatencyMs": 20476
+        }
+      ],
+      "promptExampleOverlap": [
+        "계약 조건별 수익성 분석을 수행한다"
+      ],
+      "withoutPromptOverlap": {
+        "rule": {
+          "macroF1": 1.0,
+          "accuracy": 1.0,
+          "noneRecall": 1.0,
+          "perClassF1": {
+            "MEETING_PREP": 1.0,
+            "VISIT_PREP": 1.0,
+            "CONTRACT_PREP": 1.0,
+            "RENEWAL_INTERVIEW": 1.0,
+            "PROPOSAL_SUBMISSION": 1.0,
+            "REJECTION_NOTICE": 1.0,
+            "DOC_COLLECTION": 1.0,
+            "END_EVALUATION": 1.0,
+            "PROFITABILITY_REVIEW": 1.0,
+            "SOURCING_START": 1.0,
+            "NONE": 1.0
+          },
+          "confusion": {
+            "MEETING_PREP": {
+              "MEETING_PREP": 5
+            },
+            "VISIT_PREP": {
+              "VISIT_PREP": 5
+            },
+            "CONTRACT_PREP": {
+              "CONTRACT_PREP": 5
+            },
+            "RENEWAL_INTERVIEW": {
+              "RENEWAL_INTERVIEW": 5
+            },
+            "PROPOSAL_SUBMISSION": {
+              "PROPOSAL_SUBMISSION": 5
+            },
+            "REJECTION_NOTICE": {
+              "REJECTION_NOTICE": 5
+            },
+            "DOC_COLLECTION": {
+              "DOC_COLLECTION": 5
+            },
+            "END_EVALUATION": {
+              "END_EVALUATION": 5
+            },
+            "PROFITABILITY_REVIEW": {
+              "PROFITABILITY_REVIEW": 4
+            },
+            "SOURCING_START": {
+              "SOURCING_START": 5
+            },
+            "NONE": {
+              "NONE": 5
+            }
+          },
+          "errorCount": 0
+        },
+        "llm": {
+          "macroF1": 0.9816,
+          "accuracy": 0.9815,
+          "noneRecall": 1.0,
+          "perClassF1": {
+            "MEETING_PREP": 0.8889,
+            "VISIT_PREP": 0.9091,
+            "CONTRACT_PREP": 1.0,
+            "RENEWAL_INTERVIEW": 1.0,
+            "PROPOSAL_SUBMISSION": 1.0,
+            "REJECTION_NOTICE": 1.0,
+            "DOC_COLLECTION": 1.0,
+            "END_EVALUATION": 1.0,
+            "PROFITABILITY_REVIEW": 1.0,
+            "SOURCING_START": 1.0,
+            "NONE": 1.0
+          },
+          "confusion": {
+            "MEETING_PREP": {
+              "MEETING_PREP": 4,
+              "VISIT_PREP": 1
+            },
+            "VISIT_PREP": {
+              "VISIT_PREP": 5
+            },
+            "CONTRACT_PREP": {
+              "CONTRACT_PREP": 5
+            },
+            "RENEWAL_INTERVIEW": {
+              "RENEWAL_INTERVIEW": 5
+            },
+            "PROPOSAL_SUBMISSION": {
+              "PROPOSAL_SUBMISSION": 5
+            },
+            "REJECTION_NOTICE": {
+              "REJECTION_NOTICE": 5
+            },
+            "DOC_COLLECTION": {
+              "DOC_COLLECTION": 5
+            },
+            "END_EVALUATION": {
+              "END_EVALUATION": 5
+            },
+            "PROFITABILITY_REVIEW": {
+              "PROFITABILITY_REVIEW": 4
+            },
+            "SOURCING_START": {
+              "SOURCING_START": 5
+            },
+            "NONE": {
+              "NONE": 5
+            }
+          },
+          "errorCount": 1
+        },
+        "embeddingLR": {
+          "macroF1": 0.3064,
+          "accuracy": 0.3333,
+          "noneRecall": 1.0,
+          "perClassF1": {
+            "MEETING_PREP": 0.3333,
+            "VISIT_PREP": 0.3333,
+            "CONTRACT_PREP": 0.7692,
+            "RENEWAL_INTERVIEW": 0.5714,
+            "PROPOSAL_SUBMISSION": 0.3333,
+            "REJECTION_NOTICE": 0.5,
+            "DOC_COLLECTION": 0.0,
+            "END_EVALUATION": 0.0,
+            "PROFITABILITY_REVIEW": 0.0,
+            "SOURCING_START": 0.2857,
+            "NONE": 0.2439
+          },
+          "confusion": {
+            "MEETING_PREP": {
+              "MEETING_PREP": 1,
+              "NONE": 4
+            },
+            "VISIT_PREP": {
+              "NONE": 4,
+              "VISIT_PREP": 1
+            },
+            "CONTRACT_PREP": {
+              "CONTRACT_PREP": 5
+            },
+            "RENEWAL_INTERVIEW": {
+              "RENEWAL_INTERVIEW": 2,
+              "NONE": 2,
+              "CONTRACT_PREP": 1
+            },
+            "PROPOSAL_SUBMISSION": {
+              "REJECTION_NOTICE": 1,
+              "PROPOSAL_SUBMISSION": 1,
+              "NONE": 2,
+              "SOURCING_START": 1
+            },
+            "REJECTION_NOTICE": {
+              "REJECTION_NOTICE": 2,
+              "NONE": 3
+            },
+            "DOC_COLLECTION": {
+              "NONE": 3,
+              "CONTRACT_PREP": 2
+            },
+            "END_EVALUATION": {
+              "NONE": 5
+            },
+            "PROFITABILITY_REVIEW": {
+              "NONE": 4
+            },
+            "SOURCING_START": {
+              "SOURCING_START": 1,
+              "NONE": 4
+            },
+            "NONE": {
+              "NONE": 5
+            }
+          },
+          "errorCount": 36
+        }
+      }
+    },
+    "holdout": {
+      "size": 36,
+      "rule": {
+        "macroF1": 0.3163,
+        "accuracy": 0.3611,
+        "noneRecall": 0.8333,
+        "perClassF1": {
+          "MEETING_PREP": 0.6667,
+          "VISIT_PREP": 0.5,
+          "CONTRACT_PREP": 1.0,
+          "RENEWAL_INTERVIEW": 0.5,
+          "PROPOSAL_SUBMISSION": 0.5,
+          "REJECTION_NOTICE": 0.0,
+          "DOC_COLLECTION": 0.0,
+          "END_EVALUATION": 0.0,
+          "PROFITABILITY_REVIEW": 0.0,
+          "SOURCING_START": 0.0,
+          "NONE": 0.3125
+        },
+        "confusion": {
+          "MEETING_PREP": {
+            "MEETING_PREP": 2,
+            "NONE": 1
+          },
+          "VISIT_PREP": {
+            "NONE": 2,
+            "VISIT_PREP": 1
+          },
+          "CONTRACT_PREP": {
+            "CONTRACT_PREP": 3
+          },
+          "RENEWAL_INTERVIEW": {
+            "NONE": 2,
+            "RENEWAL_INTERVIEW": 1
+          },
+          "PROPOSAL_SUBMISSION": {
+            "PROPOSAL_SUBMISSION": 1,
+            "NONE": 2
+          },
+          "REJECTION_NOTICE": {
+            "NONE": 2,
+            "MEETING_PREP": 1
+          },
+          "DOC_COLLECTION": {
+            "NONE": 3
+          },
+          "END_EVALUATION": {
+            "NONE": 3
+          },
+          "PROFITABILITY_REVIEW": {
+            "NONE": 3
+          },
+          "SOURCING_START": {
+            "NONE": 3
+          },
+          "NONE": {
+            "NONE": 5,
+            "PROFITABILITY_REVIEW": 1
+          }
+        },
+        "errorCount": 23,
+        "secondsPerItem": 0.0
+      },
+      "llm": {
+        "macroF1": 0.8444,
+        "accuracy": 0.8333,
+        "noneRecall": 0.3333,
+        "perClassF1": {
+          "MEETING_PREP": 1.0,
+          "VISIT_PREP": 0.8571,
+          "CONTRACT_PREP": 0.8,
+          "RENEWAL_INTERVIEW": 1.0,
+          "PROPOSAL_SUBMISSION": 0.6667,
+          "REJECTION_NOTICE": 0.8571,
+          "DOC_COLLECTION": 0.75,
+          "END_EVALUATION": 1.0,
+          "PROFITABILITY_REVIEW": 1.0,
+          "SOURCING_START": 0.8571,
+          "NONE": 0.5
+        },
+        "confusion": {
+          "MEETING_PREP": {
+            "MEETING_PREP": 3
+          },
+          "VISIT_PREP": {
+            "VISIT_PREP": 3
+          },
+          "CONTRACT_PREP": {
+            "CONTRACT_PREP": 2,
+            "DOC_COLLECTION": 1
+          },
+          "RENEWAL_INTERVIEW": {
+            "RENEWAL_INTERVIEW": 3
+          },
+          "PROPOSAL_SUBMISSION": {
+            "PROPOSAL_SUBMISSION": 2,
+            "DOC_COLLECTION": 1
+          },
+          "REJECTION_NOTICE": {
+            "REJECTION_NOTICE": 3
+          },
+          "DOC_COLLECTION": {
+            "DOC_COLLECTION": 3
+          },
+          "END_EVALUATION": {
+            "END_EVALUATION": 3
+          },
+          "PROFITABILITY_REVIEW": {
+            "PROFITABILITY_REVIEW": 3
+          },
+          "SOURCING_START": {
+            "SOURCING_START": 3
+          },
+          "NONE": {
+            "NONE": 2,
+            "SOURCING_START": 1,
+            "REJECTION_NOTICE": 1,
+            "PROPOSAL_SUBMISSION": 1,
+            "VISIT_PREP": 1
+          }
+        },
+        "errorCount": 6,
+        "secondsPerItem": 13.3839,
+        "formatFailures": 0
+      },
+      "hybridRuleThenLlm": {
+        "macroF1": 0.8411,
+        "accuracy": 0.8333,
+        "noneRecall": 0.3333,
+        "perClassF1": {
+          "MEETING_PREP": 0.8571,
+          "VISIT_PREP": 0.8571,
+          "CONTRACT_PREP": 1.0,
+          "RENEWAL_INTERVIEW": 1.0,
+          "PROPOSAL_SUBMISSION": 0.8,
+          "REJECTION_NOTICE": 0.6667,
+          "DOC_COLLECTION": 0.8571,
+          "END_EVALUATION": 1.0,
+          "PROFITABILITY_REVIEW": 0.8571,
+          "SOURCING_START": 0.8571,
+          "NONE": 0.5
+        },
+        "confusion": {
+          "MEETING_PREP": {
+            "MEETING_PREP": 3
+          },
+          "VISIT_PREP": {
+            "VISIT_PREP": 3
+          },
+          "CONTRACT_PREP": {
+            "CONTRACT_PREP": 3
+          },
+          "RENEWAL_INTERVIEW": {
+            "RENEWAL_INTERVIEW": 3
+          },
+          "PROPOSAL_SUBMISSION": {
+            "PROPOSAL_SUBMISSION": 2,
+            "DOC_COLLECTION": 1
+          },
+          "REJECTION_NOTICE": {
+            "REJECTION_NOTICE": 2,
+            "MEETING_PREP": 1
+          },
+          "DOC_COLLECTION": {
+            "DOC_COLLECTION": 3
+          },
+          "END_EVALUATION": {
+            "END_EVALUATION": 3
+          },
+          "PROFITABILITY_REVIEW": {
+            "PROFITABILITY_REVIEW": 3
+          },
+          "SOURCING_START": {
+            "SOURCING_START": 3
+          },
+          "NONE": {
+            "NONE": 2,
+            "SOURCING_START": 1,
+            "REJECTION_NOTICE": 1,
+            "PROFITABILITY_REVIEW": 1,
+            "VISIT_PREP": 1
+          }
+        },
+        "errorCount": 6
+      },
+      "embeddingLR": {
+        "macroF1": 0.2586,
+        "accuracy": 0.3611,
+        "noneRecall": 0.8333,
+        "perClassF1": {
+          "MEETING_PREP": 0.0,
+          "VISIT_PREP": 0.0,
+          "CONTRACT_PREP": 0.8571,
+          "RENEWAL_INTERVIEW": 0.5714,
+          "PROPOSAL_SUBMISSION": 0.0,
+          "REJECTION_NOTICE": 0.0,
+          "DOC_COLLECTION": 0.0,
+          "END_EVALUATION": 0.0,
+          "PROFITABILITY_REVIEW": 0.5,
+          "SOURCING_START": 0.5714,
+          "NONE": 0.3448
+        },
+        "confusion": {
+          "MEETING_PREP": {
+            "NONE": 3
+          },
+          "VISIT_PREP": {
+            "NONE": 3
+          },
+          "CONTRACT_PREP": {
+            "CONTRACT_PREP": 3
+          },
+          "RENEWAL_INTERVIEW": {
+            "RENEWAL_INTERVIEW": 2,
+            "NONE": 1
+          },
+          "PROPOSAL_SUBMISSION": {
+            "NONE": 1,
+            "SOURCING_START": 2
+          },
+          "REJECTION_NOTICE": {
+            "NONE": 3
+          },
+          "DOC_COLLECTION": {
+            "CONTRACT_PREP": 1,
+            "NONE": 1,
+            "RENEWAL_INTERVIEW": 1
+          },
+          "END_EVALUATION": {
+            "NONE": 3
+          },
+          "PROFITABILITY_REVIEW": {
+            "NONE": 2,
+            "PROFITABILITY_REVIEW": 1
+          },
+          "SOURCING_START": {
+            "SOURCING_START": 2,
+            "NONE": 1
+          },
+          "NONE": {
+            "RENEWAL_INTERVIEW": 1,
+            "NONE": 5
+          }
+        },
+        "errorCount": 23,
+        "secondsPerItem": 0.0123
+      },
+      "items": [
+        {
+          "id": "ho_meeting_prep_0",
+          "text": "수요일 오전 고객사 구매팀장과의 대면 미팅 전에 지난 견적 이력을 훑어본다",
+          "gold": "MEETING_PREP",
+          "rule": "MEETING_PREP",
+          "embeddingLR": "NONE",
+          "llm": "MEETING_PREP",
+          "llmReason": "대면 미팅 전에 지난 견적 이력 확인은 고객 미팅 준비 브리핑에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 16457
+        },
+        {
+          "id": "ho_meeting_prep_1",
+          "text": "발주처 PM과 다음 주 정기 미팅이 잡혀서 진행 현황 자료를 챙긴다",
+          "gold": "MEETING_PREP",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "MEETING_PREP",
+          "llmReason": "발주처 PM과의 정기 미팅 준비를 위한 진행 현황 자료 챙김",
+          "llmFailure": null,
+          "llmLatencyMs": 15018
+        },
+        {
+          "id": "ho_meeting_prep_2",
+          "text": "담당 고객을 다음 주에 만나 필요한 인력 규모를 들어 보기로 했다",
+          "gold": "MEETING_PREP",
+          "rule": "MEETING_PREP",
+          "embeddingLR": "NONE",
+          "llm": "MEETING_PREP",
+          "llmReason": " 고객과 만나는 일정이 잡힘",
+          "llmFailure": null,
+          "llmLatencyMs": 11063
+        },
+        {
+          "id": "ho_visit_prep_0",
+          "text": "부산 물류센터 현장 실사를 위해 KTX 표를 예매한다",
+          "gold": "VISIT_PREP",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "VISIT_PREP",
+          "llmReason": "현장 실사를 위한 이동이 포함되어 있어 현장 방문 준비로 분류됩니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 13918
+        },
+        {
+          "id": "ho_visit_prep_1",
+          "text": "다음 달 울산 공장 설비를 직접 보러 가는 일정의 숙박을 잡는다",
+          "gold": "VISIT_PREP",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "VISIT_PREP",
+          "llmReason": "지역 이동이 있는 방문·출장 준비",
+          "llmFailure": null,
+          "llmLatencyMs": 12071
+        },
+        {
+          "id": "ho_visit_prep_2",
+          "text": "고객사 지방 지점들을 도는 출장 일정표를 짠다",
+          "gold": "VISIT_PREP",
+          "rule": "VISIT_PREP",
+          "embeddingLR": "NONE",
+          "llm": "VISIT_PREP",
+          "llmReason": "지방 지점 방문 일정표 작성은 현장 방문 준비에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 14497
+        },
+        {
+          "id": "ho_contract_prep_0",
+          "text": "협의가 끝난 단가와 투입 기간으로 용역 계약서 문구를 고친다",
+          "gold": "CONTRACT_PREP",
+          "rule": "CONTRACT_PREP",
+          "embeddingLR": "CONTRACT_PREP",
+          "llm": "CONTRACT_PREP",
+          "llmReason": "단가와 투입 기간을 고친 계약서 작성에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 14680
+        },
+        {
+          "id": "ho_contract_prep_1",
+          "text": "법무팀 검토 의견을 반영한 계약서 최종본을 고객에게 메일로 보낸다",
+          "gold": "CONTRACT_PREP",
+          "rule": "CONTRACT_PREP",
+          "embeddingLR": "CONTRACT_PREP",
+          "llm": "CONTRACT_PREP",
+          "llmReason": "계약서 최종본을 고객에게 메일로 보내는 행위는 계약서 작성 및 송부에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 15287
+        },
+        {
+          "id": "ho_contract_prep_2",
+          "text": "표준 계약서와 고객 수정본의 차이를 조항별로 비교한다",
+          "gold": "CONTRACT_PREP",
+          "rule": "CONTRACT_PREP",
+          "embeddingLR": "CONTRACT_PREP",
+          "llm": "DOC_COLLECTION",
+          "llmReason": "서류의 비교는 수집, 대조의 일환으로 분류됩니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 11773
+        },
+        {
+          "id": "ho_renewal_interview_0",
+          "text": "12월에 계약이 끝나는 파견 인력과 연장 희망 여부를 이야기하는 자리를 만든다",
+          "gold": "RENEWAL_INTERVIEW",
+          "rule": "NONE",
+          "embeddingLR": "RENEWAL_INTERVIEW",
+          "llm": "RENEWAL_INTERVIEW",
+          "llmReason": "12월에 계약이 끝나는 파견 인력과 연장 희망 여부를 이야기하는 자리 만드는 일은 계약 만료 대응 면담에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 21642
+        },
+        {
+          "id": "ho_renewal_interview_1",
+          "text": "갱신 시점이 다가온 고객 담당자와 내년 계약 연장 면담을 잡는다",
+          "gold": "RENEWAL_INTERVIEW",
+          "rule": "RENEWAL_INTERVIEW",
+          "embeddingLR": "RENEWAL_INTERVIEW",
+          "llm": "RENEWAL_INTERVIEW",
+          "llmReason": "재계약·갱신 의사 면담이 필요",
+          "llmFailure": null,
+          "llmLatencyMs": 12943
+        },
+        {
+          "id": "ho_renewal_interview_2",
+          "text": "만료 두 달 전 인력 면담에서 물어볼 처우 관련 질문을 추린다",
+          "gold": "RENEWAL_INTERVIEW",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "RENEWAL_INTERVIEW",
+          "llmReason": "물어볼 처우 관련 질문을 추린다는 내용은 계약 만료 대응 면담의 일환으로 분류됩니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 16628
+        },
+        {
+          "id": "ho_proposal_submission_0",
+          "text": "입찰 마감인 금요일까지 기술 제안서를 완성해 올린다",
+          "gold": "PROPOSAL_SUBMISSION",
+          "rule": "PROPOSAL_SUBMISSION",
+          "embeddingLR": "NONE",
+          "llm": "PROPOSAL_SUBMISSION",
+          "llmReason": "제안서 준비 및 완성",
+          "llmFailure": null,
+          "llmLatencyMs": 10901
+        },
+        {
+          "id": "ho_proposal_submission_1",
+          "text": "고객이 요청한 자바 개발자 세 명의 이력서를 묶어서 보낸다",
+          "gold": "PROPOSAL_SUBMISSION",
+          "rule": "NONE",
+          "embeddingLR": "SOURCING_START",
+          "llm": "DOC_COLLECTION",
+          "llmReason": "이력서 묶어서 보내는 행위는 서류의 회수/독촉에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 13339
+        },
+        {
+          "id": "ho_proposal_submission_2",
+          "text": "공고 요건에 맞춰 추천 인력 명단을 정리해 제출한다",
+          "gold": "PROPOSAL_SUBMISSION",
+          "rule": "NONE",
+          "embeddingLR": "SOURCING_START",
+          "llm": "PROPOSAL_SUBMISSION",
+          "llmReason": "제안서 준비 및 제출에 해당",
+          "llmFailure": null,
+          "llmLatencyMs": 10583
+        },
+        {
+          "id": "ho_rejection_notice_0",
+          "text": "이번 투입에서 빠진 지원자들에게 선정되지 않았다는 소식을 전한다",
+          "gold": "REJECTION_NOTICE",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "REJECTION_NOTICE",
+          "llmReason": "미채택 결과를 알리는 작업이기 때문",
+          "llmFailure": null,
+          "llmLatencyMs": 11529
+        },
+        {
+          "id": "ho_rejection_notice_1",
+          "text": "최종 면접에서 떨어진 후보에게 결과와 간단한 사유를 메일로 보낸다",
+          "gold": "REJECTION_NOTICE",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "REJECTION_NOTICE",
+          "llmReason": "미채택 결과와 사유를 메일로 통보하는 행위",
+          "llmFailure": null,
+          "llmLatencyMs": 13131
+        },
+        {
+          "id": "ho_rejection_notice_2",
+          "text": "고객 인터뷰 후 채택되지 않은 두 명에게 결과를 알린다",
+          "gold": "REJECTION_NOTICE",
+          "rule": "MEETING_PREP",
+          "embeddingLR": "NONE",
+          "llm": "REJECTION_NOTICE",
+          "llmReason": "미채택 결과를 알려야 하므로 REJECTION_NOTICE 부류에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 12376
+        },
+        {
+          "id": "ho_doc_collection_0",
+          "text": "투입 예정자들에게 받아야 할 재직증명서와 자격증 사본을 모은다",
+          "gold": "DOC_COLLECTION",
+          "rule": "NONE",
+          "embeddingLR": "CONTRACT_PREP",
+          "llm": "DOC_COLLECTION",
+          "llmReason": "받아야 할 서류의 수집이 명시되어 있습니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 12166
+        },
+        {
+          "id": "ho_doc_collection_1",
+          "text": "보낸 지 2주가 지난 보안 서약서가 아직 안 돌아와서 다시 요청한다",
+          "gold": "DOC_COLLECTION",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "DOC_COLLECTION",
+          "llmReason": "받아야 할 서류의 수집·반환·독촉은 DOC_COLLECTION에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 13334
+        },
+        {
+          "id": "ho_doc_collection_2",
+          "text": "서명해서 돌려주기로 한 날인본을 아직 못 받아 담당자에게 재촉한다",
+          "gold": "DOC_COLLECTION",
+          "rule": "NONE",
+          "embeddingLR": "RENEWAL_INTERVIEW",
+          "llm": "DOC_COLLECTION",
+          "llmReason": "받아야 할 서류의 수집·반환·독촉은 DOC_COLLECTION에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 13198
+        },
+        {
+          "id": "ho_end_evaluation_0",
+          "text": "이달 말 철수하는 인력의 프로젝트 수행 평가서를 작성한다",
+          "gold": "END_EVALUATION",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "END_EVALUATION",
+          "llmReason": "인력 툕입 종료 후 평가서 작성",
+          "llmFailure": null,
+          "llmLatencyMs": 11737
+        },
+        {
+          "id": "ho_end_evaluation_1",
+          "text": "투입이 끝난 개발자에 대한 고객 만족도 평가를 정리한다",
+          "gold": "END_EVALUATION",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "END_EVALUATION",
+          "llmReason": "투입 종료 후 평가 작성",
+          "llmFailure": null,
+          "llmLatencyMs": 11084
+        },
+        {
+          "id": "ho_end_evaluation_2",
+          "text": "운영 지원 과제가 끝난 인력별로 수행 평가를 남긴다",
+          "gold": "END_EVALUATION",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "END_EVALUATION",
+          "llmReason": "인력 툕입 종료 후 평가 작성",
+          "llmFailure": null,
+          "llmLatencyMs": 12217
+        },
+        {
+          "id": "ho_profitability_review_0",
+          "text": "고객이 제시한 단가로 들어가면 남는 금액이 얼마인지 따져 본다",
+          "gold": "PROFITABILITY_REVIEW",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "PROFITABILITY_REVIEW",
+          "llmReason": "마진 계산은 계약 조건이 배경이어도 PROFITABILITY_REVIEW에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 14495
+        },
+        {
+          "id": "ho_profitability_review_1",
+          "text": "인건비 인상분을 반영했을 때 이익률이 어떻게 바뀌는지 계산한다",
+          "gold": "PROFITABILITY_REVIEW",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "PROFITABILITY_REVIEW",
+          "llmReason": "마진·마argin율·수익률 계산은 계약 조건이 배경이어도 PROFITABILITY_REVIEW에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 16841
+        },
+        {
+          "id": "ho_profitability_review_2",
+          "text": "단가 협상 전에 투입 인력별 원가와 매출을 비교한 표를 만든다",
+          "gold": "PROFITABILITY_REVIEW",
+          "rule": "NONE",
+          "embeddingLR": "PROFITABILITY_REVIEW",
+          "llm": "PROFITABILITY_REVIEW",
+          "llmReason": "표를 만드는 행위는 마진·마argin율·수익률 계산의 배경이므로 PROFITABILITY_REVIEW에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 18095
+        },
+        {
+          "id": "ho_sourcing_start_0",
+          "text": "고객이 요청한 데이터 엔지니어 자리에 맞는 사람을 찾기 시작한다",
+          "gold": "SOURCING_START",
+          "rule": "NONE",
+          "embeddingLR": "SOURCING_START",
+          "llm": "SOURCING_START",
+          "llmReason": "인력 요청 후 후보 탐색 착수",
+          "llmFailure": null,
+          "llmLatencyMs": 12022
+        },
+        {
+          "id": "ho_sourcing_start_1",
+          "text": "구인 사이트와 기존 인력 풀에서 클라우드 경력자를 뒤져 본다",
+          "gold": "SOURCING_START",
+          "rule": "NONE",
+          "embeddingLR": "SOURCING_START",
+          "llm": "SOURCING_START",
+          "llmReason": "인력 요청 후 후보 탐색 착수",
+          "llmFailure": null,
+          "llmLatencyMs": 13625
+        },
+        {
+          "id": "ho_sourcing_start_2",
+          "text": "신규 인력 요청이 들어와서 후보군을 꾸리는 작업에 착수한다",
+          "gold": "SOURCING_START",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "SOURCING_START",
+          "llmReason": "인력 요청 후 후보 탐색 착수 작업",
+          "llmFailure": null,
+          "llmLatencyMs": 12141
+        },
+        {
+          "id": "ho_none_0",
+          "text": "팀 주간 회의에서 이번 달 영업 실적을 공유한다",
+          "gold": "NONE",
+          "rule": "NONE",
+          "embeddingLR": "RENEWAL_INTERVIEW",
+          "llm": "NONE",
+          "llmReason": "내부 회의이며, 고객 관련 내용이 없습니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 11657
+        },
+        {
+          "id": "ho_none_1",
+          "text": "사무용 노트북을 납품할 새 업체를 알아본다",
+          "gold": "NONE",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "SOURCING_START",
+          "llmReason": "채용 포털에서 후보 검색",
+          "llmFailure": null,
+          "llmLatencyMs": 10641
+        },
+        {
+          "id": "ho_none_2",
+          "text": "지난주 올린 제안서가 접수됐는지 확인한다",
+          "gold": "NONE",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "NONE",
+          "llmReason": "제안서 확인은 제출 준비·작성·송부의 후속 작업으로 분류되지 않음",
+          "llmFailure": null,
+          "llmLatencyMs": 13553
+        },
+        {
+          "id": "ho_none_3",
+          "text": "지난번 떨어진 지원자에게 새 공고가 열렸다고 연락한다",
+          "gold": "NONE",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "REJECTION_NOTICE",
+          "llmReason": "미채택 결과를 알려주는 연락",
+          "llmFailure": null,
+          "llmLatencyMs": 13523
+        },
+        {
+          "id": "ho_none_4",
+          "text": "제안서를 보내고 수익성 표도 같이 만든다",
+          "gold": "NONE",
+          "rule": "PROFITABILITY_REVIEW",
+          "embeddingLR": "NONE",
+          "llm": "PROPOSAL_SUBMISSION",
+          "llmReason": "제안서를 보내는 행위가 포함되어 있습니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 11562
+        },
+        {
+          "id": "ho_none_5",
+          "text": "목요일 외근 나갈 준비를 한다",
+          "gold": "NONE",
+          "rule": "NONE",
+          "embeddingLR": "NONE",
+          "llm": "VISIT_PREP",
+          "llmReason": "외근 준비가 있으므로 현장 방문 준비 부류에 해당합니다.",
+          "llmFailure": null,
+          "llmLatencyMs": 12095
+        }
+      ]
+    }
+  }
+}
