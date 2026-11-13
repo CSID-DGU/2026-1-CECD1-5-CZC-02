@@ -1,0 +1,38 @@
+{
+  "independent_clean": {
+    "sha256": "c38e9075840588d52ba338e66bf5c716b90ea7758698de3d106fb195f239e053",
+    "seed": 77123,
+    "people": 80,
+    "queries": 121,
+    "heavyNoise": false,
+    "independentGenerator": true,
+    "labelSource": "synthetic_source_and_possible_identity_sets_not_human_reviewed"
+  },
+  "independent_heavy_noise": {
+    "sha256": "1a1080a034f534585021e73308e589c629d980b36f836b7744fa3ab40cee38fc",
+    "seed": 77123,
+    "people": 80,
+    "queries": 121,
+    "heavyNoise": true,
+    "independentGenerator": true,
+    "labelSource": "synthetic_source_and_possible_identity_sets_not_human_reviewed"
+  },
+  "independent_clean_roster_240": {
+    "sha256": "1ec672aab572761504990f8bd9180f0abe397139614ee9c9afb708e1def4bca2",
+    "seed": 77123,
+    "people": 240,
+    "queries": 121,
+    "heavyNoise": false,
+    "independentGenerator": true,
+    "labelSource": "synthetic_source_and_possible_identity_sets_not_human_reviewed"
+  },
+  "independent_clean_roster_800": {
+    "sha256": "951a2d409277da6a1137849a8fa5c0a29bf840195739cebe29d91fb7d0551813",
+    "seed": 77123,
+    "people": 800,
+    "queries": 121,
+    "heavyNoise": false,
+    "independentGenerator": true,
+    "labelSource": "synthetic_source_and_possible_identity_sets_not_human_reviewed"
+  }
+}
