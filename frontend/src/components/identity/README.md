@@ -64,3 +64,7 @@ npm run build
 SSR 렌더 검사는 WebSocket을 끄며 외부 네트워크가 필요 없다. 백엔드 서비스의 실제 MySQL 검사는 8개를 통과했다
 ([결과](../../../../backend/src/main/java/com/salesmap/backend/person/MYSQL_VERIFICATION.md)). 브라우저·JWT까지 연결한 통합 검증은 아직 하지 않았다.
 공용 CI 설정은 변경하지 않았다. 프론트 기본 CI는 기존과 같이 빌드를 실행하며, 위 Node 검사는 별도 명령이다.
+
+## ⑤ 사람 화면 후속
+
+목록·검색·상세·읽기 전용 확정 미팅 이력과 독립 개발 진입점은 [PEOPLE_SCREEN.md](PEOPLE_SCREEN.md)를 참고한다. 공용 메뉴/라우트 및 B/C 연결 경계는 아직 남아 있다.

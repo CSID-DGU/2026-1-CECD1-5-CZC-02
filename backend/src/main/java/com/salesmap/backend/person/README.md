@@ -99,3 +99,9 @@ bash ./gradlew test --tests '*Test'
 위 단위 검사는 MySQL 없이 실행한다. 별도 실제 MySQL 저장·조회·선택·롤백 검사 8개도 통과했다.
 재현·한계는 [MYSQL_VERIFICATION.md](MYSQL_VERIFICATION.md)를 참고한다. HTTP JWT 통합은 아직 검증하지 않았다.
 보안 필터는 기존 SecurityConfig의 anyRequest().authenticated()를 그대로 사용한다.
+
+## 2026-11-12 사람별 이력 조회 추가
+
+GET `/api/persons/{personId}/meetings?page=0&size=20`은 본인 인물·본인 원본·미보관·미삭제·확정 회의록 중 저장된 personId가 정확히 연결된 기록만 반환한다. data는 기존 meeting_note 계약 배열이다. 이름 또는 A의 미반영 선택으로 이력을 추정하지 않는다. 미팅 시각 최신순(미기록은 마지막), ID 역순으로 정렬한 뒤 페이지를 적용한다. size는 1~100이다. B 저장소/조회 서비스는 읽기만 하며 B 데이터는 갱신하지 않는다.
+
+사람 화면 접속·정확한 한계는 [PEOPLE_SCREEN.md](../../../../../../../../frontend/src/components/identity/PEOPLE_SCREEN.md)를 참고한다. 전체 본인 회의록을 먼저 읽는 초기 방식이라 대량 데이터에서는 쿼리 최적화가 필요하다.
