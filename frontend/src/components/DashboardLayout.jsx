@@ -302,6 +302,7 @@ export function DashboardLayout({ children }) {
     { path: '/meeting-notes', icon: NotebookPen, label: '미팅 기록' },
     { path: '/meeting-notes/inbox', icon: ClipboardCheck, label: '확인 대기함', badge: draftNoteCount },
     { path: '/tasks', icon: ListChecks, label: '할 일' },
+    { path: '/people', icon: UsersRound, label: '사람' },
     { path: '/pipeline', icon: KanbanSquare, label: '딜 파이프라인' },
     { path: '/customers', icon: UsersRound, label: '고객 타임라인' },
     { path: '/dashboard', icon: LayoutDashboard, label: '대시보드' },
@@ -379,6 +380,7 @@ export function DashboardLayout({ children }) {
                 return (
                   <button
                     key={item.path}
+                    aria-current={isActive(item.path) ? 'page' : undefined}
                     onClick={() => navigate(item.path)}
                     className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
                       isActive(item.path)

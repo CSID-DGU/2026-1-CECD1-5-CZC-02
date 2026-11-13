@@ -68,3 +68,5 @@ SSR 렌더 검사는 WebSocket을 끄며 외부 네트워크가 필요 없다. �
 ## ⑤ 사람 화면 후속
 
 목록·검색·상세·읽기 전용 확정 미팅 이력과 독립 개발 진입점은 [PEOPLE_SCREEN.md](PEOPLE_SCREEN.md)를 참고한다. 공용 메뉴/라우트 및 B/C 연결 경계는 아직 남아 있다.
+
+사용자 승인으로 공용 앱에 사람 화면을 연결했다. `/people`은 기존 로그인 보호와 DashboardLayout을 사용하며 공용 메뉴에 **사람**이 표시된다. 이전 독립 HTML은 `/people`로 이동한다. 화면 내부는 목록/상세 2열·타임라인 시안을 적용하고, 가상 예시 전환은 DB에 저장하지 않는다. 공용 변경은 `App.jsx`의 import/보호 경로와 `DashboardLayout.jsx`의 메뉴/aria-current 표시다.

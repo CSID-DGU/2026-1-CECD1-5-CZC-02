@@ -33,3 +33,24 @@ test('LIGHT follow-ups require exact person IDs and do not match display names',
   const note = { noteId: 'mn_1', status: 'CONFIRMED', mode: 'LIGHT', perPerson: [{ personId: 'p_17', followUp }, { personId: 'p_18', followUp }] };
   assert.equal(commitmentRecords([note], 'p_17').length, 1);
 });
+
+test('explicit preview is isolated from real data and each read returns a copy', async () => {
+  const { peoplePreviewApi } = await import('./peoplePreview.js');
+  const people = await peoplePreviewApi.list();
+  assert.equal(people.length, 3);
+  assert.ok(people.every(p => p.isSynthetic && p.personId.startsWith('p_preview_')));
+  people[0].name = 'changed locally';
+  assert.equal((await peoplePreviewApi.person('p_preview_001')).name, '가상인물_001');
+  assert.equal((await peoplePreviewApi.list('가상회사_초록')).length, 1);
+  assert.equal((await peoplePreviewApi.list('', 1)).length, 0);
+});
+test('preview history uses exact IDs and preserves cancellation and missing records', async () => {
+  const { peoplePreviewApi } = await import('./peoplePreview.js');
+  const notes = await peoplePreviewApi.meetings('p_preview_001');
+  assert.equal(notes.length, 2);
+  assert.deepEqual(await peoplePreviewApi.meetings('p_preview_002'), []);
+  assert.ok(notes.every(n => n.participants.every(p => p.personId === 'p_preview_001')));
+  await assert.rejects(peoplePreviewApi.person('p_unknown'), /미리보기 인물이 없습니다/);
+  const controller = new AbortController(); controller.abort();
+  await assert.rejects(peoplePreviewApi.list('', 0, controller.signal), { name: 'AbortError' });
+});

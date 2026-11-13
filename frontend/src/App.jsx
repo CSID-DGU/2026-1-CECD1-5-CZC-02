@@ -13,6 +13,7 @@ import { MeetingNotePage } from './components/minutes/MeetingNotePage';
 import { MeetingNoteInboxPage } from './components/minutes/MeetingNoteInboxPage';
 import { MeetingNoteReviewPage } from './components/minutes/MeetingNoteReviewPage';
 import { TasksPage } from './components/tasks/TasksPage';
+import { PeopleScreen } from './components/identity/PeopleScreen.jsx';
 
 function ProtectedRoute({ children }) {
   const accessToken = localStorage.getItem('accessToken');
@@ -63,6 +64,13 @@ export default function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <ProcessingHistoryPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/people" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <PeopleScreen />
               </DashboardLayout>
             </ProtectedRoute>
           } />
