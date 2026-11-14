@@ -11,6 +11,7 @@ Salesmap 영업 활동 자동화 에이전트 — 2026 종합설계2 팀 컴쫀�
 | 상황 | 읽을 파일 |
 | --- | --- |
 | 무엇을 왜 만드는지 | `docs/project/overview.md` |
+| 웹 전체 흐름·화면·AI 동작 (처음 보는 사람용, 캡처 포함) | `docs/project/web-guide.md` |
 | 내 역할·담당 폴더 | `docs/project/roles.md` |
 | 모듈 사이 데이터 형식 | `contracts/README.md`, `contracts/*.schema.json`, `contracts/examples/` |
 | 회사 요청 기능 5개·주간 일정 | `docs/project/overview.md` |
