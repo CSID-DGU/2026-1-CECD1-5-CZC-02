@@ -22,7 +22,7 @@ A의 비교 단서·충돌 처리·팀 검토 사항은 [../../app/identity/RULE
 이름의 편집 거리·문자열 유사도는 app/identity/similarity.py에서 계산하며 확률로 해석하지 않는다.
 정확한 이름/별칭·연락처 일치에 따른 내부 검토 후보 선별은 app/identity/candidates.py에 구현했다.
 유사도 기반 내부 검색·순위는 app/identity/ranking.py에 구현했다.
-외부 응답의 확률 score는 D-022에 따라 null이다. API의 세 판정은 engine.py에 구현했으며
+규칙 응답의 score는 D-022에 따라 null이다. 현재 기본 API는 규칙+로지스틱 혼합이며 MODEL 후보만 합성 자료에서 보정한 score를 사용한다([HYBRID](../../app/identity/HYBRID.md)). 규칙의 세 판정은 engine.py에 구현했으며
 사람 선택·인물 저장·병합은 하지 않는다. 공용 파일은 app/main.py 라우트 등록 두 줄만 추가했다.
 
 ## 실행
@@ -183,3 +183,17 @@ results/embedding_comparison.json에 설정별 수치·모델 파일 해시·라
 현재 컴퓨터의 캐시 없는 검색 중앙값은 300명 약 13.93ms, 1,000명 약 47.73ms다.
 모델·HTTP·DB·동시 요청을 포함한 성능이 아니다. 규칙 기준과 새 holdout은 변경하지 않았다.
 보고서에는 유형별 원문 근거·예시와 측정 환경·캐시 조건·제약을 남겼다.
+
+## 2026-11-12 ML-1 학습 모델 비교
+
+LR·그래디언트 부스팅을 train 내부 인물 분리로 학습·선택하고 기존 eval로 비교했다. 운영 API는 변경하지 않았다. 이진 쌍 분류 결과이며 기존 top-3 검색 지표와 구분한다. [ML1_COMPARISON.md](ML1_COMPARISON.md)에 수치·한계·재현 명령을 정리했다.
+
+## 고정 규정 자동 재학습·전체 대장 비교
+
+사람 검수 대기 없이 자동 합성 정답과 고정된 학습/보정/선택/시험 분리로 LR·GB를 재학습했다. 두 방식 모두 사전 개선 gate를 통과했으며 정답 놓침은 줄고 표시 후보는 늘었다. [CONTROLLED_COMPARISON.md](CONTROLLED_COMPARISON.md)에 조건·결과·한계를 정리했다. 기존 이진 쌍 비교와 다른 실험이며 운영 API는 바꾸지 않았다.
+
+과적합·별도 생성기·대장 확대 추가 검사: [OVERFIT_AUDIT.md](OVERFIT_AUDIT.md). 부스팅의 심한 표기 훼손 조건에서 후보 포괄률 하락이 확인됐으므로 기존 평균 점수와 함께 확인한다.
+
+새 인물 240명·560건의 고정 모델 추가 평가: [FRESH_VALIDATION.md](FRESH_VALIDATION.md). 생성 자료·평가 전 고정 기록·질문별 후보를 함께 보존한다.
+
+로지스틱 혼합 방식 API 연결·계수 출처·규칙 모드 전환: [HYBRID.md](../../app/identity/HYBRID.md). 기존 실험 보고서의 “운영 변경 없음”은 각 실험 실행 당시의 기록이며, 현재 API 연결 상태는 이 문서를 따른다.

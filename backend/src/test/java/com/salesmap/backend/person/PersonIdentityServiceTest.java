@@ -88,6 +88,20 @@ class PersonIdentityServiceTest {
         assertThat(ContractSchemaValidator.load("revision.schema.json").validate(record)).isEmpty();
         verify(notes,never()).save(any());verify(people,never()).create(any(),anyLong(),anyLong());
     }
+    @Test void modelProposalIsStoredAndHumanSelectionKeepsModelAttribution() {
+        proposal.put("decidedBy","MODEL").put("modelVersion","identity-logistic-v1");
+        ((ObjectNode)proposal.path("candidates").get(0)).put("score",0.72);
+        when(rows.findByUserIdAndSourceRefOrderByMentionIndexAsc(7L,"src_101")).thenReturn(List.of());
+        service.storeProposals("src_101",List.of(proposal),7L);verify(rows).save(any());
+        row=new IdentityResolutionEntry(user,"src_101",0,"ir_owned",proposal.toString(),LocalDateTime.now());
+        ReflectionTestUtils.setField(row,"version",0L);when(rows.lockOwned("ir_owned",7L)).thenReturn(Optional.of(row));
+        var saved=select(choose("p_17"));
+        assertThat(saved.resolution().path("decidedBy").asText()).isEqualTo("HUMAN");
+        assertThat(saved.resolution().path("candidates").get(0).path("score").isNull()).isTrue();
+        assertThat(revision().proposedBy()).isEqualTo("MODEL");
+        assertThat(row.getProposal()).isEqualTo(proposal.toString());
+    }
+
     @Test void directSearchSelectionRecordsEditAndNewRegistrationRecordsCreatedNew(){
         assertThat(select(choose("p_18")).resolution().path("personId").asText()).isEqualTo("p_18");
         assertThat(revision().action()).isEqualTo("EDITED");

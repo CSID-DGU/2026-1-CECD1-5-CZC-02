@@ -1,11 +1,11 @@
-"""A의 읽기 전용 규칙 식별 API. 요청·응답의 인물 객체는 contracts를 따른다."""
+"""A의 읽기 전용 규칙+로지스틱 식별 API. 요청·응답의 인물 객체는 contracts를 따른다."""
 
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, ConfigDict
 
-from app.identity.engine import resolve_identities
+from app.identity.hybrid import resolve_identities
 
 router = APIRouter(prefix="/identity", tags=["identity"])
 

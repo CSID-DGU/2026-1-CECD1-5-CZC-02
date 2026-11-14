@@ -2,3 +2,6 @@
 # Windows(core.autocrlf=true)에서 CRLF로 바뀌면 해시 검사가 실패한다.
 *.json text eol=lf
 *.md text eol=lf
+
+# 실험 보고서가 생성 코드의 바이트 해시도 고정하므로 Python 소스 역시 LF로 유지한다.
+*.py text eol=lf

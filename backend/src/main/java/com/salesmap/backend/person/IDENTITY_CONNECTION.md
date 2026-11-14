@@ -35,7 +35,7 @@ B의 기존 초안 서비스 → `IdentityResolutionClient` → A `PersonIdentit
 ## 응답·실패 처리
 
 - 입력 언급과 같은 수·순서·원문 mention이어야 한다. resolutionId 형식·중복과 계약 필드를 검사한다.
-- 지금 연결은 RULE API 전용이다. score는 null, 후보 최대 3명, 중복 후보 없음, 각 후보 이유 필수다.
+- RULE과 MODEL 응답을 모두 받는다. RULE score는 null, MODEL score는 유한한 0~1 숫자와 모델 버전이 필요하다. MODEL의 CONFIRMED는 거절한다. 후보 최대 3명·중복 없음·각 후보 이유 필수다.
 - 후보와 확정 personId가 요청에 보낸 본인 대장 안에 있어야 한다. 모르는 인물 ID는 거절한다.
 - NEW는 personId=null·후보 없음, CANDIDATES는 personId=null·후보 있음이어야 한다.
 - HTTP 오류·접속/읽기 실패·잘못된 응답은 예외로 넘긴다. NEW/CONFIRMED나 가짜 후보로 대체하지 않는다.
@@ -57,8 +57,8 @@ B의 기존 초안 서비스 → `IdentityResolutionClient` → A `PersonIdentit
    mention.name을 맞추지 못하므로 회의록 participant에 resolutionId/personId가 연결되지 않을 수 있다.
 3. 위 경우를 정상 연결하려면 B가 순서·이메일 등으로 참석자와 결과를 정확히 대응시켜야 한다.
    B의 두 연결 함수를 이번에 수정하지 않았다. 계약 변경이 필요하면 먼저 팀 합의해야 한다.
-4. 후보 선택 화면·HUMAN 결정·Revision은 3번의 A 선택 API에 구현했다. B 회의록 반영과
-   인물 대장의 사람별 이력 조회는 남아 있다.
+4. 후보 선택 화면·HUMAN 결정·Revision은 3번의 A 선택 API에 구현했다. B 회의록 반영은 남아 있다.
+   사람별 이력 조회는 구현됐으며, B 저장본의 정확한 personId만 사용한다.
 
 따라서 **A HTTP 호출·일반 이름 참석자 연결은 구현했으며, 모든 참석자 유형의 앱 연결 완료를 뜻하지 않는다.**
 
@@ -80,3 +80,7 @@ bash ./gradlew test --tests '*Test'
   이름+이메일, 이름만, 이메일만, 미일치, 정보 부족의 5가지 응답이 JSON Schema를 통과했다.
 
 전체 백엔드 단위 테스트: **158개 통과, 실패·오류·건너뜀 0개** (1번 127개에서 31개 추가).
+
+## 2026-11-13 검증 갱신
+
+MODEL 후보 수신·저장·HUMAN 선택과 원래 MODEL 제안자 기록을 검사했다. 이전 158개는 당시 수치다. 현재 검사와 연결 경계는 [HANDOFF](../../../../../../../../ai-module/ml/identity/HANDOFF.md)를 우선한다.

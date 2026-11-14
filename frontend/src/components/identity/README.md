@@ -59,8 +59,16 @@ npm exec -- eslint src/components/identity src/components/minutes/ParticipantCan
 npm run build
 ```
 
-프론트 검사 12개: 불명확한 대응 방지·정보 부족·등록 입력·API 버전·실패/가짜 성공 거절·
+초기 프론트 검사 12개: 불명확한 대응 방지·정보 부족·등록 입력·API 버전·실패/가짜 성공 거절·
 검색/재조회와 후보·읽기 전용·HUMAN·미저장 결과의 실제 React 렌더를 검사한다.
 SSR 렌더 검사는 WebSocket을 끄며 외부 네트워크가 필요 없다. 백엔드 서비스의 실제 MySQL 검사는 8개를 통과했다
-([결과](../../../../backend/src/main/java/com/salesmap/backend/person/MYSQL_VERIFICATION.md)). 브라우저·JWT까지 연결한 통합 검증은 아직 하지 않았다.
+([결과](../../../../backend/src/main/java/com/salesmap/backend/person/MYSQL_VERIFICATION.md)). JWT 필터부터 A API·격리 MySQL까지 추가 검증했다. 브라우저 클릭 통합은 아직 하지 않았다.
 공용 CI 설정은 변경하지 않았다. 프론트 기본 CI는 기존과 같이 빌드를 실행하며, 위 Node 검사는 별도 명령이다.
+
+## ⑤ 사람 화면 후속
+
+목록·검색·상세·읽기 전용 확정 미팅 이력과 독립 개발 진입점은 [PEOPLE_SCREEN.md](PEOPLE_SCREEN.md)를 참고한다. 공용 메뉴/라우트는 연결됐으며 B/C 데이터 반영 경계가 남아 있다.
+
+사용자 승인으로 공용 앱에 사람 화면을 연결했다. `/people`은 기존 로그인 보호와 DashboardLayout을 사용하며 공용 메뉴에 **사람**이 표시된다. 이전 독립 HTML은 `/people`로 이동한다. 화면 내부는 목록/상세 2열·타임라인 시안을 적용하고, 가상 예시 전환은 DB에 저장하지 않는다. 공용 변경은 `App.jsx`의 import/보호 경로와 `DashboardLayout.jsx`의 메뉴/aria-current 표시다.
+
+2026-11-13 MODEL 후보 렌더 검사 추가: 모델 점수를 실제 업무 확률처럼 표시하지 않고 이유와 사용자 확인을 보여 준다. 현재 상태는 [HANDOFF](../../../../ai-module/ml/identity/HANDOFF.md)를 우선한다.

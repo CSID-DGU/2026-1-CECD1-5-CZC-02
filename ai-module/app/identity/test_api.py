@@ -38,8 +38,9 @@ def test_main_route_returns_identity_contract_array(scenario):
         Draft202012Validator(SCHEMA).validate(result)
         assert result['decision'] == expected
         assert result['mention'] == body['mentions'][0]
-        assert result['decidedBy'] == 'RULE'
-        assert all(c['score'] is None and c['reasons'] for c in result['candidates'])
+        assert result['decidedBy'] == ('MODEL' if scenario == 'candidates' else 'RULE')
+        assert all(c['reasons'] for c in result['candidates'])
+        assert all((isinstance(c['score'], float) and 0 <= c['score'] <= 1) if scenario == 'candidates' else c['score'] is None for c in result['candidates'])
 
 
 @pytest.mark.parametrize('bad', ['missing_persons','missing_channel','extra_mention','bad_person','duplicate','extra_wrapper','non_object'])

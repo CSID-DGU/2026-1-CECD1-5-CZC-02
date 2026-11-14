@@ -1,5 +1,7 @@
 # A — 같은 사람 판별 규칙 초안
 
+2026-11-12 현재 API는 규칙 보호 + 로지스틱 후보 보완을 사용한다. [HYBRID.md](HYBRID.md)를 우선 확인한다. 아래는 기존 규칙 설계·실험의 역사 기록이다.
+
 작성: 2026-10-15. 상태: **설계 초안·내부 비교/검색/순위/평가 구현·팀 검토 전**.
 기준: AGENTS.md, 최신 decisions.md, person.schema.json, identity_resolution.schema.json.
 

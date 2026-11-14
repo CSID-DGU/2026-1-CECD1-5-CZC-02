@@ -1,0 +1,134 @@
+{
+  "fit": {
+    "name": "fit",
+    "seed": 11103,
+    "persons": 120,
+    "queriesBeforeDedup": 1350,
+    "queries": 1240,
+    "labelSource": "automatic_synthetic_scenarios_not_human_reviewed",
+    "sha256": "78e32aecd49ca6c1fc5cea78223da9547bdca86cb22c13eb212e5f0e01da19ce",
+    "caseCounts": {
+      "contact_exact": 120,
+      "honorific": 113,
+      "alias": 113,
+      "typo_replace": 120,
+      "typo_delete": 119,
+      "typo_insert": 120,
+      "typo_transpose": 117,
+      "missing_company": 88,
+      "previous_company": 97,
+      "email_only": 112,
+      "contact_conflict": 30,
+      "name_contact_conflict": 30,
+      "insufficient": 1,
+      "new_with_contacts": 30,
+      "new_name_only": 30
+    },
+    "kindCounts": {
+      "KNOWN": 869,
+      "AMBIGUOUS": 250,
+      "CONFLICT": 60,
+      "INSUFFICIENT": 1,
+      "NEW": 60
+    }
+  },
+  "calibration": {
+    "name": "calibration",
+    "seed": 22207,
+    "persons": 40,
+    "queriesBeforeDedup": 450,
+    "queries": 415,
+    "labelSource": "automatic_synthetic_scenarios_not_human_reviewed",
+    "sha256": "1009cdc9fbca98e29f34f310adeb2128303ccfb05e778e7ae83e247438a6647d",
+    "caseCounts": {
+      "contact_exact": 40,
+      "honorific": 38,
+      "alias": 38,
+      "typo_replace": 40,
+      "typo_delete": 39,
+      "typo_insert": 40,
+      "typo_transpose": 40,
+      "missing_company": 30,
+      "previous_company": 32,
+      "email_only": 37,
+      "contact_conflict": 10,
+      "name_contact_conflict": 10,
+      "insufficient": 1,
+      "new_with_contacts": 10,
+      "new_name_only": 10
+    },
+    "kindCounts": {
+      "KNOWN": 302,
+      "AMBIGUOUS": 72,
+      "CONFLICT": 20,
+      "INSUFFICIENT": 1,
+      "NEW": 20
+    }
+  },
+  "tune": {
+    "name": "tune",
+    "seed": 33311,
+    "persons": 60,
+    "queriesBeforeDedup": 675,
+    "queries": 620,
+    "labelSource": "automatic_synthetic_scenarios_not_human_reviewed",
+    "sha256": "8142929d83d5751079228a017ad6227a33c65f92e0496f550e616d1556e4d33f",
+    "caseCounts": {
+      "contact_exact": 60,
+      "honorific": 56,
+      "alias": 56,
+      "typo_replace": 60,
+      "typo_delete": 60,
+      "typo_insert": 60,
+      "typo_transpose": 60,
+      "missing_company": 43,
+      "previous_company": 48,
+      "email_only": 56,
+      "contact_conflict": 15,
+      "name_contact_conflict": 15,
+      "insufficient": 1,
+      "new_with_contacts": 15,
+      "new_name_only": 15
+    },
+    "kindCounts": {
+      "KNOWN": 441,
+      "AMBIGUOUS": 118,
+      "CONFLICT": 30,
+      "INSUFFICIENT": 1,
+      "NEW": 30
+    }
+  },
+  "test": {
+    "name": "test",
+    "seed": 44417,
+    "persons": 80,
+    "queriesBeforeDedup": 900,
+    "queries": 830,
+    "labelSource": "automatic_synthetic_scenarios_not_human_reviewed",
+    "sha256": "0654724863567854f91647aedf7f9a7dc1825e2953382bf5fcb02f4b80a214f6",
+    "caseCounts": {
+      "contact_exact": 80,
+      "honorific": 75,
+      "alias": 75,
+      "typo_replace": 80,
+      "typo_delete": 80,
+      "typo_insert": 80,
+      "typo_transpose": 79,
+      "missing_company": 60,
+      "previous_company": 65,
+      "email_only": 75,
+      "contact_conflict": 20,
+      "name_contact_conflict": 20,
+      "insufficient": 1,
+      "new_with_contacts": 20,
+      "new_name_only": 20
+    },
+    "kindCounts": {
+      "KNOWN": 589,
+      "AMBIGUOUS": 160,
+      "CONFLICT": 40,
+      "INSUFFICIENT": 1,
+      "NEW": 40
+    }
+  }
+}

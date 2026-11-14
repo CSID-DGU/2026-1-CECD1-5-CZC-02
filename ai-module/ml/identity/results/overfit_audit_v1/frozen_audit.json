@@ -1,0 +1,36 @@
+{
+  "policy": {
+    "version": "ml1-overfit-audit-v1",
+    "sourceExperiment": "results/controlled_v1/report.json",
+    "modelSeed": 42,
+    "freezeSelectedHyperparametersCalibrationAndThresholds": true,
+    "retrainForReproductionOnly": "original_fit_and_calibration_only_no_new_audit_data_in_fit",
+    "independentGeneratorSeed": 77123,
+    "basePeople": 80,
+    "rosterSizes": [
+      80,
+      240,
+      800
+    ],
+    "profiles": [
+      "independent_clean",
+      "independent_heavy_noise",
+      "independent_clean_roster_240",
+      "independent_clean_roster_800"
+    ],
+    "warningDrop": 0.05,
+    "sharpDrop": 0.1,
+    "minimumKnownTop3": 0.9,
+    "maximumNewFalseCandidateIncrease": 0.1,
+    "maximumMeanFalseCandidateIncrease": 0.5,
+    "labelSource": "automatic_synthetic_not_human_reviewed",
+    "interpretation": "same_generator_fit_tune_gap_is_overfit_warning_independent_profile_drop_is_shift_sensitivity_not_proof_of_overfit",
+    "productionChange": false,
+    "monitoringAmendment": "After initial audit, ambiguity coverage was added to diagnosis because known-only recall hid heavy-noise failures. Models, thresholds and data are unchanged; this is not a new unseen test."
+  },
+  "reportSha256": "11d0337d8665c52314339e9bb7efbbf502a97d0b0822975abdbd45f4976a6e41",
+  "auditCodeSha256": {
+    "overfit_audit.py": "2966e062f1a93ce948959ce9a1a1a1ab62336abca4bb972ff3af15dea46a789d",
+    "stress_data.py": "cae32d74a53fff8d8812eb4b9e219e54cde7e3469baf44466cf3b0a94f10119e"
+  }
+}

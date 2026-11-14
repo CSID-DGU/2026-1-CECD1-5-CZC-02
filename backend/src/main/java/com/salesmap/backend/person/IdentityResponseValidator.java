@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/** 계약 응답의 형식·RULE 정책·요청 대응·사용자 대장 참조를 검사한다. 판정 로직 자체는 A API에 둔다. */
+/** 계약 응답의 형식·RULE/MODEL 정책·요청 대응·사용자 대장 참조를 검사한다. 판정 로직 자체는 A API에 둔다. */
 final class IdentityResponseValidator {
     private static final Set<String> REQUIRED = Set.of("resolutionId", "mention", "decision", "personId", "candidates", "decidedBy");
     private static final Set<String> ALLOWED = Set.of("resolutionId", "mention", "decision", "personId", "candidates", "decidedBy", "modelVersion");
@@ -28,7 +28,7 @@ final class IdentityResponseValidator {
             String id = text(row.get("resolutionId"));
             require(id.matches("ir_[0-9a-z_]+") && resolutionIds.add(id));
             require(mentions.get(i).equals(row.get("mention")));
-            require("RULE".equals(text(row.get("decidedBy"))));
+            validateProposalPolicy(row);
             if (row.has("modelVersion")) require(row.get("modelVersion").isNull() || row.get("modelVersion").isTextual());
             String decision = text(row.get("decision"));
             require(Set.of("CONFIRMED", "CANDIDATES", "NEW").contains(decision));
@@ -39,7 +39,6 @@ final class IdentityResponseValidator {
                 object(candidate, CANDIDATE, CANDIDATE);
                 String personId = text(candidate.get("personId"));
                 require(people.contains(personId) && candidateIds.add(personId));
-                require(candidate.get("score").isNull());
                 JsonNode reasons = candidate.get("reasons");
                 require(reasons.isArray() && !reasons.isEmpty());
                 for (JsonNode reason : reasons) require(reason.isTextual() && !reason.textValue().isBlank());
@@ -57,6 +56,26 @@ final class IdentityResponseValidator {
             result.add(row.deepCopy());
         }
         return List.copyOf(result);
+    }
+
+    /** 모델은 후보 보완만 한다. 연락처 규칙을 대신해 자동 확정할 수 없다. */
+    static void validateProposalPolicy(JsonNode row) {
+        String by = text(row.get("decidedBy"));
+        require(Set.of("RULE", "MODEL").contains(by));
+        boolean model = "MODEL".equals(by);
+        if (model) {
+            require(!"CONFIRMED".equals(text(row.get("decision"))));
+            require(row.path("modelVersion").isTextual() && !row.path("modelVersion").asText().isBlank());
+        }
+        JsonNode candidates = row.get("candidates");
+        require(candidates != null && candidates.isArray());
+        for (JsonNode candidate : candidates) {
+            JsonNode score = candidate.get("score");
+            require(score != null);
+            if (model) require(score.isNumber() && Double.isFinite(score.doubleValue())
+                    && score.doubleValue() >= 0 && score.doubleValue() <= 1);
+            else require(score.isNull());
+        }
     }
 
     private static void object(JsonNode node, Set<String> required, Set<String> allowed) {

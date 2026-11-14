@@ -1,0 +1,32 @@
+{
+  "seed": 816293,
+  "modelSeed": 42,
+  "datasetSha256": "9e44904be0b9ce669339002346e8001119166af85ff968a4de94bde70ad22ed6",
+  "sourceReportSha256": "41a4b571c8da4326b5322a3af77fa9f1f4da3546a977627b20bfa245fa28d0a3",
+  "codeSha256": "6de66527822990e1646536909aae8b67ffedf08fbd68e2f8172bef1fdf8df865",
+  "selected": {
+    "logistic": {
+      "parameter": 10.0,
+      "threshold": 0.02
+    },
+    "gradient": {
+      "parameter": 3,
+      "threshold": 0.05
+    }
+  },
+  "policy": "no_new_fit_calibration_threshold_selection; report_all_cases_and_separate_impossible_overflow",
+  "decisionCriteria": {
+    "minimumConfirmedPrecision": 0.95,
+    "minimumTop3Recall": 0.9,
+    "maximumTop3Drop": 0.01,
+    "maximumAmbiguousCoverageDrop": 0.01,
+    "maximumNewFalseCandidateIncrease": 0.01,
+    "minimumTop3Gain": 0.03,
+    "minimumFalseCandidatesReduction": 0.15,
+    "pairedClusterBootstrapLowerBoundMustExceedZero": true,
+    "p95RequestMillisecondsMaximum": 100.0
+  },
+  "safetyCheck": "no_worse_than_rule_on_ambiguity_new_and_insufficient; no_wrong_confirmation",
+  "syntheticGoldNotHumanReviewed": true,
+  "productionChange": false
+}
