@@ -66,3 +66,7 @@ GET /api/persons/{personId}/meetings?page=0&size=20
 현재 구성: `PeopleScreen.jsx`가 실대장/명시적 미리보기 전환을 관리하고, `PeoplePage.jsx`가 목록·상세를 렌더한다. 사람 화면 전용 스타일만 재정의해 다른 화면의 제목·레이아웃에는 영향을 주지 않는다. 공용 변경 범위는 App의 import/보호 경로, DashboardLayout의 사람 메뉴 및 선택 메뉴의 aria-current 표시다. 고객 타임라인 등 기존 경로는 유지한다.
 
 검증 참고: 공용 DashboardLayout의 기존 99행 알림 effect에 `react-hooks/set-state-in-effect` lint 오류 1건이 있으며 변경 전 HEAD에서도 같은 오류를 확인했다. 사람 화면 및 App 변경 lint는 통과했다. 해당 알림 로직은 이번 메뉴 연결 범위에서 수정하지 않았다.
+
+## 2026-11-13 확인
+
+401 로그인 문제는 사용자가 해결했다고 확인했다. 로그인 설정은 수정하지 않았다. A 백엔드의 MODEL 응답 거절을 수정하고 실제 JWT 필터·격리 MySQL 선택 저장 검증을 추가했다. 실제 브라우저에서 B 반영 뒤 사람별 이력을 확인하는 항목은 남아 있다.

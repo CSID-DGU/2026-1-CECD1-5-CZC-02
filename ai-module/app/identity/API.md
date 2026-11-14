@@ -51,25 +51,28 @@
 인물 대장 직접 검색 안내를 넣는다. 신규 등록·후보 선택은 사람이 한다.
 CONFIRMED도 회의록 확정 화면에서 한 번 더 확인해야 한다.
 
-## B 연결과 화면의 다음 작업
+## 백엔드·화면 연결과 남은 경계
 
 호출자가 사용자 범위의 인물 대장을 조회해 persons로 전달한다. AI가 예제/학습 대장을 자동으로
 불러오거나 사용자 권한을 검증하지 않는다. 기존 서버의 내부 호출 경로로 사용한다.
-현재 B의 IdentityResolutionClient는 sourceId·attendees·userId를 받으므로, 실제 연결 때
-참석자 이름을 mention으로 만들고 채널·sourceRef·해당 사용자 대장을 전달하는 어댑터가 필요하다.
-이 요청 봉투는 이번 AI API의 인터페이스이며 백엔드 연결이 완료됐다는 뜻은 아니다.
+A의 `PersonIdentityResolutionClient`는 `AI_MODULE_MODE=http`일 때 본인 대장 전체와
+B가 전달한 name/email/channel/sourceRef를 보낸다. 응답의 원문·순서·대장 참조·후보 수를 검사한다.
+2026-11-13에는 백엔드의 RULE 전용 수신 제한을 고쳐 MODEL 후보도 검증·저장하도록 했다.
+MODEL 자동 확정·범위 밖 점수·모델 버전 누락·HUMAN 가장은 거절한다.
 
-- 이름·이메일·전화가 모두 없어서 NEW이면 화면은 “정보 부족 — 확인 필요”로 보여야 한다.
-  내부 `has_identity_clue(mention)`과 같은 정규화 규칙으로 판별하며 계약 필드는 추가하지 않는다.
-- 후보 목록·이유·직접 검색·새 사람 등록 버튼은 참석자 후보 화면 작업에서 연결한다.
-- 사람이 고르면 HUMAN 결과와 수정 기록을 B-3 RevisionClient → D API로 전달해야 한다.
-  이번 API는 사람 선택/Revision 저장을 구현하지 않는다.
-- 백엔드 실제 클라이언트 구현·Fake 삭제는 10/28 연결 범위다. 이번에는 변경하지 않았다.
+- 단서 없는 NEW는 화면에서 정보 부족으로 표시하며 임의 등록하지 않는다.
+- A 후보 화면의 직접 검색·명시적 신규 등록·선택 저장은 구현했다.
+- HUMAN 선택은 A 선택 저장소와 B-3 RevisionClient → D RevisionService를 같은 트랜잭션으로 저장한다.
+  이 FastAPI 자체는 DB/사람 선택/Revision을 저장하지 않는다.
+- B의 회의록 participants/perPerson 반영, 동명이인 다중 참석자·이메일만 있는 참석자 대응,
+  Fake 클라이언트 정리는 B 검토 경계다. A에서 B 데이터를 직접 고치지 않는다.
 
-## 변경 범위·검사
+현재 범위·검증은 [HANDOFF](../../ml/identity/HANDOFF.md)를 우선한다.
 
-**공용 파일 수정:** `ai-module/app/main.py`의 identity router import와 include_router 등록, 두 줄만 추가했다.
-contracts·다른 담당 폴더·백엔드·프론트·의존성 파일은 수정하지 않았다.
+## 초기 API 변경 범위와 현재 검사
+
+초기 API 등록 당시 **공용 파일 수정:** `ai-module/app/main.py`의 identity router import와 include_router 등록, 두 줄만 추가했다.
+당시 contracts·다른 담당 폴더·백엔드·프론트·의존성 파일은 수정하지 않았다. 이후 A 백엔드·화면 구현은 위 현재 상태를 따른다.
 
 ai-module에서 실행:
 
@@ -83,4 +86,4 @@ TestClient로 실제 main 라우트의 세 판정·배열 순서·오류 응답�
 반환하는지 회귀 검사한다. 이는 해당 사례의 회귀 검사이며 실사용 정확도 측정은 아니다.
 새 holdout/v1은 성능 평가에 사용하지 않았다. 네트워크·LLM·BGE 모델 없이 검사한다.
 
-전체 검사 결과: **406 passed, 5 warnings**. 경고는 기존 FastAPI/Starlette 사용 중단 예고다.
+2026-11-13 전체 검사 결과: **532 passed, 4 warnings**. 경고는 기존 FastAPI/Starlette 사용 중단 예고다.

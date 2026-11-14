@@ -52,9 +52,9 @@ public class PersonIdentityService {
         LocalDateTime now=now();
         for(int i=0;i<proposals.size();i++){
             JsonNode proposal=proposals.get(i);
-            if(!"RULE".equals(proposal.path("decidedBy").asText())
-                    || !sourceRef.equals(proposal.path("mention").path("sourceRef").asText()))
-                throw new IllegalArgumentException("검증한 원본 RULE 제안만 저장할 수 있습니다.");
+            IdentityResponseValidator.validateProposalPolicy(proposal);
+            if(!sourceRef.equals(proposal.path("mention").path("sourceRef").asText()))
+                throw new IllegalArgumentException("검증한 원본 RULE/MODEL 제안만 저장할 수 있습니다.");
             rows.save(new IdentityResolutionEntry(source.getUser(),sourceRef,i,proposal.path("resolutionId").asText(),proposal.toString(),now));
         }
         return proposals.stream().map(JsonNode::deepCopy).map(value -> (JsonNode)value).toList();

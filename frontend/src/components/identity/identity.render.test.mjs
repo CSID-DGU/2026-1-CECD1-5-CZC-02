@@ -36,3 +36,10 @@ test('saved human selection is shown without another editable candidate list',()
 test('missing stored resolution is shown honestly without sample fallback',() => {
   const html=render(null);assert.match(html,/저장된 식별 결과가 없거나/);assert.doesNotMatch(html,/type="radio"/);
 });
+
+test('model candidates show reasons without presenting synthetic calibration as a real-world percentage', () => {
+  const html=render({...base,decidedBy:'MODEL',modelVersion:'identity-logistic-v1',
+    candidates:[{personId:'p_17',score:0.72,reasons:['로지스틱 비교 후보 — 사용자 확인 필요']}]});
+  assert.match(html,/로지스틱 비교 후보/);assert.match(html,/인물 확인 필요/);
+  assert.doesNotMatch(html,/72%|0\.72|사람이 선택 · 저장됨/);
+});

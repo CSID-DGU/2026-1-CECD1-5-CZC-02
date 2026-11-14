@@ -73,6 +73,45 @@ class PersonIdentityResolutionClientTest {
         verify(people).forResolution(7L); server.verify();
     }
 
+    @Test void acceptsModelCandidatesAndNewWithoutTurningThemIntoConfirmed() throws Exception {
+        ObjectNode one=mention("가상인물_오타",null,"MEETING");
+        ObjectNode two=mention("가상인물_미등록",null,"MEETING");
+        ObjectNode a=result(one,"CANDIDATES").put("decidedBy","MODEL").put("modelVersion","identity-logistic-v1");
+        ((ObjectNode)a.path("candidates").get(0)).put("score",0.72);
+        ObjectNode b=result(two,"NEW").put("resolutionId","ir_test_2").put("decidedBy","MODEL").put("modelVersion","identity-logistic-v1");
+        server.expect(requestTo("http://identity.test/identity/resolve"))
+                .andRespond(withSuccess(mapper.createArrayNode().add(a).add(b).toString(),MediaType.APPLICATION_JSON));
+        var response=client.resolve("src_101",List.of(new AttendeeMention("가상인물_오타",null,"MEETING"),
+                new AttendeeMention("가상인물_미등록",null,"MEETING")),7L);
+        assertThat(response).containsExactly(a,b);
+        for(JsonNode row:response) assertThat(ContractSchemaValidator.load("identity_resolution.schema.json").validate(row)).isEmpty();
+        verify(identities).storeProposals("src_101",response,7L);server.verify();
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings={"confirmed","negative","over_one","null_score","text_score","missing_version","blank_version","human"})
+    void rejectsUnsafeModelResponses(String fault) {
+        ObjectNode observed=mention("가상인물_0001",null,"MEETING");
+        ObjectNode row=result(observed,"CANDIDATES").put("decidedBy","MODEL").put("modelVersion","identity-logistic-v1");
+        ObjectNode candidate=(ObjectNode)row.path("candidates").get(0);candidate.put("score",0.7);
+        switch(fault) {
+            case "confirmed" -> row.put("decision","CONFIRMED").put("personId","p_17");
+            case "negative" -> candidate.put("score",-0.1);
+            case "over_one" -> candidate.put("score",1.1);
+            case "null_score" -> candidate.putNull("score");
+            case "text_score" -> candidate.put("score","0.7");
+            case "missing_version" -> row.remove("modelVersion");
+            case "blank_version" -> row.put("modelVersion"," ");
+            case "human" -> row.put("decidedBy","HUMAN");
+            default -> throw new IllegalArgumentException();
+        }
+        server.expect(requestTo("http://identity.test/identity/resolve"))
+                .andRespond(withSuccess(mapper.createArrayNode().add(row).toString(),MediaType.APPLICATION_JSON));
+        assertThatThrownBy(() -> client.resolve("src_101",List.of(new AttendeeMention("가상인물_0001",null,"MEETING")),7L))
+                .isInstanceOf(RestClientException.class);
+        verifyNoInteractions(identities);server.verify();
+    }
+
     @Test void batchOrderAndUnknownNameArePreservedRatherThanFillingNameFromEmail() {
         ObjectNode one=mention("가상인물_0001",null,"MEETING");
         ObjectNode two=mention(null,"synthetic@people.example","EMAIL");

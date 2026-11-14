@@ -2,7 +2,7 @@
 
 ## 저장 경계
 
-`PersonIdentityResolutionClient`가 검사한 RULE 제안을 A의 `person_identity_resolutions`에 저장한다.
+`PersonIdentityResolutionClient`가 검사한 RULE/MODEL 제안을 A의 `person_identity_resolutions`에 저장한다.
 이 테이블은 원본 제안·현재 결과·원본 ID·언급 순서·소유자·버전·선택자/시각을 가진다.
 B의 원본/회의록 테이블은 소유자와 상태 확인을 위해 읽기만 하며 수정하지 않는다.
 기존 JPA `ddl-auto=update`로 백엔드 실행 시 A 테이블이 생성된다. 별도 검증 DB의 결과는 [MYSQL_VERIFICATION.md](MYSQL_VERIFICATION.md)를 참고한다. 기존 앱 DB는 변경하지 않았다.
@@ -50,7 +50,7 @@ B의 이름 기반 연결 제한과 가짜 구현 정리는 IDENTITY_CONNECTION.
 backend의 `bash ./gradlew test --tests '*Test'`: **181개 통과**, 실패·오류·건너뜀 0개.
 계약 출력·권한·버전 충돌·같은 원본 확인·재조회·명시적 선택 변경·기록 실패 시 트랜잭션 롤백을 검사했다.
 JPA 엔티티/잠금 HQL 매핑도 DB 연결 없이 검사한다. 추가로 격리된 실제 MySQL에서 커밋·롤백·동시 선택 등 8개를 통과했다.
-상세 범위와 재현 방법은 [MYSQL_VERIFICATION.md](MYSQL_VERIFICATION.md)를 참고한다. 브라우저/JWT 통합은 미검증이다.
+상세 범위와 재현 방법은 [MYSQL_VERIFICATION.md](MYSQL_VERIFICATION.md)를 참고한다. 2026-11-13에는 실제 JWT 필터→A 컨트롤러→격리 MySQL까지 검증했다. 브라우저 클릭은 미검증이다.
 기존 DB의 D 수정 기록 조건은 [D README](../revision/README.md)를 확인해야 한다.
 프론트는 12개 검사·A 영역 ESLint·전체 빌드를 통과했다. 유료 API·Ollama·실제 데이터는 사용하지 않았다.
 공용 계약·설정·의존성·CI 파일은 수정하지 않았다.

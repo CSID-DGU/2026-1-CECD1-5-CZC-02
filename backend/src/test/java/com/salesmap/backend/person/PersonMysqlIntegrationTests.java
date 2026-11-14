@@ -23,7 +23,6 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContextInitializer;
@@ -50,26 +49,42 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+import org.springframework.test.web.servlet.MockMvc;
+import com.salesmap.backend.global.security.JwtTokenProvider;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.assertj.core.api.Assertions.*;
 
 /** 실제 MySQL 선택 검증. 일반 CI의 *Test 패턴에서 빠지고 명시적 opt-in에서만 실행한다. */
 @EnabledIfEnvironmentVariable(named="A_PERSON_MYSQL_TEST",matches="true")
-@SpringBootTest(classes=PersonMysqlIntegrationTests.MysqlConfig.class,webEnvironment=SpringBootTest.WebEnvironment.NONE,
+@SpringBootTest(classes=PersonMysqlIntegrationTests.MysqlConfig.class,webEnvironment=SpringBootTest.WebEnvironment.MOCK,
         properties={"spring.jpa.show-sql=false","spring.jpa.open-in-view=false","spring.sql.init.mode=never",
                 "spring.jpa.hibernate.ddl-auto=create-only","spring.jpa.properties.hibernate.hbm2ddl.halt_on_error=true",
-                "spring.datasource.hikari.maximum-pool-size=6","logging.level.root=WARN"})
+                "spring.datasource.hikari.maximum-pool-size=6","logging.level.root=WARN",
+                "jwt.secret=synthetic-a-integration-test-only-not-a-deployment-secret",
+                "jwt.access-token-expiration-ms=3600000","cors.allowed-origins=http://localhost:5173"})
 @ContextConfiguration(initializers=PersonMysqlIntegrationTests.FreshDatabaseGuard.class)
+@org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 @DirtiesContext(classMode=DirtiesContext.ClassMode.AFTER_CLASS)
 class PersonMysqlIntegrationTests {
     private static final Pattern URL=Pattern.compile("jdbc:mysql://127\\.0\\.0\\.1:[0-9]+/(a_identity_verify_([0-9a-f]{16}))(?:\\?serverTimezone=Asia/Seoul&characterEncoding=UTF-8)?");
 
     @Configuration(proxyBeanMethods=false)
-    @EnableAutoConfiguration(exclude={SecurityAutoConfiguration.class,UserDetailsServiceAutoConfiguration.class})
+    @EnableAutoConfiguration(exclude=UserDetailsServiceAutoConfiguration.class)
     @EntityScan("com.salesmap.backend")
     @EnableJpaRepositories(basePackageClasses={PersonRepository.class,UserRepository.class,SourceRepository.class,
-            MeetingNoteRepository.class,AnalysisRevisionRepository.class})
+            MeetingNoteRepository.class,AnalysisRevisionRepository.class,
+            com.salesmap.backend.demo.repository.DemoWorkspaceRepository.class})
     @EnableJpaAuditing
-    @Import({PersonService.class,PersonIdentityService.class,RevisionServiceClient.class,RevisionService.class})
+    @Import({PersonService.class,PersonIdentityService.class,RevisionServiceClient.class,RevisionService.class,
+            PersonController.class,PersonIdentityController.class,IdentitySelectionExceptionHandler.class,
+            com.salesmap.backend.global.config.SecurityConfig.class,
+            com.salesmap.backend.global.security.JwtTokenProvider.class,
+            com.salesmap.backend.global.security.JwtAuthenticationFilter.class,
+            com.salesmap.backend.global.security.CustomUserDetailsService.class,
+            com.salesmap.backend.global.security.RestAuthenticationEntryPoint.class,
+            com.salesmap.backend.global.security.RestAccessDeniedHandler.class,
+            com.salesmap.backend.global.exception.GlobalExceptionHandler.class})
     static class MysqlConfig {}
 
     static String env(String key){
@@ -108,6 +123,8 @@ class PersonMysqlIntegrationTests {
         }
     }
 
+    @Autowired MockMvc http;
+    @Autowired JwtTokenProvider tokens;
     @Autowired PersonService people;
     @Autowired PersonIdentityService identities;
     @Autowired RevisionService revisions;
@@ -169,6 +186,50 @@ class PersonMysqlIntegrationTests {
         assertThat(personCount()).isEqualTo(count);assertThat(revisionCount()).isZero();
         assertThat(stored(seed).path("decidedBy").asText()).isEqualTo("RULE");
         assertThat(identities.list(fixture.note(),fixture.owner()).get(0).etag()).isEqualTo(seed.etag());
+    }
+
+    /** 실제 보안 필터·JWT·컨트롤러·서비스·DB를 통과한다. 브라우저/외부 AI 호출은 아니다. */
+    @Test void authenticatedModelSelectionPersistsAcrossHttpReadsAndRejectsForeignAndStaleRequests() throws Exception {
+        String bearer="Bearer "+tokens.createAccessToken(fixture.owner(),"synthetic@people.example","USER");
+        String foreign="Bearer "+tokens.createAccessToken(fixture.other(),"synthetic_other@people.example","USER");
+        http.perform(get("/api/persons"))
+                .andExpect(status().isUnauthorized());
+        http.perform(get("/api/persons").header("Authorization","Bearer invalid-test-token"))
+                .andExpect(status().isUnauthorized());
+        String expired="Bearer "+new JwtTokenProvider("synthetic-a-integration-test-only-not-a-deployment-secret",-10000,mapper)
+                .createAccessToken(fixture.owner(),"synthetic@people.example","USER");
+        http.perform(get("/api/persons").header("Authorization",expired)).andExpect(status().isUnauthorized());
+        var created=http.perform(post("/api/persons")
+                        .header("Authorization",bearer).contentType("application/json").content(person("가상인물_0001").toString()))
+                .andExpect(status().isOk()).andReturn();
+        String personId=mapper.readTree(created.getResponse().getContentAsString()).path("data").path("personId").asText();
+        http.perform(get("/api/persons/"+personId).header("Authorization",foreign)).andExpect(status().isNotFound());
+        http.perform(get("/api/persons").header("Authorization",bearer).param("q","가상인물_0001"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.data[0].personId").value(personId));
+        String id="ir_http_"+UUID.randomUUID().toString().replace("-","");
+        ObjectNode model=proposal(id,personId).put("decidedBy","MODEL").put("modelVersion","identity-logistic-v1");
+        ((ObjectNode)model.path("candidates").get(0)).put("score",0.72);
+        identities.storeProposals(fixture.source(),List.of(model),fixture.owner());
+        String route="/api/person-identities/for-note/"+fixture.note();
+        var listed=http.perform(get(route).header("Authorization",bearer))
+                .andExpect(status().isOk()).andReturn();
+        String etag=mapper.readTree(listed.getResponse().getContentAsString()).path("data").get(0).path("etag").asText();
+        String selection=route+"/"+id+"/selection";
+        http.perform(post(selection).header("Authorization",foreign)
+                        .header("If-Match",etag).contentType("application/json").content(choose(personId).toString()))
+                .andExpect(status().isNotFound());
+        http.perform(post(selection).header("Authorization",bearer)
+                        .header("If-Match",etag).contentType("application/json").content(choose(personId).toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.resolution.decidedBy").value("HUMAN"));
+        http.perform(get(route).header("Authorization",bearer))
+                .andExpect(jsonPath("$.data[0].resolution.personId").value(personId))
+                .andExpect(jsonPath("$.data[0].resolution.decidedBy").value("HUMAN"));
+        http.perform(post(selection).header("Authorization",bearer)
+                        .header("If-Match",etag).contentType("application/json").content(createBody().toString()))
+                .andExpect(status().isConflict());
+        assertThat(personCount()).isEqualTo(1);assertThat(revisionCount()).isEqualTo(1);
+        assertThat(jdbc.queryForObject("select proposed_by from analysis_revisions where owner_user_id=?",String.class,fixture.owner())).isEqualTo("MODEL");
     }
 
     @Test void registrationSearchAndOwnerIsolationUseActualMysql() throws Exception {

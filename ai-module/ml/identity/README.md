@@ -22,7 +22,7 @@ A의 비교 단서·충돌 처리·팀 검토 사항은 [../../app/identity/RULE
 이름의 편집 거리·문자열 유사도는 app/identity/similarity.py에서 계산하며 확률로 해석하지 않는다.
 정확한 이름/별칭·연락처 일치에 따른 내부 검토 후보 선별은 app/identity/candidates.py에 구현했다.
 유사도 기반 내부 검색·순위는 app/identity/ranking.py에 구현했다.
-외부 응답의 확률 score는 D-022에 따라 null이다. API의 세 판정은 engine.py에 구현했으며
+규칙 응답의 score는 D-022에 따라 null이다. 현재 기본 API는 규칙+로지스틱 혼합이며 MODEL 후보만 합성 자료에서 보정한 score를 사용한다([HYBRID](../../app/identity/HYBRID.md)). 규칙의 세 판정은 engine.py에 구현했으며
 사람 선택·인물 저장·병합은 하지 않는다. 공용 파일은 app/main.py 라우트 등록 두 줄만 추가했다.
 
 ## 실행
