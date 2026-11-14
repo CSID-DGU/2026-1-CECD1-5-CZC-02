@@ -49,3 +49,19 @@ def test_validation_rejects_duplicate_observations_and_unknown_gold_ids():
     data["queries"][0]["expected"]["targetPersonIds"] = ["p_missing"]
     with pytest.raises(AssertionError):
         validate_data(data)
+
+
+def test_archived_data_reproduces_original_hash_and_never_overwrites(tmp_path):
+    import json
+    from ml.identity.reproduce_fresh_data import ROOT, reproduce
+    from ml.identity.controlled_data import digest
+    output = tmp_path / "dataset.json"
+    result = reproduce(output)
+    data = json.loads(output.read_text(encoding="utf-8"))
+    frozen = json.loads((ROOT/"frozen_protocol.json").read_text(encoding="utf-8"))
+    assert digest(data) == frozen["datasetSha256"] == result["datasetSha256"]
+    assert result["persons"] == 240 and result["queries"] == 560
+    before = output.read_bytes()
+    with pytest.raises(FileExistsError):
+        reproduce(output)
+    assert output.read_bytes() == before

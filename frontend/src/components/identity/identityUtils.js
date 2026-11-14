@@ -44,3 +44,13 @@ export function identityError(error) {
   if (error.response?.status === 409) return '다른 화면에서 변경됐거나 이미 선택했어요. 다시 불러와 확인해 주세요.';
   return error.response?.data?.message || error.message || '저장하지 못했어요. 입력을 유지했으니 다시 확인해 주세요.';
 }
+
+// 기존 RULE 응답의 반복 안내도 후보별 근거와 분리해 참석자마다 한 번만 보여 준다.
+export function groupCandidateReasons(candidates = []) {
+  const notice = reason => /^후보가 \d+명입니다\./u.test(reason);
+  const visible = candidates.slice(0, 3);
+  return {
+    notices: [...new Set(visible.flatMap(candidate => (candidate.reasons || []).filter(notice)))],
+    candidates: visible.map(candidate => ({ ...candidate, reasons: (candidate.reasons || []).filter(reason => !notice(reason)) })),
+  };
+}

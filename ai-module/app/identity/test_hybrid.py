@@ -12,6 +12,8 @@ from app.identity.hybrid import resolve_identities
 from app.identity.engine import resolve_identities as rule_resolve, validators
 from ml.identity.learned_comparison import features as training_features
 from app.main import app
+from ml.identity.fresh_validation import make_fresh
+from ml.identity.controlled_data import digest
 
 ROOT = Path(__file__).resolve().parents[2] / "ml/identity"
 
@@ -22,13 +24,18 @@ def hybrid_mode(monkeypatch):
 
 
 def fixture():
-    data = json.loads((ROOT/"results/fresh_validation_v1/dataset.json").read_text(encoding="utf-8"))
+    frozen = json.loads((ROOT/"results/fresh_validation_v1/frozen_protocol.json").read_text(encoding="utf-8"))
+    data = make_fresh(seed=frozen["seed"])
+    assert digest(data) == frozen["datasetSha256"]
     return data
 
 
 def test_runtime_features_and_responses_match_frozen_experiment():
     data = fixture()
-    expected = {p["queryId"]: p for p in json.loads((ROOT/"results/fresh_validation_v1/predictions.json").read_text(encoding="utf-8")) if p["model"] == "logistic"}
+    snapshot = json.loads((ROOT/"results/fresh_validation_v1/runtime_predictions.json").read_text(encoding="utf-8"))
+    assert digest(data) == snapshot["datasetSha256"]
+    expected = {p["queryId"]: p for p in snapshot["predictions"]}
+    assert len(expected) == 56 and set(expected) == {q["queryId"] for q in data["queries"][:56]}
     # 전체 새 검증의 14개 유형을 포함한 앞 4그룹. 실제 엔진 응답과 저장된 실험 결과 대조.
     for q in data["queries"][:56]:
         before = deepcopy(q["mention"])
@@ -83,7 +90,7 @@ def test_maximal_model_score_never_confirms_or_discards_contact_candidates(monke
         assert len(r["candidates"]) == 3
         if case in ("conflicting_name_contact", "shared_email_missing_name"):
             assert set(q["expected"]["targetPersonIds"]) <= {c["personId"] for c in r["candidates"]}
-        assert any("직접 검색" in reason for c in r["candidates"] for reason in c["reasons"])
+        assert sum(reason.startswith("후보가 ") for c in r["candidates"] for reason in c["reasons"]) == 1
 
 
 @pytest.mark.parametrize("failure", [FileNotFoundError, ValueError, KeyError])

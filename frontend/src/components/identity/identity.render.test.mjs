@@ -43,3 +43,10 @@ test('model candidates show reasons without presenting synthetic calibration as 
   assert.match(html,/로지스틱 비교 후보/);assert.match(html,/인물 확인 필요/);
   assert.doesNotMatch(html,/72%|0\.72|사람이 선택 · 저장됨/);
 });
+
+test('overflow notice appears once while each candidate retains its own reasons', () => {
+  const notice='후보가 8명입니다. 표시되지 않은 인물은 인물 대장에서 직접 검색해 주세요.';
+  const html=render({...base,candidates:[17,18,19].map(id => ({personId:`p_${id}`,score:null,reasons:[`고유 근거 ${id}`,notice]}))});
+  assert.equal((html.match(/후보가 8명입니다/g)||[]).length,1);
+  for(const id of [17,18,19]) assert.match(html,new RegExp(`고유 근거 ${id}`));
+});
