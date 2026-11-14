@@ -1,5 +1,7 @@
 package com.salesmap.backend.person;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmap.backend.minutes.dto.MeetingNoteDocument;
@@ -8,6 +10,8 @@ import com.salesmap.backend.minutes.entity.MeetingNoteStatus;
 import com.salesmap.backend.minutes.repository.MeetingNoteRepository;
 import com.salesmap.backend.minutes.service.MeetingNoteService;
 import com.salesmap.backend.source.entity.SourceStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
@@ -16,6 +20,7 @@ import java.util.List;
 /** B 저장본 읽기만 한다. 이름이나 A 후보를 확정된 미팅 이력으로 추측하지 않는다. */
 @Service
 public class PersonHistoryService {
+    private static final Logger log = LoggerFactory.getLogger(PersonHistoryService.class);
     private final PersonService people;
     private final MeetingNoteRepository notes;
     private final MeetingNoteService meetings;
@@ -35,20 +40,37 @@ public class PersonHistoryService {
                 .filter(n -> n.getUser().getId().equals(owner) && n.getSource().getUser().getId().equals(owner))
                 .filter(n -> !n.isArchived() && n.getStatus()==MeetingNoteStatus.CONFIRMED
                         && n.getSource().getStatus()!=SourceStatus.DELETED)
-                .filter(n -> contains(n.getParticipantsJson(),personId) || contains(n.getPerPersonJson(),personId))
+                .filter(n -> matchesPerson(n,personId))
                 .sorted(Comparator.comparing(MeetingNote::getOccurredAt,
                         Comparator.nullsLast(Comparator.reverseOrder())).thenComparing(MeetingNote::getId,Comparator.reverseOrder()))
                 .skip((long)page*size).limit(size)
                 .map(n -> meetings.getMeetingNote("mn_"+n.getId(),owner).meetingNote()).toList();
     }
 
-    private boolean contains(String json,String personId) {
-        if(json==null) return false;
+    private boolean matchesPerson(MeetingNote note,String personId) {
         try {
-            JsonNode rows=mapper.readTree(json);
-            if(!rows.isArray()) throw new IllegalArgumentException();
-            for(JsonNode row:rows) if(personId.equals(row.path("personId").asText(null))) return true;
+            // 첫 배열에서 ID가 맞아도 두 배열을 모두 검사한다. 깨진 노트는 전체를 건너뛴다.
+            boolean participant=contains(note.getParticipantsJson(),personId);
+            boolean perPerson=contains(note.getPerPersonJson(),personId);
+            return participant || perPerson;
+        } catch(JsonProcessingException | IllegalArgumentException error) {
+            // 원문 JSON·인물 단서·예외 메시지를 로그에 복사하지 않는다.
+            log.warn("사람별 이력에서 인물 연결 JSON이 잘못된 회의록을 건너뜁니다. noteId=mn_{}",note.getId());
             return false;
-        } catch(Exception error) { throw new IllegalStateException("저장된 회의록의 인물 연결 형식을 확인해야 합니다."); }
+        }
+    }
+
+    private boolean contains(String json,String personId) throws JsonProcessingException {
+        if(json==null) return false;
+        JsonNode rows=mapper.reader().with(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).readTree(json);
+        if(rows==null || !rows.isArray()) throw new IllegalArgumentException();
+        boolean found=false;
+        for(JsonNode row:rows) {
+            if(!row.isObject()) throw new IllegalArgumentException();
+            JsonNode id=row.get("personId");
+            if(id!=null && !id.isNull() && !id.isTextual()) throw new IllegalArgumentException();
+            found |= id!=null && id.isTextual() && personId.equals(id.textValue());
+        }
+        return found;
     }
 }

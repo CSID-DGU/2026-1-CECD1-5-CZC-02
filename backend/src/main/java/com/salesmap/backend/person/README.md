@@ -105,3 +105,5 @@ bash ./gradlew test --tests '*Test'
 GET `/api/persons/{personId}/meetings?page=0&size=20`은 본인 인물·본인 원본·미보관·미삭제·확정 회의록 중 저장된 personId가 정확히 연결된 기록만 반환한다. data는 기존 meeting_note 계약 배열이다. 이름 또는 A의 미반영 선택으로 이력을 추정하지 않는다. 미팅 시각 최신순(미기록은 마지막), ID 역순으로 정렬한 뒤 페이지를 적용한다. size는 1~100이다. B 저장소/조회 서비스는 읽기만 하며 B 데이터는 갱신하지 않는다.
 
 사람 화면 접속·정확한 한계는 [PEOPLE_SCREEN.md](../../../../../../../../frontend/src/components/identity/PEOPLE_SCREEN.md)를 참고한다. 전체 본인 회의록을 먼저 읽는 초기 방식이라 대량 데이터에서는 쿼리 최적화가 필요하다.
+
+PR #48 후속: 참석자/perPerson JSON 파손은 해당 회의록만 이력에서 제외하고 noteId만 경고 로그에 남긴다. 파손 제외 뒤 페이지를 계산하며 DB/서비스 오류 전체를 정상 빈 목록으로 바꾸지는 않는다.

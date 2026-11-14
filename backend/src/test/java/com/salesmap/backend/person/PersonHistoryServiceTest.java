@@ -10,6 +10,11 @@ import com.salesmap.backend.minutes.repository.MeetingNoteRepository;
 import com.salesmap.backend.minutes.service.MeetingNoteService;
 import com.salesmap.backend.source.entity.SourceStatus;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -74,10 +79,32 @@ class PersonHistoryServiceTest {
         assertThatThrownBy(() -> history.list("p_17",0,101,7L)).isInstanceOf(IllegalArgumentException.class);
         verifyNoInteractions(notes,meetings);
     }
-    @Test void malformedStoredLinksFailRatherThanPretendThereIsNoHistory() {
-        var broken=note(1,"{broken",null);
-        when(notes.findByUserId(7L)).thenReturn(List.of(broken));
-        assertThatThrownBy(() -> history.list("p_17",0,20,7L)).isInstanceOf(IllegalStateException.class);
+    @ParameterizedTest
+    @ValueSource(strings={"{private_raw_marker", "null", "{}", "[null]", "[7]", "[{\"personId\":17}]", "[] trailing", ""})
+    @ExtendWith(OutputCaptureExtension.class)
+    void malformedStoredLinksSkipOnlyThatNoteAndNeverLogThePayload(String json,CapturedOutput output) {
+        var broken=note(1,json,null);
+        var valid=note(2,"[{\"personId\":\"p_17\"}]",null);returned(2);
+        when(notes.findByUserId(7L)).thenReturn(List.of(broken,valid));
+        assertThat(history.list("p_17",0,20,7L)).extracting(MeetingNoteDocument::noteId).containsExactly("mn_2");
+        assertThat(output.getOut()).contains("noteId=mn_1").doesNotContain("private_raw_marker");
+        verify(meetings,never()).getMeetingNote("mn_1",7L);
+    }
+    @Test void malformedPerPersonOrLaterRowsSkipWholeNoteBeforePagination() {
+        var brokenPerPerson=note(1,"[{\"personId\":\"p_17\"}]","{broken");
+        var brokenLaterRow=note(2,"[{\"personId\":\"p_17\"},null]",null);
+        var valid=note(3,"[]","[{\"personId\":\"p_17\"}]");returned(3);
+        when(notes.findByUserId(7L)).thenReturn(List.of(brokenPerPerson,brokenLaterRow,valid));
+        assertThat(history.list("p_17",0,1,7L)).extracting(MeetingNoteDocument::noteId).containsExactly("mn_3");
+        verify(meetings).getMeetingNote("mn_3",7L);verifyNoMoreInteractions(meetings);
+    }
+    @Test void storageAndDocumentServiceFailuresAreNotHiddenAsMalformedLinks() {
+        when(notes.findByUserId(7L)).thenThrow(new IllegalStateException("storage failure"));
+        assertThatThrownBy(() -> history.list("p_17",0,20,7L)).hasMessage("storage failure");
+        var valid=note(1,"[{\"personId\":\"p_17\"}]",null);
+        doReturn(List.of(valid)).when(notes).findByUserId(7L);
+        when(meetings.getMeetingNote("mn_1",7L)).thenThrow(new IllegalStateException("document failure"));
+        assertThatThrownBy(() -> history.list("p_17",0,20,7L)).hasMessage("document failure");
     }
     @Test void outputUsesExistingMeetingNoteContractWithoutAddingIdentityFields() throws Exception {
         var exact=note(1,"[{\"personId\":\"p_17\"}]",null);

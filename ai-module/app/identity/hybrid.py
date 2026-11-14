@@ -34,7 +34,7 @@ def _resolve(mention, persons, model):
         reasons.append("이름 유사도·연락처・소속 비교 단서를 로지스틱 모델로 함께 평가한 후보입니다.")
         if name_matches > 1 and comparison.name.status == "MATCH":
             reasons.append("같은 이름이 여러 인물에 일치 — 동명이인·소속 이동 중 누구인지 확인 필요")
-        if len(ranked) > 3:
+        if len(ranked) > 3 and not candidates:
             reasons.append(f"후보가 {len(ranked)}명입니다. 표시되지 않은 인물은 인물 대장에서 직접 검색해 주세요.")
         reasons.append("이 중 누구인지 확인해 주세요. 신규 등록은 사람이 결정합니다.")
         candidates.append({"personId": comparison.person_id, "score": score, "reasons": reasons})
