@@ -5,3 +5,8 @@ export async function getTodayBriefing(date) {
   return response.data;
 }
 
+export async function getPreparationBriefing(date) {
+  const response = await api.get('/api/briefings/preparation', { params: { date } });
+  return response.data;
+}
+
