@@ -66,6 +66,55 @@ class BriefingServiceTest {
         assertThat(response.items().get(0).preparationItems()).isNotEmpty();
     }
 
+    @Test
+    void preparationIncludesOnlyConfirmedTasksDueTomorrow() throws Exception {
+        JsonNode sample = mapper.readTree(Files.readString(
+                Path.of("..", "contracts", "examples", "task.example.json"), StandardCharsets.UTF_8));
+        List<TaskEntry> entries = new java.util.ArrayList<>();
+        long id = 1L;
+        for (JsonNode task : sample) entries.add(entry(id++, task.toString()));
+        when(repository.findByOwnerIdOrderByIdDesc(7L)).thenReturn(entries);
+
+        var response = service.preparation(7L, LocalDate.of(2026, 10, 20));
+
+        assertThat(response.items()).isEmpty();
+
+        JsonNode tomorrowTask = sample.get(0).deepCopy();
+        ((com.fasterxml.jackson.databind.node.ObjectNode) tomorrowTask)
+                .put("dueDate", "2026-10-21")
+                .remove("prerequisites");
+        TaskEntry tomorrowEntry = entry(4L, tomorrowTask.toString());
+        when(repository.findByOwnerIdOrderByIdDesc(7L)).thenReturn(List.of(tomorrowEntry));
+
+        var tomorrowResponse = service.preparation(7L, LocalDate.of(2026, 10, 20));
+
+        assertThat(tomorrowResponse.items()).hasSize(1);
+        assertThat(tomorrowResponse.items().get(0).preparationItems()).hasSize(3);
+    }
+
+    @Test
+    void todayBundlesDueOverduePendingAndTomorrowTasks() throws Exception {
+        JsonNode sample = mapper.readTree(Files.readString(
+                Path.of("..", "contracts", "examples", "task.example.json"), StandardCharsets.UTF_8));
+        JsonNode today = sample.get(0).deepCopy();
+        JsonNode pending = sample.get(1).deepCopy();
+        JsonNode tomorrow = sample.get(2).deepCopy();
+        ((com.fasterxml.jackson.databind.node.ObjectNode) today).put("dueDate", "2026-10-20");
+        ((com.fasterxml.jackson.databind.node.ObjectNode) pending).put("dueDate", "2026-10-20");
+        ((com.fasterxml.jackson.databind.node.ObjectNode) tomorrow)
+                .put("dueDate", "2026-10-21")
+                .put("status", "CONFIRMED");
+        when(repository.findByOwnerIdOrderByIdDesc(7L)).thenReturn(List.of(
+                entry(1L, today.toString()), entry(2L, pending.toString()), entry(3L, tomorrow.toString())));
+
+        var response = service.today(7L, LocalDate.of(2026, 10, 20));
+
+        assertThat(response.dueToday()).hasSize(1);
+        assertThat(response.overdue()).isEmpty();
+        assertThat(response.pendingConfirmation()).hasSize(1);
+        assertThat(response.tomorrowPreparation()).hasSize(1);
+    }
+
     private TaskEntry entry(Long id, String document) {
         TaskEntry entry = new TaskEntry(7L, "mn_1", "key-" + id, document);
         ReflectionTestUtils.setField(entry, "id", id);
