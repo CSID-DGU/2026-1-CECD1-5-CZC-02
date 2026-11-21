@@ -38,6 +38,9 @@ test('people screen shares the existing app menu and account header without a se
     assert.match(html, /로그아웃/);
     assert.match(html, /사람 목록/);
     assert.match(html, /가상 화면 예시/);
+    const peopleLink=html.match(/<button[^>]*aria-current="page"[\s\S]*?<\/button>/)?.[0];
+    assert.match(peopleLink,/lucide-contact-round/);
+    assert.doesNotMatch(peopleLink,/lucide-users-round/);
     assert.doesNotMatch(html, /people-sidebar/);
   } finally {
     if (storage) Object.defineProperty(globalThis, 'localStorage', storage);
