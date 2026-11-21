@@ -45,14 +45,19 @@
 
 ## 파일과 재현
 
+PR #48 후속 보관 정책·파일 크기·원본 추적 방법은 [ARTIFACTS.md](ARTIFACTS.md)에 있다.
+
 - 생성·평가: `fresh_validation.py`
 - 결과: `results/fresh_validation_v1/report.json`
-- 새 자료·정답: `results/fresh_validation_v1/dataset.json`
-- 질문별 모델 후보: `results/fresh_validation_v1/predictions.json`
+- 새 자료·정답: 고정 seed와 해시로 `reproduce_fresh_data.py`에서 재생성한다 (큰 dataset.json은 Git에서 제거).
+- 질문별 모델 후보: 전체 목록은 원 실험 재현 명령으로 생성한다. 기본 검사에는 기존 결과에서 추출한 앞 56건의 `results/fresh_validation_v1/runtime_predictions.json`을 사용한다.
 - 평가 전 고정 기록: `results/fresh_validation_v1/frozen_protocol.json`
 
 ```bash
 cd ai-module
+# 모델 없이 자료만 재생성; 원 평가 해시 일치를 먼저 확인
+.venv/bin/python -m ml.identity.reproduce_fresh_data --output /tmp/a-fresh-dataset.json
+# 전체 모델 예측 재현 (기존 실험과 같은 sklearn 필요)
 .venv/bin/python -m ml.identity.fresh_validation --output-dir /tmp/a-fresh-new-output
 .venv/bin/python -m pytest ml/identity/test_fresh_validation.py -q
 ```

@@ -1,6 +1,6 @@
 # A 인물 식별 — 현재 상태와 인수인계
 
-기준: 2026-11-13 로컬 `s2/a-people-and-ml-comparison`. GitHub 최신 main과 동일하다고 확인한 기록은 아니다.
+기준: PR #48 리뷰 후속, `main`의 `75271f8`에서 시작한 `s2/a-review-followups`. GitHub 최신 main과 동일하다고 확인한 기록은 아니다.
 이전 실험·인수인계는 [과거 기록](HANDOFF_HISTORY.md)에 보관했다. 과거의 “API·화면 미연결”, 테스트 수, push 상태를 현재 상태로 해석하지 않는다.
 
 ## 구현 완료
@@ -26,16 +26,27 @@ MODEL이 CONFIRMED를 반환하거나 HUMAN을 가장하면 거절한다. 사용
 
 아래는 2026-11-13 실행 결과다. 숫자는 해당 명령의 범위이며 단순 합산하지 않는다.
 
-- AI: `python -m pytest tests app ml -q` — 532 passed, 기존 경고 4개.
-- 프론트: A Node 검사 24개 통과, A ESLint·전체 빌드 통과.
-- 백엔드: 전체 `*Test` 단위 검사 198개 통과, 실패·오류·건너뜀 0개.
-- 격리 MySQL: 9개. 실제 SecurityConfig/JWT 필터 → A 컨트롤러 → 서비스 → 저장/재조회와
+- AI: `python -m pytest tests app ml -q` — 533 passed, 기존 경고 4개.
+- 프론트: A Node 검사 25개 통과, A ESLint·전체 빌드 통과.
+- 백엔드: 전체 `*Test` 단위 검사 207개 통과, 실패·오류·건너뜀 0개.
+- 이전 격리 MySQL 검증(이번에는 재실행하지 않음): 9개. 실제 SecurityConfig/JWT 필터 → A 컨트롤러 → 서비스 → 저장/재조회와
   MODEL 제안의 HUMAN 선택·Revision, 만료/잘못된 토큰, 타 사용자 접근, 오래된 버전 거절 포함.
   [재현 방법](../../../backend/src/main/java/com/salesmap/backend/person/MYSQL_VERIFICATION.md)
 
 격리 검사는 무작위 임시 DB/계정만 사용하고 실행 후 제거한다. 기존 앱 DB·실제 고객 자료·유료 API는 사용하지 않는다.
 MockMvc는 실제 보안 필터를 통과하지만 브라우저 클릭이나 실제 TCP 서버 검증은 아니다.
 401 앱 로그인 문제는 사용자가 해결했다고 확인했다. 이 작업에서 인증 설정을 변경하지 않았다.
+
+## PR #48 리뷰 후속 5개
+
+1. 참석자/perPerson JSON이 깨진 노트만 이력에서 제외하고 noteId만 경고 로그에 남긴다. 두 배열 전체를 검사하고 제외 뒤 페이지를 계산한다. DB/서비스 장애는 숨기지 않는다.
+2. 재생성 가능한 dataset·전체 predictions를 제거하고, 기존 logistic 56건 스냅샷과 필수 원 학습 보고서를 보존했다. 대상 자료는 1,306,074 → 397,471바이트(69.6% 감소). [보관·재현 규칙](ARTIFACTS.md) 참고.
+3. 공용 DashboardLayout의 사람 메뉴 아이콘만 ContactRound로 구분했다. 사용자 요청 범위의 공용 파일 수정이다.
+4. 개발용 people.html·people-entry.jsx를 삭제하고 기존 `/people` 보호 경로를 유지한다.
+5. 혼합 API의 후보 수 안내는 첫 후보에만 넣고 화면에서는 목록 위에 한 번 보여 준다. 이전 RULE 응답의 반복 안내도 중복 제거하며 후보별 근거는 남긴다.
+
+원본 데이터는 재생성 명령으로 JSON 바이트까지 일치함을 확인했고, 원 controlled 보고서·모델 계수는 변경하지 않았다.
+후보 검색/순위/확정 기준과 contracts·B 코드도 변경하지 않았다. 이번 후속의 커밋·push·리뷰 상태는 `s2/a-review-followups` 브랜치의 PR에서 확인한다.
 
 ## 다른 담당자와 이어야 하는 일
 

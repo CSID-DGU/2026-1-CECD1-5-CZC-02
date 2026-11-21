@@ -1,0 +1,491 @@
+{
+  "description": "Original logistic predictions for the first 56 queries (all 14 case types); extracted without rerunning models.",
+  "datasetSha256": "9e44904be0b9ce669339002346e8001119166af85ff968a4de94bde70ad22ed6",
+  "fullPredictionsSha256": "b4a4a373cdaedb0f85cb3cd2051dc67779c9cd3345e5c73a88859cab6684badb",
+  "seed": 816293,
+  "groups": 40,
+  "predictions": [
+    {
+      "queryId": "q_fresh_816293_0_phone_only",
+      "decision": "CONFIRMED",
+      "personId": "p_fresh_816293_5",
+      "candidateIds": [
+        "p_fresh_816293_5"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_0_domain_case_honorific",
+      "decision": "CONFIRMED",
+      "personId": "p_fresh_816293_5",
+      "candidateIds": [
+        "p_fresh_816293_5"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_0_unicode_registered_alias",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_5"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_0_alias_with_extra_space",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_5"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_0_alias_punctuation_typo",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_5",
+        "p_fresh_816293_133",
+        "p_fresh_816293_132"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_0_compound_typo_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_5"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_0_compound_typo_missing_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_5",
+        "p_fresh_816293_155",
+        "p_fresh_816293_47"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_0_homonym_current_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_0",
+        "p_fresh_816293_1",
+        "p_fresh_816293_2"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_0_homonym_previous_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_0",
+        "p_fresh_816293_1",
+        "p_fresh_816293_2"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_0_shared_email_missing_name",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_4",
+        "p_fresh_816293_0"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_0_conflicting_name_contact",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_4",
+        "p_fresh_816293_0",
+        "p_fresh_816293_5"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_0_four_homonyms_overflow",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_0",
+        "p_fresh_816293_1",
+        "p_fresh_816293_2"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_0_new_distant_identity",
+      "decision": "NEW",
+      "personId": null,
+      "candidateIds": []
+    },
+    {
+      "queryId": "q_fresh_816293_0_company_without_identity",
+      "decision": "NEW",
+      "personId": null,
+      "candidateIds": []
+    },
+    {
+      "queryId": "q_fresh_816293_1_phone_only",
+      "decision": "CONFIRMED",
+      "personId": "p_fresh_816293_11",
+      "candidateIds": [
+        "p_fresh_816293_11"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_1_domain_case_honorific",
+      "decision": "CONFIRMED",
+      "personId": "p_fresh_816293_11",
+      "candidateIds": [
+        "p_fresh_816293_11"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_1_unicode_registered_alias",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_11"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_1_alias_with_extra_space",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_11"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_1_alias_punctuation_typo",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_11",
+        "p_fresh_816293_164",
+        "p_fresh_816293_118"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_1_compound_typo_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_11"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_1_compound_typo_missing_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_11",
+        "p_fresh_816293_215",
+        "p_fresh_816293_203"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_1_homonym_current_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_6",
+        "p_fresh_816293_7",
+        "p_fresh_816293_8"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_1_homonym_previous_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_6",
+        "p_fresh_816293_7",
+        "p_fresh_816293_8"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_1_shared_email_missing_name",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_6",
+        "p_fresh_816293_10"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_1_conflicting_name_contact",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_6",
+        "p_fresh_816293_10",
+        "p_fresh_816293_11"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_1_four_homonyms_overflow",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_6",
+        "p_fresh_816293_7",
+        "p_fresh_816293_8"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_1_new_distant_identity",
+      "decision": "NEW",
+      "personId": null,
+      "candidateIds": []
+    },
+    {
+      "queryId": "q_fresh_816293_1_company_without_identity",
+      "decision": "NEW",
+      "personId": null,
+      "candidateIds": []
+    },
+    {
+      "queryId": "q_fresh_816293_2_phone_only",
+      "decision": "CONFIRMED",
+      "personId": "p_fresh_816293_17",
+      "candidateIds": [
+        "p_fresh_816293_17"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_2_domain_case_honorific",
+      "decision": "CONFIRMED",
+      "personId": "p_fresh_816293_17",
+      "candidateIds": [
+        "p_fresh_816293_17"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_2_unicode_registered_alias",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_17"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_2_alias_with_extra_space",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_17"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_2_alias_punctuation_typo",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_17",
+        "p_fresh_816293_237",
+        "p_fresh_816293_50"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_2_compound_typo_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_17"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_2_compound_typo_missing_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_17",
+        "p_fresh_816293_107",
+        "p_fresh_816293_173"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_2_homonym_current_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_12",
+        "p_fresh_816293_13",
+        "p_fresh_816293_14"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_2_homonym_previous_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_12",
+        "p_fresh_816293_13",
+        "p_fresh_816293_14"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_2_shared_email_missing_name",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_12",
+        "p_fresh_816293_16"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_2_conflicting_name_contact",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_12",
+        "p_fresh_816293_16",
+        "p_fresh_816293_17"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_2_four_homonyms_overflow",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_12",
+        "p_fresh_816293_13",
+        "p_fresh_816293_14"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_2_new_distant_identity",
+      "decision": "NEW",
+      "personId": null,
+      "candidateIds": []
+    },
+    {
+      "queryId": "q_fresh_816293_2_company_without_identity",
+      "decision": "NEW",
+      "personId": null,
+      "candidateIds": []
+    },
+    {
+      "queryId": "q_fresh_816293_3_phone_only",
+      "decision": "CONFIRMED",
+      "personId": "p_fresh_816293_23",
+      "candidateIds": [
+        "p_fresh_816293_23"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_3_domain_case_honorific",
+      "decision": "CONFIRMED",
+      "personId": "p_fresh_816293_23",
+      "candidateIds": [
+        "p_fresh_816293_23"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_3_unicode_registered_alias",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_23"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_3_alias_with_extra_space",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_23"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_3_alias_punctuation_typo",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_23",
+        "p_fresh_816293_187",
+        "p_fresh_816293_124"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_3_compound_typo_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_23"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_3_compound_typo_missing_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_23"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_3_homonym_current_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_18",
+        "p_fresh_816293_19",
+        "p_fresh_816293_20"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_3_homonym_previous_company",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_18",
+        "p_fresh_816293_19",
+        "p_fresh_816293_20"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_3_shared_email_missing_name",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_18",
+        "p_fresh_816293_22"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_3_conflicting_name_contact",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_18",
+        "p_fresh_816293_22",
+        "p_fresh_816293_23"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_3_four_homonyms_overflow",
+      "decision": "CANDIDATES",
+      "personId": null,
+      "candidateIds": [
+        "p_fresh_816293_18",
+        "p_fresh_816293_19",
+        "p_fresh_816293_20"
+      ]
+    },
+    {
+      "queryId": "q_fresh_816293_3_new_distant_identity",
+      "decision": "NEW",
+      "personId": null,
+      "candidateIds": []
+    },
+    {
+      "queryId": "q_fresh_816293_3_company_without_identity",
+      "decision": "NEW",
+      "personId": null,
+      "candidateIds": []
+    }
+  ]
+}
