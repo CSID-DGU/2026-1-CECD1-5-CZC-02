@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Settings, Search, LayoutDashboard, ClipboardList, ContactRound, UsersRound, ChevronDown, ChevronRight, Wind, KanbanSquare, FlaskConical, NotebookPen, ClipboardCheck, ListChecks } from 'lucide-react';
+import { Settings, Search, LayoutDashboard, ClipboardList, ContactRound, UsersRound, ChevronDown, ChevronRight, Wind, KanbanSquare, FlaskConical, NotebookPen, ClipboardCheck, ListChecks, CalendarDays } from 'lucide-react';
 import jandiLogo from '../assets/잔디 로고 이미지 .jpg';
 import gmailLogo from '../assets/gmail로고 이미지 spaced.png';
 import { getMe } from '../api/auth';
@@ -306,6 +306,7 @@ export function DashboardLayout({ children }) {
     { path: '/pipeline', icon: KanbanSquare, label: '딜 파이프라인' },
     { path: '/customers', icon: UsersRound, label: '고객 타임라인' },
     { path: '/dashboard', icon: LayoutDashboard, label: '대시보드' },
+    { path: '/briefing/today', icon: CalendarDays, label: '오늘 브리핑' },
     { path: '/history', icon: ClipboardList, label: '처리 이력' },
     { path: '/settings', icon: Settings, label: '설정' },
   ];

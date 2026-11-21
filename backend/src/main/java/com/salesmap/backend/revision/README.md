@@ -1,5 +1,18 @@
 # Revision API
 
+## Existing database migration
+
+`AnalysisRevision` allows revisions that are not linked to an `Analysis` record.
+On a PC where `analysis_revisions` already exists, `ddl-auto=update` may not relax the
+existing `analysis_id` constraint. Run this once before using `POST /api/revisions`:
+
+```sql
+ALTER TABLE analysis_revisions MODIFY analysis_id BIGINT NULL;
+```
+
+New databases receive the nullable column from the JPA mapping. This statement is only
+for existing databases that still have `analysis_id` defined as `NOT NULL`.
+
 D가 제공하는 사람 수정 기록 저장 API다. A/B/C 화면은 AI 제안과 사람이 확정한 값을 이 API에 전달한다.
 
 ## Endpoints
