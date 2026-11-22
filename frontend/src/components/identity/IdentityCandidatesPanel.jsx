@@ -149,7 +149,7 @@ function IdentityPanelContent({ noteId, participants = [], readOnly = false, api
     </>}
     {error && <p role="alert" className="text-xs text-red-700">{error}</p>}
     {message && <p role="status" className="rounded-lg bg-emerald-50 p-2 text-xs text-emerald-800">{message}</p>}
-    <p className="text-[11px] text-slate-500">인물 선택은 저장할 수 있어요. 회의록·할 일에 선택을 반영하는 연결은 아직 준비 중이에요.</p>
+    <p className="text-[11px] text-slate-500">고른 인물은 회의록을 확정할 때 참석자에 연결돼요. 할 일의 상대방은 할 일 카드에서 따로 골라요.</p>
   </div>;
 }
 
