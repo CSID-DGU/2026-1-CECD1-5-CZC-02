@@ -24,6 +24,10 @@ OLLAMA_SEED = int(os.getenv("OLLAMA_SEED", "").strip()) if os.getenv("OLLAMA_SEE
 # 생각 모드(thinking) 모델(qwen3.5·gemma4 등)은 Ollama가 기본으로 생각을 켜서 출력 한도·CPU 시간을 먹는다.
 # 비우면 think 값을 보내지 않는다(모델 기본, qwen2.5 등 지금 동작 그대로). false면 끄고 true면 켠다
 OLLAMA_THINK = {"true": True, "false": False}.get(os.getenv("OLLAMA_THINK", "").strip().lower())
+# 과제별 모델 (D-029): 회의록(task=minutes)만 gemma4:e4b로 부른다. 비우면 OLLAMA_MODEL을 따른다
+OLLAMA_MODEL_MINUTES = os.getenv("OLLAMA_MODEL_MINUTES", "gemma4:e4b").strip()
+# 회의록 모델의 생각 모드. gemma4는 끄지 않으면 출력 한도를 생각에 써 버린다(D-027 측정). 비우면 OLLAMA_THINK를 따른다
+OLLAMA_THINK_MINUTES = {"true": True, "false": False}.get(os.getenv("OLLAMA_THINK_MINUTES", "false").strip().lower())
 
 # LLM provider
 # ollama: 로컬 Ollama만 사용 (기본값, 무료)

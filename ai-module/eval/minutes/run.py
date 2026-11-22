@@ -1,8 +1,8 @@
 """회의록 엔진을 평가셋 10건에 돌리고 채점한다. 로컬 Ollama가 필요하다 (CI에서는 돌리지 않음).
 
 사용법 (ai-module 폴더에서):
-    python -m eval.minutes.run                                   # 기본 OLLAMA_MODEL
-    OLLAMA_MODEL=qwen2.5:7b python -m eval.minutes.run --verbose
+    python -m eval.minutes.run                                   # 기본 회의록 모델 (D-029: OLLAMA_MODEL_MINUTES=gemma4:e4b)
+    OLLAMA_MODEL_MINUTES=qwen2.5:7b OLLAMA_THINK_MINUTES= python -m eval.minutes.run --verbose   # 다른 모델로
     python -m eval.minutes.run --output eval/results/minutes_7b.json
 
 결과 JSON과 같은 이름의 폴더에 케이스별 예측(<caseId>.json)을 남긴다 → score.py --pred로 다시 채점할 수 있다.
@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from app import config
+from app.llm.ollama_provider import OllamaProvider
 from app.minutes import build_meeting_note
 from app.minutes.schemas import MinutesRequest
 from eval.minutes.score import load_cases, print_report, score
@@ -36,6 +37,15 @@ def case_request(case: Dict[str, Any]) -> MinutesRequest:
         attendees=given["attendees"],
     )
 
+
+def minutes_settings(engine: str):
+    """결과 파일의 모델 칸은 회의록에 실제로 쓴 모델로 (D-029 과제별 모델)."""
+    settings = runtime_settings(engine)
+    if settings.get("ollamaModel"):
+        provider = OllamaProvider()
+        settings["ollamaModel"] = provider.model_for("minutes")
+        settings["ollamaThink"] = provider.think_for("minutes")
+    return settings
 
 def evaluate(cases: List[Dict[str, Any]], engine: str, pred_dir: Path) -> Dict[str, Any]:
     pred_dir.mkdir(parents=True, exist_ok=True)
@@ -78,7 +88,7 @@ def evaluate(cases: List[Dict[str, Any]], engine: str, pred_dir: Path) -> Dict[s
     return {
         "task": "minutes",
         "engine": engine,
-        "settings": runtime_settings(engine),
+        "settings": minutes_settings(engine),
         "summary": {key: {"score": value, "n": len(cases)} for key, value in summary.items()},
         "report": {key: value for key, value in report.items() if key != "perCase"},
         "runtime": {
@@ -127,7 +137,7 @@ def main() -> None:
         cases = [case for case in cases if case["caseId"] in wanted]
     cases = cases[: args.limit]
 
-    print(f"회의록 평가 {len(cases)}건 · 모델 {config.OLLAMA_MODEL if config.LLM_PROVIDER != 'openai' else config.OPENAI_MODEL_ANALYSIS}")
+    print(f"회의록 평가 {len(cases)}건 · 모델 {minutes_settings(args.engine)['ollamaModel'] if config.LLM_PROVIDER != 'openai' else config.OPENAI_MODEL_ANALYSIS}")
     payload = evaluate(cases, args.engine, output.with_suffix(""))
     payload["finishedAt"] = datetime.now().isoformat(timespec="seconds")
     report = payload.pop("_report")

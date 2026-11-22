@@ -13,7 +13,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from app.config import AI_ENGINE, OLLAMA_BASE_URL, OLLAMA_MODEL, SERVER_HOST, SERVER_PORT, BACKEND_URL, EMBEDDING_CLASSIFIER_ENABLED, EMBEDDING_MODEL_NAME, GLINER_ENABLED, GLINER_MODEL_NAME
+from app.config import AI_ENGINE, OLLAMA_BASE_URL, OLLAMA_MODEL, OLLAMA_MODEL_MINUTES, SERVER_HOST, SERVER_PORT, BACKEND_URL, EMBEDDING_CLASSIFIER_ENABLED, EMBEDDING_MODEL_NAME, GLINER_ENABLED, GLINER_MODEL_NAME
 from app.routes.analyze import router as analyze_router
 from app.routes.minutes import router as minutes_router
 from app.identity.api import router as identity_router
@@ -87,7 +87,7 @@ async def startup_event():
     print(f"📌 Embedding Classifier: {EMBEDDING_CLASSIFIER_ENABLED} / {EMBEDDING_MODEL_NAME}")
     print(f"📌 Entity Extractor: {GLINER_ENABLED} / {GLINER_MODEL_NAME}")
     if AI_ENGINE in {"ollama", "llm", "hybrid"}:
-        print(f"📌 Ollama: {OLLAMA_BASE_URL} / {OLLAMA_MODEL}")
+        print(f"📌 Ollama: {OLLAMA_BASE_URL} / {OLLAMA_MODEL} (회의록: {OLLAMA_MODEL_MINUTES or OLLAMA_MODEL})")
 
 
 @app.on_event("shutdown")
