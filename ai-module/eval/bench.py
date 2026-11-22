@@ -45,6 +45,8 @@ ALLOWED_ENV_KEYS = {
     "OLLAMA_TEMPERATURE",
     "OLLAMA_SEED",
     "OLLAMA_THINK",
+    "OLLAMA_MODEL_MINUTES",
+    "OLLAMA_THINK_MINUTES",
     "OPENAI_MODEL_ANALYSIS",
     "OPENAI_REASONING_EFFORT",
     "OPENAI_TIMEOUT_SECONDS",
@@ -185,6 +187,10 @@ def build_child_env(config: BenchConfig, base_env: Dict[str, str], budget_usd: f
     env.update(code_defaults())
     env["OLLAMA_SEED"] = DEFAULT_OLLAMA_SEED
     env.update(config.env)
+    if "OLLAMA_MODEL" in config.env and "OLLAMA_MODEL_MINUTES" not in config.env:
+        # 후보 모델 비교: 회의록도 그 후보로 잰다 (기본값의 회의록 전용 모델 D-029로 고정되지 않게)
+        env["OLLAMA_MODEL_MINUTES"] = config.env["OLLAMA_MODEL"]
+        env["OLLAMA_THINK_MINUTES"] = config.env.get("OLLAMA_THINK", "")
     env["PYTHONIOENCODING"] = "utf-8"
     if config.paid:
         # 키는 사용자 환경 변수나 .env에서 자식 프로세스가 직접 읽는다. 이 실행만의 예산 상한을 건다.

@@ -99,6 +99,18 @@ def test_unset_model_variables_are_pinned_to_code_defaults():
     assert candidate["OLLAMA_MODEL"] == "cand:7b"
 
 
+def test_candidate_model_is_also_used_for_minutes():
+    # D-029 회의록 전용 모델은 기본 설정에서만 쓴다. 후보 모델을 비교할 때는 회의록도 그 후보로 잰다
+    defaults = bench.code_defaults()
+    plain = bench.build_child_env(config(engine="ollama"), {}, budget_usd=1.0)
+    candidate = bench.build_child_env(config(engine="ollama", env={"OLLAMA_MODEL": "cand:7b", "OLLAMA_THINK": "false"}), {}, budget_usd=1.0)
+    pinned = bench.build_child_env(config(engine="ollama", env={"OLLAMA_MODEL": "cand:7b", "OLLAMA_MODEL_MINUTES": "other:4b"}), {}, budget_usd=1.0)
+
+    assert plain["OLLAMA_MODEL_MINUTES"] == defaults["OLLAMA_MODEL_MINUTES"] == "gemma4:e4b"
+    assert candidate["OLLAMA_MODEL_MINUTES"] == "cand:7b" and candidate["OLLAMA_THINK_MINUTES"] == "false"
+    assert pinned["OLLAMA_MODEL_MINUTES"] == "other:4b"
+
+
 def test_paid_config_child_gets_budget_cap():
     paid = config("openai", engine="ollama", env={"LLM_PROVIDER": "openai"})
 
