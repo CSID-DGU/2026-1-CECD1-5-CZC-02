@@ -307,6 +307,12 @@ public class MeetingNote extends BaseEntity {
         this.missingFieldsJson = missingFieldsJson;
     }
 
+    /** 참석자 영역(A 식별 결과)의 personId 반영. 내용 칸은 건드리지 않는다. */
+    public void linkParticipants(String participantsJson, String perPersonJson) {
+        this.participantsJson = participantsJson;
+        this.perPersonJson = perPersonJson;
+    }
+
     public void markConfirmed(boolean withoutEdit) {
         this.status = MeetingNoteStatus.CONFIRMED;
         this.confirmedAt = LocalDateTime.now();

@@ -34,6 +34,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -239,6 +240,7 @@ class MeetingNoteFromMailTest {
                 userRepository,
                 aiClient,
                 identityClient,
+                (sourceId, userId) -> Map.of(),
                 taskDraftClient,
                 mock(RevisionClient.class),
                 mock(ApplicationEventPublisher.class),

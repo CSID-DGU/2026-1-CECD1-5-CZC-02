@@ -31,6 +31,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -87,6 +88,7 @@ class MeetingNoteArchiveTest {
                 userRepository,
                 aiClient,
                 new FakeIdentityResolutionClient(objectMapper),
+                (sourceId, userId) -> Map.of(),
                 taskDraftClient,
                 revisionClient,
                 mock(ApplicationEventPublisher.class),

@@ -10,6 +10,7 @@ import com.salesmap.backend.ai.dto.AiMinutesRequest;
 import com.salesmap.backend.ai.dto.AiMinutesResponse;
 import com.salesmap.backend.ai.exception.AiClientException;
 import com.salesmap.backend.minutes.client.AttendeeMention;
+import com.salesmap.backend.minutes.client.IdentityDecisionReader;
 import com.salesmap.backend.minutes.client.IdentityResolutionClient;
 import com.salesmap.backend.minutes.client.RevisionClient;
 import com.salesmap.backend.minutes.client.RevisionRecord;
@@ -44,6 +45,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -76,6 +78,7 @@ public class MeetingNoteService {
     private final UserRepository userRepository;
     private final AiClient aiClient;
     private final IdentityResolutionClient identityResolutionClient;
+    private final IdentityDecisionReader identityDecisionReader;
     private final TaskDraftClient taskDraftClient;
     private final RevisionClient revisionClient;
     private final ApplicationEventPublisher eventPublisher;
@@ -87,6 +90,7 @@ public class MeetingNoteService {
             UserRepository userRepository,
             AiClient aiClient,
             IdentityResolutionClient identityResolutionClient,
+            IdentityDecisionReader identityDecisionReader,
             TaskDraftClient taskDraftClient,
             RevisionClient revisionClient,
             ApplicationEventPublisher eventPublisher,
@@ -97,6 +101,7 @@ public class MeetingNoteService {
         this.userRepository = userRepository;
         this.aiClient = aiClient;
         this.identityResolutionClient = identityResolutionClient;
+        this.identityDecisionReader = identityDecisionReader;
         this.taskDraftClient = taskDraftClient;
         this.revisionClient = revisionClient;
         this.eventPublisher = eventPublisher;
@@ -396,6 +401,7 @@ public class MeetingNoteService {
             }
         }
 
+        applyIdentityDecisions(note, draft, authenticatedUserId);
         note.markConfirmed(withoutEdit);
         MeetingNoteDocument document = toDocument(note);
         // 캘린더 같은 외부 효과는 커밋 뒤에 (MeetingNoteHandoffListener)
@@ -526,6 +532,41 @@ public class MeetingNoteService {
                 "RULE",
                 null
         );
+    }
+
+    /**
+     * 확인 화면에서 사람이 고른 인물(A 저장)을 참석자·사람별 칸의 personId로 옮긴다. 확정 직전에 한 번만 한다 —
+     * 확정 뒤에는 A가 선택 변경을 막으므로 이후 어긋나지 않는다. 고르지 않은 참석자는 그대로(null) 둔다.
+     * 새 결정이 아니라 A가 기록한 결정을 옮기는 것이라 수정 기록을 따로 남기지 않는다 (A가 IDENTITY_CANDIDATE로 남김).
+     */
+    private void applyIdentityDecisions(MeetingNote note, MeetingNoteDocument draft, Long userId) {
+        Map<String, String> decided = identityDecisionReader.decidedPersonIds(toSourceId(note.getSource().getId()), userId);
+        if (decided.isEmpty() || draft.participants() == null) {
+            return;
+        }
+        Map<String, String> linkedByName = new HashMap<>();
+        boolean changed = false;
+        List<MeetingNoteDocument.Participant> participants = new ArrayList<>();
+        for (MeetingNoteDocument.Participant participant : draft.participants()) {
+            String personId = participant.resolutionId() == null ? null : decided.get(participant.resolutionId());
+            if (personId == null || personId.equals(participant.personId())) {
+                participants.add(participant);
+                continue;
+            }
+            participants.add(new MeetingNoteDocument.Participant(participant.displayName(), participant.resolutionId(), personId));
+            linkedByName.put(participant.displayName(), personId);
+            changed = true;
+        }
+        if (!changed) {
+            return;
+        }
+        List<MeetingNoteDocument.PerPerson> perPerson = draft.perPerson() == null ? null : draft.perPerson().stream()
+                .map(row -> linkedByName.containsKey(row.displayName())
+                        ? new MeetingNoteDocument.PerPerson(row.displayName(), linkedByName.get(row.displayName()),
+                                row.status(), row.request(), row.followUp())
+                        : row)
+                .toList();
+        note.linkParticipants(writeJson(participants), perPerson == null ? null : writeJson(perPerson));
     }
 
     /** A 식별 결과 중 mention.name이 같은 것을 연결한다 (AI 모듈 engine과 같은 규칙). */

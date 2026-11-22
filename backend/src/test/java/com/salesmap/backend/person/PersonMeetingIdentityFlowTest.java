@@ -27,6 +27,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -64,7 +65,7 @@ class PersonMeetingIdentityFlowTest {
         RestClient.Builder builder=RestClient.builder().baseUrl("http://identity.test");
         server=MockRestServiceServer.bindTo(builder).build();
         var identity=new PersonIdentityResolutionClient(people,identities,mapper,builder.build());
-        flow=new MeetingNoteService(notes,sources,users,minutes,identity,tasks,revisions,events,mapper);
+        flow=new MeetingNoteService(notes,sources,users,minutes,identity,(sourceId,userId) -> Map.of(),tasks,revisions,events,mapper);
         // B의 기존 실패 처리도 실제로 통과시켜 회의록 내용 없이 연결 정보가 보존되는지 검사한다.
         when(minutes.generateMinutes(any())).thenThrow(new AiClientException("테스트용 회의록 엔진 실패"));
         when(tasks.draftTasks(any(),anyLong())).thenReturn(List.of());

@@ -30,6 +30,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -157,6 +158,7 @@ class MeetingNoteContractTest {
                 userRepository,
                 aiClient,
                 new FakeIdentityResolutionClient(objectMapper),
+                (sourceId, userId) -> Map.of(),
                 // 할 일 형식은 C 패키지 테스트가 검사한다
                 mock(TaskDraftClient.class),
                 (revision, userId) -> revisions.add(revision),

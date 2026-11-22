@@ -33,6 +33,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -66,6 +67,8 @@ class MeetingNoteServiceTest {
     private final ApplicationEventPublisher eventPublisher = mock(ApplicationEventPublisher.class);
     // C 할 일은 C 패키지 테스트가 따로 검사한다. 여기서는 B가 부르는 순서·결과 전달만 본다
     private final TaskDraftClient taskDraftClient = mock(TaskDraftClient.class);
+    // A가 저장한 사람 선택 (resolutionId → personId). 테스트마다 채운다
+    private Map<String, String> identityDecisions = Map.of();
     private final AtomicReference<MeetingNote> savedNote = new AtomicReference<>();
     private final AtomicReference<Source> savedSource = new AtomicReference<>();
     private User user;
@@ -248,6 +251,48 @@ class MeetingNoteServiceTest {
     }
 
     @Test
+    void 확정하면_확인_화면에서_고른_인물을_참석자_personId로_옮긴다() {
+        MeetingNoteService service = service(mockAiClient());
+        service.createDraft(fullRequest(List.of("홍 부장", "최가상")), USER_ID);
+        identityDecisions = Map.of("ir_002", "p_17");
+
+        MeetingNoteResponse response = service.confirmMeetingNote("mn_7", USER_ID);
+
+        assertThat(response.meetingNote().participants()).containsExactly(
+                new MeetingNoteDocument.Participant("홍 부장", "ir_002", "p_17"),
+                new MeetingNoteDocument.Participant("최가상", null, null)
+        );
+        // 확정 뒤 일정 전달에도 연결된 값이 간다
+        ArgumentCaptor<MeetingNoteConfirmedEvent> event = ArgumentCaptor.forClass(MeetingNoteConfirmedEvent.class);
+        verify(eventPublisher).publishEvent(event.capture());
+        assertThat(event.getValue().note().participants().get(0).personId()).isEqualTo("p_17");
+        // 옮기기는 새 결정이 아니라 수정 기록을 더 남기지 않는다 (ACCEPTED 5개 그대로)
+        verify(revisionClient, times(5)).record(any(), eq(USER_ID));
+    }
+
+    @Test
+    void LIGHT_회의록은_사람별_칸의_personId도_같이_옮긴다() {
+        MeetingNoteService service = service(mockAiClient());
+        service.createDraft(lightRequest(List.of("홍 부장", "박가상")), USER_ID);
+        identityDecisions = Map.of("ir_002", "p_17");
+
+        MeetingNoteDocument confirmed = service.confirmMeetingNote("mn_7", USER_ID).meetingNote();
+
+        assertThat(confirmed.perPerson()).extracting(MeetingNoteDocument.PerPerson::personId).containsExactly("p_17", null);
+    }
+
+    @Test
+    void 고른_인물이_없으면_참석자를_그대로_둔다() {
+        MeetingNoteService service = service(mockAiClient());
+        service.createDraft(fullRequest(List.of("홍 부장")), USER_ID);
+        identityDecisions = Map.of("ir_other", "p_99");
+
+        MeetingNoteDocument confirmed = service.confirmMeetingNote("mn_7", USER_ID).meetingNote();
+
+        assertThat(confirmed.participants()).containsExactly(new MeetingNoteDocument.Participant("홍 부장", "ir_002", null));
+    }
+
+    @Test
     void 확인_안_한_할_일이_남아_있으면_C가_거부해_회의록을_확정하지_않는다() {
         MeetingNoteService service = service(mockAiClient());
         service.createDraft(fullRequest(List.of()), USER_ID);
@@ -360,6 +405,7 @@ class MeetingNoteServiceTest {
                 userRepository,
                 aiClient,
                 new FakeIdentityResolutionClient(objectMapper),
+                (sourceId, userId) -> identityDecisions,
                 taskDraftClient,
                 revisionClient,
                 eventPublisher,
