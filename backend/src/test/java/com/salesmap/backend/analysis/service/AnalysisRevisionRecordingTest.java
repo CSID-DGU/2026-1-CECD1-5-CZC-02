@@ -68,7 +68,7 @@ class AnalysisRevisionRecordingTest {
                 LocalDateTime.now());
         ReflectionTestUtils.setField(source, "id", 100L);
 
-        analysis = new Analysis(source, "대성물류", "김현우", "배차 시스템", null, "김현우", "CREATE", null, null,
+        analysis = new Analysis(source, "가상물류", "김예시", "배차 시스템", null, "김예시", "CREATE", null, null,
                 "근거", "SALES_ACTIVITY", 0.9, "영업 근거", "미팅 (2026-09-15T10:00)", "미팅 준비", "요약",
                 AnalysisStatus.ANALYZED, LocalDateTime.now(), null);
         ReflectionTestUtils.setField(analysis, "id", ANALYSIS_ID);
@@ -80,20 +80,20 @@ class AnalysisRevisionRecordingTest {
 
     @Test
     void 바뀐_필드만_AI_원본값과_함께_기록한다() {
-        analysisService.updateAnalysis(ANALYSIS_ID, requestWith("대성물류(주)", "SALES_ACTIVITY"), USER_ID);
+        analysisService.updateAnalysis(ANALYSIS_ID, requestWith("가상물류(주)", "SALES_ACTIVITY"), USER_ID);
 
         ArgumentCaptor<AnalysisRevision> captor = ArgumentCaptor.forClass(AnalysisRevision.class);
         verify(revisionRepository, times(1)).save(captor.capture());
         AnalysisRevision revision = captor.getValue();
         assertThat(revision.getFieldName()).isEqualTo("customerName");
-        assertThat(revision.getAiValue()).isEqualTo("대성물류");
-        assertThat(revision.getPreviousValue()).isEqualTo("대성물류");
-        assertThat(revision.getUserValue()).isEqualTo("대성물류(주)");
+        assertThat(revision.getAiValue()).isEqualTo("가상물류");
+        assertThat(revision.getPreviousValue()).isEqualTo("가상물류");
+        assertThat(revision.getUserValue()).isEqualTo("가상물류(주)");
     }
 
     @Test
     void 영업_비영업_분류를_바꾸면_기록된다() {
-        analysisService.updateAnalysis(ANALYSIS_ID, requestWith("대성물류", "NON_BUSINESS"), USER_ID);
+        analysisService.updateAnalysis(ANALYSIS_ID, requestWith("가상물류", "NON_BUSINESS"), USER_ID);
 
         ArgumentCaptor<AnalysisRevision> captor = ArgumentCaptor.forClass(AnalysisRevision.class);
         verify(revisionRepository).save(captor.capture());
@@ -104,7 +104,7 @@ class AnalysisRevisionRecordingTest {
 
     @Test
     void 아무것도_안_바꾸면_기록하지_않고_분류가_없으면_기존값을_유지한다() {
-        analysisService.updateAnalysis(ANALYSIS_ID, requestWith("대성물류", null), USER_ID);
+        analysisService.updateAnalysis(ANALYSIS_ID, requestWith("가상물류", null), USER_ID);
 
         verify(revisionRepository, never()).save(any());
         assertThat(analysis.getBusinessType()).isEqualTo("SALES_ACTIVITY");
@@ -112,7 +112,7 @@ class AnalysisRevisionRecordingTest {
 
     @Test
     void 잘못된_분류값은_거부한다() {
-        assertThatThrownBy(() -> analysisService.updateAnalysis(ANALYSIS_ID, requestWith("대성물류", "SALES"), USER_ID))
+        assertThatThrownBy(() -> analysisService.updateAnalysis(ANALYSIS_ID, requestWith("가상물류", "SALES"), USER_ID))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -144,7 +144,7 @@ class AnalysisRevisionRecordingTest {
     private AnalysisUpdateRequest requestWith(String customerName, String businessType) {
         // 나머지 필드는 현재 값 그대로 보낸다(프론트 수정 폼과 같은 방식)
         return new AnalysisUpdateRequest(
-                customerName, "김현우", "배차 시스템", null, "김현우", "CREATE", null, "근거",
+                customerName, "김예시", "배차 시스템", null, "김예시", "CREATE", null, "근거",
                 "미팅 (2026-09-15T10:00)", "미팅 준비", "요약", businessType
         );
     }

@@ -185,7 +185,7 @@ Request:
   "sourceType": "EMAIL",
   "title": "고객 미팅 관련 이메일",
   "content": "원본 이메일 내용",
-  "senderName": "김현우",
+  "senderName": "김예시",
   "senderEmail": "kim@example.com",
   "sentAt": "2026-09-22T10:00:00"
 }
@@ -209,9 +209,9 @@ Response data 예시:
     "sourceGroupId": 5,
     "analysisId": 20,
     "title": "스마트 배차 관제 시스템 도입 상담 미팅 요청드립니다",
-    "senderName": "김현우",
+    "senderName": "김예시",
     "senderEmail": "kim@example.com",
-    "customerName": "대성물류",
+    "customerName": "가상물류",
     "receivedAt": "2026-09-22T10:00:00",
     "waitingBusinessDays": 1
   }
@@ -353,9 +353,9 @@ Response data 예시:
   {
     "revisionId": 1,
     "fieldName": "customerName",
-    "aiValue": "한빛소프트",
-    "previousValue": "한빛소프트",
-    "userValue": "한빛소프트(주)",
+    "aiValue": "예시소프트",
+    "previousValue": "예시소프트",
+    "userValue": "예시소프트(주)",
     "revisedAt": "2026-09-23T12:00:00"
   }
 ]
