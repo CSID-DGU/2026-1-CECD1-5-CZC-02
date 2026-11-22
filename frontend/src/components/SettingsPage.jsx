@@ -512,7 +512,7 @@ export function SettingsPage() {
                 localStorage.setItem('salesmapCompany', e.target.value.trim());
               }}
               className="w-full max-w-sm rounded border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500"
-              placeholder="예: 대성물류"
+              placeholder="예: 가상물류"
             />
             <p className="mt-1.5 text-xs text-gray-500">상단 바에 표시되는 회사명입니다.</p>
           </div>
