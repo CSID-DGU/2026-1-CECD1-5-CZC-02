@@ -125,12 +125,31 @@ def detect_mode(source: str, names: List[str]) -> str:
 # ---------- 항목 검증 ----------
 
 def find_evidence(evidence: str, source: str) -> Optional[str]:
-    """근거가 원문에 있으면 원문 쪽 글자를 돌려준다. 공백·줄바꿈 차이만 허용한다."""
-    tokens = evidence.strip().strip(QUOTE_CHARS).split()
-    if not tokens:
+    """근거가 원문에 있으면 원문 쪽 글자를 돌려준다. 공백·줄바꿈 차이만 허용한다.
+
+    LLM이 줄을 이어 붙이거나(`[내가 할 일]- 11월…`) 근거 전체를 대괄호로 감싸는 경우가 있어,
+    공백을 모두 빼고 비교하고 바깥 대괄호·괄호는 한 겹 벗겨 다시 찾는다. 글자 자체가 다르면 버린다.
+    """
+    stripped = evidence.strip().strip(QUOTE_CHARS).strip()
+    candidates = [stripped]
+    if len(stripped) > 2 and stripped[0] in "[(" and stripped[-1] in "])":
+        candidates.append(stripped[1:-1].strip().strip(QUOTE_CHARS).strip())
+    for candidate in candidates:
+        span = _find_ignoring_space(candidate, source)
+        if span is not None:
+            return span
+    return None
+
+
+def _find_ignoring_space(text: str, source: str) -> Optional[str]:
+    needle = re.sub(r"\s+", "", text)
+    if not needle:
         return None
-    match = re.search(r"\s+".join(re.escape(token) for token in tokens), source)
-    return match.group(0) if match else None
+    positions = [index for index, char in enumerate(source) if not char.isspace()]
+    at = "".join(source[index] for index in positions).find(needle)
+    if at < 0:
+        return None
+    return source[positions[at]:positions[at + len(needle) - 1] + 1]
 
 
 def clean_item(raw: Any, source: str) -> Tuple[Optional[Dict[str, str]], Optional[str]]:

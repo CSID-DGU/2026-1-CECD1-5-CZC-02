@@ -117,6 +117,30 @@ def test_evidence_with_different_spacing_is_stored_as_source_text(monkeypatch):
     assert note["fields"]["commitments"][0]["evidence"] == "견적서는 이번 주 금요일까지 메일로 보내드리기로 함"
 
 
+def test_evidence_with_joined_lines_or_outer_brackets_is_kept_as_source_text(monkeypatch):
+    memo = "고객이 예산이 빠듯하다고 걱정함.\n[내가 할 일]\n- 11월 24일까지 후보 이력서 3부 송부"
+    fake_llm(monkeypatch, full_output(
+        concerns=[item("예산 우려", "[고객이 예산이 빠듯하다고 걱정함.]")],
+        commitments=[item("이력서 송부", "[내가 할 일]- 11월 24일까지 후보 이력서 3부 송부")],
+    ))
+
+    result = build_meeting_note(request_for(text=memo))
+
+    assert result.note["fields"]["concerns"][0]["evidence"] == "고객이 예산이 빠듯하다고 걱정함."
+    assert result.note["fields"]["commitments"][0]["evidence"] == "[내가 할 일]\n- 11월 24일까지 후보 이력서 3부 송부"
+    assert result.dropped_items == []
+
+
+def test_evidence_with_different_characters_is_still_dropped(monkeypatch):
+    memo = "[내가 할 일]\n- 11월 24일까지 후보 이력서 3부 송부"
+    fake_llm(monkeypatch, full_output(commitments=[item("이력서 송부", "[내가 할 일]- 11월 25일까지 후보 이력서 3부 송부")]))
+
+    result = build_meeting_note(request_for(text=memo))
+
+    assert result.note["fields"]["commitments"] == []
+    assert result.dropped_items[0]["reason"] == "근거가 원문에 없음"
+
+
 @pytest.mark.parametrize("mode", ["FULL", "LIGHT"])
 def test_llm_failure_returns_empty_note_with_all_fields_missing(monkeypatch, mode):
     def unavailable(request):
