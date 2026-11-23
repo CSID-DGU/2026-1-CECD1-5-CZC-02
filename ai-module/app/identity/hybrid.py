@@ -7,8 +7,21 @@ from uuid import uuid4
 from app.identity import logistic
 from app.identity.engine import _can_confirm, _reasons, _resolve_one, _validate_inputs, has_identity_clue, validators
 from app.identity.features import compare_people
+from app.identity.normalization import normalize_name
 
 logger = logging.getLogger(__name__)
+
+
+def _has_comparable_name(comparison):
+    # 짧은 이름은 성이 다르면(김가상/이가상) 다른 사람이므로 모델 점수만으로 후보에 넣지 않는다.
+    # 성이 같은 세 글자 이름(김가샹/김가상)은 오타일 수 있어 후보로 보여 주고 사람이 고른다 (D-028).
+    best = max(comparison.name_similarities, key=lambda item: item.similarity, default=None)
+    if best is None:
+        return False
+    observed, registered = (normalize_name(value) or "" for value in (best.observed, best.registered))
+    if min(len(observed), len(registered)) >= 4:
+        return True
+    return len(observed) == len(registered) == 3 and observed[0] == registered[0]
 
 
 def _resolve(mention, persons, model):
@@ -19,12 +32,15 @@ def _resolve(mention, persons, model):
     if len(contacts) == 1 and _can_confirm(contacts[0], contacts, mention):
         # 확정 경계와 확정 점수(null)는 기존 RULE 응답 그대로다.
         return _resolve_one(mention, persons)
+    # 정확한 이름(등록 별칭 포함)·연락처 단서가 있으면 점수만으로 다른 후보를 채우지 않는다.
+    # 직접 단서가 없는 경우에만 모델로 오타 후보를 보완한다.
+    has_direct_match = bool(contacts) or any(c.name.status == "MATCH" for c in comparisons)
     ranked = []
     for comparison in comparisons:
         score = model.score(comparison)
         contact = "MATCH" in (comparison.email.status, comparison.phone.status)
         exact = comparison.name.status == "MATCH"
-        if contact or exact or score >= model.threshold:
+        if contact or exact or (not has_direct_match and _has_comparable_name(comparison) and score >= model.threshold):
             ranked.append((comparison, score, (int(contact), int(exact), round(score, 12))))
     ranked.sort(key=lambda item: (tuple(-v for v in item[2]), item[0].person_id))
     name_matches = sum(c.name.status == "MATCH" for c in comparisons)

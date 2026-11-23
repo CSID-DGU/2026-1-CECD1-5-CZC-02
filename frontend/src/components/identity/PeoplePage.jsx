@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, Building2, ChevronDown, ChevronLeft, ChevronRight, FileText, ListTodo, RefreshCw, Search, UsersRound } from 'lucide-react';
 import { peopleApi } from './peopleApi.js';
+import { PersonMergePanel } from './PersonMergePanel.jsx';
 import { commitmentRecords, duplicateNames } from './peopleUtils.js';
 import { identityError } from './identityUtils.js';
 import './people.css';
@@ -72,8 +73,8 @@ export function MeetingHistory({ meetings, personId, tab = '타임라인', previ
   })}</div>;
 }
 
-function PersonWorkspace({ id, apiClient, preview }) {
-  const [state, setState] = useState({ loading: true, person: null, meetings: [], error: '' });
+function PersonWorkspace({ id, apiClient, preview, onChanged }) {
+  const [state, setState] = useState({ loading: true, person: null, meetings: [], mergeHistory: { personIds: [id], records: [] }, error: '' });
   const [tab, setTab] = useState('타임라인');
   const [nextPage, setNextPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
@@ -85,13 +86,14 @@ function PersonWorkspace({ id, apiClient, preview }) {
     const controller = new AbortController(); let active = true;
     async function load() {
       try {
-        const [person, meetings] = await Promise.all([apiClient.person(id, controller.signal), apiClient.meetings(id, 0, controller.signal)]);
-        if (active) { setState({ loading: false, person, meetings, error: '' }); setNextPage(1); setHasMore(meetings.length === 20); }
-      } catch (error) { if (active) setState({ loading: false, person: null, meetings: [], error: identityError(error) }); }
+        const [person, meetings, mergeHistory] = await Promise.all([apiClient.person(id, controller.signal), apiClient.meetings(id, 0, controller.signal),
+          preview ? Promise.resolve({ personIds: [id], records: [] }) : apiClient.merges(id, 0, controller.signal)]);
+        if (active) { setState({ loading: false, person, meetings, mergeHistory, error: '' }); setNextPage(1); setHasMore(meetings.length === 20); }
+      } catch (error) { if (active) setState({ loading: false, person: null, meetings: [], mergeHistory: { personIds: [id], records: [] }, error: identityError(error) }); }
     }
     load();
     return () => { active = false; generation.current += 1; controller.abort(); };
-  }, [id, apiClient, refresh]);
+  }, [id, apiClient, refresh, preview]);
   async function more() {
     const version = generation.current;
     setLoadingMore(true);
@@ -102,16 +104,19 @@ function PersonWorkspace({ id, apiClient, preview }) {
     finally { if (version === generation.current) setLoadingMore(false); }
   }
   if (state.loading) return <div className="people-loading" role="status"><RefreshCw size={18} className="people-spin" />인물 정보를 불러오는 중…</div>;
-  const records = commitmentRecords(state.meetings, id).length;
+  const records = commitmentRecords(state.meetings, state.mergeHistory.personIds).length;
   const count = name => name === '약속 기록' ? records : name === '회의록' ? state.meetings.length : null;
   return <>
     {state.error && <p role="alert" className="people-error">{state.error}</p>}
     {state.person && <><PersonDetails person={state.person} />
+      {!preview && <PersonMergePanel key={refresh} person={state.person} history={state.mergeHistory} apiClient={apiClient} onChanged={() => {
+        setState(old => ({ ...old, loading: true })); setRefresh(n => n + 1); onChanged();
+      }} />}
       <div className="people-tabs" role="tablist" aria-label="인물 기록">{tabs.map((name, i) => <button key={name} role="tab" id={`people-tab-${i}`} aria-controls={`people-panel-${i}`} aria-selected={tab === name}
         className={tab === name ? 'active' : ''} onClick={() => setTab(name)}>{name}{count(name) !== null && <span title="현재 불러온 회의록 기준">{count(name)}</span>}</button>)}</div>
       <div className="people-tab-content" role="tabpanel" id={`people-panel-${tabs.indexOf(tab)}`} aria-labelledby={`people-tab-${tabs.indexOf(tab)}`}>
         {tab === '할 일' ? <EmptyState icon={ListTodo} title="인물별 할 일은 준비 중이에요"><p>전체 할 일은 보드에서 확인할 수 있어요.</p>{!preview && <a className="people-button" href="/tasks">할 일 보드 열기 <ArrowUpRight size={14} /></a>}</EmptyState>
-          : <MeetingHistory meetings={state.meetings} personId={id} tab={tab} preview={preview} />}
+          : <MeetingHistory meetings={state.meetings} personId={state.mergeHistory.personIds} tab={tab} preview={preview} />}
       </div>
       {tab !== '할 일' && hasMore && <div className="people-load-more"><button className="people-button" disabled={loadingMore} onClick={more}>{loadingMore ? '불러오는 중…' : '이전 미팅 더 불러오기'}<ChevronDown size={14} /></button></div>}
     </>}
@@ -160,7 +165,7 @@ export function PeoplePage({ apiClient = peopleApi, preview = false, onPreviewTo
         <div className="people-pagination"><button className="people-icon-button" disabled={state.loading || request.page === 0} onClick={e => search(e, request.page - 1)} aria-label="이전 페이지"><ChevronLeft size={16} /></button><span>{request.page + 1}쪽</span><button className="people-icon-button" disabled={state.loading || state.people.length < 20} onClick={e => search(e, request.page + 1)} aria-label="다음 페이지"><ChevronRight size={16} /></button></div>
         <p className="people-list-footnote"><Building2 size={13} />유형 미등록 · 동명이인 표시는 현재 페이지 기준이에요.</p>
       </aside>
-      <section className="people-detail-panel" aria-label="선택한 사람">{selected ? <PersonWorkspace key={selected} id={selected} apiClient={apiClient} preview={preview} /> :
+      <section className="people-detail-panel" aria-label="선택한 사람">{selected ? <PersonWorkspace key={selected} id={selected} apiClient={apiClient} preview={preview} onChanged={() => setRequest(old => ({ ...old, revision: old.revision + 1 }))} /> :
         <EmptyState icon={UsersRound} title="한 사람의 기록을 한눈에"><p>왼쪽 목록에서 인물을 선택하면<br />연락처와 미팅 이력을 확인할 수 있어요.</p></EmptyState>}</section>
     </div>
   </main>;

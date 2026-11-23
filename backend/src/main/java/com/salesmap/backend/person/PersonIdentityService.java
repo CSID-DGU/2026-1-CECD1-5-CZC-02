@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.UUID;
 import java.util.NoSuchElementException;
 
 @Service
@@ -50,14 +52,23 @@ public class PersonIdentityService {
             return existing.stream().map(row -> read(row.getDocument())).toList();
         }
         LocalDateTime now=now();
+        List<JsonNode> stored=new ArrayList<>();
         for(int i=0;i<proposals.size();i++){
             JsonNode proposal=proposals.get(i);
             IdentityResponseValidator.validateProposalPolicy(proposal);
             if(!sourceRef.equals(proposal.path("mention").path("sourceRef").asText()))
                 throw new IllegalArgumentException("검증한 원본 RULE/MODEL 제안만 저장할 수 있습니다.");
-            rows.save(new IdentityResolutionEntry(source.getUser(),sourceRef,i,proposal.path("resolutionId").asText(),proposal.toString(),now));
+            // IDENTITY PK를 먼저 발급받는다. 임시 키는 외부 응답·회의록에 넘기지 않는다.
+            String pendingId="ir_pending_"+UUID.randomUUID().toString().replace("-","");
+            IdentityResolutionEntry row=rows.saveAndFlush(new IdentityResolutionEntry(
+                    source.getUser(),sourceRef,i,pendingId,proposal.toString(),now));
+            ObjectNode document=((ObjectNode)proposal).deepCopy().put("resolutionId","ir_"+row.getId());
+            row.useDatabaseId(document.toString());
+            stored.add(document);
         }
-        return proposals.stream().map(JsonNode::deepCopy).map(value -> (JsonNode)value).toList();
+        // 같은 트랜잭션에서 컬럼·제안·현재 문서를 같은 DB 기반 ID로 저장한다.
+        rows.flush();
+        return List.copyOf(stored);
     }
 
     @Transactional(readOnly=true)
@@ -95,9 +106,12 @@ public class PersonIdentityService {
             selected=people.get(body.get("personId").textValue(),owner);
         }
         if(!create && humanBefore && selected.personId().equals(current.path("personId").asText())) return item(row);
+        // 제안 뒤에 병합됐으면 대표 ID로 돌아오므로, 합쳐진 ID까지 같은 사람으로 보고 제안과 비교한다.
+        java.util.Set<String> selectedIds=new java.util.HashSet<>(create ? java.util.Set.<String>of() : people.historyIds(selected.personId(),owner));
+        selectedIds.add(selected.personId());
         boolean candidate=false;
-        for(JsonNode c:proposal.path("candidates")) if(selected.personId().equals(c.path("personId").asText())) candidate=true;
-        String action=create ? "CREATED_NEW" : humanBefore ? "EDITED" : selected.personId().equals(proposal.path("personId").asText())
+        for(JsonNode c:proposal.path("candidates")) if(selectedIds.contains(c.path("personId").asText())) candidate=true;
+        String action=create ? "CREATED_NEW" : humanBefore ? "EDITED" : selectedIds.contains(proposal.path("personId").asText())
                 ? "ACCEPTED" : candidate ? "SELECTED_CANDIDATE" : "EDITED";
         ObjectNode decided=(ObjectNode)proposal.deepCopy();
         decided.put("decision","CONFIRMED").put("personId",selected.personId()).put("decidedBy","HUMAN");

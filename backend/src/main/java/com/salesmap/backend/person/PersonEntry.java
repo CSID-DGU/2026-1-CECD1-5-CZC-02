@@ -37,6 +37,9 @@ public class PersonEntry {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    // 원본 문서는 보존하고 대표 인물로의 연결만 추가한다. 병합 해제 시 null로 복원한다.
+    @Column(name = "merged_into_id") private Long mergedIntoId;
+
     protected PersonEntry() {}
 
     PersonEntry(User user, String document, String searchText, Long createdBy, LocalDateTime createdAt) {
@@ -47,6 +50,9 @@ public class PersonEntry {
         this.createdAt = createdAt;
     }
 
+    public Long getMergedIntoId() { return mergedIntoId; }
+    void mergeInto(Long target) { this.mergedIntoId = target; }
+    void replaceSearchText(String value) { this.searchText = value; }
     public Long getId() { return id; }
     public String getDocument() { return document; }
     public Long getCreatedBy() { return createdBy; }

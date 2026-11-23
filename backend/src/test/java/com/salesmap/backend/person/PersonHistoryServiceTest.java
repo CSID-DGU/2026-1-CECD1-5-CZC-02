@@ -29,6 +29,8 @@ class PersonHistoryServiceTest {
     final ObjectMapper mapper=new ObjectMapper();
     final PersonHistoryService history=new PersonHistoryService(people,notes,meetings,mapper);
 
+    @org.junit.jupiter.api.BeforeEach void groupIds(){when(people.historyIds("p_17",7L)).thenReturn(java.util.Set.of("p_17"));}
+
     MeetingNote note(long id,String participants,String perPerson) {
         MeetingNote note=mock(MeetingNote.class,RETURNS_DEEP_STUBS);
         when(note.getId()).thenReturn(id);when(note.getUser().getId()).thenReturn(7L);
@@ -111,5 +113,14 @@ class PersonHistoryServiceTest {
         when(notes.findByUserId(7L)).thenReturn(List.of(exact));returned(1);
         var result=history.list("p_17",0,20,7L).get(0);
         assertThat(ContractSchemaValidator.load("meeting_note.schema.json").validate(mapper.valueToTree(result))).isEmpty();
+    }
+    @Test void explicitMergedGroupIncludesSourceIdHistoryOnceWithoutMatchingNames() {
+        when(people.historyIds("p_17",7L)).thenReturn(java.util.Set.of("p_17","p_18"));
+        var source=note(1,"[{\"personId\":\"p_18\"}]",null);returned(1);
+        var both=note(2,"[{\"personId\":\"p_17\"},{\"personId\":\"p_18\"}]",null);returned(2);
+        var other=note(3,"[{\"personId\":\"p_19\"}]",null);
+        when(notes.findByUserId(7L)).thenReturn(List.of(source,both,other));
+        assertThat(history.list("p_17",0,20,7L)).extracting(MeetingNoteDocument::noteId).containsExactly("mn_2","mn_1");
+        verify(notes,never()).save(any());
     }
 }

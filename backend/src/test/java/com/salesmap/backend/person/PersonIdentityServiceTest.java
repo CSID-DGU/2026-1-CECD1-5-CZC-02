@@ -46,6 +46,7 @@ class PersonIdentityServiceTest {
     IdentityResolutionEntry row;
     ObjectNode proposal;
     PersonDocument person;
+    long nextResolutionId;
 
     @BeforeEach void setup() throws Exception {
         when(user.getId()).thenReturn(7L);when(source.getId()).thenReturn(101L);when(source.getUser()).thenReturn(user);
@@ -61,8 +62,10 @@ class PersonIdentityServiceTest {
         ReflectionTestUtils.setField(row,"version",0L);
         when(rows.lockOwned("ir_owned",7L)).thenReturn(Optional.of(row));
         when(rows.findByUserIdAndSourceRefOrderByMentionIndexAsc(7L,"src_101")).thenReturn(List.of(row));
+        nextResolutionId=301L;
         when(rows.saveAndFlush(any())).thenAnswer(call -> {IdentityResolutionEntry saved=call.getArgument(0);
-            ReflectionTestUtils.setField(saved,"version",saved.getVersion()+1);return saved;});
+            if(saved.getId()==null) ReflectionTestUtils.setField(saved,"id",nextResolutionId++);
+            ReflectionTestUtils.setField(saved,"version",saved.getVersion()==null ? 0L : saved.getVersion()+1);return saved;});
         person=PersonRequest.parse(mapper.readTree(PersonServiceTest.body())).withId(17L);
         when(people.get("p_17",7L)).thenReturn(person);
         when(people.get("p_18",7L)).thenReturn(person.withId(18L));
@@ -88,11 +91,18 @@ class PersonIdentityServiceTest {
         assertThat(ContractSchemaValidator.load("revision.schema.json").validate(record)).isEmpty();
         verify(notes,never()).save(any());verify(people,never()).create(any(),anyLong(),anyLong());
     }
+    @Test void candidateMergedAfterProposalStillCountsAsSelectedCandidate(){
+        when(people.get("p_20",7L)).thenReturn(person.withId(20L));
+        when(people.historyIds("p_20",7L)).thenReturn(java.util.Set.of("p_20","p_17"));
+        IdentityReviewItem saved=select(choose("p_20"));
+        assertThat(saved.resolution().path("personId").asText()).isEqualTo("p_20");
+        assertThat(revision().action()).isEqualTo("SELECTED_CANDIDATE");
+    }
     @Test void modelProposalIsStoredAndHumanSelectionKeepsModelAttribution() {
         proposal.put("decidedBy","MODEL").put("modelVersion","identity-logistic-v1");
         ((ObjectNode)proposal.path("candidates").get(0)).put("score",0.72);
         when(rows.findByUserIdAndSourceRefOrderByMentionIndexAsc(7L,"src_101")).thenReturn(List.of());
-        service.storeProposals("src_101",List.of(proposal),7L);verify(rows).save(any());
+        service.storeProposals("src_101",List.of(proposal),7L);verify(rows).saveAndFlush(any());
         row=new IdentityResolutionEntry(user,"src_101",0,"ir_owned",proposal.toString(),LocalDateTime.now());
         ReflectionTestUtils.setField(row,"version",0L);when(rows.lockOwned("ir_owned",7L)).thenReturn(Optional.of(row));
         var saved=select(choose("p_17"));
@@ -176,7 +186,7 @@ class PersonIdentityServiceTest {
     @Test void newProposalsAreStoredOnlyForOwnedSource(){
         when(rows.findByUserIdAndSourceRefOrderByMentionIndexAsc(7L,"src_101")).thenReturn(List.of());
         service.storeProposals("src_101",List.of(proposal),7L);
-        verify(rows).save(any());
+        verify(rows).saveAndFlush(any());
         assertThatThrownBy(() -> service.storeProposals("src_101",List.of(proposal),8L)).isInstanceOf(NoSuchElementException.class);
     }
     @Test void changedMentionCannotOverwriteOriginalProposal(){
@@ -195,5 +205,43 @@ class PersonIdentityServiceTest {
         assertThatThrownBy(() -> proxied.select("mn_21","ir_owned",choose("p_17"),"\"irv-0\"",7L,70L)).isInstanceOf(IllegalStateException.class);
         verify(manager).rollback(status);verify(manager,never()).commit(any());
         assertThat(row.getDocument()).isEqualTo(proposal.toString());verify(rows,never()).saveAndFlush(any());
+    }
+
+    @Test void databaseIdsReplaceTemporaryIdsInColumnBothDocumentsAndResponse() throws Exception {
+        when(rows.findByUserIdAndSourceRefOrderByMentionIndexAsc(7L,"src_101")).thenReturn(List.of());
+        ObjectNode second=proposal.deepCopy().put("resolutionId","ir_second_temporary");
+        ((ObjectNode)second.path("mention")).put("name","가상인물_0002");
+        List<JsonNode> result=service.storeProposals("src_101",List.of(proposal,second),7L);
+        ArgumentCaptor<IdentityResolutionEntry> captured=ArgumentCaptor.forClass(IdentityResolutionEntry.class);
+        verify(rows,times(2)).saveAndFlush(captured.capture());
+        for(int i=0;i<2;i++){
+            IdentityResolutionEntry saved=captured.getAllValues().get(i);
+            String id="ir_"+saved.getId();
+            assertThat(id).isEqualTo("ir_"+(301+i));
+            assertThat(saved.getResolutionId()).isEqualTo(id);
+            assertThat(mapper.readTree(saved.getProposal()).path("resolutionId").asText()).isEqualTo(id);
+            assertThat(mapper.readTree(saved.getDocument())).isEqualTo(result.get(i));
+            assertThat(ContractSchemaValidator.load("identity_resolution.schema.json").validate(result.get(i))).isEmpty();
+        }
+        assertThat(proposal.path("resolutionId").asText()).isEqualTo("ir_owned");
+        assertThat(second.path("resolutionId").asText()).isEqualTo("ir_second_temporary");
+        verify(rows).flush();
+        verifyNoInteractions(people,revisions);
+    }
+
+    @Test void databaseIdRemainsStableThroughHumanSelectionAndRetry() throws Exception {
+        when(rows.findByUserIdAndSourceRefOrderByMentionIndexAsc(7L,"src_101")).thenReturn(List.of());
+        JsonNode initial=service.storeProposals("src_101",List.of(proposal),7L).get(0);
+        ArgumentCaptor<IdentityResolutionEntry> captured=ArgumentCaptor.forClass(IdentityResolutionEntry.class);
+        verify(rows).saveAndFlush(captured.capture());
+        IdentityResolutionEntry saved=captured.getValue();
+        when(rows.lockOwned("ir_301",7L)).thenReturn(Optional.of(saved));
+        when(rows.findByUserIdAndSourceRefOrderByMentionIndexAsc(7L,"src_101")).thenReturn(List.of(saved));
+        var selected=service.select("mn_21","ir_301",choose("p_17"),"\"irv-0\"",7L,70L);
+        assertThat(selected.resolution().path("resolutionId").asText()).isEqualTo("ir_301");
+        assertThat(revision().targetId()).isEqualTo("ir_301");
+        assertThat(mapper.readTree(saved.getProposal())).isEqualTo(initial);
+        JsonNode retry=service.storeProposals("src_101",List.of(proposal.deepCopy().put("resolutionId","ir_retry")),7L).get(0);
+        assertThat(retry).isEqualTo(selected.resolution());
     }
 }

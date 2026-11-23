@@ -76,7 +76,7 @@ class PersonMysqlIntegrationTests {
             MeetingNoteRepository.class,AnalysisRevisionRepository.class,
             com.salesmap.backend.demo.repository.DemoWorkspaceRepository.class})
     @EnableJpaAuditing
-    @Import({PersonService.class,PersonIdentityService.class,RevisionServiceClient.class,RevisionService.class,
+    @Import({PersonService.class,PersonIdentityService.class,PersonMergeService.class,PersonMergeController.class,PersonMergeExceptionHandler.class,RevisionServiceClient.class,RevisionService.class,
             PersonController.class,PersonIdentityController.class,IdentitySelectionExceptionHandler.class,
             com.salesmap.backend.global.config.SecurityConfig.class,
             com.salesmap.backend.global.security.JwtTokenProvider.class,
@@ -126,6 +126,7 @@ class PersonMysqlIntegrationTests {
     @Autowired MockMvc http;
     @Autowired JwtTokenProvider tokens;
     @Autowired PersonService people;
+    @Autowired PersonMergeService merges;
     @Autowired PersonIdentityService identities;
     @Autowired RevisionService revisions;
     @Autowired UserRepository users;
@@ -170,8 +171,22 @@ class PersonMysqlIntegrationTests {
     Seed seed(){
         PersonDocument person=people.create(person("가상인물_0001"),fixture.owner(),fixture.owner());
         String id="ir_mysql_"+UUID.randomUUID().toString().replace("-","");
-        identities.storeProposals(fixture.source(),List.of(proposal(id,person.personId())),fixture.owner());
+        id=identities.storeProposals(fixture.source(),List.of(proposal(id,person.personId())),fixture.owner()).get(0).path("resolutionId").asText();
         return new Seed(id,identities.list(fixture.note(),fixture.owner()).get(0).etag(),person.personId());
+    }
+    @Test void persistedResolutionUsesDatabasePrimaryKeyInEveryStoredDocument() throws Exception {
+        Seed seed=seed();
+        Long primaryKey=jdbc.queryForObject("select id from person_identity_resolutions where resolution_id=?",Long.class,seed.resolutionId());
+        assertThat(seed.resolutionId()).isEqualTo("ir_"+primaryKey);
+        String original=jdbc.queryForObject("select proposal from person_identity_resolutions where id=?",String.class,primaryKey);
+        assertThat(mapper.readTree(original).path("resolutionId").asText()).isEqualTo(seed.resolutionId());
+        assertThat(stored(seed).path("resolutionId").asText()).isEqualTo(seed.resolutionId());
+        assertThat(identities.list(fixture.note(),fixture.owner()).get(0).resolution().path("resolutionId").asText()).isEqualTo(seed.resolutionId());
+    }
+
+    String nextEtag(String previous){
+        long version=Long.parseLong(previous.substring(5,previous.length()-1));
+        return "\"irv-"+(version+1)+"\"";
     }
     ObjectNode choose(String id){return mapper.createObjectNode().put("personId",id);}
     ObjectNode createBody(){ObjectNode body=mapper.createObjectNode();body.set("newPerson",person("가상인물_신규"));return body;}
@@ -209,7 +224,7 @@ class PersonMysqlIntegrationTests {
         String id="ir_http_"+UUID.randomUUID().toString().replace("-","");
         ObjectNode model=proposal(id,personId).put("decidedBy","MODEL").put("modelVersion","identity-logistic-v1");
         ((ObjectNode)model.path("candidates").get(0)).put("score",0.72);
-        identities.storeProposals(fixture.source(),List.of(model),fixture.owner());
+        id=identities.storeProposals(fixture.source(),List.of(model),fixture.owner()).get(0).path("resolutionId").asText();
         String route="/api/person-identities/for-note/"+fixture.note();
         var listed=http.perform(get(route).header("Authorization",bearer))
                 .andExpect(status().isOk()).andReturn();
@@ -255,7 +270,7 @@ class PersonMysqlIntegrationTests {
         String participants=jdbc.queryForObject("select participants_json from meeting_notes where id=?",String.class,Long.parseLong(fixture.note().substring(3)));
         LocalDateTime before=LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusSeconds(1);
         IdentityReviewItem saved=select(seed,choose(seed.personId()));
-        assertThat(saved.etag()).isEqualTo("\"irv-1\"");
+        assertThat(saved.etag()).isEqualTo(nextEtag(seed.etag()));
         assertThat(stored(seed).path("personId").asText()).isEqualTo(seed.personId());
         assertThat(stored(seed).path("decidedBy").asText()).isEqualTo("HUMAN");
         assertThat(identities.list(fixture.note(),fixture.owner()).get(0)).isEqualTo(saved);
@@ -276,7 +291,7 @@ class PersonMysqlIntegrationTests {
         assertThat(personCount()).isEqualTo(2);assertThat(revisions.list(fixture.owner()).get(0).action()).isEqualTo("CREATED_NEW");
         assertThat(people.get(created.resolution().path("personId").asText(),fixture.owner()).name()).isEqualTo("가상인물_신규");
         IdentityReviewItem changed=identities.select(fixture.note(),seed.resolutionId(),choose(seed.personId()),created.etag(),fixture.owner(),fixture.owner());
-        assertThat(changed.etag()).isEqualTo("\"irv-2\"");assertThat(revisionCount()).isEqualTo(2);
+        assertThat(changed.etag()).isEqualTo(nextEtag(created.etag()));assertThat(revisionCount()).isEqualTo(2);
         assertThat(revisions.list(fixture.owner()).get(1).action()).isEqualTo("EDITED");
         identities.select(fixture.note(),seed.resolutionId(),choose(seed.personId()),changed.etag(),fixture.owner(),fixture.owner());
         assertThat(revisionCount()).isEqualTo(2);
@@ -339,7 +354,118 @@ class PersonMysqlIntegrationTests {
                     .containsExactlyInAnyOrder("saved","conflict");
             assertThat(revisionCount()).isEqualTo(1);
             assertThat(stored(seed).path("personId").asText()).isIn(Set.of(seed.personId(),second));
-            assertThat(identities.list(fixture.note(),fixture.owner()).get(0).etag()).isEqualTo("\"irv-1\"");
+            assertThat(identities.list(fixture.note(),fixture.owner()).get(0).etag()).isEqualTo(nextEtag(seed.etag()));
         }finally{start.countDown();pool.shutdownNow();assertThat(pool.awaitTermination(10,TimeUnit.SECONDS)).isTrue();}
+    }
+
+    ObjectNode mergeBody(String source){return mapper.createObjectNode().put("sourcePersonId",source).put("confirmed",true);}
+    ObjectNode undoBody(){return mapper.createObjectNode().put("confirmed",true);}
+    @Test void mergeAndUndoCommitAuditAndSearchWithoutChangingOriginalDocuments() throws Exception {
+        var first=people.create(person("가상인물_대표"),fixture.owner(),fixture.owner());
+        var second=people.create(person("가상인물_중복"),fixture.owner(),fixture.owner());
+        var third=people.create(person("가상인물_추가"),fixture.owner(),fixture.owner());
+        String raw=jdbc.queryForObject("select document from person_entries where id=?",String.class,Long.parseLong(second.personId().substring(2)));
+        var merged=merges.merge(first.personId(),mergeBody(second.personId()),fixture.owner(),fixture.owner());
+        merges.merge(first.personId(),mergeBody(third.personId()),fixture.owner(),fixture.owner());
+        assertThat(people.list(null,0,20,fixture.owner())).hasSize(1);
+        assertThat(people.list(second.name(),0,20,fixture.owner())).extracting(PersonDocument::personId).containsExactly(first.personId());
+        assertThat(people.forResolution(fixture.owner())).hasSize(1);
+        assertThat(people.get(second.personId(),fixture.owner()).personId()).isEqualTo(first.personId());
+        assertThat(merges.history(first.personId(),0,20,fixture.owner()).personIds()).containsExactlyInAnyOrder(first.personId(),second.personId(),third.personId());
+        assertThat(revisionCount()).isZero();
+        assertThatThrownBy(() -> merges.undo(first.personId(),merged.mergeId(),undoBody(),fixture.other(),fixture.other())).isInstanceOf(NoSuchElementException.class);
+        var undone=merges.undo(first.personId(),merged.mergeId(),undoBody(),fixture.owner(),fixture.owner());
+        assertThat(undone.active()).isFalse();assertThat(undone.undoneBy()).isEqualTo(fixture.owner());
+        assertThat(people.list(null,0,20,fixture.owner())).hasSize(2);
+        assertThat(people.list(second.name(),0,20,fixture.owner())).extracting(PersonDocument::personId).containsExactly(second.personId());
+        assertThat(people.get(first.personId(),fixture.owner()).nameVariants()).contains(third.name()).doesNotContain(second.name());
+        assertThat(jdbc.queryForObject("select document from person_entries where id=?",String.class,Long.parseLong(second.personId().substring(2)))).isEqualTo(raw);
+        assertThat(jdbc.queryForObject("select undone_at from person_merge_entries where id=?",LocalDateTime.class,Long.parseLong(merged.mergeId().substring(3)))).isNotNull();
+        var redone=merges.merge(first.personId(),mergeBody(second.personId()),fixture.owner(),fixture.owner());
+        assertThatThrownBy(() -> merges.undo(first.personId(),merged.mergeId(),undoBody(),fixture.owner(),fixture.owner())).isInstanceOf(IdentitySelectionConflictException.class);
+        assertThat(people.get(second.personId(),fixture.owner()).personId()).isEqualTo(first.personId());
+        merges.undo(first.personId(),redone.mergeId(),undoBody(),fixture.owner(),fixture.owner());
+    }
+    @Test void auditFailureRollsBackMergeAndSearchChanges() {
+        var target=people.create(person("가상인물_대표"),fixture.owner(),fixture.owner());
+        var source=people.create(person("가상인물_중복"),fixture.owner(),fixture.owner());
+        jdbc.execute("alter table person_merge_entries add constraint reject_test_merge check (merged_by<>"+fixture.owner()+")");
+        try{
+            assertThatThrownBy(() -> merges.merge(target.personId(),mergeBody(source.personId()),fixture.owner(),fixture.owner())).isInstanceOf(RuntimeException.class);
+            assertThat(people.get(source.personId(),fixture.owner()).personId()).isEqualTo(source.personId());
+            assertThat(people.list(null,0,20,fixture.owner())).hasSize(2);
+            assertThat(people.list(source.name(),0,20,fixture.owner())).extracting(PersonDocument::personId).containsExactly(source.personId());
+        }finally{jdbc.execute("alter table person_merge_entries drop check reject_test_merge");}
+    }
+    @Test void concurrentMergeAndUndoEachCommitOnlyOnce() throws Exception {
+        var target=people.create(person("가상인물_대표"),fixture.owner(),fixture.owner());
+        var source=people.create(person("가상인물_중복"),fixture.owner(),fixture.owner());
+        var pool=Executors.newFixedThreadPool(2);
+        try{
+            CountDownLatch start=new CountDownLatch(1);
+            var attempts=java.util.stream.IntStream.range(0,2).mapToObj(i -> pool.submit(() -> {
+                start.await();try{merges.merge(target.personId(),mergeBody(source.personId()),fixture.owner(),fixture.owner());return "saved";}
+                catch(IdentitySelectionConflictException expected){return "conflict";}
+            })).toList();start.countDown();
+            assertThat(List.of(attempts.get(0).get(10,TimeUnit.SECONDS),attempts.get(1).get(10,TimeUnit.SECONDS))).containsExactlyInAnyOrder("saved","conflict");
+            String mergeId=merges.history(target.personId(),0,20,fixture.owner()).records().get(0).mergeId();
+            CountDownLatch undoStart=new CountDownLatch(1);
+            var undos=java.util.stream.IntStream.range(0,2).mapToObj(i -> pool.submit(() -> {
+                undoStart.await();try{merges.undo(target.personId(),mergeId,undoBody(),fixture.owner(),fixture.owner());return "saved";}
+                catch(IdentitySelectionConflictException expected){return "conflict";}
+            })).toList();undoStart.countDown();
+            assertThat(List.of(undos.get(0).get(10,TimeUnit.SECONDS),undos.get(1).get(10,TimeUnit.SECONDS))).containsExactlyInAnyOrder("saved","conflict");
+            assertThat(people.list(null,0,20,fixture.owner())).hasSize(2);
+        }finally{pool.shutdownNow();assertThat(pool.awaitTermination(10,TimeUnit.SECONDS)).isTrue();}
+    }
+    @Test void mergeHttpRequiresJwtAndUsesAuthenticatedAuditActor() throws Exception {
+        var target=people.create(person("가상인물_대표"),fixture.owner(),fixture.owner());
+        var source=people.create(person("가상인물_중복"),fixture.owner(),fixture.owner());
+        String route="/api/persons/"+target.personId()+"/merges";
+        http.perform(post(route).contentType("application/json").content(mergeBody(source.personId()).toString())).andExpect(status().isUnauthorized());
+        String bearer="Bearer "+tokens.createAccessToken(fixture.owner(),"synthetic@people.example","USER");
+        String response=http.perform(post(route).header("Authorization",bearer).contentType("application/json").content(mergeBody(source.personId()).toString()))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.data.mergedBy").value(fixture.owner())).andReturn().getResponse().getContentAsString();
+        String id=mapper.readTree(response).path("data").path("mergeId").asText();
+        http.perform(post(route).header("Authorization",bearer).contentType("application/json").content(mergeBody(source.personId()).toString())).andExpect(status().isConflict());
+        http.perform(post(route+"/"+id+"/undo").header("Authorization",bearer).contentType("application/json").content(undoBody().toString()))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.data.active").value(false));
+    }
+
+    @Test void undoAuditFailureRollsBackUnlinkAndSearch() {
+        var target=people.create(person("가상인물_대표"),fixture.owner(),fixture.owner());
+        var source=people.create(person("가상인물_중복"),fixture.owner(),fixture.owner());
+        var merged=merges.merge(target.personId(),mergeBody(source.personId()),fixture.owner(),fixture.owner());
+        jdbc.execute("alter table person_merge_entries add constraint reject_test_undo check (user_id<>"+fixture.owner()+" or undone_by is null)");
+        try{
+            assertThatThrownBy(() -> merges.undo(target.personId(),merged.mergeId(),undoBody(),fixture.owner(),fixture.owner())).isInstanceOf(RuntimeException.class);
+            assertThat(people.get(source.personId(),fixture.owner()).personId()).isEqualTo(target.personId());
+            assertThat(people.list(source.name(),0,20,fixture.owner())).extracting(PersonDocument::personId).containsExactly(target.personId());
+            assertThat(merges.history(target.personId(),0,20,fixture.owner()).records().get(0).active()).isTrue();
+        }finally{jdbc.execute("alter table person_merge_entries drop check reject_test_undo");}
+    }
+    @Test void mergeHistoryIncludesOriginalSourceIdAndUndoSeparatesItWithoutRewritingB() {
+        var target=people.create(person("가상인물_대표"),fixture.owner(),fixture.owner());
+        var source=people.create(person("가상인물_중복"),fixture.owner(),fixture.owner());
+        long notePk=Long.parseLong(fixture.note().substring(3));
+        String original="[{\"displayName\":\"가상인물_중복\",\"personId\":\""+source.personId()+"\"}]";
+        jdbc.update("update meeting_notes set status='CONFIRMED',participants_json=? where id=?",original,notePk);
+        var document=new com.salesmap.backend.minutes.dto.MeetingNoteDocument(fixture.note(),
+                List.of(new com.salesmap.backend.minutes.dto.MeetingNoteDocument.SourceRef(fixture.source(),"MEETING_NOTE")),
+                null,null,"FULL",List.of(new com.salesmap.backend.minutes.dto.MeetingNoteDocument.Participant(source.name(),null,source.personId())),
+                new com.salesmap.backend.minutes.dto.MeetingNoteDocument.Fields(List.of(),List.of(),List.of(),List.of(),List.of()),
+                null,List.of(),null,"CONFIRMED","RULE",null);
+        var reader=org.mockito.Mockito.mock(com.salesmap.backend.minutes.service.MeetingNoteService.class);
+        org.mockito.Mockito.when(reader.getMeetingNote(fixture.note(),fixture.owner())).thenReturn(
+                new com.salesmap.backend.minutes.dto.MeetingNoteResponse(document,null,null,null,null,null,null,null,null));
+        var history=new PersonHistoryService(people,notes,reader,mapper);
+        assertThat(history.list(target.personId(),0,20,fixture.owner())).isEmpty();
+        var merged=merges.merge(target.personId(),mergeBody(source.personId()),fixture.owner(),fixture.owner());
+        assertThat(history.list(target.personId(),0,20,fixture.owner())).containsExactly(document);
+        assertThat(jdbc.queryForObject("select participants_json from meeting_notes where id=?",String.class,notePk)).isEqualTo(original);
+        merges.undo(target.personId(),merged.mergeId(),undoBody(),fixture.owner(),fixture.owner());
+        assertThat(history.list(target.personId(),0,20,fixture.owner())).isEmpty();
+        assertThat(history.list(source.personId(),0,20,fixture.owner())).containsExactly(document);
+        assertThat(jdbc.queryForObject("select participants_json from meeting_notes where id=?",String.class,notePk)).isEqualTo(original);
     }
 }

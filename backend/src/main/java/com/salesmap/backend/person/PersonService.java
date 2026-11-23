@@ -43,8 +43,12 @@ public class PersonService {
     public PersonDocument get(String id, Long owner) {
         requireOwner(owner);
         long pk = parseId(id);
-        return document(people.findByIdAndUserId(pk, owner)
-                .orElseThrow(() -> new NoSuchElementException("인물이 없거나 접근할 수 없습니다.")));
+        PersonEntry row=people.findByIdAndUserId(pk,owner)
+                .orElseThrow(() -> new NoSuchElementException("인물이 없거나 접근할 수 없습니다."));
+        if(row.getMergedIntoId()!=null) row=people.findByIdAndUserId(row.getMergedIntoId(),owner)
+                .filter(target -> target.getMergedIntoId()==null)
+                .orElseThrow(() -> new IllegalStateException("인물 병합 연결을 확인해야 합니다."));
+        return combined(row,people.findByUserIdAndMergedIntoIdOrderByIdAsc(owner,row.getId()));
     }
 
     /** 한 페이지에 최대 100명. 검색과 정렬은 DB에서 수행하며 소유자 조건을 항상 포함한다. */
@@ -57,21 +61,45 @@ public class PersonService {
         String normalized = query == null ? "" : normalize(query);
         String pattern = normalized.isBlank() ? null : "%" + normalized.replace("!", "!!").replace("%", "!%")
                 .replace("_", "!_") + "%";
-        return people.searchOwned(owner, pattern, PageRequest.of(page, size)).stream().map(this::document).toList();
+        List<PersonEntry> roots=people.searchOwned(owner,pattern,PageRequest.of(page,size));
+        if(roots.isEmpty()) return List.of();
+        List<PersonEntry> aliases=people.findByUserIdAndMergedIntoIdInOrderByIdAsc(owner,roots.stream().map(PersonEntry::getId).toList());
+        return roots.stream().map(row -> combined(row,aliases.stream().filter(a -> row.getId().equals(a.getMergedIntoId())).toList())).toList();
     }
 
     /** 읽기 트랜잭션에서 DTO 스냅샷을 만든다. 이후 식별 HTTP 호출 동안 DB 트랜잭션을 잡지 않는다. */
     @Transactional(readOnly = true)
     public List<PersonDocument> forResolution(Long owner) {
         requireOwner(owner);
-        return people.findByUserIdOrderByIdAsc(owner).stream().map(this::document).toList();
+        List<PersonEntry> all=people.findByUserIdOrderByIdAsc(owner);
+        java.util.Map<Long,List<PersonEntry>> groups=all.stream().filter(row -> row.getMergedIntoId()!=null)
+                .collect(java.util.stream.Collectors.groupingBy(PersonEntry::getMergedIntoId));
+        return all.stream().filter(row -> row.getMergedIntoId()==null)
+                .map(row -> withMergedCompanies(combined(row,groups.getOrDefault(row.getId(),List.of())),
+                        groups.getOrDefault(row.getId(),List.of()))).toList();
+    }
+
+    /**
+     * 식별 비교에만 합쳐진 인물의 소속을 단서로 넘긴다. 어느 쪽이 이전 소속인지는 모르므로
+     * 인물 문서·화면의 이력에는 넣지 않고, 직함·기간도 채우지 않는다.
+     */
+    private PersonDocument withMergedCompanies(PersonDocument root,List<PersonEntry> aliases){
+        var history=new ArrayList<>(root.companyHistory());
+        for(PersonEntry alias:aliases){
+            String company=document(alias).company();
+            if(company==null || company.equals(root.company())
+                    || history.stream().anyMatch(item -> company.equals(item.company()))) continue;
+            history.add(new PersonDocument.CompanyHistory(company,null,null));
+        }
+        return new PersonDocument(root.personId(),root.name(),root.nameVariants(),root.company(),root.department(),root.title(),
+                root.emails(),root.phones(),root.channels(),List.copyOf(history),root.photoAvailable(),root.isSynthetic());
     }
 
     private static void requireOwner(Long owner) {
         if (owner == null || owner < 1) throw new AuthenticationCredentialsNotFoundException("로그인이 필요합니다.");
     }
 
-    private static long parseId(String id) {
+    static long parseId(String id) {
         if (id == null || !id.matches("p_[1-9][0-9]*")) throw new IllegalArgumentException("p_<DB PK> ID가 필요합니다.");
         try { return Long.parseLong(id.substring(2)); }
         catch (NumberFormatException error) { throw new IllegalArgumentException("유효하지 않은 인물 ID입니다."); }
@@ -82,12 +110,41 @@ public class PersonService {
         catch (JsonProcessingException error) { throw new IllegalStateException("인물 저장 형식 오류", error); }
     }
 
-    private PersonDocument document(PersonEntry entry) {
+    PersonDocument document(PersonEntry entry) {
         try { return mapper.readValue(entry.getDocument(), PersonDocument.class).withId(entry.getId()); }
         catch (JsonProcessingException error) { throw new IllegalStateException("인물 저장 형식 오류", error); }
     }
 
-    private static String searchText(PersonDocument person) {
+    @Transactional(readOnly=true)
+    public java.util.Set<String> historyIds(String id,Long owner){
+        PersonDocument root=get(id,owner);
+        java.util.Set<String> ids=new java.util.LinkedHashSet<>();ids.add(root.personId());
+        people.findByUserIdAndMergedIntoIdOrderByIdAsc(owner,parseId(root.personId()))
+                .forEach(row -> ids.add("p_"+row.getId()));
+        return ids;
+    }
+
+    PersonDocument combined(PersonEntry root,List<PersonEntry> aliases){
+        PersonDocument target=document(root);
+        if(aliases.isEmpty()) return target;
+        var names=new java.util.LinkedHashSet<>(target.nameVariants());
+        var emails=new java.util.LinkedHashSet<>(target.emails());
+        var phones=new java.util.LinkedHashSet<>(target.phones());
+        var channels=new java.util.LinkedHashSet<>(target.channels());
+        var history=new java.util.LinkedHashSet<>(target.companyHistory());
+        boolean synthetic=target.isSynthetic();
+        for(PersonEntry alias:aliases){
+            PersonDocument source=document(alias);
+            names.add(source.name());names.addAll(source.nameVariants());emails.addAll(source.emails());
+            phones.addAll(source.phones());channels.addAll(source.channels());history.addAll(source.companyHistory());
+            synthetic &= source.isSynthetic();
+        }
+        names.remove(target.name());
+        return new PersonDocument(target.personId(),target.name(),List.copyOf(names),target.company(),target.department(),target.title(),
+                List.copyOf(emails),List.copyOf(phones),List.copyOf(channels),List.copyOf(history),target.photoAvailable(),synthetic);
+    }
+
+    static String searchText(PersonDocument person) {
         List<String> fields = new ArrayList<>();
         fields.add(person.name()); fields.add(person.company());
         fields.addAll(person.nameVariants()); fields.addAll(person.emails()); fields.addAll(person.phones());

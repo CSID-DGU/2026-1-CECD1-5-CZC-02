@@ -29,7 +29,9 @@
 응답은 입력 언급과 같은 순서의 `identity_resolution` **배열**이다.
 각 결과를 실제 계약 스키마로 검사한 뒤 반환한다. 위 예는 CONFIRMED, personId=p_demo이며
 후보 score=null과 이름·이메일·소속 일치 이유를 포함한다.
-원문 mention은 그대로 보존하고 resolutionId는 호출마다 새 UUID 기반 ID를 만든다.
+원문 mention은 그대로 보존하고 저장 전 resolutionId는 호출마다 새 UUID 기반 임시 ID를 만든다.
+백엔드 `PersonIdentityService`가 DB에 저장하면 D-008에 따라 `ir_<DB 숫자 PK>`로 교체한다.
+저장 컬럼·제안·현재 문서·회의록에 전달하는 응답은 모두 같은 DB 기반 ID를 쓴다. 기존 UUID 저장 결과는 연결 보존을 위해 그대로 조회·선택할 수 있다.
 같은 요청을 다시 보내도 ID가 같다고 가정하지 않는다. sourceRef는 원문 추적용이다.
 
 ## 판정

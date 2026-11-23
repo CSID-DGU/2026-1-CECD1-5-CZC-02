@@ -46,17 +46,25 @@ class PersonMeetingIdentityFlowTest {
     final RevisionClient revisions = mock(RevisionClient.class);
     final TaskDraftClient tasks = mock(TaskDraftClient.class);
     final ApplicationEventPublisher events = mock(ApplicationEventPublisher.class);
-    final PersonIdentityService identities=mock(PersonIdentityService.class);
+    final IdentityResolutionRepository rows=mock(IdentityResolutionRepository.class);
+    PersonIdentityService identities;
     MockRestServiceServer server;
     MeetingNoteService flow;
 
     @BeforeEach void setup() throws Exception {
-        when(identities.storeProposals(anyString(),anyList(),anyLong())).thenAnswer(call -> call.getArgument(1));
+        identities=new PersonIdentityService(rows,people,sources,notes,revisions,mapper);
+        when(rows.saveAndFlush(any())).thenAnswer(call -> {
+            IdentityResolutionEntry row=call.getArgument(0);
+            ReflectionTestUtils.setField(row,"id",901L);
+            ReflectionTestUtils.setField(row,"version",0L);
+            return row;
+        });
         var user = new User("synthetic@people.example","가상사용자_001","unused","USER",UserStatus.ACTIVE);
         ReflectionTestUtils.setField(user,"id",7L);
         when(users.findById(7L)).thenReturn(Optional.of(user));
         when(sources.save(any(Source.class))).thenAnswer(call -> {
-            Source source=call.getArgument(0); ReflectionTestUtils.setField(source,"id",101L); return source;
+            Source source=call.getArgument(0); ReflectionTestUtils.setField(source,"id",101L);
+            when(sources.findById(101L)).thenReturn(Optional.of(source)); return source;
         });
         when(notes.save(any(MeetingNote.class))).thenAnswer(call -> {
             MeetingNote note=call.getArgument(0); ReflectionTestUtils.setField(note,"id",21L); return note;
@@ -86,7 +94,8 @@ class PersonMeetingIdentityFlowTest {
                 .andRespond(withSuccess(response,MediaType.APPLICATION_JSON));
         var draft=flow.createDraft(request(),7L);
         assertThat(draft.identityResolutions()).hasSize(1);
-        assertThat(draft.note().meetingNote().participants().get(0).resolutionId()).isEqualTo("ir_actual_a");
+        assertThat(draft.identityResolutions().get(0).path("resolutionId").asText()).isEqualTo("ir_901");
+        assertThat(draft.note().meetingNote().participants().get(0).resolutionId()).isEqualTo("ir_901");
         assertThat(draft.note().meetingNote().participants().get(0).personId()).isNull();
         assertThat(draft.note().meetingNote().status()).isEqualTo("DRAFT");
         assertThat(ContractSchemaValidator.load("meeting_note.schema.json").validate(mapper.valueToTree(draft.note().meetingNote()))).isEmpty();
