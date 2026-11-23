@@ -26,7 +26,7 @@ public class CalendarRegistrationService {
 
     public ScheduleResponse register(TaskScheduleRegistrationRequest request, Long ownerUserId) {
         Schedule saved = persistence.createOrFind(request, ownerUserId);
-        if (saved.hasGoogleCalendarEvent()) return ScheduleResponse.from(saved);
+        if (saved.hasGoogleCalendarEvent() || !saved.isActive()) return ScheduleResponse.from(saved);
 
         try {
             GoogleCalendarEventResponse event = calendar.createEventForApprovedSchedule(null, saved, ownerUserId);

@@ -7,6 +7,8 @@ import com.salesmap.backend.calendar.dto.GoogleCalendarEventResponse;
 import com.salesmap.backend.calendar.service.GoogleCalendarEventService;
 import com.salesmap.backend.customer.service.CustomerTimelineService;
 import com.salesmap.backend.schedule.entity.Schedule;
+import com.salesmap.backend.schedule.entity.ScheduleDeletionAudit;
+import com.salesmap.backend.schedule.repository.ScheduleDeletionAuditRepository;
 import com.salesmap.backend.schedule.repository.ScheduleRepository;
 import com.salesmap.backend.schedule.service.ScheduleConflictService;
 import com.salesmap.backend.salesmap.client.SalesmapClient;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -34,6 +37,7 @@ public class SalesmapService {
     private final SalesmapClient salesmapClient;
     private final GoogleCalendarEventService googleCalendarEventService;
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleDeletionAuditRepository deletionAudits;
     private final ScheduleConflictService scheduleConflictService;
     private final CustomerTimelineService customerTimelineService;
 
@@ -44,6 +48,7 @@ public class SalesmapService {
             SalesmapClient salesmapClient,
             GoogleCalendarEventService googleCalendarEventService,
             ScheduleRepository scheduleRepository,
+            ScheduleDeletionAuditRepository deletionAudits,
             ScheduleConflictService scheduleConflictService,
             CustomerTimelineService customerTimelineService
     ) {
@@ -53,6 +58,7 @@ public class SalesmapService {
         this.salesmapClient = salesmapClient;
         this.googleCalendarEventService = googleCalendarEventService;
         this.scheduleRepository = scheduleRepository;
+        this.deletionAudits = deletionAudits;
         this.scheduleConflictService = scheduleConflictService;
         this.customerTimelineService = customerTimelineService;
     }
@@ -130,6 +136,12 @@ public class SalesmapService {
         if ("CANCEL".equals(analysis.getActionType())) {
             googleCalendarEventService.deleteEventForSchedule(approvedSchedule, authenticatedUserId);
             customerTimelineService.unlinkScheduleReferences(approvedSchedule.getId());
+            deletionAudits.save(new ScheduleDeletionAudit(
+                    approvedSchedule.getId(),
+                    authenticatedUserId,
+                    LocalDateTime.now(ZoneId.of("Asia/Seoul")),
+                    approvedSchedule.getTitle()
+            ));
             scheduleRepository.delete(approvedSchedule);
             return null;
         }

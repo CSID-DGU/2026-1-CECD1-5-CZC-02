@@ -5,16 +5,23 @@ import com.salesmap.backend.calendar.client.GoogleCalendarClient;
 import com.salesmap.backend.calendar.config.GoogleCalendarProperties;
 import com.salesmap.backend.calendar.dto.GoogleCalendarEventRequest;
 import com.salesmap.backend.calendar.dto.GoogleCalendarEventResponse;
+import com.salesmap.backend.calendar.exception.GoogleCalendarEventConflictException;
 import com.salesmap.backend.demo.service.DemoMailbox;
 import com.salesmap.backend.gmail.service.GmailIntegrationService;
 import com.salesmap.backend.schedule.entity.Schedule;
+import com.salesmap.backend.schedule.entity.ScheduleMemoMarker;
 import com.salesmap.backend.schedule.entity.ScheduleStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 @Service
 public class GoogleCalendarEventService {
+
+    private static final Logger log = LoggerFactory.getLogger(GoogleCalendarEventService.class);
+    private static final String EVENT_ID_PREFIX = "salesmap";
 
     private final GoogleCalendarProperties properties;
     private final GmailIntegrationService gmailIntegrationService;
@@ -50,16 +57,43 @@ public class GoogleCalendarEventService {
         String accessToken = gmailIntegrationService.getValidAccessTokenForUser(authenticatedUserId);
         LocalDateTime startDateTime = schedule.getScheduleDateTime();
         LocalDateTime endDateTime = startDateTime.plusHours(1);
-
-        return googleCalendarClient.insertEvent(
-                accessToken,
-                new GoogleCalendarEventRequest(
-                        schedule.getTitle(),
-                        buildDescription(analysis, schedule),
-                        startDateTime,
-                        endDateTime
-                )
+        GoogleCalendarEventRequest request = new GoogleCalendarEventRequest(
+                schedule.getTitle(),
+                buildDescription(analysis, schedule),
+                startDateTime,
+                endDateTime
         );
+        String eventId = eventIdFor(schedule);
+
+        try {
+            return googleCalendarClient.insertEvent(accessToken, eventId, request);
+        } catch (GoogleCalendarEventConflictException conflict) {
+            return reuseExistingEvent(accessToken, eventId, schedule, request);
+        }
+    }
+
+    // Google 이벤트 ID는 a-v, 0-9만 허용한다. 같은 일정은 항상 같은 ID라 재시도해도 이벤트가 늘지 않는다.
+    private String eventIdFor(Schedule schedule) {
+        return schedule.getId() == null ? null : EVENT_ID_PREFIX + schedule.getId();
+    }
+
+    private GoogleCalendarEventResponse reuseExistingEvent(
+            String accessToken,
+            String eventId,
+            Schedule schedule,
+            GoogleCalendarEventRequest request
+    ) {
+        GoogleCalendarEventResponse existing = googleCalendarClient.getEvent(accessToken, eventId);
+        if (existing == null || "cancelled".equalsIgnoreCase(existing.status())) {
+            log.warn("Google event {} is cancelled; schedule {} stays unregistered", eventId, schedule.getId());
+            return null;
+        }
+        // DB를 초기화해 일정 번호가 다시 쓰이면 같은 ID가 다른 일정의 이벤트일 수 있으므로 덮어쓰지 않는다.
+        if (existing.summary() == null || !existing.summary().trim().equals(schedule.getTitle().trim())) {
+            log.warn("Google event {} does not match schedule {}; left untouched", eventId, schedule.getId());
+            return null;
+        }
+        return googleCalendarClient.updateEvent(accessToken, eventId, request);
     }
 
     public GoogleCalendarEventResponse updateEventForSchedule(Schedule schedule, Long authenticatedUserId) {
@@ -103,7 +137,7 @@ public class GoogleCalendarEventService {
             appendLine(builder, "다음 행동", analysis.getFollowUpAction());
             appendLine(builder, "요약", analysis.getSummary());
         }
-        appendLine(builder, "일정 메모", schedule.getMemo());
+        appendLine(builder, "일정 메모", ScheduleMemoMarker.strip(schedule.getMemo()));
         return builder.toString().trim();
     }
 

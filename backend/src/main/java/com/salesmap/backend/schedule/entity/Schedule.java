@@ -125,6 +125,15 @@ public class Schedule extends BaseEntity {
         this.status = ScheduleStatus.SCHEDULED;
     }
 
+    /** 상태는 그대로 두고 시간만 바꾼다. */
+    public void reschedule(LocalDateTime scheduleDateTime) {
+        this.scheduleDateTime = scheduleDateTime;
+    }
+
+    public boolean isActive() {
+        return status == ScheduleStatus.SCHEDULED || status == ScheduleStatus.REMINDED;
+    }
+
     public void cancel() {
         this.status = ScheduleStatus.CANCELED;
     }
