@@ -39,8 +39,8 @@ export function ArchivedBadge() {
   );
 }
 
-// actionLabel·onAction을 주면 오른쪽에 작은 버튼(보관·보관 해제)을 함께 둔다
-export function MeetingNoteListItem({ note, onClick, actionLabel, onAction, actionDisabled = false }) {
+// actionLabel·onAction을 주면 오른쪽에 작은 버튼(보관·보관 해제)을 함께 둔다. footer는 제목 아래 한 줄(확인 대기함의 남은 항목)
+export function MeetingNoteListItem({ note, onClick, actionLabel, onAction, actionDisabled = false, footer = null }) {
   const archived = Boolean(note.archivedAt);
   const tone = archived || note.status === 'CONFIRMED'
     ? 'border-slate-200 bg-white hover:border-blue-300'
@@ -61,6 +61,7 @@ export function MeetingNoteListItem({ note, onClick, actionLabel, onAction, acti
           {note.mode === 'LIGHT' ? ' · 사람별 간단 양식' : ''}
           {!archived && note.status !== 'CONFIRMED' && note.missingFieldCount > 0 ? ` · 확인 필요 ${note.missingFieldCount}칸` : ''}
         </p>
+        {footer && <span className="mt-2 flex flex-wrap gap-1.5">{footer}</span>}
       </button>
       {onAction && (
         <button
