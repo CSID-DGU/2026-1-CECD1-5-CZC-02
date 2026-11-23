@@ -7,6 +7,7 @@ import com.salesmap.backend.calendar.config.GoogleCalendarProperties;
 import com.salesmap.backend.calendar.dto.GoogleCalendarEventRequest;
 import com.salesmap.backend.calendar.dto.GoogleCalendarEventResponse;
 import com.salesmap.backend.calendar.exception.GoogleCalendarClientException;
+import com.salesmap.backend.calendar.exception.GoogleCalendarEventConflictException;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
@@ -21,6 +22,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Component
@@ -40,14 +42,43 @@ public class HttpGoogleCalendarClient implements GoogleCalendarClient {
     }
 
     @Override
-    public GoogleCalendarEventResponse insertEvent(String accessToken, GoogleCalendarEventRequest request) {
+    public GoogleCalendarEventResponse insertEvent(String accessToken, String eventId, GoogleCalendarEventRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>(toGoogleEventBody(request));
+        if (eventId != null) {
+            body.put("id", eventId);
+        }
+
         try {
             String response = restClient.post()
                     .uri("/calendars/{calendarId}/events", properties.getCalendarId())
                     .headers(headers -> headers.setBearerAuth(accessToken))
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
-                    .body(toGoogleEventBody(request))
+                    .body(body)
+                    .retrieve()
+                    .onStatus(status -> status.isError(), (httpRequest, httpResponse) -> {
+                        if (httpResponse.getStatusCode().value() == 409) {
+                            throw new GoogleCalendarEventConflictException("같은 ID의 Google Calendar 이벤트가 이미 있습니다.");
+                        }
+                        throw toGoogleCalendarClientException(httpResponse);
+                    })
+                    .body(String.class);
+
+            return parseEventResponse(response);
+        } catch (GoogleCalendarClientException exception) {
+            throw exception;
+        } catch (RestClientException exception) {
+            throw new GoogleCalendarClientException("Google Calendar API 호출에 실패했습니다.", exception);
+        }
+    }
+
+    @Override
+    public GoogleCalendarEventResponse getEvent(String accessToken, String eventId) {
+        try {
+            String response = restClient.get()
+                    .uri("/calendars/{calendarId}/events/{eventId}", properties.getCalendarId(), eventId)
+                    .headers(headers -> headers.setBearerAuth(accessToken))
+                    .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .onStatus(status -> status.isError(), (httpRequest, httpResponse) -> {
                         throw toGoogleCalendarClientException(httpResponse);
@@ -58,7 +89,7 @@ public class HttpGoogleCalendarClient implements GoogleCalendarClient {
         } catch (GoogleCalendarClientException exception) {
             throw exception;
         } catch (RestClientException exception) {
-            throw new GoogleCalendarClientException("Google Calendar API 호출에 실패했습니다.", exception);
+            throw new GoogleCalendarClientException("Google Calendar 이벤트 조회에 실패했습니다.", exception);
         }
     }
 

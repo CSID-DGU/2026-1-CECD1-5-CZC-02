@@ -5,7 +5,10 @@ import com.salesmap.backend.calendar.dto.GoogleCalendarEventResponse;
 
 public interface GoogleCalendarClient {
 
-    GoogleCalendarEventResponse insertEvent(String accessToken, GoogleCalendarEventRequest request);
+    /** eventId가 이미 있으면 {@code GoogleCalendarEventConflictException}을 던진다. */
+    GoogleCalendarEventResponse insertEvent(String accessToken, String eventId, GoogleCalendarEventRequest request);
+
+    GoogleCalendarEventResponse getEvent(String accessToken, String eventId);
 
     GoogleCalendarEventResponse updateEvent(String accessToken, String eventId, GoogleCalendarEventRequest request);
 

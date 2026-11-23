@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AlertCircle, CalendarCheck2, CheckCircle2, Clock3, Loader2, RefreshCw } from 'lucide-react';
 import { getConfirmedTasks, registerTaskOnCalendar } from '../../api/briefings';
+import { calendarRegistrationResult } from './calendarRegistrationResult';
 
 function toDateInput(date) {
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -21,6 +22,7 @@ export function CalendarRegistrationPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [unregisteredMessage, setUnregisteredMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   const loadBriefing = useCallback(async () => {
@@ -51,11 +53,11 @@ export function CalendarRegistrationPage() {
     setSelectedTaskId(taskId);
     setScheduleDateTime(toDateTimeInput(task));
     setMessage('');
+    setUnregisteredMessage('');
     setErrorMessage('');
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const submitRegistration = async () => {
     if (!selectedTaskId || !scheduleDateTime) {
       setErrorMessage('작업과 등록 시간을 모두 선택해 주세요.');
       return;
@@ -63,15 +65,23 @@ export function CalendarRegistrationPage() {
 
     setSaving(true);
     setMessage('');
+    setUnregisteredMessage('');
     setErrorMessage('');
     try {
-      await registerTaskOnCalendar(selectedTaskId, `${scheduleDateTime}:00`);
-      setMessage('캘린더 등록이 완료되었습니다. 같은 작업을 다시 등록해도 중복 일정이 생기지 않습니다.');
+      const schedule = await registerTaskOnCalendar(selectedTaskId, `${scheduleDateTime}:00`);
+      const result = calendarRegistrationResult(schedule);
+      if (result.registered) setMessage(result.message);
+      else setUnregisteredMessage(result.message);
     } catch (error) {
       setErrorMessage(error.response?.data?.message || '캘린더 등록에 실패했습니다.');
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    submitRegistration();
   };
 
   return (
@@ -92,6 +102,7 @@ export function CalendarRegistrationPage() {
 
         {errorMessage && <div className="mb-5 flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700"><AlertCircle className="h-4 w-4" /><span>{errorMessage}</span></div>}
         {message && <div className="mb-5 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"><CheckCircle2 className="h-4 w-4" /><span>{message}</span></div>}
+        {unregisteredMessage && <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800"><span className="flex items-center gap-2"><AlertCircle className="h-4 w-4 shrink-0" />{unregisteredMessage}</span><button type="button" onClick={submitRegistration} disabled={saving} className="rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-bold text-amber-800 hover:bg-amber-100 disabled:opacity-50">{saving ? '다시 시도 중...' : '캘린더 등록 다시 시도'}</button></div>}
 
         {loading && !briefing ? <div className="flex min-h-64 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-400"><Loader2 className="mr-2 h-5 w-5 animate-spin" />등록할 작업을 불러오는 중입니다.</div> : (
           <div className="grid gap-5 lg:grid-cols-[1fr_1.2fr]">

@@ -56,7 +56,13 @@ public class CalendarSchedulePersistenceService {
                 .filter(schedule -> schedule.getMemo() != null && schedule.getMemo().contains(marker))
                 .findFirst()
                 .orElse(null);
-        if (existing != null) return existing;
+        if (existing != null) {
+            // 아직 캘린더에 못 올라간 일정을 다시 시도하면 사람이 새로 고른 시간을 따른다.
+            if (!existing.hasGoogleCalendarEvent() && existing.isActive()) {
+                existing.reschedule(request.scheduleDateTime());
+            }
+            return existing;
+        }
 
         User user = users.findById(ownerUserId)
                 .orElseThrow(() -> new NoSuchElementException("owner user not found"));

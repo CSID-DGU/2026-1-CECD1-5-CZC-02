@@ -9,6 +9,7 @@ import com.salesmap.backend.schedule.dto.ScheduleResponse;
 import com.salesmap.backend.schedule.dto.ScheduleUpdateRequest;
 import com.salesmap.backend.schedule.entity.Schedule;
 import com.salesmap.backend.schedule.entity.ScheduleDeletionAudit;
+import com.salesmap.backend.schedule.entity.ScheduleMemoMarker;
 import com.salesmap.backend.schedule.entity.ScheduleOutcome;
 import com.salesmap.backend.schedule.entity.ScheduleStatus;
 import com.salesmap.backend.schedule.repository.ScheduleRepository;
@@ -97,7 +98,9 @@ public class ScheduleService {
         Schedule schedule = findScheduleOwnedBy(scheduleId, authenticatedUserId);
 
         String nextTitle = isBlank(request.title()) ? schedule.getTitle() : request.title().trim();
-        String nextMemo = request.memo() == null ? schedule.getMemo() : truncate(request.memo(), 2000);
+        String nextMemo = request.memo() == null
+                ? schedule.getMemo()
+                : truncate(ScheduleMemoMarker.preserve(schedule.getMemo(), request.memo()), 2000);
 
         schedule.update(
                 truncate(nextTitle, 255),
