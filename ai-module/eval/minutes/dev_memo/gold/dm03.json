@@ -1,0 +1,65 @@
+{
+  "noteId": "mn_eval_dm03",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_dm03",
+      "sourceType": "MEETING_NOTE"
+    }
+  ],
+  "occurredAt": "2026-11-04T14:00:00",
+  "location": "샘플유통 강남 사무실",
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "하샘플 팀장",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "정산 모듈 데모 진행, 반응 좋음",
+        "evidence": "우리 정산 모듈 데모 보여드림. 반응은 좋았음"
+      },
+      {
+        "text": "매장 120곳, 매달 말일 수작업 정산",
+        "evidence": "매장 120곳이고 정산은 지금 매달 말일에 수작업으로 함"
+      },
+      {
+        "text": "대표이사 교체로 비용 절감이 올해 1순위",
+        "evidence": "대표이사가 바뀌면서 비용 절감이 올해 1순위가 됐다고 함"
+      },
+      {
+        "text": "ERP는 표준 API로 연동된다고 설명",
+        "evidence": "우리가 ERP 연동은 표준 API로 된다고 설명드림"
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "계약 전 무료 시범 운영 한 달 가능 여부 문의",
+        "evidence": "계약 전에 무료 시범 운영 한 달 가능한지 문의"
+      }
+    ],
+    "concerns": [
+      {
+        "text": "정산 오류 시 책임 소재 우려",
+        "evidence": "정산 오류가 나면 책임 소재가 어떻게 되는지 우려"
+      }
+    ],
+    "commitments": [
+      {
+        "text": "시범 운영 조건 내부 확인 후 내일까지 답변",
+        "evidence": "시범 운영 조건은 내부 확인해서 내일까지 답드리기로"
+      }
+    ],
+    "nextContact": []
+  },
+  "missingFields": [
+    "nextContact"
+  ],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

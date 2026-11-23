@@ -75,6 +75,7 @@ def build_meeting_note(request: MinutesRequest) -> MinutesResult:
     dropped: List[Dict[str, Any]] = []
     if full:
         fields = {name: clean_items(data.get(name), source, name, dropped) for name in FIELD_NAMES}
+        fields["discussion"] = drop_discussion_repeats(fields, dropped)
         note = assemble(base, fields, None, generated_by="LLM", llm_model=response.model)
     else:
         per_person = clean_per_person(data.get("perPerson"), source, participants, dropped)
@@ -189,6 +190,18 @@ def clean_items(raw_items: Any, source: str, field_name: str, dropped: List[Dict
         seen.add(key)
         items.append(item)
     return items
+
+
+def drop_discussion_repeats(fields: Dict[str, List[Dict[str, str]]], dropped: List[Dict[str, Any]]) -> List[Dict[str, str]]:
+    """discussion은 다른 4문항에 속하지 않는 내용이므로, 같은 근거가 다른 문항에 있으면 discussion에서 뺀다."""
+    elsewhere = {compact(item["evidence"]) for name in FIELD_NAMES if name != "discussion" for item in fields[name]}
+    kept = []
+    for item in fields["discussion"]:
+        if compact(item["evidence"]) in elsewhere:
+            drop(dropped, "discussion", item, "다른 문항과 같은 근거")
+        else:
+            kept.append(item)
+    return kept
 
 
 def clean_per_person(raw_people: Any, source: str, participants: List[Dict[str, Any]],

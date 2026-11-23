@@ -1,0 +1,72 @@
+{
+  "noteId": "mn_eval_dm01",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_dm01",
+      "sourceType": "MEETING_NOTE"
+    }
+  ],
+  "occurredAt": "2026-11-02T10:00:00",
+  "location": "예제기계 본사",
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "구예제 부장",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "기존 재고 시스템을 현장에서 거의 사용하지 않음",
+        "evidence": "작년에 도입한 재고 시스템은 현장에서 거의 안 쓴다고 함"
+      },
+      {
+        "text": "창고가 인천·평택 2곳으로 증가",
+        "evidence": "창고가 인천 1곳에서 올해 평택까지 2곳으로 늘었음"
+      },
+      {
+        "text": "품목 약 8천 개, 월 출고 3만 건",
+        "evidence": "품목 수는 약 8천 개, 월 출고 건수는 3만 건 정도"
+      },
+      {
+        "text": "경쟁사 제품도 검토 중, 미정",
+        "evidence": "경쟁사 제품도 같이 보고 있는데 아직 정한 곳은 없다고"
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "기존 바코드 스캐너 사용 가능 여부 문의",
+        "evidence": "바코드 스캐너 기존 장비 그대로 쓸 수 있는지 물어보심"
+      }
+    ],
+    "concerns": [
+      {
+        "text": "현장 직원의 새 화면 적응 우려",
+        "evidence": "현장 직원들이 새 화면에 적응 못할까 봐 걱정하심"
+      }
+    ],
+    "commitments": [
+      {
+        "text": "창고 2곳 기준 견적 다음 주 화요일까지 송부",
+        "evidence": "우리 쪽에서 창고 2곳 기준 견적을 다음 주 화요일까지 드리기로"
+      },
+      {
+        "text": "품목 코드 샘플 파일 송부 (고객 측)",
+        "evidence": "부장님이 품목 코드 샘플 파일 보내주신다고 함"
+      }
+    ],
+    "nextContact": [
+      {
+        "text": "12월 첫째 주 평택 창고 공동 방문",
+        "evidence": "12월 첫째 주에 평택 창고 같이 보러 가기로"
+      }
+    ]
+  },
+  "missingFields": [],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

@@ -48,11 +48,25 @@ e04~e10은 정답 교차 검수 전이다 (`cases.json`의 `"reviewStatus": "검
 | d04 | 상황 공유(조직 변경·예산 진행), 다른 부서 우려, 고객 측 약속, "연락드리겠습니다", 잡담 |
 | d05 | 스레드 2통 (우리 요약 → 고객 정정·추가 요청·고객 측 약속·다음 회의 제안), `Original Message` 인용 |
 
+### 개발용 메모 (`dev_memo/`, dm01~dm06)
+
+메모 지시문을 고칠 때 보는 가짜 메모 6건 (정답 포함). 평가용 메모(m01~m10)를 보고 고치지 않도록 따로 두었고, 고치는 동안에는 `--split dev_memo`만 돌린다. 현황·조직·예산처럼 `discussion`이 많은 메모 위주이며, 근거 문장이 평가셋과 겹치지 않는지 `tests/test_minutes_eval.py`가 검사한다.
+
+| 케이스 | 상황 |
+| --- | --- |
+| dm01 | 줄마다 현황이 많은 메모, 5문항 모두 있음 |
+| dm02 | 한 문단으로 적은 통화 메모 |
+| dm03 | 데모·우리 설명 + 잡담, 다음 접촉 없음 |
+| dm04 | 상대 2명 화상회의, 한 줄에 사실 2개 |
+| dm05 | 첫 미팅 회사 소개만 (`discussion`만 있음) |
+| dm06 | 번호 목록, 교체 검토·가격 우려 |
+
 ## 실행 (ai-module 폴더에서)
 
 ```bash
 python -m eval.minutes.run --verbose                                 # 엔진(app/minutes)을 20건에 돌리고 채점 (로컬 Ollama 필요)
 python -m eval.minutes.run --split dev --verbose                     # 개발용 메일 5건 (프롬프트 고칠 때)
+python -m eval.minutes.run --split dev_memo --verbose                # 개발용 메모 6건 (메모 지시문 고칠 때)
 python -m eval.minutes.score --self                                  # 정답끼리 → 만점이어야 정상
 python -m eval.minutes.score --pred eval/results/minutes_<실행이름>    # 엔진 결과 채점
 python -m eval.minutes.score --pred <폴더> --verbose --json <폴더>/report.json

@@ -1,0 +1,68 @@
+{
+  "noteId": "mn_eval_dm06",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_dm06",
+      "sourceType": "MEETING_NOTE"
+    }
+  ],
+  "occurredAt": "2026-11-09T13:30:00",
+  "location": "시범물산 회의실 B",
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "탁시범 차장",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "타사 솔루션 계약 내년 4월 종료",
+        "evidence": "현재 쓰는 타사 솔루션 계약이 내년 4월에 끝남"
+      },
+      {
+        "text": "내부 의견이 교체 쪽으로 기움",
+        "evidence": "연장보다 교체 쪽으로 내부 의견이 기울었다고 함"
+      },
+      {
+        "text": "3년 계약 시 할인 조건 안내",
+        "evidence": "우리 쪽은 3년 계약 시 할인 조건이 있다고 안내함"
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "모바일 앱 화면 캡처 요청",
+        "evidence": "모바일 앱 화면 캡처 몇 장 받아보고 싶다고 하심"
+      }
+    ],
+    "concerns": [
+      {
+        "text": "타사 대비 가격 10% 높아 부담",
+        "evidence": "타사보다 우리 가격이 10% 높아서 부담스러워하심"
+      }
+    ],
+    "commitments": [
+      {
+        "text": "화면 캡처 오늘 오후 송부",
+        "evidence": "캡처는 오늘 오후에 보내드리기로"
+      },
+      {
+        "text": "구매 담당자 연락처 공유 (고객 측)",
+        "evidence": "차장님이 구매 담당자 연락처 알려주신다고 함"
+      }
+    ],
+    "nextContact": [
+      {
+        "text": "내년 1월 둘째 주 재방문",
+        "evidence": "내년 1월 둘째 주에 다시 뵙기로"
+      }
+    ]
+  },
+  "missingFields": [],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}
