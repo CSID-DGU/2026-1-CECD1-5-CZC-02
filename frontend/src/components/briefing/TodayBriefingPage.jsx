@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AlertCircle, CalendarDays, CheckCircle2, Clock3, Loader2, RefreshCw } from 'lucide-react';
 import { getTodayBriefing } from '../../api/briefings';
+import { TaskCalendarRegistrationButton } from './TaskCalendarRegistrationButton';
+import { taskTypeLabel } from './taskTypeLabel';
 
 function toDateInput(date) {
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -27,7 +29,7 @@ function BriefingItem({ item }) {
     <article className="rounded-xl border border-slate-100 bg-white p-4 shadow-sm">
       <p className="text-sm font-semibold text-slate-800">{item.content || '내용이 없는 작업'}</p>
       <p className="mt-1 text-xs text-slate-400">
-        {item.taskId} · {item.taskType || '분류 없음'}{item.dueDate ? ` · 기한 ${item.dueDate}` : ''}
+        {taskTypeLabel(item.taskType)}{item.dueDate ? ` · 기한 ${item.dueDate}` : ''}
       </p>
       {Array.isArray(item.preparationItems) && item.preparationItems.length > 0 && (
         <ul className="mt-3 space-y-1 border-t border-slate-100 pt-3 text-xs text-slate-600">
@@ -36,6 +38,7 @@ function BriefingItem({ item }) {
           ))}
         </ul>
       )}
+      <TaskCalendarRegistrationButton taskId={item.taskId} />
     </article>
   );
 }
@@ -83,7 +86,7 @@ export function TodayBriefingPage() {
   return (
     <div className="h-full overflow-y-auto p-6 lg:p-8"><div className="mx-auto max-w-7xl">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <div><p className="mb-1 text-sm font-semibold text-blue-600">D · 일정·브리핑</p><h1 className="text-2xl font-extrabold tracking-tight text-slate-900">오늘의 영업 브리핑</h1><p className="mt-1 text-sm text-slate-500">해야 할 일과 내일 준비를 한 번에 확인합니다.</p></div>
+        <div><h1 className="text-2xl font-extrabold tracking-tight text-slate-900">오늘의 영업 브리핑</h1><p className="mt-1 text-sm text-slate-500">해야 할 일과 내일 준비를 한 번에 확인합니다.</p></div>
         <div className="flex items-center gap-2"><label htmlFor="briefing-date" className="text-sm text-slate-500">기준일</label><input id="briefing-date" type="date" value={date} onChange={(event) => setDate(event.target.value)} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm" /><button type="button" onClick={loadBriefing} disabled={loading} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-600 shadow-sm hover:bg-slate-50 disabled:opacity-50" aria-label="브리핑 새로고침"><RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} /></button></div>
       </div>
       {errorMessage && <div className="mb-5 flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700"><AlertCircle className="h-4 w-4" /><span>{errorMessage}</span></div>}

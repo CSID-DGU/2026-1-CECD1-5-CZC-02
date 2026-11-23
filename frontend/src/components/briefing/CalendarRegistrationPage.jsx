@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AlertCircle, CalendarCheck2, CheckCircle2, Clock3, Loader2, RefreshCw } from 'lucide-react';
 import { getConfirmedTasks, registerTaskOnCalendar } from '../../api/briefings';
 import { calendarRegistrationResult } from './calendarRegistrationResult';
+import { taskTypeLabel } from './taskTypeLabel';
 
 function toDateInput(date) {
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -10,8 +11,7 @@ function toDateInput(date) {
 }
 
 function toDateTimeInput(item) {
-  const date = item?.dueDate || toDateInput(new Date());
-  return `${date}T09:00`;
+  return '';
 }
 
 export function CalendarRegistrationPage() {
@@ -89,7 +89,6 @@ export function CalendarRegistrationPage() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="mb-1 text-sm font-semibold text-emerald-600">D · 일정·브리핑</p>
             <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">할 일 캘린더 등록</h1>
             <p className="mt-1 text-sm text-slate-500">확정된 작업에 사람이 직접 시간을 정해 일정을 등록합니다.</p>
           </div>
@@ -108,13 +107,13 @@ export function CalendarRegistrationPage() {
           <div className="grid gap-5 lg:grid-cols-[1fr_1.2fr]">
             <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="mb-4 flex items-center gap-3"><span className="rounded-xl bg-emerald-50 p-2 text-emerald-600"><CalendarCheck2 className="h-5 w-5" /></span><div><h2 className="font-bold text-slate-800">등록할 작업</h2><p className="text-xs text-slate-500">CONFIRMED 작업만 표시됩니다.</p></div></div>
-              {tasks.length ? <div className="space-y-2">{tasks.map((task) => <button type="button" key={task.taskId} onClick={() => handleTaskChange({ target: { value: task.taskId } })} className={`w-full rounded-xl border p-3 text-left transition ${selectedTaskId === task.taskId ? 'border-emerald-400 bg-emerald-50' : 'border-slate-200 hover:border-emerald-200 hover:bg-slate-50'}`}><p className="text-sm font-semibold text-slate-800">{task.content || '내용이 없는 작업'}</p><p className="mt-1 text-xs text-slate-400">{task.taskId} · {task.taskType || '분류 없음'}{task.dueDate ? ` · 기한 ${task.dueDate}` : ''}</p></button>)}</div> : <p className="rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center text-sm text-slate-400">등록할 확정 작업이 없습니다.</p>}
+              {tasks.length ? <div className="space-y-2">{tasks.map((task) => <button type="button" key={task.taskId} onClick={() => handleTaskChange({ target: { value: task.taskId } })} className={`w-full rounded-xl border p-3 text-left transition ${selectedTaskId === task.taskId ? 'border-emerald-400 bg-emerald-50' : 'border-slate-200 hover:border-emerald-200 hover:bg-slate-50'}`}><p className="text-sm font-semibold text-slate-800">{task.content || '내용이 없는 작업'}</p><p className="mt-1 text-xs text-slate-400">{taskTypeLabel(task.taskType)}{task.dueDate ? ` · 기한 ${task.dueDate}` : ''}</p></button>)}</div> : <p className="rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center text-sm text-slate-400">등록할 확정 작업이 없습니다.</p>}
             </section>
 
             <form onSubmit={handleSubmit} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="mb-5 flex items-center gap-3"><Clock3 className="h-5 w-5 text-emerald-600" /><div><h2 className="font-bold text-slate-800">등록 시간 선택</h2><p className="text-xs text-slate-500">시간은 자동 확정하지 않고 사용자가 선택합니다.</p></div></div>
               <label htmlFor="task-select" className="mb-2 block text-sm font-semibold text-slate-700">작업</label>
-              <select id="task-select" value={selectedTaskId} onChange={handleTaskChange} disabled={!tasks.length || saving} className="mb-5 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 disabled:bg-slate-50"><option value="">작업을 선택하세요</option>{tasks.map((task) => <option key={task.taskId} value={task.taskId}>{task.taskId} · {task.content || '내용 없음'}</option>)}</select>
+              <select id="task-select" value={selectedTaskId} onChange={handleTaskChange} disabled={!tasks.length || saving} className="mb-5 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 disabled:bg-slate-50"><option value="">작업을 선택하세요</option>{tasks.map((task) => <option key={task.taskId} value={task.taskId}>{task.content || '내용 없음'}</option>)}</select>
               <label htmlFor="schedule-date-time" className="mb-2 block text-sm font-semibold text-slate-700">캘린더 등록 일시</label>
               <input id="schedule-date-time" type="datetime-local" value={scheduleDateTime} onChange={(event) => setScheduleDateTime(event.target.value)} disabled={!selectedTaskId || saving} className="mb-5 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 disabled:bg-slate-50" />
               <button type="submit" disabled={!selectedTaskId || !scheduleDateTime || saving} className="flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"><CalendarCheck2 className="h-4 w-4" />{saving ? '등록 중...' : '캘린더에 등록'}</button>
