@@ -311,6 +311,9 @@ export function DashboardLayout({ children }) {
     if (/^\/meeting-notes\/mn_/.test(location.pathname)) {
       return '회의록 확인';
     }
+    if (location.pathname === '/briefing/calendar-registration') {
+      return '캘린더 등록';
+    }
     return menuItems.find(item => item.path === location.pathname)?.label || '대시보드';
   })();
 

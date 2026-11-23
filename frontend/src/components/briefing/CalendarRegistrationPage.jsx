@@ -10,10 +10,6 @@ function toDateInput(date) {
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
-function toDateTimeInput(item) {
-  return '';
-}
-
 export function CalendarRegistrationPage() {
   const [date, setDate] = useState(() => toDateInput(new Date()));
   const [briefing, setBriefing] = useState(null);
@@ -33,7 +29,7 @@ export function CalendarRegistrationPage() {
       setBriefing(data);
       const firstTask = data?.items?.[0];
       setSelectedTaskId(firstTask?.taskId || '');
-      setScheduleDateTime(toDateTimeInput(firstTask));
+      setScheduleDateTime('');
     } catch (error) {
       setErrorMessage(error.response?.data?.message || '등록할 작업을 불러오지 못했습니다.');
     } finally {
@@ -49,9 +45,8 @@ export function CalendarRegistrationPage() {
 
   const handleTaskChange = (event) => {
     const taskId = event.target.value;
-    const task = tasks.find((item) => item.taskId === taskId);
     setSelectedTaskId(taskId);
-    setScheduleDateTime(toDateTimeInput(task));
+    setScheduleDateTime('');
     setMessage('');
     setUnregisteredMessage('');
     setErrorMessage('');

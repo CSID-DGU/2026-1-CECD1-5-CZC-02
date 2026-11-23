@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { AlertCircle, CalendarDays, CheckCircle2, Clock3, Loader2, RefreshCw } from 'lucide-react';
 import { getTodayBriefing } from '../../api/briefings';
 import { TaskCalendarRegistrationButton } from './TaskCalendarRegistrationButton';
@@ -24,7 +25,7 @@ const colorStyles = {
   violet: { icon: 'bg-violet-50 text-violet-600', badge: 'bg-violet-50 text-violet-700' },
 };
 
-function BriefingItem({ item }) {
+function BriefingItem({ item, canRegister }) {
   return (
     <article className="rounded-xl border border-slate-100 bg-white p-4 shadow-sm">
       <p className="text-sm font-semibold text-slate-800">{item.content || '내용이 없는 작업'}</p>
@@ -38,7 +39,7 @@ function BriefingItem({ item }) {
           ))}
         </ul>
       )}
-      <TaskCalendarRegistrationButton taskId={item.taskId} />
+      {canRegister && <TaskCalendarRegistrationButton taskId={item.taskId} />}
     </article>
   );
 }
@@ -55,7 +56,7 @@ function BriefingSection({ section, items }) {
         </div>
         <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${styles.badge}`}>{items.length}</span>
       </div>
-      {items.length > 0 ? <div className="space-y-2">{items.map((item) => <BriefingItem key={item.taskId} item={item} />)}</div> : (
+      {items.length > 0 ? <div className="space-y-2">{items.map((item) => <BriefingItem key={item.taskId} item={item} canRegister={section.key !== 'pendingConfirmation'} />)}</div> : (
         <p className="rounded-xl border border-dashed border-slate-200 bg-white px-4 py-5 text-center text-sm text-slate-400">현재 표시할 작업이 없습니다.</p>
       )}
     </section>
@@ -87,7 +88,7 @@ export function TodayBriefingPage() {
     <div className="h-full overflow-y-auto p-6 lg:p-8"><div className="mx-auto max-w-7xl">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div><h1 className="text-2xl font-extrabold tracking-tight text-slate-900">오늘의 영업 브리핑</h1><p className="mt-1 text-sm text-slate-500">해야 할 일과 내일 준비를 한 번에 확인합니다.</p></div>
-        <div className="flex items-center gap-2"><label htmlFor="briefing-date" className="text-sm text-slate-500">기준일</label><input id="briefing-date" type="date" value={date} onChange={(event) => setDate(event.target.value)} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm" /><button type="button" onClick={loadBriefing} disabled={loading} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-600 shadow-sm hover:bg-slate-50 disabled:opacity-50" aria-label="브리핑 새로고침"><RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} /></button></div>
+        <div className="flex flex-wrap items-center gap-2"><Link to="/briefing/calendar-registration" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">다른 할 일 캘린더 등록</Link><label htmlFor="briefing-date" className="text-sm text-slate-500">기준일</label><input id="briefing-date" type="date" value={date} onChange={(event) => setDate(event.target.value)} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm" /><button type="button" onClick={loadBriefing} disabled={loading} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-600 shadow-sm hover:bg-slate-50 disabled:opacity-50" aria-label="브리핑 새로고침"><RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} /></button></div>
       </div>
       {errorMessage && <div className="mb-5 flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700"><AlertCircle className="h-4 w-4" /><span>{errorMessage}</span></div>}
       {loading && !briefing ? <div className="flex min-h-64 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-400"><Loader2 className="mr-2 h-5 w-5 animate-spin" />브리핑을 불러오는 중입니다.</div> : <>
