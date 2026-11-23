@@ -21,6 +21,7 @@ import {
   reviewPeople,
   sameJson,
   splitSentences,
+  unlinkedParticipants,
 } from './meetingNoteUtils';
 import { FieldSection, PerPersonCard } from './MeetingNoteItemEditor';
 import { ParticipantCandidatesPanel } from './ParticipantCandidatesPanel';
@@ -109,7 +110,15 @@ export function MeetingNoteReviewPage() {
   const [isLoadingTasks, setIsLoadingTasks] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [identityItems, setIdentityItems] = useState([]);
+  const [identityLoaded, setIdentityLoaded] = useState(false);
+  const [showLinkWarning, setShowLinkWarning] = useState(false);
+  const participantsRef = useRef(null);
   const taskVersions = useRef(new Map());
+
+  const handleIdentityItems = useCallback((items, loaded) => {
+    setIdentityItems(items);
+    setIdentityLoaded(loaded);
+  }, []);
 
   const applyNote = useCallback((response) => {
     setNote(response);
@@ -222,6 +231,7 @@ export function MeetingNoteReviewPage() {
       : null;
   // 할 일 상대방 고르기용: 사람이 정해진 참석자만 (확정 전에는 저장된 인물 선택을 본다)
   const people = useMemo(() => reviewPeople(meetingNote?.participants, identityItems), [meetingNote, identityItems]);
+  const unlinked = useMemo(() => unlinkedParticipants(meetingNote?.participants, identityItems), [meetingNote, identityItems]);
 
   // 고친 문항만 보낸다. 서버가 바뀐 값마다 수정 기록(revision)을 남긴다.
   const saveChanges = async () => {
@@ -264,6 +274,20 @@ export function MeetingNoteReviewPage() {
     // 메뉴의 확인 대기함 배지를 바로 갱신한다
     window.dispatchEvent(new Event('meeting-notes:changed'));
   });
+
+  // 참석자를 연결하지 않고 확정하면 사람 이력에 남지 않고 나중에 고칠 수도 없어서 한 번 묻는다
+  const requestConfirm = () => {
+    if (unlinked.length > 0) {
+      setShowLinkWarning(true);
+      return;
+    }
+    handleConfirm();
+  };
+
+  const goToParticipants = () => {
+    setShowLinkWarning(false);
+    participantsRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  };
 
   // 보관(숨김)·해제. 지우지 않고, 이 회의록의 할 일도 그대로 둔다 (D-025)
   const handleArchive = () => {
@@ -362,12 +386,14 @@ export function MeetingNoteReviewPage() {
 
           <Card title="회의록" subtitle={isLight ? '여러 명 방문 · 사람별 3칸' : null}>
             <div className="space-y-4">
-              <ParticipantCandidatesPanel
-                participants={meetingNote.participants}
-                identityResolutions={draftExtras.identityResolutions}
-                readOnly={readOnly}
-                onItemsChange={setIdentityItems}
-              />
+              <div ref={participantsRef} className="scroll-mt-4">
+                <ParticipantCandidatesPanel
+                  participants={meetingNote.participants}
+                  identityResolutions={draftExtras.identityResolutions}
+                  readOnly={readOnly}
+                  onItemsChange={handleIdentityItems}
+                />
+              </div>
 
               {isLight ? (
                 <div className="space-y-2">
@@ -466,6 +492,24 @@ export function MeetingNoteReviewPage() {
       </div>
 
       <div className="border-t border-slate-200 bg-white/90 px-6 py-3 backdrop-blur">
+        {showLinkWarning && unlinked.length > 0 && meetingNote.status === 'DRAFT' && !archived && (
+          <div role="alert" className="mb-3 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-left">
+            <div className="min-w-0 text-sm text-amber-900">
+              <p className="font-semibold">
+                {identityLoaded ? '아직 사람과 연결되지 않은 참석자' : '연결 상태를 확인하지 못한 참석자'}: {unlinked.map((participant) => participant.displayName || '이름 없는 참석자').join(', ')}
+              </p>
+              <p className="mt-0.5 text-xs">이대로 확정하면 이 미팅이 사람 이력에 남지 않고, 확정한 뒤에는 연결할 수 없어요.</p>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <button type="button" onClick={goToParticipants} className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+                참석자 연결하기
+              </button>
+              <button type="button" disabled={isSaving} onClick={() => { setShowLinkWarning(false); handleConfirm(); }} className="rounded-xl border border-amber-300 bg-white px-4 py-2 text-sm text-amber-900 hover:bg-amber-100 disabled:opacity-50">
+                연결 없이 확정
+              </button>
+            </div>
+          </div>
+        )}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-left text-sm text-slate-600">
             {archived ? (
@@ -542,7 +586,7 @@ export function MeetingNoteReviewPage() {
               </button>
               <button
                 type="button"
-                onClick={handleConfirm}
+                onClick={requestConfirm}
                 disabled={isSaving || Boolean(confirmBlockedReason)}
                 title={confirmBlockedReason || undefined}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 disabled:opacity-50"

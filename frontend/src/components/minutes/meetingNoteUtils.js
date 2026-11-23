@@ -104,14 +104,24 @@ export function sameJson(left, right) {
   return JSON.stringify(left) === JSON.stringify(right);
 }
 
+function decidedPersonIds(identityItems) {
+  return new Map(identityItems
+    .filter(({ resolution }) => resolution?.decision === 'CONFIRMED' && resolution.personId)
+    .map(({ resolution }) => [resolution.resolutionId, resolution.personId]));
+}
+
+/** 이대로 확정하면 사람 이력에 남지 않는 참석자. 서버가 확정 때 연결하는 기준과 같다. */
+export function unlinkedParticipants(participants = [], identityItems = []) {
+  const decided = decidedPersonIds(identityItems);
+  return participants.filter((participant) => !participant.personId && !decided.has(participant.resolutionId));
+}
+
 /**
  * 할 일 카드의 상대방 목록. 회의록 확정 전에는 참석자 personId가 비어 있으므로 저장된 인물 선택도 함께 본다.
  * 목록만 만들고 할 일에 값을 자동으로 넣지는 않는다.
  */
 export function reviewPeople(participants = [], identityItems = []) {
-  const decided = new Map(identityItems
-    .filter(({ resolution }) => resolution?.decision === 'CONFIRMED' && resolution.personId)
-    .map(({ resolution }) => [resolution.resolutionId, resolution.personId]));
+  const decided = decidedPersonIds(identityItems);
   const seen = new Set();
   return participants.flatMap((participant) => {
     const personId = participant.personId || decided.get(participant.resolutionId);

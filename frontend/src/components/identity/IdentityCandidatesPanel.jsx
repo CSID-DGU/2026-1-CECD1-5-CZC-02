@@ -40,7 +40,8 @@ export function IdentityCandidateRow({ participant, item, people = {}, readOnly,
   const [page, setPage] = useState(0);
   const [didSearch, setDidSearch] = useState(false);
   const [searching, setSearching] = useState(false);
-  const [creating, setCreating] = useState(false);
+  // 후보가 없는 첫 만남은 등록 칸을 바로 펼친다. 등록은 사람이 내용을 확인하고 눌러야 한다 (D-022)
+  const [creating, setCreating] = useState(resolution?.decision === 'NEW' && resolution?.decidedBy !== 'HUMAN' && hasIdentityClue(resolution?.mention));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [form, setForm] = useState({ name: resolution?.mention?.name || '', company: resolution?.mention?.company || '',
@@ -96,7 +97,7 @@ export function IdentityCandidateRow({ participant, item, people = {}, readOnly,
         {selected && <div className="rounded-lg bg-blue-50 p-2"><p className="mb-2 text-xs text-slate-700">선택 대기: {personLabel(selected)}</p>
           <button type="button" className={`${button} border-blue-300 text-blue-700`} disabled={disabled} onClick={() => save({ personId: selected.personId })}>{busy ? '저장 중…' : '이 사람으로 선택 저장'}</button></div>}
         {editing && <button type="button" className={button} disabled={busy} onClick={() => { setSelected(null); setEditing(false); }}>선택 변경 취소</button>}
-        {creating && <NewPersonForm form={form} setForm={setForm} disabled={disabled} onSubmit={register} />}
+        {creating && !readOnly && <NewPersonForm form={form} setForm={setForm} disabled={disabled} onSubmit={register} />}
       </>}
     </>}
     {error && <p role="alert" className="text-xs text-red-700">{error}</p>}
@@ -111,26 +112,27 @@ function IdentityPanelContent({ noteId, participants = [], readOnly = false, api
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [refresh, setRefresh] = useState(0);
+  const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     const controller = new AbortController();
     let live = true;
     async function load() {
       try {
         if (!noteId) throw new Error('회의록을 먼저 불러와 주세요.');
-        const loaded = await apiClient.list(noteId, controller.signal);
-        const ids = [...new Set(loaded.flatMap(({ resolution: r }) => [r.personId,...(r.candidates || []).map(c => c.personId)]).filter(Boolean))];
+        const stored = await apiClient.list(noteId, controller.signal);
+        const ids = [...new Set(stored.flatMap(({ resolution: r }) => [r.personId,...(r.candidates || []).map(c => c.personId)]).filter(Boolean))];
         const fetched = await Promise.allSettled(ids.map(id => apiClient.person(id,controller.signal)));
         if (!live) return;
-        setItems(loaded); setPeople(Object.fromEntries(fetched.filter(result => result.status === 'fulfilled').map(result => [result.value.personId,result.value])));
+        setItems(stored); setLoaded(true); setPeople(Object.fromEntries(fetched.filter(result => result.status === 'fulfilled').map(result => [result.value.personId,result.value])));
         setError(fetched.some(result => result.status === 'rejected') ? '일부 인물 정보를 불러오지 못했어요. 해당 후보는 선택할 수 없어요.' : '');
-      } catch (failure) { if(live) setError(identityError(failure)); }
+      } catch (failure) { if(live) { setLoaded(false); setError(identityError(failure)); } }
       finally { if(live) setLoading(false); }
     }
     load();
     return () => { live=false; controller.abort(); };
   },[noteId,apiClient,refresh]);
   // 확인 화면의 할 일 카드가 저장된 인물 선택을 상대방 목록으로 쓴다.
-  useEffect(() => { onItemsChange?.(items); },[items,onItemsChange]);
+  useEffect(() => { onItemsChange?.(items, loaded); },[items,loaded,onItemsChange]);
 
   async function saved(item) {
     setItems(previous => previous.map(old => old.resolution.resolutionId === item.resolution.resolutionId ? item : old));
