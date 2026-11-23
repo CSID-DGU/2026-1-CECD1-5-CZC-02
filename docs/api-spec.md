@@ -33,7 +33,7 @@ Request:
 {
   "email": "test@example.com",
   "password": "12345678",
-  "name": "이민재"
+  "name": "영업 담당자"
 }
 ```
 
@@ -254,13 +254,13 @@ Response data 주요 필드:
 {
   "analysisId": 1,
   "sourceId": 10,
-  "summary": "Nimbus Tech / CRM Automation / 도입 상담 미팅 / 2026-06-12 / 오전 10시",
+  "summary": "가상물산 / CRM Automation / 도입 상담 미팅 / 2026-06-12 / 오전 10시",
   "nextAction": "미팅 일정 등록 및 미팅 준비",
   "scheduleInfo": "CRM Automation 관련 미팅 (2026-06-12T10:00)",
-  "customerName": "Nimbus Tech",
+  "customerName": "가상물산",
   "productName": "CRM Automation",
   "amount": null,
-  "attendees": "Nimbus Tech 김도윤, 영업팀 이민재",
+  "attendees": "가상물산 김가상, 영업팀 담당자",
   "actionType": "CREATE",
   "actionReason": "일정 생성 요청 표현과 날짜/시간 정보가 포함되어 있습니다.",
   "targetScheduleId": null,
@@ -319,11 +319,11 @@ Request 예시:
   "summary": "수정된 분석 요약",
   "followUpAction": "수정된 다음 행동",
   "scheduleText": "CRM Automation 도입 상담 (2026-06-12T10:00)",
-  "customerName": "Nimbus Tech",
-  "contactName": "김도윤",
+  "customerName": "가상물산",
+  "contactName": "김가상",
   "productName": "CRM Automation",
   "amount": null,
-  "attendees": "김도윤, 이민재",
+  "attendees": "김가상, 영업 담당자",
   "actionType": "CREATE",
   "actionReason": "사용자 수정",
   "targetScheduleTitle": "CRM Automation 관련 미팅",
@@ -450,11 +450,13 @@ Request:
   "attendees": ["홍 부장"],
   "text": "홍 부장님이 내년 상반기에 개발자 두 명 정도 더 필요하다고 하심\n계약서 초안은 이번 주 금요일까지 보내드리기로 함",
   "mode": null,
-  "title": null
+  "title": null,
+  "attendeeCompanies": { "홍 부장": "가상전자" }
 }
 ```
 
 - `text`만 필수입니다. `occurredAt`·`location`은 모르면 `null`.
+- `attendeeCompanies`(선택): 만난 사람 이름 → 소속. 사용자가 아는 경우만 적고, 없으면 빼거나 `null`. A 인물 식별에 `mention.company`로 넘어가 동명이인 후보를 소속으로 가린다. 메모 본문·장소에서 추측하지 않는다. 소속은 100자까지
 - `mode`: `FULL` / `LIGHT` / `null`(AI 모듈이 메모 모양을 보고 정함). 그 밖의 값은 400.
 - `title`을 비우면 원본 제목을 `미팅 메모 2026-10-14 15:00 · 가상전자 본사`처럼 만듭니다.
 

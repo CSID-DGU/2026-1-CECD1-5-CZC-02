@@ -130,8 +130,9 @@ public class MeetingNoteService {
                 SourceStatus.CREATED,
                 null
         ));
+        Map<String, String> companies = normalizeCompanies(request.attendeeCompanies());
         List<AttendeeMention> mentions = attendees.stream()
-                .map(name -> new AttendeeMention(name, null, "MEETING"))
+                .map(name -> new AttendeeMention(name, null, "MEETING", companies.get(name)))
                 .toList();
 
         return draftNote(new DraftInput(
@@ -885,6 +886,26 @@ public class MeetingNoteService {
         if (!"FULL".equals(normalized) && !"LIGHT".equals(normalized)) {
             throw new IllegalArgumentException("mode는 FULL, LIGHT 중 하나이거나 비워야 합니다.");
         }
+        return normalized;
+    }
+
+    /** 이름 → 소속. 이름·소속 앞뒤 공백을 지우고, 빈 소속은 뺀다 (모르면 비움). */
+    private Map<String, String> normalizeCompanies(Map<String, String> companies) {
+        if (companies == null) {
+            return Map.of();
+        }
+        Map<String, String> normalized = new HashMap<>();
+        companies.forEach((name, company) -> {
+            String key = name == null ? null : name.trim();
+            String value = company == null ? null : company.trim();
+            if (key == null || key.isEmpty() || value == null || value.isEmpty()) {
+                return;
+            }
+            if (value.length() > 100) {
+                throw new IllegalArgumentException("소속은 100자 이하여야 합니다.");
+            }
+            normalized.put(key, value);
+        });
         return normalized;
     }
 
