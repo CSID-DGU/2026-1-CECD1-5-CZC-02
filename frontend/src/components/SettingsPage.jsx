@@ -5,6 +5,7 @@ import { getApiErrorMessage } from '../api/errors';
 import { disconnectGmailIntegration, getGmailAuthorizationUrl, getIntegrations } from '../api/integrations';
 import { disableAutoPipeline, enableAutoPipeline, getAutoPipelineStatus } from '../api/autoPipeline';
 import { disableDemo, enableDemo, getDemoStatus, resetDemo } from '../api/demo';
+import { MorningBriefingSettings } from './MorningBriefingSettings';
 import jandiIcon from '../assets/image-8.png';
 import jandiText from '../assets/image-9.png';
 import gmailIcon from '../assets/image-10.png';
@@ -407,6 +408,8 @@ export function SettingsPage() {
             </button>
           </div>
         </section>
+
+        <MorningBriefingSettings />
 
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="relative mb-5 flex items-center justify-center">
