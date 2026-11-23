@@ -104,7 +104,7 @@ export function IdentityCandidateRow({ participant, item, people = {}, readOnly,
   </section>;
 }
 
-function IdentityPanelContent({ noteId, participants = [], readOnly = false, apiClient = identityApi }) {
+function IdentityPanelContent({ noteId, participants = [], readOnly = false, apiClient = identityApi, onItemsChange }) {
   const [items, setItems] = useState([]);
   const [people, setPeople] = useState({});
   const [loading, setLoading] = useState(true);
@@ -129,12 +129,14 @@ function IdentityPanelContent({ noteId, participants = [], readOnly = false, api
     load();
     return () => { live=false; controller.abort(); };
   },[noteId,apiClient,refresh]);
+  // 확인 화면의 할 일 카드가 저장된 인물 선택을 상대방 목록으로 쓴다.
+  useEffect(() => { onItemsChange?.(items); },[items,onItemsChange]);
 
   async function saved(item) {
     setItems(previous => previous.map(old => old.resolution.resolutionId === item.resolution.resolutionId ? item : old));
     try { const person = await apiClient.person(item.resolution.personId); setPeople(previous => ({ ...previous,[person.personId]:person })); }
     catch { setError('선택은 저장됐지만 인물 정보를 다시 불러오지 못했어요. 다시 불러와 확인해 주세요.'); }
-    setMessage('인물 선택과 수정 기록을 저장했어요. 회의록·할 일의 상대방은 아직 바뀌지 않았어요.');
+    setMessage('인물 선택과 수정 기록을 저장했어요. 할 일의 상대방은 할 일 카드에서 고를 수 있어요.');
   }
   function reload() { setLoading(true); setError(''); setMessage(''); setRefresh(value => value+1); }
   return <div className="space-y-3">

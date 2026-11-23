@@ -103,3 +103,22 @@ export const ARCHIVE_CONFIRM_MESSAGE = '이 회의록을 보관할까요?\n'
 export function sameJson(left, right) {
   return JSON.stringify(left) === JSON.stringify(right);
 }
+
+/**
+ * 할 일 카드의 상대방 목록. 회의록 확정 전에는 참석자 personId가 비어 있으므로 저장된 인물 선택도 함께 본다.
+ * 목록만 만들고 할 일에 값을 자동으로 넣지는 않는다.
+ */
+export function reviewPeople(participants = [], identityItems = []) {
+  const decided = new Map(identityItems
+    .filter(({ resolution }) => resolution?.decision === 'CONFIRMED' && resolution.personId)
+    .map(({ resolution }) => [resolution.resolutionId, resolution.personId]));
+  const seen = new Set();
+  return participants.flatMap((participant) => {
+    const personId = participant.personId || decided.get(participant.resolutionId);
+    if (!personId || seen.has(personId)) {
+      return [];
+    }
+    seen.add(personId);
+    return [{ personId, name: participant.displayName }];
+  });
+}
