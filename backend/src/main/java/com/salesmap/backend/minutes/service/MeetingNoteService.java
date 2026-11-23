@@ -70,6 +70,7 @@ public class MeetingNoteService {
     private static final String REVIEW_SCREEN = "MEETING_NOTE_REVIEW";
     private static final String TARGET_TYPE = "MEETING_NOTE";
     private static final String ARCHIVED_FILTER = "ARCHIVED";
+    private static final int MAX_REVIEW_SECONDS_PER_REQUEST = 3600;
     private static final List<String> FIELD_NAMES =
             List.of("discussion", "customerRequests", "concerns", "commitments", "nextContact");
 
@@ -409,6 +410,19 @@ public class MeetingNoteService {
         eventPublisher.publishEvent(new MeetingNoteConfirmedEvent(document, authenticatedUserId));
 
         return toResponse(note, document);
+    }
+
+    /**
+     * 확인 화면을 실제로 본 시간을 더한다 (scope.md 7절 "확인 시간"). 측정값이라 수정 기록에 넣지 않는다.
+     * 확정·보관된 회의록이면 늦게 도착한 값이므로 오류 없이 무시한다.
+     */
+    @Transactional
+    public void recordReviewTime(String noteId, Integer seconds, Long authenticatedUserId) {
+        if (seconds == null || seconds < 1 || seconds > MAX_REVIEW_SECONDS_PER_REQUEST) {
+            throw new IllegalArgumentException("확인 시간은 1~" + MAX_REVIEW_SECONDS_PER_REQUEST + "초여야 합니다.");
+        }
+        MeetingNote note = findOwnedNote(noteId, authenticatedUserId);
+        meetingNoteRepository.addReviewSeconds(note.getId(), authenticatedUserId, seconds);
     }
 
     /**

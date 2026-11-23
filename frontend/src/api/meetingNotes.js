@@ -52,6 +52,11 @@ export async function unarchiveMeetingNote(noteId) {
   return response.data.data;
 }
 
+// 확인 화면을 실제로 본 시간(초)을 누적한다. 측정용이라 실패해도 화면 동작을 막지 않는다.
+export async function recordMeetingNoteReviewTime(noteId, seconds) {
+  await api.post(`/api/meeting-notes/${noteId}/review-time`, { seconds });
+}
+
 export async function confirmMeetingNote(noteId) {
   const response = await api.post(`/api/meeting-notes/${noteId}/confirm`);
 
