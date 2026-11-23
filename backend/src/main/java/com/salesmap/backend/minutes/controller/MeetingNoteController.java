@@ -6,6 +6,7 @@ import com.salesmap.backend.minutes.dto.MeetingNoteCreateRequest;
 import com.salesmap.backend.minutes.dto.MeetingNoteDraftResponse;
 import com.salesmap.backend.minutes.dto.MeetingNoteFromSourceResponse;
 import com.salesmap.backend.minutes.dto.MeetingNoteResponse;
+import com.salesmap.backend.minutes.dto.MeetingNoteReviewTimeRequest;
 import com.salesmap.backend.minutes.dto.MeetingNoteSummaryResponse;
 import com.salesmap.backend.minutes.dto.MeetingNoteUpdateRequest;
 import com.salesmap.backend.minutes.service.MeetingNoteService;
@@ -85,6 +86,17 @@ public class MeetingNoteController {
             @AuthenticationPrincipal CustomUserPrincipal principal
     ) {
         return ApiResponse.success("회의록을 확정했습니다.", meetingNoteService.confirmMeetingNote(noteId, principal.getUserId()));
+    }
+
+    /** 확인 화면을 실제로 본 시간(초)을 누적한다. 확정·보관된 회의록이면 무시한다 */
+    @PostMapping("/{noteId}/review-time")
+    public ApiResponse<Void> recordReviewTime(
+            @PathVariable String noteId,
+            @RequestBody MeetingNoteReviewTimeRequest request,
+            @AuthenticationPrincipal CustomUserPrincipal principal
+    ) {
+        meetingNoteService.recordReviewTime(noteId, request.seconds(), principal.getUserId());
+        return ApiResponse.success("확인 시간을 기록했습니다.", null);
     }
 
     /** 보관(숨김). 기본 목록·확인 대기함에서 빠지고 ?status=ARCHIVED로만 보인다. 영구 삭제 API는 두지 않는다 (D-025) */

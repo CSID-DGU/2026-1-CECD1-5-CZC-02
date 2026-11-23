@@ -607,6 +607,19 @@ Authorization: 필요
 - 한 번도 고치지 않고 확정하면 `confirmedWithoutEdit: true`.
 - 이미 확정된 회의록이면 400. Response data는 `GET /api/meeting-notes/{noteId}`와 같습니다.
 
+### POST /api/meeting-notes/{noteId}/review-time
+
+확인 화면을 실제로 본 시간(초)을 회의록에 누적합니다. 탭이 보이고 최근 1분 안에 조작이 있을 때만 화면이 세어 보냅니다. 측정값이라 수정 기록·회의록 응답에는 넣지 않습니다.
+
+Authorization: 필요
+
+```json
+{ "seconds": 15 }
+```
+
+- `seconds`는 1~3600. 범위를 벗어나면 400, 다른 사용자의 회의록이면 403.
+- 이미 확정·보관된 회의록이면 값을 더하지 않고 성공으로 응답합니다 (늦게 도착한 전송).
+
 ### POST /api/meeting-notes/{noteId}/archive
 
 회의록을 보관(숨김)합니다. 지우지 않습니다 — 영구 삭제 API는 없습니다 (D-025 ③). 요청 본문은 없습니다.

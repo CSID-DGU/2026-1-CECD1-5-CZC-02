@@ -25,6 +25,7 @@ import { FieldSection, PerPersonCard } from './MeetingNoteItemEditor';
 import { ParticipantCandidatesPanel } from './ParticipantCandidatesPanel';
 import { TaskDraftPanel } from './TaskDraftPanel';
 import { ArchivedBadge, StatusBadge } from './MeetingNotePage';
+import { useReviewTimer } from './useReviewTimer';
 
 function Card({ title, subtitle, className = '', children }) {
   return (
@@ -199,6 +200,7 @@ export function MeetingNoteReviewPage() {
   // 보관한 회의록은 해제하기 전까지 읽기만 한다 (서버도 수정·확정을 거부함)
   const archived = Boolean(note?.archivedAt);
   const readOnly = meetingNote?.status === 'CONFIRMED' || archived || isSaving;
+  const flushReviewTime = useReviewTimer(noteId, meetingNote?.status === 'DRAFT' && !archived);
 
   const changedFieldKeys = useMemo(() => {
     if (!meetingNote || !fields) {
@@ -256,6 +258,7 @@ export function MeetingNoteReviewPage() {
 
   const handleConfirm = () => runAction(async () => {
     await saveChanges();
+    await flushReviewTime();
     applyNote(await confirmMeetingNote(noteId));
     setActionMessage('확정했어요.');
     // 메뉴의 확인 대기함 배지를 바로 갱신한다
