@@ -307,6 +307,8 @@ export function DashboardLayout({ children }) {
     { path: '/customers', icon: UsersRound, label: '고객 타임라인' },
     { path: '/dashboard', icon: LayoutDashboard, label: '대시보드' },
     { path: '/briefing/today', icon: CalendarDays, label: '오늘 브리핑' },
+    { path: '/briefing/preparation', icon: ClipboardCheck, label: '미팅 준비' },
+    { path: '/briefing/calendar-registration', icon: CalendarDays, label: '캘린더 등록' },
     { path: '/history', icon: ClipboardList, label: '처리 이력' },
     { path: '/settings', icon: Settings, label: '설정' },
   ];

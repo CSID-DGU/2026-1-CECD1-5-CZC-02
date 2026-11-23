@@ -15,6 +15,8 @@ import { MeetingNoteReviewPage } from './components/minutes/MeetingNoteReviewPag
 import { TasksPage } from './components/tasks/TasksPage';
 import { PeopleScreen } from './components/identity/PeopleScreen.jsx';
 import { TodayBriefingPage } from './components/briefing/TodayBriefingPage';
+import { PreparationBriefingPage } from './components/briefing/PreparationBriefingPage';
+import { CalendarRegistrationPage } from './components/briefing/CalendarRegistrationPage';
 
 function ProtectedRoute({ children }) {
   const accessToken = localStorage.getItem('accessToken');
@@ -44,6 +46,20 @@ export default function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <TodayBriefingPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/briefing/preparation" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <PreparationBriefingPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/briefing/calendar-registration" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <CalendarRegistrationPage />
               </DashboardLayout>
             </ProtectedRoute>
           } />
