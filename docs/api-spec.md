@@ -914,6 +914,26 @@ Response data: `enabled`, `demoAccountEmail`, `anchorDate`, `deliveredStage`, `l
 
 본인 할 일 수정 기록 중 D로 아직 넘기지 않은 것 (`revision` 형식 배열, 임시 ID `rv_task_<PK>`).
 
+## Task Status Suggestions (할 일 상태 제안)
+
+확정한 할 일이 메일로 끝난 것 같으면 완료를 제안합니다. 규칙으로 계산하고(LLM 없음), 상태는 사람이 눌러야 바뀝니다 (D-025).
+
+- 우리 약속은 상대에게 **보낸** 메일, 고객 측 약속 확인(`IMPLICIT`)은 상대에게서 **온** 메일을 봅니다.
+- 미팅 이후 메일만, 할 일 내용의 낱말이 2개 이상(낱말이 하나면 그 하나) 있을 때만 제안합니다. 인용문은 보지 않습니다.
+- 상대방이 연결되지 않은 할 일, 미팅·방문 준비 할 일은 제안하지 않습니다.
+
+### GET /api/task-status-suggestions
+
+`taskId`, `content`, `currentStatus`, `suggestedStatus`, `sourceId`, `sourceTitle`, `sourceSentAt`, `matchedKeywords`, `reason` 목록을 돌려줍니다.
+
+### POST /api/task-status-suggestions/{taskId}/accept
+
+Request: `{ "sourceId": "src_12" }`. 할 일을 `DONE`으로 바꾸고 수정 기록에 `ACCEPTED`로 남깁니다. 지금 없는 제안이면 404.
+
+### POST /api/task-status-suggestions/{taskId}/dismiss
+
+Request: `{ "sourceId": "src_12" }`. 상태는 그대로 두고 수정 기록에 `REJECTED`로 남깁니다. 같은 메일로는 다시 제안하지 않습니다.
+
 ## Revisions (수정 기록, D)
 
 모두 Authorization 필요. 형식은 `contracts/revision.schema.json`. ID는 `rv_<PK>`.
