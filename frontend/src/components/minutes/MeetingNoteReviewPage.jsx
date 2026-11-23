@@ -18,6 +18,7 @@ import {
   cloneFields,
   findEvidenceRange,
   formatMeetingDateTime,
+  reviewPeople,
   sameJson,
   splitSentences,
 } from './meetingNoteUtils';
@@ -107,6 +108,7 @@ export function MeetingNoteReviewPage() {
   const [taskMessage, setTaskMessage] = useState('');
   const [isLoadingTasks, setIsLoadingTasks] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [identityItems, setIdentityItems] = useState([]);
   const taskVersions = useRef(new Map());
 
   const applyNote = useCallback((response) => {
@@ -218,10 +220,8 @@ export function MeetingNoteReviewPage() {
     : draftTaskCount > 0
       ? `확인 안 한 할 일 ${draftTaskCount}건이 있어요. 할 일을 하나씩 확정하거나 취소한 뒤 회의록을 확정할 수 있어요.`
       : null;
-  // 할 일 담당 상대 고르기용: A가 사람을 확정한 참석자만
-  const people = useMemo(() => (meetingNote?.participants || [])
-    .filter((participant) => participant.personId)
-    .map((participant) => ({ personId: participant.personId, name: participant.displayName })), [meetingNote]);
+  // 할 일 상대방 고르기용: 사람이 정해진 참석자만 (확정 전에는 저장된 인물 선택을 본다)
+  const people = useMemo(() => reviewPeople(meetingNote?.participants, identityItems), [meetingNote, identityItems]);
 
   // 고친 문항만 보낸다. 서버가 바뀐 값마다 수정 기록(revision)을 남긴다.
   const saveChanges = async () => {
@@ -366,6 +366,7 @@ export function MeetingNoteReviewPage() {
                 participants={meetingNote.participants}
                 identityResolutions={draftExtras.identityResolutions}
                 readOnly={readOnly}
+                onItemsChange={setIdentityItems}
               />
 
               {isLight ? (
