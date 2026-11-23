@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AlertCircle, CalendarDays, CheckCircle2, ClipboardCheck, Loader2, RefreshCw } from 'lucide-react';
 import { getPreparationBriefing } from '../../api/briefings';
+import { TaskCalendarRegistrationButton } from './TaskCalendarRegistrationButton';
+import { taskTypeLabel } from './taskTypeLabel';
 
 function toDateInput(date) {
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -16,10 +18,11 @@ function PreparationCard({ item }) {
         <div className="min-w-0 flex-1">
           <p className="text-base font-bold text-slate-800">{item.content || '내용이 없는 작업'}</p>
           <p className="mt-1 text-xs text-slate-400">
-            {item.taskId} · {item.taskType || '분류 없음'}{item.dueDate ? ` · 예정일 ${item.dueDate}` : ''}
+            {taskTypeLabel(item.taskType)}{item.dueDate ? ` · 예정일 ${item.dueDate}` : ''}
           </p>
         </div>
       </div>
+      <TaskCalendarRegistrationButton taskId={item.taskId} />
       <div className="mt-5 rounded-xl bg-slate-50 p-4">
         <div className="mb-3 flex items-center gap-2">
           <ClipboardCheck className="h-4 w-4 text-violet-600" />
@@ -67,7 +70,6 @@ export function PreparationBriefingPage() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="mb-1 text-sm font-semibold text-violet-600">D · 일정·브리핑</p>
             <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">미팅 준비 브리핑</h1>
             <p className="mt-1 text-sm text-slate-500">기준일 다음 날의 확정 미팅과 준비 항목을 확인합니다.</p>
           </div>

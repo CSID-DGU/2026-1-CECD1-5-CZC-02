@@ -297,7 +297,6 @@ export function DashboardLayout({ children }) {
     { path: '/dashboard', icon: LayoutDashboard, label: '대시보드' },
     { path: '/briefing/today', icon: CalendarDays, label: '오늘 브리핑' },
     { path: '/briefing/preparation', icon: ClipboardCheck, label: '미팅 준비' },
-    { path: '/briefing/calendar-registration', icon: CalendarDays, label: '캘린더 등록' },
     { path: '/history', icon: ClipboardList, label: '처리 이력' },
     { path: '/settings', icon: Settings, label: '설정' },
   ];
@@ -311,6 +310,9 @@ export function DashboardLayout({ children }) {
     }
     if (/^\/meeting-notes\/mn_/.test(location.pathname)) {
       return '회의록 확인';
+    }
+    if (location.pathname === '/briefing/calendar-registration') {
+      return '캘린더 등록';
     }
     return menuItems.find(item => item.path === location.pathname)?.label || '대시보드';
   })();
