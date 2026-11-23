@@ -47,3 +47,15 @@ test('people screen shares the existing app menu and account header without a se
     else delete globalThis.localStorage;
   }
 });
+
+test('merge comparison preserves conflicting company/contact values and labels the retained primary identity', async () => {
+  const { MergeComparison } = await vite.ssrLoadModule('/src/components/identity/PersonMergePanel.jsx');
+  const target = { personId: 'p_17', name: '가상인물_대표', company: '가상회사_파랑', emails: ['target@fake.example'] };
+  const source = { personId: 'p_18', name: '가상인물_중복', company: '가상회사_초록', emails: ['source@fake.example'] };
+  const before = JSON.stringify([target, source]);
+  const html = renderToStaticMarkup(createElement(MergeComparison, { target, source }));
+  assert.match(html, /유지할 대표 인물/); assert.match(html, /합칠 인물 · 원본 보존/);
+  assert.match(html, /가상회사_파랑/); assert.match(html, /가상회사_초록/);
+  assert.match(html, /target@fake.example/); assert.match(html, /source@fake.example/);
+  assert.match(html, /전화: 미등록/); assert.equal(JSON.stringify([target, source]), before);
+});

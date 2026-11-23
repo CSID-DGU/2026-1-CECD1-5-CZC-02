@@ -87,10 +87,12 @@ def test_maximal_model_score_never_confirms_or_discards_contact_candidates(monke
         q = next(q for q in data["queries"] if q["caseType"] == case)
         r, = resolve_identities([q["mention"]], data["persons"])
         assert r["decision"] == "CANDIDATES" and r["personId"] is None
-        assert len(r["candidates"]) == 3
+        expected_count = 2 if case == "shared_email_missing_name" else 3
+        assert len(r["candidates"]) == expected_count
         if case in ("conflicting_name_contact", "shared_email_missing_name"):
             assert set(q["expected"]["targetPersonIds"]) <= {c["personId"] for c in r["candidates"]}
-        assert sum(reason.startswith("후보가 ") for c in r["candidates"] for reason in c["reasons"]) == 1
+        overflow = case in ("four_homonyms_overflow", "homonym_current_company")
+        assert sum(reason.startswith("후보가 ") for c in r["candidates"] for reason in c["reasons"]) == int(overflow)
 
 
 @pytest.mark.parametrize("failure", [FileNotFoundError, ValueError, KeyError])
@@ -152,3 +154,52 @@ def test_exported_runtime_preserves_full_frozen_metrics(dataset):
     model = logistic.load_model()
     scores = [[round(model.score(c), 12) for c in row["comparisons"]] for row in prepared]
     assert evaluate(prepared, scores, model.threshold)[0] == expected
+
+
+@pytest.mark.parametrize("names", [("가상인물_파랑", "가상인물_노랑"), ("가상갑", "가상을")])
+@pytest.mark.parametrize("scenario", ["name", "alias", "homonyms", "contact_conflict", "unknown_contact"])
+def test_api_does_not_fill_direct_matches_with_other_names(scenario, names):
+    # 공통 접두어 때문에 유사도와 모델 점수가 높아지는 가짜 이름이다.
+    people = [
+        {"personId": "p_exact", "name": names[0], "isSynthetic": True},
+        {"personId": "p_other_1", "name": names[1], "isSynthetic": True},
+        {"personId": "p_other_2", "name": names[1], "isSynthetic": True},
+    ]
+    mention = {"name": names[0], "channel": "MEETING"}
+    expected = {"p_exact"}
+    if scenario == "alias":
+        people[0].update(name="가상인물_별칭대상", nameVariants=[mention["name"]])
+    elif scenario == "homonyms":
+        people[1]["name"] = mention["name"]
+        expected.add("p_other_1")
+    elif scenario == "contact_conflict":
+        people[1]["emails"] = ["contact@fake.example"]
+        mention["email"] = "contact@fake.example"
+        expected.add("p_other_1")  # 이름이 달라도 연락처 충돌 후보는 사람에게 보여 준다.
+    elif scenario == "unknown_contact":
+        mention.update(name=None, company="가상회사_파랑", email="unknown@fake.example")
+        for person in people:
+            person["company"] = mention["company"]
+        expected = set()
+    response = TestClient(app).post("/identity/resolve", json={"mentions": [mention], "persons": people})
+    assert response.status_code == 200
+    result, = response.json()
+    validators()[2].validate(result)
+    assert {c["personId"] for c in result["candidates"]} == expected
+    assert result["decision"] == ("CANDIDATES" if expected else "NEW")
+    assert result["personId"] is None
+
+
+def test_inexact_names_remain_available_when_no_direct_match_exists():
+    people = [{"personId": "p_typo", "name": "가상인물_파랑", "isSynthetic": True}]
+    result, = resolve_identities([{"name": "가상인물_파란", "channel": "MEETING"}], people)
+    assert result["decision"] == "CANDIDATES"
+    assert [c["personId"] for c in result["candidates"]] == ["p_typo"]
+
+
+@pytest.mark.parametrize("company", [None, "가상회사_파랑"])
+def test_short_different_names_are_not_model_only_candidates(company):
+    people = [{"personId": "p_short", "name": "가상을", "company": company, "isSynthetic": True}]
+    result, = resolve_identities([{"name": "가상갑", "company": company, "channel": "MEETING"}], people)
+    assert result["decision"] == "NEW"
+    assert result["candidates"] == []

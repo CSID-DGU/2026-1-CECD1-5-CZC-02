@@ -36,22 +36,23 @@ public class PersonHistoryService {
         people.get(personId,owner); // 권한/ID 검사 먼저. 타 사용자 대장의 존재 여부도 숨긴다.
         if(page<0 || page>1000000 || size<1 || size>100)
             throw new IllegalArgumentException("page는 0~1000000, size는 1~100이어야 합니다.");
+        java.util.Set<String> personIds=people.historyIds(personId,owner);
         return notes.findByUserId(owner).stream()
                 .filter(n -> n.getUser().getId().equals(owner) && n.getSource().getUser().getId().equals(owner))
                 .filter(n -> !n.isArchived() && n.getStatus()==MeetingNoteStatus.CONFIRMED
                         && n.getSource().getStatus()!=SourceStatus.DELETED)
-                .filter(n -> matchesPerson(n,personId))
+                .filter(n -> matchesPerson(n,personIds))
                 .sorted(Comparator.comparing(MeetingNote::getOccurredAt,
                         Comparator.nullsLast(Comparator.reverseOrder())).thenComparing(MeetingNote::getId,Comparator.reverseOrder()))
                 .skip((long)page*size).limit(size)
                 .map(n -> meetings.getMeetingNote("mn_"+n.getId(),owner).meetingNote()).toList();
     }
 
-    private boolean matchesPerson(MeetingNote note,String personId) {
+    private boolean matchesPerson(MeetingNote note,java.util.Set<String> personIds) {
         try {
             // 첫 배열에서 ID가 맞아도 두 배열을 모두 검사한다. 깨진 노트는 전체를 건너뛴다.
-            boolean participant=contains(note.getParticipantsJson(),personId);
-            boolean perPerson=contains(note.getPerPersonJson(),personId);
+            boolean participant=contains(note.getParticipantsJson(),personIds);
+            boolean perPerson=contains(note.getPerPersonJson(),personIds);
             return participant || perPerson;
         } catch(JsonProcessingException | IllegalArgumentException error) {
             // 원문 JSON·인물 단서·예외 메시지를 로그에 복사하지 않는다.
@@ -60,7 +61,7 @@ public class PersonHistoryService {
         }
     }
 
-    private boolean contains(String json,String personId) throws JsonProcessingException {
+    private boolean contains(String json,java.util.Set<String> personIds) throws JsonProcessingException {
         if(json==null) return false;
         JsonNode rows=mapper.reader().with(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).readTree(json);
         if(rows==null || !rows.isArray()) throw new IllegalArgumentException();
@@ -69,7 +70,7 @@ public class PersonHistoryService {
             if(!row.isObject()) throw new IllegalArgumentException();
             JsonNode id=row.get("personId");
             if(id!=null && !id.isNull() && !id.isTextual()) throw new IllegalArgumentException();
-            found |= id!=null && id.isTextual() && personId.equals(id.textValue());
+            found |= id!=null && id.isTextual() && personIds.contains(id.textValue());
         }
         return found;
     }

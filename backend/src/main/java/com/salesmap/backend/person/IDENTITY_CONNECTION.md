@@ -6,8 +6,7 @@ B의 기존 초안 서비스 → `IdentityResolutionClient` → A `PersonIdentit
 → 본인 인물 대장 전체 DTO → `POST /identity/resolve` → 계약 형태·요청 대응·대장 참조 검사
 → 기존 B 회의록 초안 흐름으로 결과 전달.
 
-2번 당시에는 A의 `person` 패키지와 같은 패키지의 테스트만 변경했다.
-3번의 후보 화면·제안/선택 저장 추가분은 IDENTITY_SELECTION.md를 우선한다. B/C/D·공용 설정·contracts는 수정하지 않았다.
+현재 후보 화면·제안/선택 저장과 B 확정 시 반영은 [IDENTITY_SELECTION.md](IDENTITY_SELECTION.md)를 참고한다. 이 문서는 A 실제 호출 경로와 아직 남은 처음 참석자 대응 제한을 설명한다.
 
 ## 실행 모드
 
@@ -22,10 +21,10 @@ B의 기존 초안 서비스 → `IdentityResolutionClient` → A `PersonIdentit
 
 ## 요청과 사용자 분리
 
-- B의 AttendeeMention에서 name·email·channel을 그대로, sourceId를 mention.sourceRef로 전달한다.
+- B의 AttendeeMention에서 name·email·channel을 그대로, sourceId를 mention.sourceRef로 전달한다. 사용자가 직접 적은 company가 있으면 함께 전달한다 (#60).
 - 이름 없이 이메일만 있으면 name=null을 유지한다. 이메일 주소를 이름으로 꾸며 채우지 않는다.
-- 회사·전화·직함처럼 B가 전달하지 않은 단서를 임의로 추가하지 않는다.
-- owner는 B가 전달한 인증 사용자 ID다. 인물 대장은 `findByUserIdOrderByIdAsc`로 본인 것만 조회한다.
+- 메모 본문·장소에서 소속을 추측하지 않는다. B가 전달하지 않은 소속·전화·직함을 임의로 추가하지 않는다.
+- owner는 B가 전달한 인증 사용자 ID다. PersonService.forResolution에서 본인 대장 전체를 조회한다. 수동 병합한 원본은 비교 대상에서 제외하고, 대표 인물의 등록 단서로 함께 조회한다.
 - 화면의 50명/100명 페이지를 재사용하지 않는다. 공유 연락처·동명이인을 놓치지 않게 본인 대장
   전체를 읽는다. 120명 회귀 검사로 첫 페이지 누락을 방지한다.
 - 대장을 읽는 읽기 전용 트랜잭션은 DTO 반환 시 끝난다. 클라이언트에 트랜잭션을 붙이지 않아
@@ -41,7 +40,7 @@ B의 기존 초안 서비스 → `IdentityResolutionClient` → A `PersonIdentit
 - HTTP 오류·접속/읽기 실패·잘못된 응답은 예외로 넘긴다. NEW/CONFIRMED나 가짜 후보로 대체하지 않는다.
   B의 기존 실패 처리에 따라 회의록은 연결 정보 없는 DRAFT로 남는다.
 - upstream 오류 본문·개인 단서를 예외 메시지나 로그에 복사하지 않는다.
-- 클라이언트는 인물 등록·병합이나 회의록 확정을 하지 않는다. 3번에서 검증한 제안의 A 저장을 추가했다.
+- 클라이언트는 인물 등록·병합이나 회의록 확정을 하지 않는다. 검증한 제안을 A에 저장하고 DB 기반 resolutionId로 반환한다.
   사람의 선택·등록·수정 기록은 별도의 A 선택 API가 사용자 요청을 받아 처리한다.
 
 ## B 담당 검토가 필요한 경계
@@ -57,8 +56,8 @@ B의 기존 초안 서비스 → `IdentityResolutionClient` → A `PersonIdentit
    mention.name을 맞추지 못하므로 회의록 participant에 resolutionId/personId가 연결되지 않을 수 있다.
 3. 위 경우를 정상 연결하려면 B가 순서·이메일 등으로 참석자와 결과를 정확히 대응시켜야 한다.
    B의 두 연결 함수를 이번에 수정하지 않았다. 계약 변경이 필요하면 먼저 팀 합의해야 한다.
-4. 후보 선택 화면·HUMAN 결정·Revision은 3번의 A 선택 API에 구현했다. B 회의록 반영은 남아 있다.
-   사람별 이력 조회는 구현됐으며, B 저장본의 정확한 personId만 사용한다.
+4. 후보 선택 화면·HUMAN 결정·Revision과 **B 확정 시 반영은 구현돼 있다.** B는 확정 직전에 저장된 CONFIRMED 결과를 resolutionId로 읽어 참석자를 갱신한다. LIGHT의 표시 이름 대응 제한은 남아 있다.
+   A 사람별 이력은 B 저장본의 정확한 personId와 사용자가 명시적으로 병합한 ID 집합만 사용한다.
 
 따라서 **A HTTP 호출·일반 이름 참석자 연결은 구현했으며, 모든 참석자 유형의 앱 연결 완료를 뜻하지 않는다.**
 
@@ -79,8 +78,8 @@ bash ./gradlew test --tests '*Test'
 - 실제 A FastAPI 엔드포인트도 인프로세스 TestClient로 확인했다. 백엔드와 같은 Person 예제로
   이름+이메일, 이름만, 이메일만, 미일치, 정보 부족의 5가지 응답이 JSON Schema를 통과했다.
 
-전체 백엔드 단위 테스트: **158개 통과, 실패·오류·건너뜀 0개** (1번 127개에서 31개 추가).
+과거 최초 연결 시 백엔드 단위 테스트는 158개였다. 현재 검증 수치·범위는 [IDENTITY_SELECTION.md](IDENTITY_SELECTION.md)를 참고한다.
 
 ## 2026-11-13 검증 갱신
 
-MODEL 후보 수신·저장·HUMAN 선택과 원래 MODEL 제안자 기록을 검사했다. 이전 158개는 당시 수치다. 현재 검사와 연결 경계는 [HANDOFF](../../../../../../../../ai-module/ml/identity/HANDOFF.md)를 우선한다.
+MODEL 후보 수신·저장·HUMAN 선택과 원래 MODEL 제안자 기록을 검사했다. 이전 158개는 당시 수치다. 현재 저장·확정 반영 경계는 [IDENTITY_SELECTION.md](IDENTITY_SELECTION.md)를 우선한다. [HANDOFF](../../../../../../../../ai-module/ml/identity/HANDOFF.md)의 과거 미연결 설명과 구분한다.

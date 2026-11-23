@@ -119,3 +119,21 @@
 @media (max-width: 1000px) { .people-columns { grid-template-columns: minmax(0, 1fr); } .people-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 285px; overflow-y: auto; } .people-page-header > div { display: block; } .people-page-header p { margin-top: 5px; } .people-profile-heading { flex-wrap: nowrap; } .people-next-meeting { margin-left: 0; } }
 @media (max-width: 680px) { .people-page { padding: 20px 14px 40px; } .people-page-header { align-items: flex-start; gap: 10px; flex-wrap: wrap; } .people-preview-toggle { padding: 7px 8px; } .people-list-panel { padding: 16px; } .people-list { grid-template-columns: minmax(0, 1fr); } .people-detail-panel { min-height: 300px; padding: 19px 16px 0; } .people-profile-heading { flex-wrap: wrap; } .people-next-meeting { margin-left: 60px; } .people-profile-details { margin-left: 0; } .people-timeline-card { padding: 12px; gap: 8px; } .people-tabs { justify-content: space-between; gap: 8px; } .people-tabs button { font-size: 12px; } }
 @media (prefers-reduced-motion: reduce) { .people-spin { animation: none; } .people-person-card { transition: none; } }
+
+.people-merge { padding: 14px 20px; border-top: 1px solid #e5eaf2; }
+.people-merge-body { margin-top: 16px; display: grid; gap: 12px; font-size: 13px; color: #475569; }
+.people-merge-body h3 { font-size: 14px; font-weight: 650; color: #1e293b; }
+.people-merge-search, .people-merge-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.people-merge-search label { display: grid; gap: 6px; flex: 1; }
+.people-merge-search input { border: 1px solid #d9e2ef; padding: 9px; border-radius: 8px; width: 100%; }
+.people-merge-results { list-style: none; padding: 0; display: grid; gap: 8px; }
+.people-merge-results label, .people-merge-confirm { display: flex; align-items: start; gap: 8px; }
+.people-merge input[type="checkbox"], .people-merge input[type="radio"] { width: auto; margin-top: 3px; flex-shrink: 0; }
+.people-merge-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.people-merge-comparison section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; overflow-wrap: anywhere; }
+.people-merge-comparison h4 { margin-bottom: 8px; color: #1d4ed8; }
+.people-merge-comparison p { margin-top: 5px; }
+.people-merge-audit { padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; display: grid; gap: 8px; }
+.people-merge-audit summary { cursor: pointer; }
+.people-merge-submit { justify-self: start; color: #fff; background: #245cff; }
+@media (max-width: 700px) { .people-merge-comparison { grid-template-columns: 1fr; } }

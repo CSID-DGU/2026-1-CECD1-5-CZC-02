@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.UUID;
 import java.util.NoSuchElementException;
 
 @Service
@@ -50,14 +52,23 @@ public class PersonIdentityService {
             return existing.stream().map(row -> read(row.getDocument())).toList();
         }
         LocalDateTime now=now();
+        List<JsonNode> stored=new ArrayList<>();
         for(int i=0;i<proposals.size();i++){
             JsonNode proposal=proposals.get(i);
             IdentityResponseValidator.validateProposalPolicy(proposal);
             if(!sourceRef.equals(proposal.path("mention").path("sourceRef").asText()))
                 throw new IllegalArgumentException("검증한 원본 RULE/MODEL 제안만 저장할 수 있습니다.");
-            rows.save(new IdentityResolutionEntry(source.getUser(),sourceRef,i,proposal.path("resolutionId").asText(),proposal.toString(),now));
+            // IDENTITY PK를 먼저 발급받는다. 임시 키는 외부 응답·회의록에 넘기지 않는다.
+            String pendingId="ir_pending_"+UUID.randomUUID().toString().replace("-","");
+            IdentityResolutionEntry row=rows.saveAndFlush(new IdentityResolutionEntry(
+                    source.getUser(),sourceRef,i,pendingId,proposal.toString(),now));
+            ObjectNode document=((ObjectNode)proposal).deepCopy().put("resolutionId","ir_"+row.getId());
+            row.useDatabaseId(document.toString());
+            stored.add(document);
         }
-        return proposals.stream().map(JsonNode::deepCopy).map(value -> (JsonNode)value).toList();
+        // 같은 트랜잭션에서 컬럼·제안·현재 문서를 같은 DB 기반 ID로 저장한다.
+        rows.flush();
+        return List.copyOf(stored);
     }
 
     @Transactional(readOnly=true)

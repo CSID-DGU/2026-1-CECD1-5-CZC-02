@@ -27,6 +27,11 @@ public class IdentityResolutionEntry {
         this.user=user;this.sourceRef=sourceRef;this.mentionIndex=mentionIndex;this.resolutionId=resolutionId;
         this.proposal=proposal;this.document=proposal;this.createdAt=now;
     }
+    public Long getId(){return id;}
+    void useDatabaseId(String storedProposal){
+        if(id==null || id<1) throw new IllegalStateException("저장한 식별 결과의 DB ID가 필요합니다.");
+        this.resolutionId="ir_"+id;this.proposal=storedProposal;this.document=storedProposal;
+    }
     public String getResolutionId(){return resolutionId;}
     public String getSourceRef(){return sourceRef;}
     public String getProposal(){return proposal;}

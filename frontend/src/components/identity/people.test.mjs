@@ -54,3 +54,23 @@ test('preview history uses exact IDs and preserves cancellation and missing reco
   const controller = new AbortController(); controller.abort();
   await assert.rejects(peoplePreviewApi.list('', 0, controller.signal), { name: 'AbortError' });
 });
+
+test('merge API sends only explicit confirmation and source identity, never spoofed actor metadata', async () => {
+  const calls = [];
+  const api = createPeopleApi({ post: async (...args) => { calls.push(args); return { data: { data: {} } }; } });
+  await api.merge('p_17', 'p_18'); await api.undoMerge('p_17', 'pm_31');
+  assert.deepEqual(calls, [
+    ['/api/persons/p_17/merges', { sourcePersonId: 'p_18', confirmed: true }],
+    ['/api/persons/p_17/merges/pm_31/undo', { confirmed: true }],
+  ]);
+});
+test('only explicit merged IDs expand promise history, preserving original note IDs and evidence', () => {
+  const note = { noteId: 'mn_3', status: 'CONFIRMED', mode: 'LIGHT', perPerson: [
+    { personId: 'p_18', followUp: { text: '가상 후속', evidence: '가상 후속 근거' } },
+    { personId: 'p_19', followUp: { text: '다른 사람 약속', evidence: '다른 근거' } },
+  ] };
+  assert.equal(commitmentRecords([note], 'p_17').length, 0);
+  const result = commitmentRecords([note], ['p_17', 'p_18']);
+  assert.equal(result.length, 1); assert.equal(result[0].noteId, 'mn_3'); assert.equal(result[0].evidence, '가상 후속 근거');
+  assert.equal(note.perPerson[0].personId, 'p_18');
+});
