@@ -82,7 +82,6 @@ public class MeetingNoteService {
     private final IdentityDecisionReader identityDecisionReader;
     private final TaskDraftClient taskDraftClient;
     private final RevisionClient revisionClient;
-    private final ApplicationEventPublisher eventPublisher;
     private final ObjectMapper objectMapper;
 
     public MeetingNoteService(
@@ -105,7 +104,6 @@ public class MeetingNoteService {
         this.identityDecisionReader = identityDecisionReader;
         this.taskDraftClient = taskDraftClient;
         this.revisionClient = revisionClient;
-        this.eventPublisher = eventPublisher;
         this.objectMapper = objectMapper;
     }
 
@@ -406,9 +404,7 @@ public class MeetingNoteService {
         applyIdentityDecisions(note, draft, authenticatedUserId);
         note.markConfirmed(withoutEdit);
         MeetingNoteDocument document = toDocument(note);
-        // 캘린더 같은 외부 효과는 커밋 뒤에 (MeetingNoteHandoffListener)
-        eventPublisher.publishEvent(new MeetingNoteConfirmedEvent(document, authenticatedUserId));
-
+        // 일정 자동 등록은 제거하고, 확정된 할 일을 D 브리핑에서 사람이 시간 지정 후 등록한다.
         return toResponse(note, document);
     }
 

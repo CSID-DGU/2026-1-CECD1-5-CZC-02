@@ -15,6 +15,7 @@ public record MorningBriefingResponse(
             String taskType,
             String content,
             String dueDate,
+            String evidence,
             List<String> preparationItems
     ) {
     }

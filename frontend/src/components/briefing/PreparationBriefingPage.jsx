@@ -41,6 +41,7 @@ function PreparationCard({ item }) {
           <p className="text-sm text-slate-400">등록된 준비 항목이 없습니다.</p>
         )}
       </div>
+      {item.evidence && <p className="mt-3 text-xs text-slate-500">출처: {item.evidence}</p>}
     </article>
   );
 }

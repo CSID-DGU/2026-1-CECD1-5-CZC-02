@@ -29,8 +29,8 @@ import com.salesmap.backend.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
@@ -246,10 +246,7 @@ class MeetingNoteServiceTest {
         assertThat(accepted).allSatisfy(revision -> assertThat(revision.finalValue()).isEqualTo(revision.proposedValue()));
 
         verify(taskDraftClient).confirmTasks(any(), eq(USER_ID));
-        ArgumentCaptor<MeetingNoteConfirmedEvent> event = ArgumentCaptor.forClass(MeetingNoteConfirmedEvent.class);
-        verify(eventPublisher).publishEvent(event.capture());
-        assertThat(event.getValue().note().status()).isEqualTo("CONFIRMED");
-        assertThat(event.getValue().userId()).isEqualTo(USER_ID);
+        verify(eventPublisher, never()).publishEvent(any());
     }
 
     @Test
@@ -264,10 +261,6 @@ class MeetingNoteServiceTest {
                 new MeetingNoteDocument.Participant("홍 부장", "ir_002", "p_17"),
                 new MeetingNoteDocument.Participant("최가상", null, null)
         );
-        // 확정 뒤 일정 전달에도 연결된 값이 간다
-        ArgumentCaptor<MeetingNoteConfirmedEvent> event = ArgumentCaptor.forClass(MeetingNoteConfirmedEvent.class);
-        verify(eventPublisher).publishEvent(event.capture());
-        assertThat(event.getValue().note().participants().get(0).personId()).isEqualTo("p_17");
         // 옮기기는 새 결정이 아니라 수정 기록을 더 남기지 않는다 (ACCEPTED 5개 그대로)
         verify(revisionClient, times(5)).record(any(), eq(USER_ID));
     }
@@ -338,7 +331,6 @@ class MeetingNoteServiceTest {
         // C 확인이 가장 먼저라 기록·상태 변경·일정 전달이 하나도 일어나지 않는다
         assertThat(savedNote.get().getStatus()).isEqualTo(MeetingNoteStatus.DRAFT);
         verify(revisionClient, never()).record(any(), any());
-        verify(eventPublisher, never()).publishEvent(any());
     }
 
     @Test

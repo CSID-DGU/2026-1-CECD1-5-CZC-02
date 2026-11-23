@@ -96,6 +96,7 @@ public class BriefingService {
                 .filter(condition)
                 .map(item -> new MorningBriefingResponse.BriefingItem(
                         item.taskId(), item.task().taskType(), item.task().content(), item.task().dueDate(),
+                        item.task().evidence(),
                         preparationItems(item.task())))
                 .toList();
     }

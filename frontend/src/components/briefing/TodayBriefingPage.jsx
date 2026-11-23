@@ -39,6 +39,7 @@ function BriefingItem({ item, canRegister }) {
           ))}
         </ul>
       )}
+      {item.evidence && <p className="mt-3 border-t border-slate-100 pt-3 text-xs text-slate-500">출처: {item.evidence}</p>}
       {canRegister && <TaskCalendarRegistrationButton taskId={item.taskId} />}
     </article>
   );
