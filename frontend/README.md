@@ -8,7 +8,7 @@ npm run dev     # http://localhost:5173
 npm run build   # PR 자동 검사에서도 실행
 ```
 
-백엔드 주소는 `src/api/client.js`의 `baseURL`(`http://localhost:8080`)이고, 로그인 토큰은 `localStorage.accessToken`으로 붙습니다. API 형식은 [docs/api-spec.md](../docs/api-spec.md), 2학기 화면 시안은 [docs/project/screens.md](../docs/project/screens.md).
+백엔드 주소는 `VITE_API_BASE_URL`이고 비우면 `http://localhost:8080`이며 (`src/api/client.js`), 로그인 토큰은 `localStorage.accessToken`으로 붙습니다. API 형식은 [docs/api-spec.md](../docs/api-spec.md), 2학기 화면 시안은 [docs/project/screens.md](../docs/project/screens.md).
 
 > 2026-10 정리. 1학기 `docs/frontend-api-guide.md`는 이 파일과 api-spec으로 대체했습니다.
 
