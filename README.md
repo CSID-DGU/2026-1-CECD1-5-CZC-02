@@ -125,7 +125,7 @@ frontend (5173) ──▶ backend (8080) ──▶ ai-module (8000) ──▶ Ol
 
 ## 실행
 
-세 모듈을 각각 실행합니다.
+세 모듈을 각각 실행합니다. 새 PC에 처음 설치한다면 [설치 문서](docs/project/install.md)를 따라 하세요.
 
 ### backend (JDK 17, MySQL 필요)
 
