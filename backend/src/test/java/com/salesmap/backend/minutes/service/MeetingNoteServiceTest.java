@@ -6,7 +6,9 @@ import com.salesmap.backend.ai.client.AiClient;
 import com.salesmap.backend.ai.client.MockAiClient;
 import com.salesmap.backend.ai.config.AiModuleProperties;
 import com.salesmap.backend.ai.exception.AiClientException;
+import com.salesmap.backend.minutes.client.AttendeeMention;
 import com.salesmap.backend.minutes.client.FakeIdentityResolutionClient;
+import com.salesmap.backend.minutes.client.IdentityResolutionClient;
 import com.salesmap.backend.minutes.client.RevisionClient;
 import com.salesmap.backend.minutes.client.RevisionRecord;
 import com.salesmap.backend.minutes.client.TaskDraftClient;
@@ -293,6 +295,36 @@ class MeetingNoteServiceTest {
     }
 
     @Test
+    void 사용자가_적은_소속만_A_식별_단서로_넘긴다() {
+        AtomicReference<List<AttendeeMention>> sent = new AtomicReference<>();
+        MeetingNoteService service = service(mockAiClient(), (sourceId, mentions, userId) -> {
+            sent.set(mentions);
+            return List.of();
+        });
+        MeetingNoteCreateRequest request = new MeetingNoteCreateRequest(
+                LocalDateTime.of(2026, 10, 14, 15, 0), "가상전자 본사", List.of("홍 부장", " 최가상 ", "박가상"), MEMO, null, null,
+                Map.of(" 홍 부장 ", " 가상전자 ", "박가상", "  "));
+
+        service.createDraft(request, USER_ID);
+
+        // 소속을 적은 사람만 company가 있고, 빈 소속·안 적은 사람은 null (장소 "가상전자 본사"를 소속으로 쓰지 않음)
+        assertThat(sent.get()).containsExactly(
+                new AttendeeMention("홍 부장", null, "MEETING", "가상전자"),
+                new AttendeeMention("최가상", null, "MEETING", null),
+                new AttendeeMention("박가상", null, "MEETING", null)
+        );
+    }
+
+    @Test
+    void 소속이_너무_길면_원본을_저장하기_전에_거부한다() {
+        MeetingNoteCreateRequest request = new MeetingNoteCreateRequest(null, null, List.of("홍 부장"), MEMO, null, null,
+                Map.of("홍 부장", "가".repeat(101)));
+
+        assertThatThrownBy(() -> service(mockAiClient()).createDraft(request, USER_ID))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     void 확인_안_한_할_일이_남아_있으면_C가_거부해_회의록을_확정하지_않는다() {
         MeetingNoteService service = service(mockAiClient());
         service.createDraft(fullRequest(List.of()), USER_ID);
@@ -399,12 +431,16 @@ class MeetingNoteServiceTest {
     }
 
     private MeetingNoteService service(AiClient aiClient) {
+        return service(aiClient, new FakeIdentityResolutionClient(objectMapper));
+    }
+
+    private MeetingNoteService service(AiClient aiClient, IdentityResolutionClient identityClient) {
         return new MeetingNoteService(
                 meetingNoteRepository,
                 sourceRepository,
                 userRepository,
                 aiClient,
-                new FakeIdentityResolutionClient(objectMapper),
+                identityClient,
                 (sourceId, userId) -> identityDecisions,
                 taskDraftClient,
                 revisionClient,

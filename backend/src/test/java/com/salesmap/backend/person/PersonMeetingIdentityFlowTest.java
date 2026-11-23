@@ -99,6 +99,22 @@ class PersonMeetingIdentityFlowTest {
         server.verify();
     }
 
+    @Test void userWrittenCompanyIsSentToIdentityApi() {
+        String response="""
+                [{"resolutionId":"ir_actual_b","mention":{"name":"가상인물_0001","email":null,"channel":"MEETING",
+                "sourceRef":"src_101","company":"가상회사_001"},"decision":"CANDIDATES","personId":null,
+                "candidates":[{"personId":"p_17","score":null,"reasons":["이름 일치","소속 일치"]}],
+                "decidedBy":"RULE","modelVersion":"identity-rule-0.2-d022"}]
+                """;
+        server.expect(requestTo("http://identity.test/identity/resolve"))
+                .andExpect(jsonPath("$.mentions[0].company").value("가상회사_001"))
+                .andRespond(withSuccess(response,MediaType.APPLICATION_JSON));
+        var draft=flow.createDraft(new MeetingNoteCreateRequest(null,null,List.of("가상인물_0001"),"가상인물_0001과 미팅했다.","FULL",null,
+                java.util.Map.of("가상인물_0001","가상회사_001")),7L);
+        assertThat(draft.identityResolutions().get(0).path("mention").path("company").asText()).isEqualTo("가상회사_001");
+        server.verify();
+    }
+
     @Test void identityApiFailureLeavesUnlinkedDraftAndDoesNotInventNewOrConfirmed() {
         server.expect(requestTo("http://identity.test/identity/resolve"))
                 .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE));

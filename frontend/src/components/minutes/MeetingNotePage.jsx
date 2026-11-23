@@ -81,8 +81,10 @@ export function MeetingNotePage() {
   const navigate = useNavigate();
   const [occurredAt, setOccurredAt] = useState(nowForDateTimeInput);
   const [location, setLocation] = useState('');
+  // { name, company } — 소속은 사용자가 아는 경우만 적는다 (메모·장소에서 추측하지 않음)
   const [attendees, setAttendees] = useState([]);
   const [attendeeInput, setAttendeeInput] = useState('');
+  const [companyInput, setCompanyInput] = useState('');
   const [text, setText] = useState('');
   const [mode, setMode] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -134,12 +136,14 @@ export function MeetingNotePage() {
     }
   };
 
-  const addAttendee = (value) => {
-    const name = value.trim().replace(/,$/, '').trim();
-    if (name && !attendees.includes(name)) {
-      setAttendees((prev) => [...prev, name]);
+  const addAttendee = () => {
+    const name = attendeeInput.trim().replace(/,$/, '').trim();
+    const company = companyInput.trim();
+    if (name && !attendees.some((person) => person.name === name)) {
+      setAttendees((prev) => [...prev, { name, company }]);
     }
     setAttendeeInput('');
+    setCompanyInput('');
   };
 
   const handleAttendeeKeyDown = (event) => {
@@ -148,9 +152,20 @@ export function MeetingNotePage() {
     }
     if (event.key === 'Enter' || event.key === ',') {
       event.preventDefault();
-      addAttendee(attendeeInput);
+      addAttendee();
     } else if (event.key === 'Backspace' && !attendeeInput && attendees.length > 0) {
       setAttendees((prev) => prev.slice(0, -1));
+    }
+  };
+
+  // 소속 칸: Enter로 사람을 추가한다. Backspace로 앞 사람을 지우지 않는다
+  const handleCompanyKeyDown = (event) => {
+    if (event.nativeEvent.isComposing) {
+      return;
+    }
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addAttendee();
     }
   };
 
@@ -159,10 +174,12 @@ export function MeetingNotePage() {
     if (!text.trim() || isSubmitting) {
       return;
     }
-    // 입력칸에 남은 이름도 만난 사람으로 넣는다
-    const names = attendeeInput.trim() && !attendees.includes(attendeeInput.trim())
-      ? [...attendees, attendeeInput.trim()]
+    // 입력칸에 남은 이름(과 소속)도 만난 사람으로 넣는다
+    const pending = attendeeInput.trim();
+    const people = pending && !attendees.some((person) => person.name === pending)
+      ? [...attendees, { name: pending, company: companyInput.trim() }]
       : attendees;
+    const companies = Object.fromEntries(people.filter((person) => person.company).map((person) => [person.name, person.company]));
 
     setIsSubmitting(true);
     setErrorMessage('');
@@ -170,7 +187,8 @@ export function MeetingNotePage() {
       const draft = await createMeetingNoteDraft({
         occurredAt: occurredAt ? `${occurredAt}:00` : null,
         location: location.trim() || null,
-        attendees: names,
+        attendees: people.map((person) => person.name),
+        attendeeCompanies: Object.keys(companies).length ? companies : null,
         text,
         mode: mode || null,
         title: null,
@@ -241,30 +259,43 @@ export function MeetingNotePage() {
 
           <div>
             <span className="mb-1 block text-xs font-semibold text-slate-600">
-              만난 사람 <span className="font-normal text-slate-400">(이름을 쓰고 Enter · 여러 명이면 하나씩)</span>
+              만난 사람 <span className="font-normal text-slate-400">(이름을 쓰고 Enter · 소속은 아는 경우만 · 여러 명이면 하나씩)</span>
             </span>
-            <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2 py-1.5 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100">
-              {attendees.map((name) => (
-                <span key={name} className="inline-flex items-center gap-1 rounded-lg bg-blue-50 px-2 py-0.5 text-sm text-blue-700">
-                  {name}
-                  <button
-                    type="button"
-                    aria-label={`${name} 빼기`}
-                    onClick={() => setAttendees((prev) => prev.filter((item) => item !== name))}
-                    className="text-blue-400 hover:text-blue-700"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </span>
-              ))}
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2 py-1.5 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100">
+                {attendees.map(({ name, company }) => (
+                  <span key={name} className="inline-flex items-center gap-1 rounded-lg bg-blue-50 px-2 py-0.5 text-sm text-blue-700">
+                    {name}
+                    {company && <span className="text-blue-500">· {company}</span>}
+                    <button
+                      type="button"
+                      aria-label={`${name} 빼기`}
+                      onClick={() => setAttendees((prev) => prev.filter((person) => person.name !== name))}
+                      className="text-blue-400 hover:text-blue-700"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                ))}
+                <input
+                  type="text"
+                  aria-label="만난 사람 이름"
+                  value={attendeeInput}
+                  onChange={(event) => setAttendeeInput(event.target.value)}
+                  onKeyDown={handleAttendeeKeyDown}
+                  placeholder={attendees.length === 0 ? '예: 홍 부장' : ''}
+                  className="min-w-[8rem] flex-1 border-none bg-transparent px-1 py-0.5 text-sm text-slate-800 focus:outline-none"
+                />
+              </div>
               <input
                 type="text"
-                value={attendeeInput}
-                onChange={(event) => setAttendeeInput(event.target.value)}
-                onKeyDown={handleAttendeeKeyDown}
-                onBlur={() => attendeeInput.trim() && addAttendee(attendeeInput)}
-                placeholder={attendees.length === 0 ? '예: 홍 부장' : ''}
-                className="min-w-[8rem] flex-1 border-none bg-transparent px-1 py-0.5 text-sm text-slate-800 focus:outline-none"
+                aria-label="소속 (선택)"
+                value={companyInput}
+                onChange={(event) => setCompanyInput(event.target.value)}
+                onKeyDown={handleCompanyKeyDown}
+                placeholder="소속 (선택) 예: 가상전자"
+                maxLength={100}
+                className={`${inputClass} sm:w-56 sm:self-start`}
               />
             </div>
           </div>

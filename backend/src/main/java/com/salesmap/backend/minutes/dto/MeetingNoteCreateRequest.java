@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /** ② 미팅 기록 화면의 "AI로 정리하기". 메모는 원본(sources, MEETING_NOTE)으로 저장된다. */
 public record MeetingNoteCreateRequest(
@@ -25,6 +26,15 @@ public record MeetingNoteCreateRequest(
 
         // 원본 제목. 비우면 날짜·장소로 만든다
         @Size(max = 255, message = "제목은 255자 이하여야 합니다.")
-        String title
+        String title,
+
+        // 만난 사람의 소속 (이름 → 소속). 사용자가 아는 경우만 적고, 없으면 비운다. A 식별에 단서로 넘긴다
+        Map<String, String> attendeeCompanies
 ) {
+
+    /** 소속 없이 부르는 기존 호출. */
+    public MeetingNoteCreateRequest(LocalDateTime occurredAt, String location, List<String> attendees,
+                                    String text, String mode, String title) {
+        this(occurredAt, location, attendees, text, mode, title, null);
+    }
 }

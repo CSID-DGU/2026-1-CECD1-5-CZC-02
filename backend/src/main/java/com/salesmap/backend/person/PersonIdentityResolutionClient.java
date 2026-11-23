@@ -55,6 +55,8 @@ public class PersonIdentityResolutionClient implements IdentityResolutionClient 
         for (AttendeeMention mention : mentions) {
             ObjectNode node = observed.addObject();
             node.put("name", mention.name()); node.put("email", mention.email());
+            // 사용자가 적은 소속이 있을 때만 (B가 메모에서 추측하지 않음). 식별 엔진이 이름과 함께 비교한다
+            if (mention.company() != null) node.put("company", mention.company());
             node.put("channel", mention.channel()); node.put("sourceRef", sourceId);
         }
         // 전체 본인 대장의 완성된 DTO만 받아서 HTTP 중 DB 트랜잭션을 유지하지 않는다.
