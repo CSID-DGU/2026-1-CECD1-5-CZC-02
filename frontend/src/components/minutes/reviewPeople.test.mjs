@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { reviewPeople } from './meetingNoteUtils.js';
+import { reviewPeople, unlinkedParticipants } from './meetingNoteUtils.js';
 
 const item = (resolutionId, decision, personId) => ({ resolution: { resolutionId, decision, personId } });
 
@@ -20,4 +20,17 @@ test('확정된 참석자는 그대로 쓰고 같은 사람은 한 번만 넣는
     { displayName: '이 부장', personId: null, resolutionId: 'ir_2' },
   ];
   assert.deepEqual(reviewPeople(participants, [item('ir_2', 'CONFIRMED', 'p_1')]), [{ personId: 'p_1', name: '이가상' }]);
+});
+
+test('확정 전에 연결되지 않은 참석자를 찾는다', () => {
+  const participants = [
+    { displayName: '이가상', personId: 'p_1', resolutionId: 'ir_1' },
+    { displayName: '박샘플', personId: null, resolutionId: 'ir_2' },
+    { displayName: '최예시', personId: null, resolutionId: 'ir_3' },
+    { displayName: '정가상', personId: null, resolutionId: 'ir_4' },
+    { displayName: '한예시', personId: null, resolutionId: null },
+  ];
+  const items = [item('ir_2', 'CONFIRMED', 'p_2'), item('ir_3', 'CANDIDATES', null), item('ir_4', 'NEW', null)];
+  assert.deepEqual(unlinkedParticipants(participants, items).map((person) => person.displayName), ['최예시', '정가상', '한예시']);
+  assert.deepEqual(unlinkedParticipants(), []);
 });
