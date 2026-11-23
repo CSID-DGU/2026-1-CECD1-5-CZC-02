@@ -33,7 +33,7 @@ export function ReminderModal({ isOpen, onClose, reminder }) {
               <Bell className="h-4 w-4 text-white" />
             </span>
             <h3 className="text-sm font-bold text-slate-900" style={{ fontFamily: 'var(--display)' }}>
-              {isUrgent ? '30분 전 일정 알림' : '일정 알림'}
+              {reminder.heading || (isUrgent ? '30분 전 일정 알림' : '일정 알림')}
             </h3>
           </div>
           <button onClick={onClose} className="rounded-lg p-1.5 hover:bg-slate-100">
@@ -66,7 +66,7 @@ export function ReminderModal({ isOpen, onClose, reminder }) {
                   <CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-blue-500" />
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-slate-800">{item.title}</p>
-                    <p className="mt-0.5 text-xs text-slate-500">{item.date} · {item.time}</p>
+                    <p className="mt-0.5 text-xs text-slate-500">{item.meta || `${item.date} · ${item.time}`}</p>
                   </div>
                 </div>
               ))}

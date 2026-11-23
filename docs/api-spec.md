@@ -940,6 +940,26 @@ Response data: `enabled`, `demoAccountEmail`, `anchorDate`, `deliveredStage`, `l
 
 아침 묶음 브리핑 (규칙 6: 하루 1회 묶음). `CONFIRMED` 할 일 중 그날·다음 날이 기한인 것을 준비 항목과 함께 묶어 반환한다. 날짜를 빼면 KST 오늘. 조회만 하고 발송하지 않는다. Authorization 필요.
 
+## Notifications (앱 안 알림)
+
+아침 묶음은 하루 1번, 즉시 알림은 하루 3건까지 서버가 셉니다. 앱 안에서 보여 줄지만 판정하고 메일·메시지는 보내지 않습니다. 날짜·시간은 KST입니다.
+
+### GET /api/notifications/settings
+
+`{ "morningTime": "09:00" }`. 저장한 적이 없으면 09:00입니다.
+
+### PUT /api/notifications/settings
+
+Request: `{ "morningTime": "10:30" }` (`HH:mm`). 형식이 틀리면 400.
+
+### POST /api/notifications/morning-bundle/claim
+
+`{ "show": true }`. 설정 시간이 지났고 오늘 아직 안 보여 줬을 때만 `true`이며, 받는 순간 오늘은 보여 준 것으로 기록합니다.
+
+### POST /api/notifications/immediate/claim
+
+Request: `{ "key": "schedule-30m-shown:12:2026-11-27T14:00:00" }`. Response: `{ "allowed": true, "remainingToday": 2 }`. 같은 키는 한 번만, 하루 3건까지만 `allowed=true`입니다.
+
 ## Status Codes
 
 | Status | 의미 |

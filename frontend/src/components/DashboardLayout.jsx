@@ -8,6 +8,9 @@ import { getIntegrations } from '../api/integrations';
 import { getDemoStatus } from '../api/demo';
 import { getSchedules } from '../api/schedules';
 import { getMeetingNotes } from '../api/meetingNotes';
+import { getTodayBriefing } from '../api/briefings';
+import { claimImmediateNotification, claimMorningBundle, getNotificationSettings } from '../api/notifications';
+import { buildMorningBundle, isPastMorningTime, kstDate } from './morningBundle';
 import { ReminderModal } from './ReminderModal';
 import { ActivityProvider, ActivityToasts, AnalysisProgressChip } from './ActivityFeed';
 import { useActivityFeed } from './useActivityFeed';
@@ -27,14 +30,6 @@ function formatTime(date) {
     hour: '2-digit',
     minute: '2-digit',
   });
-}
-
-function isSameDate(left, right) {
-  return (
-    left.getFullYear() === right.getFullYear()
-    && left.getMonth() === right.getMonth()
-    && left.getDate() === right.getDate()
-  );
 }
 
 function toScheduleDateTime(value) {
@@ -79,7 +74,7 @@ export function DashboardLayout({ children }) {
   const [showReminder, setShowReminder] = useState(false);
   const [currentReminder, setCurrentReminder] = useState(null);
   const [reminderQueue, setReminderQueue] = useState([]);
-  const loginSummaryShownRef = useRef(false);
+  const morningCheckedDateRef = useRef(null);
   const activity = useActivityFeed();
 
   const enqueueReminder = useCallback((reminder) => {
@@ -198,50 +193,37 @@ export function DashboardLayout({ children }) {
     }
   }, []);
 
+  // 아침 묶음: 설정한 시간 이후 하루 한 번. 몇 번째 탭이든 서버가 한 곳에만 허용한다
   useEffect(() => {
-    let ignore = false;
-
-    const showLoginSummary = async () => {
-      if (loginSummaryShownRef.current) {
+    const checkMorningBundle = async () => {
+      const today = kstDate(new Date());
+      if (morningCheckedDateRef.current === today) {
         return;
       }
-
-      const today = new Date();
-      const tomorrow = new Date(today);
-      tomorrow.setDate(today.getDate() + 1);
-
-      const schedules = await fetchSchedulesForReminder();
-      if (ignore) {
-        return;
-      }
-
-      const items = schedules
-        .filter((schedule) => schedule.status !== 'CANCELED')
-        .map(toReminderItem)
-        .filter(Boolean)
-        .filter((item) => {
-          const itemDate = toScheduleDateTime(item.dateTime);
-          return itemDate && (isSameDate(itemDate, today) || isSameDate(itemDate, tomorrow));
-        })
-        .sort((left, right) => new Date(left.dateTime) - new Date(right.dateTime));
-
-      if (items.length > 0) {
-        loginSummaryShownRef.current = true;
-        enqueueReminder({
-          id: `login-summary:${today.toISOString().slice(0, 10)}`,
-          kind: 'SUMMARY',
-          label: '오늘과 내일의 일정',
-          title: `오늘과 내일 일정 ${items.length}건이 있습니다.`,
-          items,
-        });
+      try {
+        const { morningTime } = await getNotificationSettings();
+        if (!isPastMorningTime(new Date(), morningTime)) {
+          return;
+        }
+        morningCheckedDateRef.current = today;
+        const [briefing, schedules] = await Promise.all([getTodayBriefing(today), fetchSchedulesForReminder()]);
+        const bundle = buildMorningBundle(briefing, schedules, today);
+        if (!bundle) {
+          return;
+        }
+        const { show } = await claimMorningBundle();
+        if (show) {
+          enqueueReminder({ ...bundle, id: `morning-bundle:${today}`, kind: 'SUMMARY' });
+        }
+      } catch (error) {
+        morningCheckedDateRef.current = null;
+        console.error('Failed to check morning bundle:', error);
       }
     };
 
-    showLoginSummary();
-
-    return () => {
-      ignore = true;
-    };
+    checkMorningBundle();
+    const intervalId = window.setInterval(checkMorningBundle, 60 * 1000);
+    return () => window.clearInterval(intervalId);
   }, [enqueueReminder, fetchSchedulesForReminder]);
 
   useEffect(() => {
@@ -267,13 +249,20 @@ export function DashboardLayout({ children }) {
           const storageKey = `${THIRTY_MINUTES_STORAGE_PREFIX}:${schedule.scheduleId}:${item.dateTime}`;
 
           if (minutesLeft > 0 && minutesLeft <= 30 && !sessionStorage.getItem(storageKey)) {
-            sessionStorage.setItem(storageKey, 'true');
-            enqueueReminder({
-              ...item,
-              id: storageKey,
-              kind: 'THIRTY_MINUTES',
-              label: '30분 전 알림',
-            });
+            // 즉시 알림은 하루 3건까지 (서버가 센다). 넘으면 띄우지 않고, 실패하면 다음 확인 때 다시 묻는다
+            claimImmediateNotification(storageKey)
+              .then(({ allowed }) => {
+                sessionStorage.setItem(storageKey, 'true');
+                if (allowed) {
+                  enqueueReminder({
+                    ...item,
+                    id: storageKey,
+                    kind: 'THIRTY_MINUTES',
+                    label: '30분 전 알림',
+                  });
+                }
+              })
+              .catch((error) => console.error('Failed to claim reminder:', error));
           }
         });
     };
