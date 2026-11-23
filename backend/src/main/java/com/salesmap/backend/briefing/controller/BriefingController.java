@@ -55,6 +55,14 @@ public class BriefingController {
         return ApiResponse.success(briefings.today(principal.getUserId(), briefingDate));
     }
 
+    @GetMapping("/confirmed-tasks")
+    public ApiResponse<MorningBriefingResponse> confirmedTasks(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @AuthenticationPrincipal CustomUserPrincipal principal) {
+        LocalDate briefingDate = date == null ? LocalDate.now(ZoneId.of("Asia/Seoul")) : date;
+        return ApiResponse.success(briefings.confirmedTasks(principal.getUserId(), briefingDate));
+    }
+
     @PostMapping("/calendar-registration")
     public ApiResponse<com.salesmap.backend.schedule.dto.ScheduleResponse> registerCalendar(
             @Valid @RequestBody TaskScheduleRegistrationRequest request,

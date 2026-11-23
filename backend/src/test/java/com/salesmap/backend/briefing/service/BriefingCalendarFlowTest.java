@@ -28,8 +28,10 @@ class BriefingCalendarFlowTest {
     private final GoogleCalendarEventService calendar = mock(GoogleCalendarEventService.class);
     private final ObjectMapper mapper = new ObjectMapper();
     private final BriefingService briefings = new BriefingService(tasks, mapper);
+    private final CalendarSchedulePersistenceService persistence =
+            new CalendarSchedulePersistenceService(tasks, schedules, users, mapper);
     private final CalendarRegistrationService registrations = new CalendarRegistrationService(
-            tasks, schedules, users, calendar, mapper);
+            persistence, calendar);
 
     @Test
     void preparationTaskIdCanBePassedToCalendarRegistration() {

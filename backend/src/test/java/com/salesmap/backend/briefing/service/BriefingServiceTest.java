@@ -116,6 +116,22 @@ class BriefingServiceTest {
     }
 
     @Test
+    void confirmedTasksIncludesConfirmedTasksBeyondTodayAndTomorrow() throws Exception {
+        JsonNode sample = mapper.readTree(Files.readString(
+                Path.of("..", "contracts", "examples", "task.example.json"), StandardCharsets.UTF_8));
+        JsonNode confirmed = sample.get(0).deepCopy();
+        ((com.fasterxml.jackson.databind.node.ObjectNode) confirmed)
+                .put("status", "CONFIRMED")
+                .put("dueDate", "2027-01-15");
+        when(repository.findByOwnerIdOrderByIdDesc(7L)).thenReturn(List.of(entry(1L, confirmed.toString())));
+
+        var response = service.confirmedTasks(7L, LocalDate.of(2026, 11, 20));
+
+        assertThat(response.items()).hasSize(1);
+        assertThat(response.items().get(0).dueDate()).isEqualTo("2027-01-15");
+    }
+
+    @Test
     void usesScenarioPreparationRulesForVisitAndContractTasks() throws Exception {
         JsonNode sample = mapper.readTree(Files.readString(
                 Path.of("..", "contracts", "examples", "task.example.json"), StandardCharsets.UTF_8));

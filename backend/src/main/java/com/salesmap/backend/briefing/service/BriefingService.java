@@ -64,6 +64,18 @@ public class BriefingService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public MorningBriefingResponse confirmedTasks(Long ownerUserId, LocalDate date) {
+        Objects.requireNonNull(ownerUserId, "owner user id is required");
+        Objects.requireNonNull(date, "briefing date is required");
+        return new MorningBriefingResponse(
+                date,
+                LocalDateTime.now(KST).withNano(0),
+                true,
+                collect(storedTasks(ownerUserId), task -> "CONFIRMED".equals(task.task().status()))
+        );
+    }
+
     private List<MorningBriefingResponse.BriefingItem> collect(
             Long ownerUserId, LocalDate startDate, LocalDate endDate) {
         return collect(storedTasks(ownerUserId),
@@ -127,14 +139,7 @@ public class BriefingService {
                     .forEach(result::add);
         }
         if (result.isEmpty()) result.addAll(rulePreparationItems(task.taskType()));
-        if (result.isEmpty()) {
-            switch (task.taskType()) {
-                case "MEETING_PREP" -> result.add("최근 고객 활동과 회의 안건 확인");
-                case "VISIT_PREP" -> result.add("방문 장소와 이동 시간 확인");
-                case "CONTRACT_PREP" -> result.add("계약서 초안과 필수 서류 확인");
-                default -> result.add("할 일의 근거와 필요한 자료 확인");
-            }
-        }
+        if (result.isEmpty()) result.add("할 일의 근거와 필요한 자료 확인");
         return List.copyOf(result);
     }
 
