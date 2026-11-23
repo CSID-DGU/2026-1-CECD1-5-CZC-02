@@ -4,6 +4,7 @@ import { noteTitle, formatMeetingDateTime } from '../minutes/meetingNoteUtils';
 import { getMe } from '../../api/auth';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TaskBoard } from './TaskBoard';
+import { TaskStatusSuggestions } from './TaskStatusSuggestions';
 import { createTask, importTasks, listTasks, loadTask, saveTask } from './taskApi';
 import { errorMessage } from './taskUtils';
 
@@ -72,6 +73,7 @@ export function TasksPage({ currentUserId = null, people = [] }) {
         setContent(''); setEvidence('');
       }); }} className="mt-4 flex flex-col gap-2"><label>할 일 내용<input aria-label="새 할 일 내용" required value={content} onChange={e => setContent(e.target.value)} className="ml-2 rounded-lg border p-2" /></label><label>원문 근거<input aria-label="새 할 일 근거" required value={evidence} onChange={e => setEvidence(e.target.value)} className="ml-2 rounded-lg border p-2" /></label><button disabled={busy} className="w-fit rounded-lg border px-3 py-2">확인 전으로 추가</button></form>
     </details>
+    <TaskStatusSuggestions refreshKey={tasks.map(task => `${task.taskId}:${task.status}:${task.counterpartPersonId}`).join('|')} onDecided={reload} />
     <TaskBoard tasks={tasks} currentUserId={actorId} onSave={save} onSelectEvidence={setSelectedEvidence} people={people} />
     {selectedEvidence && <aside className="mt-5 rounded-xl border border-blue-200 bg-white p-4"><h2 className="font-semibold">선택한 원문 근거</h2><p className="mt-2 whitespace-pre-wrap">{selectedEvidence}</p></aside>}
     <p className="mt-5 text-xs text-slate-500">수정 기록을 보관해요. 확정한 할 일은 일정·브리핑 연결 후 활용돼요.</p>
