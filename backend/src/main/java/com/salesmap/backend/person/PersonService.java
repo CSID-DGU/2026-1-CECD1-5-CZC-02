@@ -75,7 +75,24 @@ public class PersonService {
         java.util.Map<Long,List<PersonEntry>> groups=all.stream().filter(row -> row.getMergedIntoId()!=null)
                 .collect(java.util.stream.Collectors.groupingBy(PersonEntry::getMergedIntoId));
         return all.stream().filter(row -> row.getMergedIntoId()==null)
-                .map(row -> combined(row,groups.getOrDefault(row.getId(),List.of()))).toList();
+                .map(row -> withMergedCompanies(combined(row,groups.getOrDefault(row.getId(),List.of())),
+                        groups.getOrDefault(row.getId(),List.of()))).toList();
+    }
+
+    /**
+     * 식별 비교에만 합쳐진 인물의 소속을 단서로 넘긴다. 어느 쪽이 이전 소속인지는 모르므로
+     * 인물 문서·화면의 이력에는 넣지 않고, 직함·기간도 채우지 않는다.
+     */
+    private PersonDocument withMergedCompanies(PersonDocument root,List<PersonEntry> aliases){
+        var history=new ArrayList<>(root.companyHistory());
+        for(PersonEntry alias:aliases){
+            String company=document(alias).company();
+            if(company==null || company.equals(root.company())
+                    || history.stream().anyMatch(item -> company.equals(item.company()))) continue;
+            history.add(new PersonDocument.CompanyHistory(company,null,null));
+        }
+        return new PersonDocument(root.personId(),root.name(),root.nameVariants(),root.company(),root.department(),root.title(),
+                root.emails(),root.phones(),root.channels(),List.copyOf(history),root.photoAvailable(),root.isSynthetic());
     }
 
     private static void requireOwner(Long owner) {

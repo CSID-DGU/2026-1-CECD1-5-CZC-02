@@ -13,11 +13,15 @@ logger = logging.getLogger(__name__)
 
 
 def _has_comparable_name(comparison):
-    # 기존 fuzzy 검색과 동일하게 짧은 이름의 한 글자 차이를 후보 근거로 쓰지 않는다.
+    # 짧은 이름은 성이 다르면(김가상/이가상) 다른 사람이므로 모델 점수만으로 후보에 넣지 않는다.
+    # 성이 같은 세 글자 이름(김가샹/김가상)은 오타일 수 있어 후보로 보여 주고 사람이 고른다 (D-028).
     best = max(comparison.name_similarities, key=lambda item: item.similarity, default=None)
-    return best is not None and all(
-        len(normalize_name(value) or "") >= 4 for value in (best.observed, best.registered)
-    )
+    if best is None:
+        return False
+    observed, registered = (normalize_name(value) or "" for value in (best.observed, best.registered))
+    if min(len(observed), len(registered)) >= 4:
+        return True
+    return len(observed) == len(registered) == 3 and observed[0] == registered[0]
 
 
 def _resolve(mention, persons, model):

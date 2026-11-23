@@ -198,8 +198,17 @@ def test_inexact_names_remain_available_when_no_direct_match_exists():
 
 
 @pytest.mark.parametrize("company", [None, "가상회사_파랑"])
-def test_short_different_names_are_not_model_only_candidates(company):
-    people = [{"personId": "p_short", "name": "가상을", "company": company, "isSynthetic": True}]
-    result, = resolve_identities([{"name": "가상갑", "company": company, "channel": "MEETING"}], people)
+def test_short_names_with_different_family_name_are_not_model_only_candidates(company):
+    people = [{"personId": "p_short", "name": "이가상", "company": company, "isSynthetic": True}]
+    result, = resolve_identities([{"name": "김가상", "company": company, "channel": "MEETING"}], people)
     assert result["decision"] == "NEW"
     assert result["candidates"] == []
+
+
+@pytest.mark.parametrize("company", [None, "가상회사_파랑"])
+def test_three_letter_typo_with_same_family_name_stays_a_candidate(company):
+    people = [{"personId": "p_typo", "name": "김가상", "company": company, "isSynthetic": True}]
+    result, = resolve_identities([{"name": "김가샹", "company": company, "channel": "MEETING"}], people)
+    assert result["decision"] == "CANDIDATES"
+    assert [c["personId"] for c in result["candidates"]] == ["p_typo"]
+    assert result["personId"] is None

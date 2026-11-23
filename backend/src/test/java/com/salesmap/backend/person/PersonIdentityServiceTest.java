@@ -91,6 +91,13 @@ class PersonIdentityServiceTest {
         assertThat(ContractSchemaValidator.load("revision.schema.json").validate(record)).isEmpty();
         verify(notes,never()).save(any());verify(people,never()).create(any(),anyLong(),anyLong());
     }
+    @Test void candidateMergedAfterProposalStillCountsAsSelectedCandidate(){
+        when(people.get("p_20",7L)).thenReturn(person.withId(20L));
+        when(people.historyIds("p_20",7L)).thenReturn(java.util.Set.of("p_20","p_17"));
+        IdentityReviewItem saved=select(choose("p_20"));
+        assertThat(saved.resolution().path("personId").asText()).isEqualTo("p_20");
+        assertThat(revision().action()).isEqualTo("SELECTED_CANDIDATE");
+    }
     @Test void modelProposalIsStoredAndHumanSelectionKeepsModelAttribution() {
         proposal.put("decidedBy","MODEL").put("modelVersion","identity-logistic-v1");
         ((ObjectNode)proposal.path("candidates").get(0)).put("score",0.72);

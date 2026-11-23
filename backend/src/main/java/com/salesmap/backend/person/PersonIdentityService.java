@@ -106,9 +106,12 @@ public class PersonIdentityService {
             selected=people.get(body.get("personId").textValue(),owner);
         }
         if(!create && humanBefore && selected.personId().equals(current.path("personId").asText())) return item(row);
+        // 제안 뒤에 병합됐으면 대표 ID로 돌아오므로, 합쳐진 ID까지 같은 사람으로 보고 제안과 비교한다.
+        java.util.Set<String> selectedIds=new java.util.HashSet<>(create ? java.util.Set.<String>of() : people.historyIds(selected.personId(),owner));
+        selectedIds.add(selected.personId());
         boolean candidate=false;
-        for(JsonNode c:proposal.path("candidates")) if(selected.personId().equals(c.path("personId").asText())) candidate=true;
-        String action=create ? "CREATED_NEW" : humanBefore ? "EDITED" : selected.personId().equals(proposal.path("personId").asText())
+        for(JsonNode c:proposal.path("candidates")) if(selectedIds.contains(c.path("personId").asText())) candidate=true;
+        String action=create ? "CREATED_NEW" : humanBefore ? "EDITED" : selectedIds.contains(proposal.path("personId").asText())
                 ? "ACCEPTED" : candidate ? "SELECTED_CANDIDATE" : "EDITED";
         ObjectNode decided=(ObjectNode)proposal.deepCopy();
         decided.put("decision","CONFIRMED").put("personId",selected.personId()).put("decidedBy","HUMAN");

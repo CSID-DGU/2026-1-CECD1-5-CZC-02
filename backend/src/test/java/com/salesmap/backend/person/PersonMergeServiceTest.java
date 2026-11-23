@@ -46,6 +46,14 @@ class PersonMergeServiceTest {
     }
     ObjectNode body(){return mapper.createObjectNode().put("sourcePersonId","p_18").put("confirmed",true);}
     ObjectNode undoBody(){return mapper.createObjectNode().put("confirmed",true);}
+    @Test void mergedCompanyIsAClueForIdentityOnlyAndDisappearsAfterUndo() {
+        var result=merges.merge("p_17",body(),7L,70L);
+        PersonDocument forIdentity=people.forResolution(7L).get(0);
+        assertThat(forIdentity.companyHistory()).anyMatch(h -> h.company().equals("가상회사_다른소속") && h.title()==null && h.until()==null);
+        assertThat(people.get("p_17",7L).companyHistory()).noneMatch(h -> h.company().equals("가상회사_다른소속"));
+        merges.undo("p_17",result.mergeId(),undoBody(),7L,70L);
+        assertThat(people.forResolution(7L)).hasSize(2).allSatisfy(p -> assertThat(p.companyHistory()).noneMatch(h -> h.company().equals("가상회사_다른소속")));
+    }
     @Test void explicitMergeKeepsOriginalsUnionsRegisteredCluesAndAuditWithoutInventingCompanyHistory() throws Exception {
         String sourceOriginal=source.getDocument(),targetOriginal=target.getDocument();
         var result=merges.merge("p_17",body(),7L,70L);
@@ -59,7 +67,7 @@ class PersonMergeServiceTest {
         assertThat(combined.companyHistory()).noneMatch(h -> h.company().equals("가상회사_다른소속"));
         assertThat(ContractSchemaValidator.load("person.schema.json").validate(mapper.valueToTree(combined))).isEmpty();
         assertThat(people.get("p_18",7L)).isEqualTo(combined);
-        assertThat(people.forResolution(7L)).containsExactly(combined);
+        assertThat(people.forResolution(7L)).singleElement().satisfies(p -> {assertThat(p.personId()).isEqualTo(combined.personId());assertThat(p.emails()).isEqualTo(combined.emails());assertThat(p.nameVariants()).isEqualTo(combined.nameVariants());});
         assertThat(people.historyIds("p_17",7L)).containsExactlyInAnyOrder("p_17","p_18");
         assertThat((String)ReflectionTestUtils.getField(target,"searchText")).contains("second@fake.example");
     }
