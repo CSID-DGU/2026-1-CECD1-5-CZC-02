@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AlertCircle, CalendarCheck2, CheckCircle2, Clock3, Loader2, RefreshCw } from 'lucide-react';
-import { getTodayBriefing, registerTaskOnCalendar } from '../../api/briefings';
+import { getConfirmedTasks, registerTaskOnCalendar } from '../../api/briefings';
 
 function toDateInput(date) {
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -27,9 +27,9 @@ export function CalendarRegistrationPage() {
     setLoading(true);
     setErrorMessage('');
     try {
-      const data = await getTodayBriefing(date);
+      const data = await getConfirmedTasks(date);
       setBriefing(data);
-      const firstTask = [...(data?.dueToday || []), ...(data?.tomorrowPreparation || []), ...(data?.overdue || [])][0];
+      const firstTask = data?.items?.[0];
       setSelectedTaskId(firstTask?.taskId || '');
       setScheduleDateTime(toDateTimeInput(firstTask));
     } catch (error) {
@@ -42,8 +42,7 @@ export function CalendarRegistrationPage() {
   useEffect(() => { loadBriefing(); }, [loadBriefing]);
 
   const tasks = useMemo(() => {
-    const candidates = [...(briefing?.dueToday || []), ...(briefing?.tomorrowPreparation || []), ...(briefing?.overdue || [])];
-    return [...new Map(candidates.map((item) => [item.taskId, item])).values()];
+    return briefing?.items || [];
   }, [briefing]);
 
   const handleTaskChange = (event) => {

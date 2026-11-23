@@ -28,8 +28,10 @@ class CalendarRegistrationServiceTest {
     private final ScheduleRepository schedules = mock(ScheduleRepository.class);
     private final UserRepository users = mock(UserRepository.class);
     private final GoogleCalendarEventService calendar = mock(GoogleCalendarEventService.class);
+    private final CalendarSchedulePersistenceService persistence =
+            new CalendarSchedulePersistenceService(tasks, schedules, users, new ObjectMapper());
     private final CalendarRegistrationService service = new CalendarRegistrationService(
-            tasks, schedules, users, calendar, new ObjectMapper());
+            persistence, calendar);
 
     @Test
     void registersOnlyConfirmedTaskWithHumanSelectedTime() {
@@ -71,5 +73,32 @@ class CalendarRegistrationServiceTest {
                 new TaskScheduleRegistrationRequest("t_1", LocalDateTime.of(2026, 11, 20, 10, 0)), 7L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("CONFIRMED");
+    }
+
+    @Test
+    void keepsSavedScheduleWhenExternalCalendarRegistrationFails() {
+        TaskEntry entry = new TaskEntry(7L, "mn_001", "draft-1", """
+                {"taskId":"t_1","noteId":"mn_001","content":"준비","dueDate":null,
+                "dueDateIsDefault":false,"assignee":"user_001","counterpartPersonId":null,
+                "commitmentKind":"IMPLICIT","taskType":"NONE","taskTypeConfidence":0.5,
+                "taskTypeSource":"HUMAN","evidence":"원문 근거","status":"CONFIRMED"}
+                """);
+        User user = mock(User.class);
+        when(tasks.lockOwned(1L, 7L)).thenReturn(Optional.of(entry));
+        when(schedules.findByUserId(7L)).thenReturn(List.of());
+        when(users.findById(7L)).thenReturn(Optional.of(user));
+        when(schedules.save(any(Schedule.class))).thenAnswer(invocation -> {
+            Schedule schedule = invocation.getArgument(0);
+            ReflectionTestUtils.setField(schedule, "id", 12L);
+            return schedule;
+        });
+        when(calendar.createEventForApprovedSchedule(any(), any(), any()))
+                .thenThrow(new IllegalStateException("calendar unavailable"));
+
+        var response = service.register(
+                new TaskScheduleRegistrationRequest("t_1", LocalDateTime.of(2026, 11, 20, 10, 0)), 7L);
+
+        assertThat(response.googleCalendarEventId()).isNull();
+        verify(schedules).save(any(Schedule.class));
     }
 }

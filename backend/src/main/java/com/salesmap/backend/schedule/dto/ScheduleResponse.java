@@ -5,6 +5,7 @@ import com.salesmap.backend.schedule.entity.ScheduleOutcome;
 import com.salesmap.backend.schedule.entity.ScheduleStatus;
 
 import java.time.LocalDateTime;
+import java.util.regex.Pattern;
 
 public record ScheduleResponse(
         Long scheduleId,
@@ -23,6 +24,7 @@ public record ScheduleResponse(
         ScheduleOutcome outcome,
         LocalDateTime outcomeRecordedAt
 ) {
+    private static final Pattern TASK_MARKER = Pattern.compile("(?m)^\\[SALESMAP_TASK:[^\\]]+\\]\\s*\\n?");
 
     public static ScheduleResponse from(Schedule schedule) {
         Long analysisId = schedule.getAnalysis() == null ? null : schedule.getAnalysis().getId();
@@ -37,7 +39,7 @@ public record ScheduleResponse(
                 actionType,
                 schedule.getTitle(),
                 schedule.getScheduleDateTime(),
-                schedule.getMemo(),
+                displayMemo(schedule.getMemo()),
                 schedule.getReminderDateTime(),
                 schedule.getGoogleCalendarEventId(),
                 schedule.getStatus(),
@@ -46,5 +48,10 @@ public record ScheduleResponse(
                 schedule.getOutcome(),
                 schedule.getOutcomeRecordedAt()
         );
+    }
+
+    private static String displayMemo(String memo) {
+        if (memo == null || memo.isBlank()) return "";
+        return TASK_MARKER.matcher(memo).replaceFirst("").trim();
     }
 }

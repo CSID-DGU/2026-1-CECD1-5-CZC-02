@@ -115,6 +115,64 @@ class BriefingServiceTest {
         assertThat(response.tomorrowPreparation()).hasSize(1);
     }
 
+    @Test
+    void confirmedTasksIncludesConfirmedTasksBeyondTodayAndTomorrow() throws Exception {
+        JsonNode sample = mapper.readTree(Files.readString(
+                Path.of("..", "contracts", "examples", "task.example.json"), StandardCharsets.UTF_8));
+        JsonNode confirmed = sample.get(0).deepCopy();
+        ((com.fasterxml.jackson.databind.node.ObjectNode) confirmed)
+                .put("status", "CONFIRMED")
+                .put("dueDate", "2027-01-15");
+        when(repository.findByOwnerIdOrderByIdDesc(7L)).thenReturn(List.of(entry(1L, confirmed.toString())));
+
+        var response = service.confirmedTasks(7L, LocalDate.of(2026, 11, 20));
+
+        assertThat(response.items()).hasSize(1);
+        assertThat(response.items().get(0).dueDate()).isEqualTo("2027-01-15");
+    }
+
+    @Test
+    void usesScenarioPreparationRulesForVisitAndContractTasks() throws Exception {
+        JsonNode sample = mapper.readTree(Files.readString(
+                Path.of("..", "contracts", "examples", "task.example.json"), StandardCharsets.UTF_8));
+        JsonNode contract = sample.get(0).deepCopy();
+        JsonNode visit = sample.get(2).deepCopy();
+        ((com.fasterxml.jackson.databind.node.ObjectNode) contract)
+                .put("dueDate", "2026-10-16")
+                .put("status", "CONFIRMED")
+                .put("taskType", "CONTRACT_PREP")
+                .remove("prerequisites");
+        ((com.fasterxml.jackson.databind.node.ObjectNode) visit)
+                .put("dueDate", "2026-10-16")
+                .put("status", "CONFIRMED")
+                .put("taskType", "VISIT_PREP")
+                .remove("prerequisites");
+        when(repository.findByOwnerIdOrderByIdDesc(7L)).thenReturn(List.of(
+                entry(1L, contract.toString()), entry(2L, visit.toString())));
+
+        var response = service.morning(7L, LocalDate.of(2026, 10, 15));
+
+        assertThat(response.items()).hasSize(2);
+        assertThat(response.items().stream()
+                .filter(item -> "CONTRACT_PREP".equals(item.taskType()))
+                .findFirst()
+                .orElseThrow()
+                .preparationItems())
+                .containsExactly(
+                        "계약서 초안과 주요 조건 확인",
+                        "필요 서류 목록 확인",
+                        "이전 합의 내용과 변경 사항 대조");
+        assertThat(response.items().stream()
+                .filter(item -> "VISIT_PREP".equals(item.taskType()))
+                .findFirst()
+                .orElseThrow()
+                .preparationItems())
+                .containsExactly(
+                        "방문 장소와 이동 시간 확인",
+                        "현장 점검 자료와 필요한 장비 준비",
+                        "방문 중 확인할 질문 정리");
+    }
+
     private TaskEntry entry(Long id, String document) {
         TaskEntry entry = new TaskEntry(7L, "mn_1", "key-" + id, document);
         ReflectionTestUtils.setField(entry, "id", id);

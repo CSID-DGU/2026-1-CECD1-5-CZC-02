@@ -8,9 +8,11 @@ import com.salesmap.backend.schedule.dto.ScheduleCreateRequest;
 import com.salesmap.backend.schedule.dto.ScheduleResponse;
 import com.salesmap.backend.schedule.dto.ScheduleUpdateRequest;
 import com.salesmap.backend.schedule.entity.Schedule;
+import com.salesmap.backend.schedule.entity.ScheduleDeletionAudit;
 import com.salesmap.backend.schedule.entity.ScheduleOutcome;
 import com.salesmap.backend.schedule.entity.ScheduleStatus;
 import com.salesmap.backend.schedule.repository.ScheduleRepository;
+import com.salesmap.backend.schedule.repository.ScheduleDeletionAuditRepository;
 import com.salesmap.backend.user.entity.User;
 import com.salesmap.backend.user.repository.UserRepository;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -27,6 +30,7 @@ import java.util.NoSuchElementException;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleDeletionAuditRepository deletionAudits;
     private final UserRepository userRepository;
     private final AnalysisRepository analysisRepository;
     private final GoogleCalendarEventService googleCalendarEventService;
@@ -34,12 +38,14 @@ public class ScheduleService {
 
     public ScheduleService(
             ScheduleRepository scheduleRepository,
+            ScheduleDeletionAuditRepository deletionAudits,
             UserRepository userRepository,
             AnalysisRepository analysisRepository,
             GoogleCalendarEventService googleCalendarEventService,
             CustomerTimelineService customerTimelineService
     ) {
         this.scheduleRepository = scheduleRepository;
+        this.deletionAudits = deletionAudits;
         this.userRepository = userRepository;
         this.analysisRepository = analysisRepository;
         this.googleCalendarEventService = googleCalendarEventService;
@@ -128,6 +134,12 @@ public class ScheduleService {
 
         googleCalendarEventService.deleteEventForSchedule(schedule, authenticatedUserId);
         customerTimelineService.unlinkScheduleReferences(schedule.getId());
+        deletionAudits.save(new ScheduleDeletionAudit(
+                schedule.getId(),
+                authenticatedUserId,
+                LocalDateTime.now(ZoneId.of("Asia/Seoul")),
+                schedule.getTitle()
+        ));
         scheduleRepository.delete(schedule);
     }
 
