@@ -44,7 +44,11 @@ def test_new_gold_carries_review_status():
     # 정답 교차 검수 표시. 값은 "검수 전" 또는 "검수 완료"만
     for case in CASES:
         assert case.get("reviewStatus", "검수 완료") in ("검수 전", "검수 완료"), case["caseId"]
-    assert {case["caseId"] for case in CASES if case.get("reviewStatus") == "검수 전"} >= {f"e{n:02d}" for n in range(4, 11)}
+    # 새 메일 정답은 검수 상태를 명시해야 한다. 검수 완료로의 전환도 허용한다.
+    reviewed_ids = {f"e{n:02d}" for n in range(4, 11)}
+    for case in CASES:
+        if case["caseId"] in reviewed_ids:
+            assert "reviewStatus" in case, case["caseId"]
 
 
 @pytest.mark.parametrize("case", CASES, ids=CASE_IDS)
