@@ -107,7 +107,9 @@ public class TaskService {
     }
     @Transactional(readOnly = true)
     public List<JsonNode> pendingRevisions(Long owner) {
-        return revisions.findByOwnerIdOrderByIdAsc(owner).stream().map(row -> {
+        return revisions.findByOwnerIdOrderByIdAsc(owner).stream()
+                .filter(row -> !row.isDelivered())
+                .map(row -> {
             ObjectNode payload = (ObjectNode) read(row.getPayload());
             payload.put("revisionId", "rv_task_" + row.getId());
             return (JsonNode) payload;
