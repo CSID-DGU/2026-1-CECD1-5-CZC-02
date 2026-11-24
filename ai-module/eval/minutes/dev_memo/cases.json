@@ -1,0 +1,108 @@
+[
+  {
+    "caseId": "dm01",
+    "title": "[dev] 예제기계 줄마다 현황이 많은 메모",
+    "tags": [
+      "dev",
+      "memo",
+      "discussion_heavy"
+    ],
+    "input": {
+      "sourceType": "MEETING_NOTE",
+      "occurredAt": "2026-11-02T10:00:00",
+      "location": "예제기계 본사",
+      "attendees": [
+        "구예제 부장"
+      ]
+    }
+  },
+  {
+    "caseId": "dm02",
+    "title": "[dev] 모의에너지 한 문단 통화 메모",
+    "tags": [
+      "dev",
+      "memo",
+      "dense_paragraph"
+    ],
+    "input": {
+      "sourceType": "MEETING_NOTE",
+      "occurredAt": "2026-11-03T15:30:00",
+      "location": null,
+      "attendees": [
+        "남모의 과장"
+      ]
+    }
+  },
+  {
+    "caseId": "dm03",
+    "title": "[dev] 샘플유통 데모·설명과 잡담",
+    "tags": [
+      "dev",
+      "memo",
+      "chitchat",
+      "our_explanation"
+    ],
+    "input": {
+      "sourceType": "MEETING_NOTE",
+      "occurredAt": "2026-11-04T14:00:00",
+      "location": "샘플유통 강남 사무실",
+      "attendees": [
+        "하샘플 팀장"
+      ]
+    }
+  },
+  {
+    "caseId": "dm04",
+    "title": "[dev] 가상제약 화상회의, 말한 사람별 긴 줄",
+    "tags": [
+      "dev",
+      "memo",
+      "multi_attendee",
+      "long_line"
+    ],
+    "input": {
+      "sourceType": "MEETING_NOTE",
+      "occurredAt": "2026-11-05T11:00:00",
+      "location": "화상회의",
+      "attendees": [
+        "변가상 이사",
+        "추가상 책임"
+      ]
+    }
+  },
+  {
+    "caseId": "dm05",
+    "title": "[dev] 테스트교육 첫 미팅, 회사 소개만",
+    "tags": [
+      "dev",
+      "memo",
+      "discussion_only"
+    ],
+    "input": {
+      "sourceType": "MEETING_NOTE",
+      "occurredAt": "2026-11-06T16:00:00",
+      "location": "테스트교육 사무실",
+      "attendees": [
+        "추테스트 대리"
+      ]
+    }
+  },
+  {
+    "caseId": "dm06",
+    "title": "[dev] 시범물산 번호 목록, 교체 검토",
+    "tags": [
+      "dev",
+      "memo",
+      "numbered_list",
+      "our_explanation"
+    ],
+    "input": {
+      "sourceType": "MEETING_NOTE",
+      "occurredAt": "2026-11-09T13:30:00",
+      "location": "시범물산 회의실 B",
+      "attendees": [
+        "탁시범 차장"
+      ]
+    }
+  }
+]

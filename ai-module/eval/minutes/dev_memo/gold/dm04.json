@@ -1,0 +1,77 @@
+{
+  "noteId": "mn_eval_dm04",
+  "sourceRefs": [
+    {
+      "sourceId": "src_eval_dm04",
+      "sourceType": "MEETING_NOTE"
+    }
+  ],
+  "occurredAt": "2026-11-05T11:00:00",
+  "location": "화상회의",
+  "mode": "FULL",
+  "participants": [
+    {
+      "displayName": "변가상 이사",
+      "resolutionId": null,
+      "personId": null
+    },
+    {
+      "displayName": "추가상 책임",
+      "resolutionId": null,
+      "personId": null
+    }
+  ],
+  "fields": {
+    "discussion": [
+      {
+        "text": "신약 허가 일정으로 내년 상반기까지 품질팀 인력 부족",
+        "evidence": "신약 허가 일정 때문에 내년 상반기까지 품질팀 인력이 부족함."
+      },
+      {
+        "text": "문서 자동화를 우선 검토",
+        "evidence": "그래서 문서 자동화부터 보고 있다고 함."
+      },
+      {
+        "text": "문서 결재 평균 5일 소요",
+        "evidence": "현재 문서 결재에 평균 5일 걸림."
+      },
+      {
+        "text": "외부 감사 때 서류 찾는 데 일주일 소요",
+        "evidence": "외부 감사 때마다 서류 찾는 데 일주일이 듦."
+      }
+    ],
+    "customerRequests": [
+      {
+        "text": "전자서명 기록의 규정 준수 여부 확인 요청",
+        "evidence": "전자서명 기록이 규정에 맞게 남는지 확인 부탁하심."
+      }
+    ],
+    "concerns": [
+      {
+        "text": "문서 4만 건 이전 중 업무 중단 우려",
+        "evidence": "기존 문서 4만 건을 옮기는 동안 업무가 멈출까 걱정하심."
+      }
+    ],
+    "commitments": [
+      {
+        "text": "이행 계획 초안 다음 주 목요일까지 송부",
+        "evidence": "이행 계획 초안은 우리가 다음 주 목요일까지 보내드리기로 함."
+      },
+      {
+        "text": "문서 분류 기준표 공유 (고객 측)",
+        "evidence": "책임님이 문서 분류 기준표 공유해 주신다고 함."
+      }
+    ],
+    "nextContact": [
+      {
+        "text": "11월 말 재회의",
+        "evidence": "초안 나오면 11월 말에 다시 회의하기로."
+      }
+    ]
+  },
+  "missingFields": [],
+  "uncertainSegments": [],
+  "status": "DRAFT",
+  "generatedBy": "HUMAN",
+  "llmModel": null
+}

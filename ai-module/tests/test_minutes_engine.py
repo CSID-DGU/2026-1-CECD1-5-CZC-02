@@ -107,6 +107,34 @@ def test_items_without_evidence_in_source_are_dropped(monkeypatch):
     assert all(evidence in MEMO for evidence in every_evidence)
 
 
+def test_discussion_item_repeating_another_field_is_dropped(monkeypatch):
+    memo = "가상전자 미팅\n- 창고가 2곳으로 늘었음\n- 데이터 이전이 잘못될까 걱정하심"
+    fake_llm(monkeypatch, full_output(
+        discussion=[
+            item("창고 2곳으로 증가", "창고가 2곳으로 늘었음"),
+            item("데이터 이전 걱정", "데이터 이전이  잘못될까 걱정하심"),  # 공백만 다른 같은 근거
+        ],
+        concerns=[item("데이터 이전 우려", "데이터 이전이 잘못될까 걱정하심")],
+    ))
+
+    result = build_meeting_note(request_for(text=memo))
+
+    assert [i["text"] for i in result.note["fields"]["discussion"]] == ["창고 2곳으로 증가"]
+    assert [i["text"] for i in result.note["fields"]["concerns"]] == ["데이터 이전 우려"]
+    assert [(d["field"], d["reason"]) for d in result.dropped_items] == [("discussion", "다른 문항과 같은 근거")]
+
+
+def test_discussion_only_repeat_leaves_field_marked_missing(monkeypatch):
+    memo = "가상전자 미팅\n- 데이터 이전이 잘못될까 걱정하심"
+    evidence = "데이터 이전이 잘못될까 걱정하심"
+    fake_llm(monkeypatch, full_output(discussion=[item("걱정", evidence)], concerns=[item("이전 우려", evidence)]))
+
+    note = build_meeting_note(request_for(text=memo)).note
+
+    assert_valid(note)
+    assert note["fields"]["discussion"] == [] and "discussion" in note["missingFields"]
+
+
 def test_evidence_with_different_spacing_is_stored_as_source_text(monkeypatch):
     fake_llm(monkeypatch, full_output(
         commitments=[item("견적서 송부", '"견적서는 이번 주  금요일까지\n메일로 보내드리기로 함"')],

@@ -7,6 +7,7 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from app.minutes.preprocess import prepare_source
+from app.minutes.prompts import FULL_SYSTEM_PROMPT
 from eval.minutes.score import FIELD_NAMES, PER_PERSON_FIELDS, is_perfect, load_cases, match_items, score
 
 SCHEMA = json.loads(
@@ -158,3 +159,48 @@ def test_dev_gold_matches_schema_and_rules(case):
 def test_dev_gold_against_gold_is_perfect():
     predictions = {case["caseId"]: copy.deepcopy(case["gold"]) for case in DEV_CASES}
     assert is_perfect(score(DEV_CASES, predictions))
+
+
+# ---------- 개발용 메모 세트 (eval/minutes/dev_memo) ----------
+# 메모 지시문을 고칠 때는 이 세트만 보고, 평가용 메모(m01~m10)는 고친 뒤 마지막에 한 번만 잰다.
+
+DEV_MEMO_CASES = load_cases("dev_memo")
+DEV_MEMO_IDS = [case["caseId"] for case in DEV_MEMO_CASES]
+
+
+def test_dev_memo_set_is_separate_from_other_sets():
+    assert len(DEV_MEMO_CASES) == 6
+    assert set(DEV_MEMO_IDS).isdisjoint([*CASE_IDS, *DEV_IDS])
+    assert all(case_id.startswith("dm") for case_id in DEV_MEMO_IDS)
+    assert all("dev" in case["tags"] and case["title"].startswith("[dev]") for case in DEV_MEMO_CASES)
+    assert all(case["input"]["sourceType"] == "MEETING_NOTE" for case in DEV_MEMO_CASES)
+    eval_text = "\n".join(case["text"] for case in CASES)
+    overlaps = [item["evidence"] for case in DEV_MEMO_CASES for item in all_items(case["gold"]) if item["evidence"] in eval_text]
+    assert not overlaps, overlaps
+    dev_text = "\n".join(case["text"] for case in DEV_MEMO_CASES)
+    reverse = [item["evidence"] for case in CASES for item in all_items(case["gold"]) if item["evidence"] in dev_text]
+    assert not reverse, reverse
+
+
+def test_memo_prompt_example_does_not_copy_eval_or_dev_memos():
+    example = FULL_SYSTEM_PROMPT.split("예시)", 1)[1]
+    for case in [*CASES, *DEV_MEMO_CASES]:
+        for item in all_items(case["gold"]):
+            assert item["evidence"] not in example, (case["caseId"], item["evidence"])
+
+
+@pytest.mark.parametrize("case", DEV_MEMO_CASES, ids=DEV_MEMO_IDS)
+def test_dev_memo_gold_matches_schema_and_rules(case):
+    gold = case["gold"]
+    errors = [f"{list(error.path)}: {error.message}" for error in Draft202012Validator(SCHEMA).iter_errors(gold)]
+    assert not errors, errors
+    source = prepare_source(case["text"], is_email=False)
+    for item in all_items(gold):
+        assert item["evidence"] in source, item
+    assert gold["missingFields"] == [name for name in FIELD_NAMES if not gold["fields"][name]]
+    assert [p["displayName"] for p in gold["participants"]] == case["input"]["attendees"]
+
+
+def test_dev_memo_gold_against_gold_is_perfect():
+    predictions = {case["caseId"]: copy.deepcopy(case["gold"]) for case in DEV_MEMO_CASES}
+    assert is_perfect(score(DEV_MEMO_CASES, predictions))
