@@ -58,7 +58,7 @@ def extract_tasks(note: dict, *, assignee: str | None = None) -> list[dict]:
             "content": content,
             "dueDate": None if customer_side else resolve_due_date(item["text"], note.get("occurredAt")),
             "dueDateIsDefault": False,
-            "assignee": assignee,
+            "assignee": None if customer_side else assignee,
             "counterpartPersonId": counterpart,
             "commitmentKind": "IMPLICIT" if customer_side else "EXPLICIT",
             "taskType": kind,
