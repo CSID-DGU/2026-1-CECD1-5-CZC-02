@@ -36,6 +36,7 @@ class BriefingServiceTest {
         assertThat(response.bundled()).isTrue();
         assertThat(response.items()).hasSize(1);
         assertThat(response.items().get(0).taskType()).isEqualTo("CONTRACT_PREP");
+        assertThat(response.items().get(0).evidence()).isNotBlank();
         assertThat(response.items().get(0).preparationItems()).hasSize(2);
     }
 
