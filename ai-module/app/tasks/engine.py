@@ -19,7 +19,7 @@ def _validator(name: str) -> Draft202012Validator:
     ))
 
 
-def extract_tasks(note: dict, *, assignee: str | None = None) -> list[dict]:
+def extract_tasks(note: dict, *, assignee: str | None = None, type_suggester=None) -> list[dict]:
     """assignee는 호출자가 명시한 우리 쪽 사용자 ID만 사용한다.
 
     고객 측 약속은 고객의 일을 대신 배정하지 않고 이행 확인 초안으로 남긴다.
@@ -52,6 +52,11 @@ def extract_tasks(note: dict, *, assignee: str | None = None) -> list[dict]:
         if customer_side:
             content = f"{content} — 이행 여부 확인"
         kind, confidence = ("NONE", 0.0) if customer_side else classify_task(content)
+        source = "RULE"
+        if not customer_side and kind == "NONE" and type_suggester is not None:
+            suggestion = type_suggester(content)
+            if suggestion in _validator("task").schema["properties"]["taskType"]["enum"] and suggestion != "NONE":
+                kind, confidence, source = suggestion, 0.0, "LLM"
         task = {
             "taskId": f"t_{note['noteId'][3:]}_{len(tasks) + 1}",
             "noteId": note["noteId"],
@@ -63,7 +68,7 @@ def extract_tasks(note: dict, *, assignee: str | None = None) -> list[dict]:
             "commitmentKind": "IMPLICIT" if customer_side else "EXPLICIT",
             "taskType": kind,
             "taskTypeConfidence": confidence,
-            "taskTypeSource": "RULE",
+            "taskTypeSource": source,
             "evidence": item["evidence"],
             "status": "DRAFT",
         }

@@ -19,7 +19,7 @@ print(json.dumps(tasks, ensure_ascii=False, indent=2))
 - FULL: `commitments`, `nextContact`만 추출한다. 요청·논의는 약속으로 추측하지 않는다.
 - LIGHT: 사람별 `followUp`만 추출하고 해당 사람의 `personId`를 유지한다.
 - 고객 측 약속은 원문 내용을 유지하고 `이행 여부 확인`을 붙인 IMPLICIT 초안으로 만든다.
-  확인 날짜의 기본값은 합의되지 않아 null이다. 종류도 NONE으로 둔다.
+  확인 날짜의 기본값은 합의되지 않아 null이다. 종류도 NONE으로 두며 LLM으로 분류하지 않는다.
 - 다른 항목은 EXPLICIT 초안이다. B가 후속 계획으로 정리한 항목을 입력으로 가정한다.
 - 담당자는 호출자가 명시한 값만 사용한다. FULL에서 참석자가 둘 이상이면 상대 ID는 null이다.
 - 근거는 입력 항목의 `evidence`를 그대로 보존한다. FULL에서 같은 내용·근거·상대의 중복만 제거한다. LIGHT는 사람이 달라도 ID가 null일 수 있어 사람별 항목을 각각 보존한다.
@@ -41,7 +41,11 @@ print(json.dumps(tasks, ensure_ascii=False, indent=2))
 
 독립 API는 `python -m uvicorn app.tasks.api:app --port 8001`로 실행한다.
 POST `/tasks/extract?assignee=user_demo`의 본문은 meeting_note 계약이고 응답은 task 배열이다.
-입력 계약 오류나 잘못된 접촉 날짜는 422로 반환한다. 공용 main.py 라우트 등록은 아직 하지 않았다.
+입력 계약 오류나 잘못된 접촉 날짜는 422로 반환한다.
+API는 D-030에 따라 규칙 NONE 항목에만 로컬 gemma4:e4b를 호출한다.
+실패·잘못된 형식·NONE 응답이면 기존 RULE/NONE을 유지한다. 유효한 제안은
+LLM/0.0으로 표시한다(확률을 추측하지 않음). 순수 함수는 `type_suggester`를
+명시적으로 넘기지 않으면 네트워크 없이 동작한다.
 백엔드 task·프론트 tasks·ML-2 실험도 추가했으며 자세한 역할별 연결은 HANDOFF.md를 참고한다.
 공용 파일이나 계약은 변경하지 않았다.
 
