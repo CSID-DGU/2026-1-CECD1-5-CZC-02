@@ -59,11 +59,15 @@ EXIT;
 
 `mysql` 명령을 못 찾으면 `& "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p`로 실행한다.
 
-**이미 쓰던 DB만** 아래 한 줄이 필요하다. 새로 만든 DB에는 실행하지 않는다. `ddl-auto=update`가 NOT NULL을 풀어 주지 않아서 수정 기록 저장이 실패하기 때문이다.
+**예전 백엔드로 이미 쓰던 DB만** 아래 한 줄이 필요하다. 예전 코드가 이 칸을 "비우면 안 됨"으로 만들었고, `ddl-auto=update`는 그 제약을 풀어 주지 않아 수정 기록 저장이 실패하기 때문이다.
 
 ```sql
 ALTER TABLE analysis_revisions MODIFY analysis_id BIGINT NULL;
 ```
+
+- `Table 'salesmap.analysis_revisions' doesn't exist` 오류가 나면 **새 DB라는 뜻이니 건너뛴다.** 백엔드를 처음 켤 때 테이블이 알맞게 만들어진다.
+- 확인하려면 백엔드를 한 번 켠 뒤 `SHOW COLUMNS FROM analysis_revisions LIKE 'analysis_id';`를 실행한다. `Null` 칸이 `YES`면 정상이다.
+- 예전에 다른 이름의 DB를 썼다면(`SHOW DATABASES;`로 확인) 그 DB에서만 실행한다.
 
 ## 4. Ollama와 AI 모듈 (포트 8000)
 
