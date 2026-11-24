@@ -4,6 +4,7 @@ import com.salesmap.backend.global.response.ApiResponse;
 import com.salesmap.backend.global.security.CustomUserPrincipal;
 import com.salesmap.backend.revision.dto.RevisionCreateRequest;
 import com.salesmap.backend.revision.dto.RevisionResponse;
+import com.salesmap.backend.revision.dto.RevisionMetricsResponse;
 import com.salesmap.backend.revision.service.RevisionService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,5 +32,11 @@ public class RevisionController {
     @GetMapping
     public ApiResponse<List<RevisionResponse>> list(@AuthenticationPrincipal CustomUserPrincipal principal) {
         return ApiResponse.success(revisions.list(principal.getUserId()));
+    }
+
+    @GetMapping("/metrics")
+    public ApiResponse<RevisionMetricsResponse> metrics(
+            @AuthenticationPrincipal CustomUserPrincipal principal) {
+        return ApiResponse.success(revisions.metrics(principal.getUserId()));
     }
 }
