@@ -1,0 +1,133 @@
+[
+  {
+    "caseId": "d01",
+    "title": "개인이력카드 모양 표 양식 — 두 줄 머리글, 두 줄짜리 프로젝트, 겹친 기간, 진행 중",
+    "builder": "card_sample",
+    "gold": {
+      "format": "TABLE_CARD", "name": "가상인", "birthYear": 1991, "grade": "INTERMEDIATE", "projectCount": 5,
+      "skills": ["Java", "JSP", "Oracle", "Eclipse", "JEUS", "IBM", "AIX", "HP", "HP-UX", "Spring", "Toad", "PC", "Windows",
+                 "C#", "MS-SQL", "Visual Studio", "Linux", "MySQL", "IntelliJ", "Tomcat", "Python", "Redis", "Spring Boot",
+                 "전자정부프레임워크", "PostgreSQL", "Git"],
+      "industries": ["금융", "공공", "제조"], "totalCareerMonths": 57, "availableFrom": "2027-02-01"
+    }
+  },
+  {
+    "caseId": "d02",
+    "title": "한 줄 머리글, 개발환경 한 칸에 기술을 빗금으로, 두 자리 연도, 값이 칸 이름 아래",
+    "blocks": [
+      ["p", "경력 카드 (샘플)"],
+      ["table", [["성명", "성별", "생년월일"], ["모의현", "여", "93.11.02"]]],
+      ["table", [
+        ["프로젝트명", "참여기간", "고객사", "근무회사", "역할", "개발환경"],
+        ["가상증권 HTS 고도화", "18.02~18.11", "가상증권", "샘플시스템", "개발", "C++/MFC/Oracle/Windows"],
+        ["모의공사 회계 시스템", "18.12~19.08", "모의공사", "샘플시스템", "개발", "Java/JSP/Tibero/Unix"],
+        ["예시몰 주문 관리", "19.09~20.03", "예시몰", "샘플시스템", "개발", "PHP, MySQL, Linux"]
+      ]]
+    ],
+    "gold": {
+      "format": "TABLE_CARD", "name": "모의현", "birthYear": 1993, "grade": null, "projectCount": 3,
+      "skills": ["C++", "Oracle", "Windows", "Java", "JSP", "Tibero", "Unix", "PHP", "MySQL", "Linux"],
+      "industries": [], "totalCareerMonths": 26, "availableFrom": null
+    }
+  },
+  {
+    "caseId": "d03",
+    "title": "참여기간이 시작일·종료일 두 칸, 종료일에 '현재', 등급 칸",
+    "blocks": [
+      ["table", [["성명", "샘플진", "기술등급", "고급", "생년월일", "1985년 6월"]]],
+      ["table", [
+        [{"text": "프로젝트명", "vmerge": "restart"}, {"text": "참여기간", "span": 2}, {"text": "고객사", "vmerge": "restart"},
+         {"text": "역할", "vmerge": "restart"}, {"text": "개발환경", "span": 3}],
+        [{"vmerge": "continue"}, "시작일", "종료일", {"vmerge": "continue"}, {"vmerge": "continue"}, "언어", "DBMS", "OS"],
+        ["예시카드 승인 시스템 구축", "2021.04", "2022.03", "예시카드", "PL", "Java, Spring", "Oracle 19c", "Linux"],
+        ["가상생명 보험금 지급 개선", "2022.05", "현재", "가상생명", "PM", "Java, 전자정부 프레임워크", "Tibero 6", "AIX 7.1"]
+      ]]
+    ],
+    "gold": {
+      "format": "TABLE_CARD", "name": "샘플진", "birthYear": 1985, "grade": "ADVANCED", "projectCount": 2,
+      "skills": ["Java", "Spring", "Oracle", "Linux", "전자정부프레임워크", "Tibero", "AIX"],
+      "industries": [], "totalCareerMonths": 67, "availableFrom": null
+    }
+  },
+  {
+    "caseId": "d04",
+    "title": "프로젝트 표가 쪽 나눔으로 두 표로 나뉨 (둘째 표에는 머리글 없음)",
+    "blocks": [
+      ["table", [["성명", "테스트윤", "생년월일", "1990.02.03"]]],
+      ["table", [
+        ["프로젝트명(업무명)", "참여기간", "고객사", "근무회사", "역할", "언어", "DBMS"],
+        ["모의대학 학사 시스템", "2015.03 ~ 2016.02", "모의대학", "가상아이티", "개발", "JAVA", "ORACLE"],
+        ["샘플병원 EMR 연계", "2016.03 ~ 2017.06", "샘플병원", "가상아이티", "개발", "Java", "MS-SQL"]
+      ]],
+      ["p", ""],
+      ["table", [
+        ["예시항공 예약 시스템 개선", "2017.07 ~ 2018.12", "예시항공", "가상아이티", "PL", "java", "oracle"],
+        ["가상에너지 설비 관리", "2019.01 ~ 2019.10", "가상에너지", "가상아이티", "PL", "Python", "PostgreSQL"]
+      ]]
+    ],
+    "gold": {
+      "format": "TABLE_CARD", "name": "테스트윤", "birthYear": 1990, "grade": null, "projectCount": 4,
+      "skills": ["Java", "Oracle", "MS-SQL", "Python", "PostgreSQL"],
+      "industries": [], "totalCareerMonths": 56, "availableFrom": null
+    }
+  },
+  {
+    "caseId": "d05",
+    "title": "다른 표 양식 — 경력 표·보유 기술 표만, 프로젝트 없음",
+    "blocks": [
+      ["table", [["이름", "예시원", "연락처", "010-0000-0000"]]],
+      ["table", [
+        ["회사명", "근무기간", "직위", "담당업무"],
+        ["샘플테크", "2012.01 ~ 2016.12", "주임", "웹 개발"],
+        ["모의네트웍스", "2017.01 ~ 2023.06", "책임", "백엔드 개발"]
+      ]],
+      ["table", [["보유기술", "숙련도"], ["Java, Spring Boot", "상"], ["MariaDB", "중"], ["Docker / Kubernetes", "중"]]]
+    ],
+    "gold": {
+      "format": "OTHER_TABLE", "name": "예시원", "birthYear": null, "grade": null, "projectCount": 0,
+      "skills": ["Java", "Spring Boot", "MariaDB", "Docker", "Kubernetes"],
+      "industries": [], "totalCareerMonths": 138, "availableFrom": null
+    }
+  },
+  {
+    "caseId": "d06",
+    "title": "줄글 경력기술서 — 보유 기술 줄, 경력 2곳, 프로젝트 2개(하나 진행 중)",
+    "builder": "free_text_sample",
+    "gold": {
+      "format": "FREE_TEXT", "name": "예시민", "birthYear": 1994, "grade": null, "projectCount": 2,
+      "skills": ["Python", "Django", "PostgreSQL", "Docker", "MySQL", "Kafka"],
+      "industries": ["유통", "물류"], "totalCareerMonths": 58, "availableFrom": "2027-01-01"
+    }
+  },
+  {
+    "caseId": "d07",
+    "title": "줄글 — 특급 기술자, 자격증, 문장 속 프로젝트",
+    "text": "가상 프리랜서 소개서\n성명: 모의석\n출생: 1978년\n특급 기술자 (KOSA 등록)\n자격: 정보관리기술사(2010.05 취득), 정보처리기사\n\n주요 수행 이력\n2014년 3월부터 2016년 2월까지 예시전력 배전 관리 시스템 구축에서 PM을 맡았고 Java와 Oracle을 사용했습니다.\n2016년 4월부터 2019년 12월까지 모의은행 여신 시스템 재구축의 아키텍트로 참여했습니다(Spring, DB2, AIX).\n그 뒤 2020.03 ~ 2021.08 샘플통신 고객센터 시스템 개선(PL, Node.js, MongoDB).",
+    "gold": {
+      "format": "FREE_TEXT", "name": "모의석", "birthYear": 1978, "grade": "EXPERT", "projectCount": 3,
+      "skills": ["Java", "Oracle", "Spring", "DB2", "AIX", "Node.js", "MongoDB"],
+      "industries": ["에너지", "금융", "통신"], "totalCareerMonths": 87, "availableFrom": null
+    }
+  },
+  {
+    "caseId": "d08",
+    "title": "다른 표 양식 — 프로젝트마다 '칸 이름 | 값' 세로 표",
+    "blocks": [
+      ["p", "샘플 인력 프로필"],
+      ["table", [["성명", "가상훈"], ["생년월일", "1996.08.15"]]],
+      ["table", [
+        ["프로젝트", "모의시 스마트 주차 앱"], ["기간", "2022.01 ~ 2022.09"], ["발주처", "모의시"],
+        ["역할", "앱 개발"], ["개발환경", "Kotlin, Android, Firebase"]
+      ]],
+      ["table", [
+        ["프로젝트", "예시마트 재고 대시보드"], ["기간", "2022.10 ~ 2023.05"], ["발주처", "예시마트"],
+        ["역할", "프론트엔드"], ["개발환경", "React, TypeScript, Node.js"]
+      ]]
+    ],
+    "gold": {
+      "format": "OTHER_TABLE", "name": "가상훈", "birthYear": 1996, "grade": null, "projectCount": 2,
+      "skills": ["Kotlin", "Android", "React", "TypeScript", "Node.js"],
+      "industries": ["유통"], "totalCareerMonths": 17, "availableFrom": null
+    }
+  }
+]

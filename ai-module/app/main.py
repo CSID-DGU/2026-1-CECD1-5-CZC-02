@@ -18,6 +18,7 @@ from app.routes.analyze import router as analyze_router
 from app.routes.minutes import router as minutes_router
 from app.identity.api import router as identity_router
 from app.tasks.api import router as tasks_router
+from app.resumes.api import router as resumes_router
 from app.schemas.models import AiErrorResponse
 
 # FastAPI 앱 생성
@@ -41,6 +42,7 @@ app.include_router(analyze_router)
 app.include_router(minutes_router)
 app.include_router(identity_router)
 app.include_router(tasks_router)
+app.include_router(resumes_router)
 
 
 @app.exception_handler(RequestValidationError)

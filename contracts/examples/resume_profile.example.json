@@ -1,0 +1,792 @@
+[
+  {
+    "profileId": "rp_001",
+    "sourceRefs": [
+      {
+        "sourceId": "src_501",
+        "sourceType": "RESUME_FILE",
+        "fileName": "샘플_개인이력카드.docx"
+      }
+    ],
+    "format": "TABLE_CARD",
+    "name": {
+      "value": "가상인",
+      "evidence": "가상인",
+      "source": "RULE"
+    },
+    "birthYear": {
+      "value": 1991,
+      "evidence": "1991",
+      "source": "RULE"
+    },
+    "grade": {
+      "value": "INTERMEDIATE",
+      "evidence": "중급",
+      "source": "RULE"
+    },
+    "certifications": [
+      {
+        "name": "정보처리기사",
+        "acquiredOn": "2015-11",
+        "evidence": "정보처리기사",
+        "source": "RULE"
+      },
+      {
+        "name": "SQLD",
+        "acquiredOn": "2018-05",
+        "evidence": "SQLD",
+        "source": "RULE"
+      }
+    ],
+    "educations": [
+      {
+        "name": "자바 웹 개발 과정",
+        "institution": "샘플교육원",
+        "period": {
+          "start": "2015-07",
+          "end": "2015-12",
+          "ongoing": false
+        },
+        "evidence": "자바 웹 개발 과정 | 샘플교육원 | 2015.07 | 2015.12 | 정보처리기사 | 2015.11",
+        "source": "RULE"
+      }
+    ],
+    "careers": [
+      {
+        "company": "가상정보기술",
+        "position": "대리",
+        "duty": "SI 개발",
+        "period": {
+          "start": "2016-01",
+          "end": "2020-12",
+          "ongoing": false
+        },
+        "evidence": "가상정보기술 | 2016.01 ~ 2020.12 | 대리 | SI 개발",
+        "source": "RULE"
+      },
+      {
+        "company": "예시솔루션",
+        "position": "과장",
+        "duty": "금융 SI",
+        "period": {
+          "start": "2021-01",
+          "end": null,
+          "ongoing": true
+        },
+        "evidence": "예시솔루션 | 2021.01 ~ 현재 | 과장 | 금융 SI",
+        "source": "RULE"
+      }
+    ],
+    "projects": [
+      {
+        "name": "예시은행 차세대 계정계 구축",
+        "period": {
+          "start": "2016-03",
+          "end": "2017-02",
+          "ongoing": false
+        },
+        "client": "예시은행",
+        "employer": "가상정보기술",
+        "role": "개발",
+        "duty": "계정계",
+        "industry": "금융",
+        "environment": {
+          "machines": [
+            "IBM"
+          ],
+          "os": [
+            "AIX"
+          ],
+          "languages": [
+            "JAVA, JSP"
+          ],
+          "dbms": [
+            "Oracle 11g"
+          ],
+          "tools": [
+            "Eclipse"
+          ],
+          "others": [
+            "JEUS"
+          ]
+        },
+        "evidence": "예시은행 차세대 계정계 구축 | 2016.03 ~ 2017.02 | 예시은행 | 가상정보기술 | 금융 | 계정계 | 개발 | IBM | AIX | JAVA, JSP | Oracle 11g | Eclipse | JEUS",
+        "source": "RULE"
+      },
+      {
+        "name": "모의시청 민원 시스템 고도화",
+        "period": {
+          "start": "2017-04",
+          "end": "2017-12",
+          "ongoing": false
+        },
+        "client": "모의시청",
+        "employer": "가상정보기술",
+        "role": "개발",
+        "duty": "민원",
+        "industry": "공공",
+        "environment": {
+          "machines": [
+            "HP"
+          ],
+          "os": [
+            "HP-UX"
+          ],
+          "languages": [
+            "Java, Spring"
+          ],
+          "dbms": [
+            "oracle10g"
+          ],
+          "tools": [
+            "Toad"
+          ],
+          "others": []
+        },
+        "evidence": "모의시청 민원 시스템 고도화 | 17.04~17.12 | 모의시청 | 가상정보기술 | 공공 | 민원 | 개발 | HP | HP-UX | Java, Spring | oracle10g | Toad | -",
+        "source": "RULE"
+      },
+      {
+        "name": "샘플카드 포인트 시스템 운영",
+        "period": {
+          "start": "2017-10",
+          "end": "2018-06",
+          "ongoing": false
+        },
+        "client": "샘플카드",
+        "employer": "가상정보기술",
+        "role": "운영",
+        "duty": "포인트",
+        "industry": "금융",
+        "environment": {
+          "machines": [
+            "PC"
+          ],
+          "os": [
+            "Win2008"
+          ],
+          "languages": [
+            "C#"
+          ],
+          "dbms": [
+            "MSSQL"
+          ],
+          "tools": [
+            "Visual Studio 2010"
+          ],
+          "others": []
+        },
+        "evidence": "샘플카드 포인트 시스템 운영 | 2017.10 - 2018.06 | 샘플카드 | 가상정보기술 | 금융 | 포인트 | 운영 | PC | Win2008 | C# | MSSQL | Visual Studio 2010",
+        "source": "RULE"
+      },
+      {
+        "name": "가상전자 MES 구축",
+        "period": {
+          "start": "2019-01",
+          "end": "2019-12",
+          "ongoing": false
+        },
+        "client": "가상전자",
+        "employer": "가상정보기술",
+        "role": "PL",
+        "duty": "MES",
+        "industry": "제조",
+        "environment": {
+          "machines": [
+            "PC"
+          ],
+          "os": [
+            "Linux"
+          ],
+          "languages": [
+            "Java",
+            "Python"
+          ],
+          "dbms": [
+            "MySQL",
+            "Redis"
+          ],
+          "tools": [
+            "IntelliJ"
+          ],
+          "others": [
+            "Tomcat"
+          ]
+        },
+        "evidence": "가상전자 MES 구축 | 2019.01 ~ 2019.12 | 가상전자 | 가상정보기술 | 제조 | MES | PL | PC | Linux | Java | MySQL | IntelliJ | Tomcat\nPython | Redis",
+        "source": "RULE"
+      },
+      {
+        "name": "예시보험 보상 시스템 구축",
+        "period": {
+          "start": "2025-06",
+          "end": "2027-01",
+          "ongoing": true
+        },
+        "client": "예시보험",
+        "employer": "예시솔루션",
+        "role": "PL",
+        "duty": "보상",
+        "industry": "보험",
+        "environment": {
+          "machines": [
+            "PC"
+          ],
+          "os": [
+            "Linux"
+          ],
+          "languages": [
+            "Spring Boot, 전자정부프레임워크"
+          ],
+          "dbms": [
+            "PostgreSQL"
+          ],
+          "tools": [
+            "Git"
+          ],
+          "others": [
+            "자체솔루션X"
+          ]
+        },
+        "evidence": "예시보험 보상 시스템 구축 | 2025.06 ~ 2027.01 | 예시보험 | 예시솔루션 | 보험 | 보상 | PL | PC | Linux | Spring Boot, 전자정부프레임워크 | PostgreSQL | Git | 자체솔루션X",
+        "source": "RULE"
+      }
+    ],
+    "skills": [
+      {
+        "name": "Java",
+        "category": "LANGUAGE",
+        "known": true,
+        "raw": [
+          "JAVA",
+          "Java"
+        ],
+        "evidence": "JAVA, JSP",
+        "source": "RULE",
+        "projectCount": 3
+      },
+      {
+        "name": "PC",
+        "category": "MACHINE",
+        "known": true,
+        "raw": [
+          "PC"
+        ],
+        "evidence": "PC",
+        "source": "RULE",
+        "projectCount": 3
+      },
+      {
+        "name": "Linux",
+        "category": "OS",
+        "known": true,
+        "raw": [
+          "Linux"
+        ],
+        "evidence": "Linux",
+        "source": "RULE",
+        "projectCount": 2
+      },
+      {
+        "name": "Oracle",
+        "category": "DBMS",
+        "known": true,
+        "raw": [
+          "Oracle 11g",
+          "oracle10g"
+        ],
+        "evidence": "Oracle 11g",
+        "source": "RULE",
+        "projectCount": 2
+      },
+      {
+        "name": "AIX",
+        "category": "OS",
+        "known": true,
+        "raw": [
+          "AIX"
+        ],
+        "evidence": "AIX",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "C#",
+        "category": "LANGUAGE",
+        "known": true,
+        "raw": [
+          "C#"
+        ],
+        "evidence": "C#",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "Eclipse",
+        "category": "TOOL",
+        "known": true,
+        "raw": [
+          "Eclipse"
+        ],
+        "evidence": "Eclipse",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "Git",
+        "category": "TOOL",
+        "known": true,
+        "raw": [
+          "Git"
+        ],
+        "evidence": "Git",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "HP",
+        "category": "MACHINE",
+        "known": true,
+        "raw": [
+          "HP"
+        ],
+        "evidence": "HP",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "HP-UX",
+        "category": "OS",
+        "known": true,
+        "raw": [
+          "HP-UX"
+        ],
+        "evidence": "HP-UX",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "IBM",
+        "category": "MACHINE",
+        "known": true,
+        "raw": [
+          "IBM"
+        ],
+        "evidence": "IBM",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "IntelliJ",
+        "category": "TOOL",
+        "known": true,
+        "raw": [
+          "IntelliJ"
+        ],
+        "evidence": "IntelliJ",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "JEUS",
+        "category": "MIDDLEWARE",
+        "known": true,
+        "raw": [
+          "JEUS"
+        ],
+        "evidence": "JEUS",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "JSP",
+        "category": "LANGUAGE",
+        "known": true,
+        "raw": [
+          "JSP"
+        ],
+        "evidence": "JAVA, JSP",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "MS-SQL",
+        "category": "DBMS",
+        "known": true,
+        "raw": [
+          "MSSQL"
+        ],
+        "evidence": "MSSQL",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "MySQL",
+        "category": "DBMS",
+        "known": true,
+        "raw": [
+          "MySQL"
+        ],
+        "evidence": "MySQL",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "PostgreSQL",
+        "category": "DBMS",
+        "known": true,
+        "raw": [
+          "PostgreSQL"
+        ],
+        "evidence": "PostgreSQL",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "Python",
+        "category": "LANGUAGE",
+        "known": true,
+        "raw": [
+          "Python"
+        ],
+        "evidence": "Python",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "Redis",
+        "category": "DBMS",
+        "known": true,
+        "raw": [
+          "Redis"
+        ],
+        "evidence": "Redis",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "Spring",
+        "category": "FRAMEWORK",
+        "known": true,
+        "raw": [
+          "Spring"
+        ],
+        "evidence": "Java, Spring",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "Spring Boot",
+        "category": "FRAMEWORK",
+        "known": true,
+        "raw": [
+          "Spring Boot"
+        ],
+        "evidence": "Spring Boot, 전자정부프레임워크",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "Toad",
+        "category": "TOOL",
+        "known": true,
+        "raw": [
+          "Toad"
+        ],
+        "evidence": "Toad",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "Tomcat",
+        "category": "MIDDLEWARE",
+        "known": true,
+        "raw": [
+          "Tomcat"
+        ],
+        "evidence": "Tomcat",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "Visual Studio",
+        "category": "TOOL",
+        "known": true,
+        "raw": [
+          "Visual Studio 2010"
+        ],
+        "evidence": "Visual Studio 2010",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "Windows",
+        "category": "OS",
+        "known": true,
+        "raw": [
+          "Win2008"
+        ],
+        "evidence": "Win2008",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "전자정부프레임워크",
+        "category": "FRAMEWORK",
+        "known": true,
+        "raw": [
+          "전자정부프레임워크"
+        ],
+        "evidence": "Spring Boot, 전자정부프레임워크",
+        "source": "RULE",
+        "projectCount": 1
+      },
+      {
+        "name": "자체솔루션X",
+        "category": "OTHER",
+        "known": false,
+        "raw": [
+          "자체솔루션X"
+        ],
+        "evidence": "자체솔루션X",
+        "source": "RULE",
+        "projectCount": 1
+      }
+    ],
+    "industries": [
+      {
+        "name": "금융",
+        "evidence": "금융",
+        "source": "RULE"
+      },
+      {
+        "name": "공공",
+        "evidence": "공공",
+        "source": "RULE"
+      },
+      {
+        "name": "제조",
+        "evidence": "제조",
+        "source": "RULE"
+      }
+    ],
+    "totalCareer": {
+      "months": 57,
+      "basis": "PROJECTS",
+      "periodCount": 5
+    },
+    "availableFrom": {
+      "date": "2027-02-01",
+      "basis": "ONGOING_PROJECT_END",
+      "evidence": "예시보험 보상 시스템 구축 | 2025.06 ~ 2027.01 | 예시보험 | 예시솔루션 | 보험 | 보상 | PL | PC | Linux | Spring Boot, 전자정부프레임워크 | PostgreSQL | Git | 자체솔루션X"
+    },
+    "referenceDate": "2026-11-24",
+    "missingFields": [],
+    "status": "DRAFT",
+    "generatedBy": "RULE",
+    "llmModel": null,
+    "isSynthetic": true
+  },
+  {
+    "profileId": "rp_002",
+    "sourceRefs": [
+      {
+        "sourceId": "src_502",
+        "sourceType": "MANUAL_INPUT",
+        "fileName": null
+      }
+    ],
+    "format": "FREE_TEXT",
+    "name": {
+      "value": "예시민",
+      "evidence": "예시민",
+      "source": "RULE"
+    },
+    "birthYear": {
+      "value": 1994,
+      "evidence": "1994",
+      "source": "LLM"
+    },
+    "grade": null,
+    "certifications": [],
+    "educations": [],
+    "careers": [
+      {
+        "company": "모의소프트",
+        "position": "사원",
+        "duty": "웹 서비스 개발",
+        "period": {
+          "start": "2020-03",
+          "end": "2022-08",
+          "ongoing": false
+        },
+        "evidence": "2020.03 ~ 2022.08 모의소프트 / 사원 / 웹 서비스 개발",
+        "source": "LLM"
+      },
+      {
+        "company": "가상데이터",
+        "position": "대리",
+        "duty": "데이터 플랫폼 개발",
+        "period": {
+          "start": "2022-09",
+          "end": null,
+          "ongoing": true
+        },
+        "evidence": "2022.09 ~ 현재 가상데이터 / 대리 / 데이터 플랫폼 개발",
+        "source": "LLM"
+      }
+    ],
+    "projects": [
+      {
+        "name": "모의쇼핑 주문 시스템 개선",
+        "period": {
+          "start": "2021-01",
+          "end": "2021-12",
+          "ongoing": false
+        },
+        "client": "모의쇼핑",
+        "employer": null,
+        "role": null,
+        "duty": null,
+        "industry": "쇼핑",
+        "environment": {
+          "machines": [],
+          "os": [],
+          "languages": [],
+          "dbms": [],
+          "tools": [],
+          "others": [
+            "Django",
+            "MySQL"
+          ]
+        },
+        "evidence": "1) 모의쇼핑 주문 시스템 개선 (2021.01 ~ 2021.12) - 고객사 모의쇼핑, Django, MySQL 사용",
+        "source": "LLM"
+      },
+      {
+        "name": "가상물류 배송 추적 플랫폼 구축",
+        "period": {
+          "start": "2023-02",
+          "end": "2026-12",
+          "ongoing": true
+        },
+        "client": "가상물류",
+        "employer": null,
+        "role": null,
+        "duty": null,
+        "industry": null,
+        "environment": {
+          "machines": [],
+          "os": [],
+          "languages": [],
+          "dbms": [],
+          "tools": [],
+          "others": [
+            "Python",
+            "Kafka"
+          ]
+        },
+        "evidence": "2) 가상물류 배송 추적 플랫폼 구축 (2023.02 ~ 2026.12) - 고객사 가상물류, Python, Kafka 사용",
+        "source": "LLM"
+      }
+    ],
+    "skills": [
+      {
+        "name": "Django",
+        "category": "FRAMEWORK",
+        "known": true,
+        "raw": [
+          "Django"
+        ],
+        "evidence": "Django",
+        "source": "LLM",
+        "projectCount": 1
+      },
+      {
+        "name": "MySQL",
+        "category": "DBMS",
+        "known": true,
+        "raw": [
+          "MySQL"
+        ],
+        "evidence": "MySQL",
+        "source": "LLM",
+        "projectCount": 1
+      },
+      {
+        "name": "Python",
+        "category": "LANGUAGE",
+        "known": true,
+        "raw": [
+          "Python"
+        ],
+        "evidence": "Python",
+        "source": "LLM",
+        "projectCount": 1
+      },
+      {
+        "name": "Kafka",
+        "category": "OTHER",
+        "known": false,
+        "raw": [
+          "Kafka"
+        ],
+        "evidence": "Kafka",
+        "source": "LLM",
+        "projectCount": 1
+      },
+      {
+        "name": "Docker",
+        "category": "TOOL",
+        "known": true,
+        "raw": [
+          "Docker"
+        ],
+        "evidence": "Docker",
+        "source": "RULE",
+        "projectCount": 0
+      },
+      {
+        "name": "PostgreSQL",
+        "category": "DBMS",
+        "known": true,
+        "raw": [
+          "PostgreSQL"
+        ],
+        "evidence": "PostgreSQL",
+        "source": "RULE",
+        "projectCount": 0
+      }
+    ],
+    "industries": [
+      {
+        "name": "유통",
+        "evidence": "쇼핑",
+        "source": "RULE"
+      },
+      {
+        "name": "물류",
+        "evidence": "가상물류 배송 추적 플랫폼 구축",
+        "source": "LLM"
+      }
+    ],
+    "totalCareer": {
+      "months": 58,
+      "basis": "PROJECTS",
+      "periodCount": 2
+    },
+    "availableFrom": {
+      "date": "2027-01-01",
+      "basis": "ONGOING_PROJECT_END",
+      "evidence": "2) 가상물류 배송 추적 플랫폼 구축 (2023.02 ~ 2026.12) - 고객사 가상물류, Python, Kafka 사용"
+    },
+    "referenceDate": "2026-11-24",
+    "missingFields": [
+      "grade"
+    ],
+    "status": "DRAFT",
+    "generatedBy": "HYBRID",
+    "llmModel": "gemma4:e4b",
+    "isSynthetic": true
+  }
+]
