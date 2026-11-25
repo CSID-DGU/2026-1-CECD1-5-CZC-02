@@ -17,6 +17,7 @@ import com.salesmap.backend.user.repository.UserRepository;
 import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,7 @@ public class TalentService {
     private final ExecutorService executor;
     private final ConcurrentLinkedDeque<Long> queue = new ConcurrentLinkedDeque<>();
 
+    @Autowired
     public TalentService(TalentProfileRepository profiles, UserRepository users, ResumeExtractionClient extractor,
                          RevisionService revisions, ObjectMapper mapper) {
         this(profiles, users, extractor, revisions, mapper, Clock.systemDefaultZone(), Executors.newSingleThreadExecutor(runnable -> {

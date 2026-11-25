@@ -14,6 +14,8 @@ import { MeetingNoteInboxPage } from './components/minutes/MeetingNoteInboxPage'
 import { MeetingNoteReviewPage } from './components/minutes/MeetingNoteReviewPage';
 import { TasksPage } from './components/tasks/TasksPage';
 import { PeopleScreen } from './components/identity/PeopleScreen.jsx';
+import { TalentPoolPage } from './components/talent/TalentPoolPage';
+import { TalentReviewPage } from './components/talent/TalentReviewPage';
 import { TodayBriefingPage } from './components/briefing/TodayBriefingPage';
 import { PreparationBriefingPage } from './components/briefing/PreparationBriefingPage';
 import { CalendarRegistrationPage } from './components/briefing/CalendarRegistrationPage';
@@ -95,6 +97,20 @@ export default function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <PeopleScreen />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/talents" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <TalentPoolPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/talents/:profileId" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <TalentReviewPage />
               </DashboardLayout>
             </ProtectedRoute>
           } />

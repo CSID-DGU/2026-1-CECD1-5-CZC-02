@@ -5,6 +5,7 @@ import { archiveMeetingNote, getMeetingNotes } from '../../api/meetingNotes';
 import { getApiErrorMessage } from '../../api/errors';
 import { identityApi } from '../identity/identityApi';
 import { listTasks } from '../tasks/taskApi';
+import { listTalents } from '../../api/talents';
 import { buildInboxSummary, runWithLimit } from './inboxItems';
 import { MeetingNoteListItem } from './MeetingNotePage';
 import { ARCHIVE_CONFIRM_MESSAGE } from './meetingNoteUtils';
@@ -64,6 +65,16 @@ export function MeetingNoteInboxPage() {
   const [identities, setIdentities] = useState({});
   const [message, setMessage] = useState('');
   const [busyNoteId, setBusyNoteId] = useState(null);
+  // 확인 전 이력서 (인력 메뉴). undefined = 불러오는 중, null = 불러오지 못함
+  const [draftResumes, setDraftResumes] = useState(undefined);
+
+  useEffect(() => {
+    let ignore = false;
+    listTalents({ status: 'DRAFT' })
+      .then((rows) => { if (!ignore) setDraftResumes(rows); })
+      .catch(() => { if (!ignore) setDraftResumes(null); });
+    return () => { ignore = true; };
+  }, []);
 
   useEffect(() => {
     let ignore = false;
@@ -173,6 +184,24 @@ export function MeetingNoteInboxPage() {
             ))}
           </div>
         </div>
+
+        {draftResumes?.length > 0 && (
+          <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-bold text-slate-800">확인 전 이력서 {draftResumes.length}건</h3>
+                <p className="text-xs text-slate-500">AI가 정리한 이력서예요. 인력 메뉴에서 원문과 비교해 확정해야 후보 풀에 등록돼요.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigate('/talents?status=DRAFT')}
+                className="shrink-0 rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                인력에서 확인
+              </button>
+            </div>
+          </div>
+        )}
 
         {summary.otherDraftTasks.length > 0 && (
           <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">

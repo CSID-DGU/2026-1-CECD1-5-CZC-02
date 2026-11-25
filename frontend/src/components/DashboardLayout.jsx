@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Settings, Search, LayoutDashboard, ClipboardList, ContactRound, UsersRound, ChevronDown, ChevronRight, Wind, KanbanSquare, FlaskConical, NotebookPen, ClipboardCheck, ListChecks, CalendarDays } from 'lucide-react';
+import { Settings, Search, LayoutDashboard, ClipboardList, ContactRound, UsersRound, ChevronDown, ChevronRight, Wind, KanbanSquare, FlaskConical, NotebookPen, ClipboardCheck, ListChecks, CalendarDays, Briefcase } from 'lucide-react';
 import jandiLogo from '../assets/잔디 로고 이미지 .jpg';
 import gmailLogo from '../assets/gmail로고 이미지 spaced.png';
 import { getMe } from '../api/auth';
@@ -8,6 +8,7 @@ import { getIntegrations } from '../api/integrations';
 import { getDemoStatus } from '../api/demo';
 import { getSchedules } from '../api/schedules';
 import { getMeetingNotes } from '../api/meetingNotes';
+import { listTalents } from '../api/talents';
 import { getTodayBriefing } from '../api/briefings';
 import { claimImmediateNotification, claimMorningBundle, getNotificationSettings } from '../api/notifications';
 import { buildMorningBundle, isPastMorningTime, kstDate } from './morningBundle';
@@ -71,6 +72,7 @@ export function DashboardLayout({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [demoEnabled, setDemoEnabled] = useState(false);
   const [draftNoteCount, setDraftNoteCount] = useState(0);
+  const [draftTalentCount, setDraftTalentCount] = useState(0);
   const [showReminder, setShowReminder] = useState(false);
   const [currentReminder, setCurrentReminder] = useState(null);
   const [reminderQueue, setReminderQueue] = useState([]);
@@ -161,6 +163,28 @@ export function DashboardLayout({ children }) {
       ignore = true;
     };
   }, []);
+
+  // 인력 배지: 확인 전(초안) 이력서 수 (이력서를 올리거나 확정할 때 갱신)
+  useEffect(() => {
+    let ignore = false;
+    const refreshDraftTalentCount = () => {
+      listTalents({ status: 'DRAFT' })
+        .then((rows) => {
+          if (!ignore) {
+            setDraftTalentCount(rows.length);
+          }
+        })
+        .catch(() => {});
+    };
+
+    refreshDraftTalentCount();
+    window.addEventListener('talents:changed', refreshDraftTalentCount);
+
+    return () => {
+      ignore = true;
+      window.removeEventListener('talents:changed', refreshDraftTalentCount);
+    };
+  }, [location]);
 
   // 확인 대기함 배지: 아직 확정하지 않은 회의록 수 (화면을 옮기거나 회의록을 확정할 때 갱신)
   useEffect(() => {
@@ -292,6 +316,7 @@ export function DashboardLayout({ children }) {
     { path: '/meeting-notes/inbox', icon: ClipboardCheck, label: '확인 대기함', badge: draftNoteCount },
     { path: '/tasks', icon: ListChecks, label: '할 일' },
     { path: '/people', icon: ContactRound, label: '사람' },
+    { path: '/talents', icon: Briefcase, label: '인력', badge: draftTalentCount },
     { path: '/pipeline', icon: KanbanSquare, label: '딜 파이프라인' },
     { path: '/customers', icon: UsersRound, label: '고객 타임라인' },
     { path: '/dashboard', icon: LayoutDashboard, label: '대시보드' },
@@ -310,6 +335,9 @@ export function DashboardLayout({ children }) {
     }
     if (/^\/meeting-notes\/mn_/.test(location.pathname)) {
       return '회의록 확인';
+    }
+    if (/^\/talents\/rp_/.test(location.pathname)) {
+      return '이력서 확인';
     }
     if (location.pathname === '/briefing/calendar-registration') {
       return '캘린더 등록';
