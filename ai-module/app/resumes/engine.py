@@ -34,6 +34,7 @@ class ResumeResult:
     dropped_items: List[Dict[str, Any]] = field(default_factory=list)
     elapsed_ms: int = 0
     llm_calls: int = 0
+    source_text: str = ""   # 근거(evidence)가 가리키는 원문. 확인 화면에서 근거를 강조할 때 쓴다
 
 
 def extract_resume(*, content: Optional[bytes] = None, text: Optional[str] = None, profile_id: str = "rp_draft",
@@ -60,7 +61,7 @@ def extract_resume(*, content: Optional[bytes] = None, text: Optional[str] = Non
         llm = extract_with_llm(source, reference, generate_fn=generate_fn, want=want or None)
 
     profile = assemble(profile_id, source_refs, doc_format, rules, llm, source, reference, mode)
-    result = ResumeResult(profile=profile, elapsed_ms=int((time.perf_counter() - started) * 1000))
+    result = ResumeResult(profile=profile, elapsed_ms=int((time.perf_counter() - started) * 1000), source_text=source)
     if llm is not None:
         result.llm_provider = llm.provider or "rule"
         result.llm_model = llm.model

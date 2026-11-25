@@ -38,3 +38,5 @@ class ResumeExtractResponse(BaseModel):
     llmFallbackReason: Optional[str] = None
     droppedItems: List[ResumeDroppedItem] = Field(default_factory=list)
     elapsedMs: int = 0
+    # 표는 한 줄의 칸을 " | "로 이은 원문. 프로필의 evidence는 모두 이 글의 일부다 (확인 화면 근거 강조용)
+    sourceText: str = ""

@@ -57,4 +57,5 @@ def extract(request: ResumeExtractRequest) -> ResumeExtractResponse:
         llmFallbackReason=result.fallback_reason,
         droppedItems=result.dropped_items,
         elapsedMs=result.elapsed_ms,
+        sourceText=result.source_text,
     )
