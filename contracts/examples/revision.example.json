@@ -26,5 +26,19 @@
     "modelVersion": "task-type-lr-0.1",
     "actorId": "user_001",
     "decidedAt": "2026-10-14T18:07:42"
+  },
+  {
+    "revisionId": "rv_003",
+    "screen": "RESUME_REVIEW",
+    "targetType": "RESUME_PROFILE",
+    "targetId": "rp_001",
+    "fieldName": "grade",
+    "proposedValue": null,
+    "finalValue": "INTERMEDIATE",
+    "action": "EDITED",
+    "proposedBy": "RULE",
+    "modelVersion": null,
+    "actorId": "user_001",
+    "decidedAt": "2026-11-25T14:20:00"
   }
 ]

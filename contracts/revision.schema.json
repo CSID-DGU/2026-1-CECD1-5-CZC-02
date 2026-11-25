@@ -23,15 +23,15 @@
       "pattern": "^rv_[0-9a-z_]+$"
     },
     "screen": {
-      "enum": ["IDENTITY_CANDIDATE", "MEETING_NOTE_REVIEW", "TASK_REVIEW", "BRIEFING"],
-      "description": "어느 화면에서 일어났나. IDENTITY_CANDIDATE=A, MEETING_NOTE_REVIEW·TASK_REVIEW=B 확인 화면(할 일 종류 수정은 C 소관 필드), BRIEFING=D"
+      "enum": ["IDENTITY_CANDIDATE", "MEETING_NOTE_REVIEW", "TASK_REVIEW", "BRIEFING", "RESUME_REVIEW"],
+      "description": "어느 화면에서 일어났나. IDENTITY_CANDIDATE=A, MEETING_NOTE_REVIEW·TASK_REVIEW=B 확인 화면(할 일 종류 수정은 C 소관 필드), BRIEFING=D, RESUME_REVIEW=이력서 확인 화면(인력 후보, B)"
     },
     "targetType": {
-      "enum": ["IDENTITY_RESOLUTION", "MEETING_NOTE", "TASK", "BRIEFING_ITEM"]
+      "enum": ["IDENTITY_RESOLUTION", "MEETING_NOTE", "TASK", "BRIEFING_ITEM", "RESUME_PROFILE"]
     },
     "targetId": {
       "type": "string",
-      "description": "대상 ID. 예: ir_002, mn_001, t_001"
+      "description": "대상 ID. 예: ir_002, mn_001, t_001, rp_001"
     },
     "fieldName": {
       "type": "string",
