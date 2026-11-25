@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { AlertTriangle, Download, FileUp, Loader2 } from 'lucide-react';
-import { downloadTalentCsv, listTalents, uploadResume } from '../../api/talents';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { AlertTriangle, Download, FileUp, Loader2, UserSearch } from 'lucide-react';
+import { downloadTalentCsv, listMatchTasks, listTalents, uploadResume } from '../../api/talents';
 import { getApiErrorMessage } from '../../api/errors';
-import { availabilityText, careerText, GRADE_LABELS, STATUS_LABELS } from './talentUtils';
+import { availabilityText, careerText, GRADE_LABELS, MATCH_TASK_LABELS, STATUS_LABELS } from './talentUtils';
 
 const TABS = [
   { value: '', label: '전체' },
@@ -32,6 +32,15 @@ export function TalentPoolPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadNotes, setUploadNotes] = useState([]);
   const fileInput = useRef(null);
+  const [matchTasks, setMatchTasks] = useState([]);
+
+  useEffect(() => {
+    let ignore = false;
+    listMatchTasks()
+      .then((data) => { if (!ignore) setMatchTasks(data || []); })
+      .catch(() => { if (!ignore) setMatchTasks([]); });
+    return () => { ignore = true; };
+  }, []);
 
   // 결과는 then 안에서만 상태에 넣는다 (화면을 떠난 뒤 도착한 응답은 버린다)
   const fetchRows = useCallback(() => listTalents({
@@ -140,6 +149,33 @@ export function TalentPoolPage() {
               {uploadNotes.map((note, index) => (
                 <li key={`${note.name}-${index}`} className={note.ok ? 'text-slate-600' : 'text-red-600'}>
                   {note.ok ? '접수됨' : '올리지 못함'} · {note.name}{note.text ? ` — ${note.text}` : ''}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="mb-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="mb-2 flex flex-wrap items-center gap-2">
+            <UserSearch className="h-4 w-4 text-blue-600" />
+            <h3 className="text-sm font-bold text-slate-800">후보 추천</h3>
+            <p className="text-xs text-slate-500">인력 리스트 제출·인력 소싱 할 일에서 고객 요청에 맞는 후보를 찾아요.</p>
+            <Link to="/talents/match" className="ml-auto text-xs font-semibold text-blue-600 hover:underline">요청 글로 바로 찾기 →</Link>
+          </div>
+          {matchTasks.length === 0 ? (
+            <p className="text-xs text-slate-400">아직 인력 리스트 제출·소싱 할 일이 없어요. 회의록에서 할 일이 생기면 여기에 보여요.</p>
+          ) : (
+            <ul className="divide-y divide-slate-100">
+              {matchTasks.map((task) => (
+                <li key={task.taskId}>
+                  <Link to={`/talents/match/${task.taskId}`} className="flex flex-wrap items-center gap-2 py-2 text-sm hover:bg-slate-50">
+                    <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[11px] font-semibold text-blue-700">{MATCH_TASK_LABELS[task.taskType]}</span>
+                    <span className="font-semibold text-slate-800">{task.content}</span>
+                    <span className="text-xs text-slate-400">{task.dueDate ? `기한 ${task.dueDate}` : '기한 확인 필요'}</span>
+                    <span className={`ml-auto text-xs ${task.submissionCount ? 'text-emerald-700' : 'text-slate-400'}`}>
+                      {task.submissionCount ? `제출 리스트 ${task.submissionCount}명` : '아직 안 고름'}
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>

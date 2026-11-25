@@ -16,6 +16,7 @@ import { TasksPage } from './components/tasks/TasksPage';
 import { PeopleScreen } from './components/identity/PeopleScreen.jsx';
 import { TalentPoolPage } from './components/talent/TalentPoolPage';
 import { TalentReviewPage } from './components/talent/TalentReviewPage';
+import { TalentMatchPage } from './components/talent/TalentMatchPage';
 import { TodayBriefingPage } from './components/briefing/TodayBriefingPage';
 import { PreparationBriefingPage } from './components/briefing/PreparationBriefingPage';
 import { CalendarRegistrationPage } from './components/briefing/CalendarRegistrationPage';
@@ -104,6 +105,20 @@ export default function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <TalentPoolPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/talents/match" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <TalentMatchPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/talents/match/:taskId" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <TalentMatchPage />
               </DashboardLayout>
             </ProtectedRoute>
           } />
