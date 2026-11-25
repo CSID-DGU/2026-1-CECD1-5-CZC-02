@@ -44,7 +44,7 @@ function TaskEditor({ task, readOnly, onSave, onSelectEvidence, selectedEvidence
             {people.map(person => <option key={person.personId} value={person.personId}>{person.name}</option>)}
           </select>
         </label>
-        <label className="text-xs text-slate-600">종류
+        <label className="text-xs text-slate-600">종류 {current.taskTypeSource === 'LLM' && current.taskType === task.taskType && <span className="text-amber-700">· AI 추정</span>}
           <select aria-label="종류" value={current.taskType} disabled={disabled} onChange={e => change('taskType', e.target.value)} className={inputClass}>
             {Object.entries(TASK_TYPES).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
           </select>
