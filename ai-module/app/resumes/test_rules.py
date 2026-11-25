@@ -94,3 +94,15 @@ def test_industry_dictionary():
     assert normalize_industry("보험") == ["금융"]
     assert normalize_industry("공공(행정)") == ["공공"]
     assert normalize_industry("알수없음") == []
+
+
+def test_backend_dictionary_copy_is_in_sync():
+    """후보 추천(백엔드)이 쓰는 사전 사본이 이 사전과 같은지. 다르면 python -m app.resumes.dictionary 로 다시 만든다."""
+    import json
+
+    from app.resumes.dictionary import _backend_dictionary_file, export_for_backend
+
+    target = _backend_dictionary_file()
+    if not target.exists():
+        pytest.skip("backend 폴더가 없는 체크아웃")
+    assert json.loads(target.read_text(encoding="utf-8")) == export_for_backend()

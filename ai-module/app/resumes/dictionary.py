@@ -27,7 +27,7 @@ SKILLS: List[Tuple[str, str, Tuple[str, ...]]] = [
     ("PHP", "LANGUAGE", ()),
     ("ASP", "LANGUAGE", ("classic asp",)),
     ("ASP.NET", "FRAMEWORK", ("asp.net mvc", "aspnet")),
-    (".NET", "FRAMEWORK", ("dotnet", ".net framework", "닷넷", "vb.net", "vb.net/c#")),
+    (".NET", "FRAMEWORK", ("net", "dotnet", ".net framework", "닷넷", "vb.net", "vb.net/c#")),
     ("Visual Basic", "LANGUAGE", ("vb", "vb6", "vb6.0", "visualbasic", "vba")),
     ("PowerBuilder", "LANGUAGE", ("power builder", "pb", "파워빌더")),
     ("Delphi", "LANGUAGE", ("델파이",)),
@@ -200,7 +200,7 @@ SLASH_NAMES = sorted({alias for alias in ALIASES if "/" in alias}, key=len, reve
 # 글 전체에서 찾을 때(줄글) 헷갈리는 짧은 이름은 뺀다
 SCAN_EXCLUDE = {"c", "r", "go", "vb", "pb", "js", "ts", "py", "oz", "ora", "win", "window", "node", "access", "ant",
                 "shell", "쉘", "pc", "hp", "ibm", "sun", "mq", "tcp", "socket", "소켓", "호스트", "군", "udb", "sap",
-                "vue", "flex", "swift", "ruby", "scala", "perl", "orange", "오렌지", "apache", "android", "git", "jee"}
+                "vue", "net", "flex", "swift", "ruby", "scala", "perl", "orange", "오렌지", "apache", "android", "git", "jee"}
 
 
 def lookup(token: str) -> Optional[Tuple[str, str]]:
@@ -324,3 +324,41 @@ def unique(values: Iterable[str]) -> List[str]:
             seen.add(value)
             result.append(value)
     return result
+
+
+# ── 백엔드(후보 추천)가 같은 사전을 쓰도록 JSON으로 내보낸다 ──
+# 사전은 여기 한 곳에서만 고친다. 고친 뒤 `python -m app.resumes.dictionary`로 다시 내보내면
+# test_rules.py가 두 쪽이 같은지 검사한다.
+BACKEND_DICTIONARY_PATH = ("backend", "src", "main", "resources", "talent", "skill-dictionary.json")
+
+
+def export_for_backend() -> dict:
+    return {
+        "note": "ai-module/app/resumes/dictionary.py에서 만든 파일. 직접 고치지 말고 python -m app.resumes.dictionary로 다시 만든다.",
+        "skills": [{"name": name, "category": category, "aliases": list(others)} for name, category, others in SKILLS],
+        "scanExclude": sorted(SCAN_EXCLUDE),
+        "industries": [{"name": name, "words": list(words)} for name, words in INDUSTRIES],
+    }
+
+
+def _backend_dictionary_file():
+    from pathlib import Path
+    return Path(__file__).resolve().parents[3].joinpath(*BACKEND_DICTIONARY_PATH)
+
+
+if __name__ == "__main__":
+    import json
+
+    target = _backend_dictionary_file()
+    target.parent.mkdir(parents=True, exist_ok=True)
+    data = export_for_backend()
+    # 기술 하나가 한 줄 (사전을 고치면 diff에서 잘 보이게)
+    lines = ["{", f' "note": {json.dumps(data["note"], ensure_ascii=False)},', ' "skills": [']
+    lines += [f"  {json.dumps(item, ensure_ascii=False)}," for item in data["skills"]]
+    lines[-1] = lines[-1].rstrip(",")
+    lines += [" ],", f' "scanExclude": {json.dumps(data["scanExclude"], ensure_ascii=False)},', ' "industries": [']
+    lines += [f"  {json.dumps(item, ensure_ascii=False)}," for item in data["industries"]]
+    lines[-1] = lines[-1].rstrip(",")
+    lines += [" ]", "}"]
+    target.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    print(f"wrote {target}")
