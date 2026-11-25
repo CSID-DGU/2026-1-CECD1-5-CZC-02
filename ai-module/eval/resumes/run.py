@@ -90,6 +90,7 @@ def run_mode(mode: str, inputs, pseudo_gold: Dict[str, Dict[str, Any]]) -> Tuple
         times.append(elapsed)
         profiles[case_id] = result.profile
         per_case.append({"caseId": case_id, "ms": elapsed, "llmCalls": result.llm_calls,
+                         "llmError": (result.fallback_reason or "")[:120] or None,
                          **{key: row[key] for key in row if key not in ("filled",)}})
     summary = summarize(rows, times)
     summary["failures"] = failures
