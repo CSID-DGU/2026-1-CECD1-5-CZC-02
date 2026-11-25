@@ -6,6 +6,7 @@ import com.salesmap.backend.analysis.entity.AnalysisRevision;
 import com.salesmap.backend.analysis.repository.AnalysisRevisionRepository;
 import com.salesmap.backend.revision.dto.RevisionCreateRequest;
 import com.salesmap.backend.revision.dto.RevisionResponse;
+import com.salesmap.backend.revision.dto.RevisionMetricsResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -91,5 +92,33 @@ class RevisionServiceTest {
 
         assertThat(service.list(3L)).isEmpty();
         verify(repository).findByOwnerUserIdOrderByIdAsc(3L);
+    }
+
+    @Test
+    void calculatesApprovalAndPerFieldEditRatesFromDecisionRows() {
+        AnalysisRevision accepted = revision(1L, "MEETING_NOTE", "mn_1", "fields.discussion", "ACCEPTED");
+        AnalysisRevision edited = revision(2L, "MEETING_NOTE", "mn_2", "fields.discussion", "EDITED");
+        AnalysisRevision ignored = revision(3L, "BRIEFING_ITEM", "t_3", "opened", "OPENED");
+        when(repository.findByOwnerUserIdOrderByIdAsc(3L)).thenReturn(List.of(accepted, edited, ignored));
+
+        RevisionMetricsResponse response = service.metrics(3L);
+
+        assertThat(response.decisionTargetCount()).isEqualTo(2);
+        assertThat(response.acceptedWithoutEditTargetCount()).isEqualTo(1);
+        assertThat(response.acceptedWithoutEditRate()).isEqualTo(0.5);
+        assertThat(response.fields()).singleElement().satisfies(field -> {
+            assertThat(field.fieldName()).isEqualTo("fields.discussion");
+            assertThat(field.decisionCount()).isEqualTo(2);
+            assertThat(field.editedCount()).isEqualTo(1);
+            assertThat(field.editRate()).isEqualTo(0.5);
+        });
+    }
+
+    private AnalysisRevision revision(Long id, String targetType, String targetId, String fieldName, String action) {
+        AnalysisRevision revision = new AnalysisRevision(
+                3L, "MEETING_NOTE_REVIEW", targetType, targetId, fieldName,
+                "\"before\"", "\"after\"", action, "MODEL", null, "user_3", null);
+        ReflectionTestUtils.setField(revision, "id", id);
+        return revision;
     }
 }

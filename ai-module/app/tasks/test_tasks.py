@@ -45,7 +45,7 @@ def test_sample_contract_and_safety(note):
 
 def test_explicit_assignee_and_single_participant(note):
     note["participants"] = note["participants"][:1]
-    assert all(t["assignee"] == "user_demo" and t["counterpartPersonId"] == "p_001"
+    assert all(t["assignee"] == (None if t["commitmentKind"] == "IMPLICIT" else "user_demo") and t["counterpartPersonId"] == "p_001"
                for t in extract_tasks(note, assignee="user_demo"))
 
 

@@ -61,3 +61,9 @@ bash ./gradlew test --tests '*Test'
 
 MySQL 없이 저장소 mock으로 권한, 상태, 중복, 충돌, audit 실패, 실제 공용 스키마 형식을 검사한다.
 실제 MySQL의 DDL/트랜잭션 통합 실행은 별도 연결 검증이 필요하다.
+
+## 수정 기록 전달
+
+TaskRevisionDispatcher는 10초마다 최대 100건을 잠그고 D RevisionService에 전달한다.
+공식 저장과 큐 삭제는 같은 트랜잭션이며 실패 시 롤백하여 재전달 중복을 막는다.
+pending API에는 미전달 행만 남는다. D 서비스는 actorId를 소유자로, decidedAt을 수신 시각으로 저장한다.

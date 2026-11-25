@@ -1,4 +1,5 @@
 import './tasks.css';
+import { peopleApi } from '../identity/peopleApi';
 import { getMeetingNotes } from '../../api/meetingNotes';
 import { noteTitle, formatMeetingDateTime } from '../minutes/meetingNoteUtils';
 import { getMe } from '../../api/auth';
@@ -14,7 +15,8 @@ async function fetchDetails() {
 }
 
 /** 통합 시 로그인 보호 경로 아래 배치한다. 현재 페이지도 JWT API만 사용한다. */
-export function TasksPage({ currentUserId = null, people = [] }) {
+export function TasksPage({ currentUserId = null, people: suppliedPeople }) {
+  const [people, setPeople] = useState(suppliedPeople || []);
   const [tasks, setTasks] = useState([]);
   const [actorId, setActorId] = useState(currentUserId);
   const [error, setError] = useState('');
@@ -48,6 +50,22 @@ export function TasksPage({ currentUserId = null, people = [] }) {
       .catch(e => { if (active) setNotesError(errorMessage(e)); });
     return () => { active = false; };
   }, []);
+  useEffect(() => {
+    if (suppliedPeople) { setPeople(suppliedPeople); return; }
+    let active = true;
+    const controller = new AbortController();
+    async function loadPeople() {
+      const all = [];
+      for (let page = 0; ; page += 1) {
+        const batch = await peopleApi.list('', page, controller.signal);
+        all.push(...batch);
+        if (batch.length < 20) break;
+      }
+      if (active) setPeople(all);
+    }
+    loadPeople().catch(e => { if (active) setError(errorMessage(e)); });
+    return () => { active = false; controller.abort(); };
+  }, [suppliedPeople]);
   async function run(action) {
     setBusy(true); setError(''); setMessage('');
     try { await action(); await reload(); }

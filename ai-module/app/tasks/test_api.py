@@ -12,7 +12,7 @@ def test_extract_endpoint_contract():
     assert len(response.json()) == 3
     for task in response.json():
         _validator("task").validate(task)
-        assert task["assignee"] == "user_demo"
+        assert task["assignee"] == (None if task["commitmentKind"] == "IMPLICIT" else "user_demo")
         assert task["status"] == "DRAFT"
 
 
