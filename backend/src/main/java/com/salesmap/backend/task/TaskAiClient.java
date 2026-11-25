@@ -15,9 +15,12 @@ public class TaskAiClient {
     private final RestClient client;
     // 생성자가 둘이라 Spring이 쓸 쪽을 지정한다 (없으면 "No default constructor found"로 서버가 안 뜸)
     @Autowired
-    public TaskAiClient(@Value("${task.ai-base-url:http://localhost:8001}") String baseUrl) {
+    // 규칙 NONE 항목은 AI 모듈이 로컬 LLM에 물어봐서 10초를 넘길 수 있다 → 회의록과 같은 AI 모듈 제한을 쓴다
+    public TaskAiClient(@Value("${task.ai-base-url:http://localhost:8001}") String baseUrl,
+                        @Value("${ai.module.connect-timeout-ms:5000}") int connectTimeoutMs,
+                        @Value("${ai.module.read-timeout-ms:330000}") int readTimeoutMs) {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(3000); factory.setReadTimeout(10000);
+        factory.setConnectTimeout(connectTimeoutMs); factory.setReadTimeout(readTimeoutMs);
         client = RestClient.builder().baseUrl(baseUrl).requestFactory(factory).build();
     }
     TaskAiClient(RestClient client) { this.client = client; }
