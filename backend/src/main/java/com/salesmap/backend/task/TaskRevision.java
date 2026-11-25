@@ -11,6 +11,7 @@ public class TaskRevision {
     @Lob @Column(nullable = false, columnDefinition = "LONGTEXT") private String payload;
     protected TaskRevision() {}
     public TaskRevision(Long ownerId, String payload) { this.ownerId = ownerId; this.payload = payload; }
+    public Long getOwnerId() { return ownerId; }
     public Long getId() { return id; }
     public String getPayload() { return payload; }
 }
