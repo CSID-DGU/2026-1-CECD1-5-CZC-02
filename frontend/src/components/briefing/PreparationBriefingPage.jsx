@@ -3,6 +3,7 @@ import { AlertCircle, CalendarDays, CheckCircle2, ClipboardCheck, Loader2, Refre
 import { getPreparationBriefing } from '../../api/briefings';
 import { TaskCalendarRegistrationButton } from './TaskCalendarRegistrationButton';
 import { taskTypeLabel } from './taskTypeLabel';
+import { SubmissionBriefingSlot } from '../talent/SubmissionBriefingSlot';
 
 function toDateInput(date) {
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -41,6 +42,7 @@ function PreparationCard({ item }) {
           <p className="text-sm text-slate-400">등록된 준비 항목이 없습니다.</p>
         )}
       </div>
+      <SubmissionBriefingSlot taskId={item.taskId} />
       {item.evidence && <p className="mt-3 text-xs text-slate-500">출처: {item.evidence}</p>}
     </article>
   );

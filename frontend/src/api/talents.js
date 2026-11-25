@@ -55,3 +55,33 @@ export async function downloadTalentCsv() {
   link.click();
   URL.revokeObjectURL(url);
 }
+
+// ── 후보 추천 · 제출 리스트 ──
+// 추천은 백엔드 규칙 계산(LLM 없음). 제출 리스트에는 담당자가 고른 후보만 저장한다.
+
+export async function listMatchTasks() {
+  const response = await api.get('/api/talents/match/tasks');
+  return response.data.data;
+}
+
+export async function matchForTask(taskId) {
+  const response = await api.get('/api/talents/match', { params: { taskId } });
+  return response.data.data;
+}
+
+// taskId 없이 text만 보내면 요청 글만으로 찾는다. 둘 다 보내면 할 일은 그대로 두고 고친 글로 다시 계산한다.
+export async function matchText({ taskId, text }) {
+  const response = await api.post('/api/talents/match', { taskId: taskId || null, text });
+  return response.data.data;
+}
+
+export async function saveSubmission(taskId, profileIds) {
+  const response = await api.put(`/api/talents/submissions/${taskId}`, { profileIds });
+  return response.data.data;
+}
+
+// 미팅 준비 브리핑 한 칸: 같은 할 일 · 같은 회의록 · 같은 고객 담당자의 제출 리스트
+export async function relatedSubmissions(taskId) {
+  const response = await api.get(`/api/talents/submissions/${taskId}/related`);
+  return response.data.data;
+}

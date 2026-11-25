@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
-  availabilityText, buildPatch, careerText, findEvidenceLine, formFromDocument, isValidBirthYear, sourceRows,
+  availabilityText, buildPatch, careerText, findEvidenceLine, formFromDocument, isStoredTaskId, isValidBirthYear,
+  requirementSummary, sameSelection, sourceRows, toggleSelection,
 } from './talentUtils.js';
 
 // 가짜 이력서 값만 쓴다.
@@ -59,4 +60,26 @@ test('생년 입력 검사', () => {
   assert.equal(isValidBirthYear('1990'), true);
   assert.equal(isValidBirthYear('1800'), false);
   assert.equal(isValidBirthYear('19.5'), false);
+});
+
+test('요청 조건 요약은 아는 칸만 쓴다', () => {
+  assert.equal(requirementSummary({
+    skills: [{ name: 'Java', required: true }, { name: 'Spring', required: true }, { name: 'React', required: false }],
+    headcount: { value: 3 },
+    minCareerMonths: { value: 60 },
+    minGrade: null,
+    startFrom: { value: '2027-02-01' },
+    industries: [{ name: '금융' }],
+  }), 'Java·Spring · 3명 · 경력 5년 이상 · 2027-02-01부터 · 우대 React · 금융 경험 가점');
+  assert.equal(requirementSummary({ skills: [], headcount: null, minCareerMonths: null, minGrade: null, startFrom: null, industries: [] }),
+    '조건을 찾지 못함');
+});
+
+test('제출 리스트 고르기는 순서를 지킨다', () => {
+  assert.deepEqual(toggleSelection(['rp_2'], 'rp_1'), ['rp_2', 'rp_1']);
+  assert.deepEqual(toggleSelection(['rp_2', 'rp_1'], 'rp_2'), ['rp_1']);
+  assert.equal(sameSelection(['rp_1', 'rp_2'], ['rp_1', 'rp_2']), true);
+  assert.equal(sameSelection(['rp_1', 'rp_2'], ['rp_2', 'rp_1']), false);
+  assert.equal(isStoredTaskId('t_12'), true);
+  assert.equal(isStoredTaskId('t_draft_1'), false);
 });

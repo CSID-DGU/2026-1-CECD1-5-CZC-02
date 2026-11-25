@@ -55,6 +55,7 @@ function TaskEditor({ task, readOnly, onSave, onSelectEvidence, selectedEvidence
       <button type="button" className="mt-3 w-full rounded-lg bg-slate-50 p-3 text-left text-xs leading-5 text-slate-600" onClick={() => onSelectEvidence?.(task.evidence)}>
         <span className="font-semibold">원문 근거</span><br />{task.evidence}
       </button>
+      {['PROPOSAL_SUBMISSION', 'SOURCING_START'].includes(task.taskType) && /^t_\d+$/.test(task.taskId || '') && <a href={`/talents/match/${task.taskId}`} className="mt-2 inline-block text-sm font-semibold text-blue-600 hover:underline">후보 추천 보기 →</a>}
       {error && <p role="alert" className="mt-2 text-sm text-red-700">{error}</p>}
       {!readOnly && onSave && <div className="mt-3 flex flex-wrap gap-2">
         <button type="button" disabled={disabled || !current.content.trim()} onClick={() => save(task.status)} className="rounded-lg border px-3 py-2 text-sm disabled:opacity-40">{busy ? '저장 중…' : '수정 저장'}</button>

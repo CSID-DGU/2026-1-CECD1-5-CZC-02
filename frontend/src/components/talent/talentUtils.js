@@ -110,3 +110,45 @@ export function isValidBirthYear(value) {
   const number = Number(value);
   return Number.isInteger(number) && number >= 1900 && number <= 2100;
 }
+
+// ── 후보 추천 ──
+
+export const RELATION_LABELS = {
+  SAME_TASK: '이 할 일',
+  SAME_NOTE: '같은 회의록',
+  SAME_COUNTERPART: '같은 고객 담당자',
+};
+
+export const SOURCE_ORIGIN_LABELS = { TASK: '할 일', CUSTOMER_REQUEST: '회의록', TYPED: '직접 입력' };
+
+export const MATCH_TASK_LABELS = { PROPOSAL_SUBMISSION: '인력 리스트 제출', SOURCING_START: '인력 소싱 착수' };
+
+/** 저장된 할 일 ID(t_숫자)만 후보 추천으로 이을 수 있다. */
+export function isStoredTaskId(taskId) {
+  return /^t_\d+$/.test(String(taskId || ''));
+}
+
+/** 요청 조건 한 줄 요약. 모르는 칸은 빼고, 빈 경우 '조건을 찾지 못함'. */
+export function requirementSummary(requirement) {
+  if (!requirement) return '';
+  const parts = [];
+  const required = requirement.skills.filter((skill) => skill.required).map((skill) => skill.name);
+  const preferred = requirement.skills.filter((skill) => !skill.required).map((skill) => skill.name);
+  if (required.length) parts.push(required.join('·'));
+  if (requirement.headcount) parts.push(`${requirement.headcount.value}명`);
+  if (requirement.minCareerMonths) parts.push(`경력 ${careerText(requirement.minCareerMonths.value)} 이상`);
+  if (requirement.minGrade) parts.push(`${GRADE_LABELS[requirement.minGrade.value]} 이상`);
+  if (requirement.startFrom) parts.push(`${requirement.startFrom.value}부터`);
+  if (preferred.length) parts.push(`우대 ${preferred.join('·')}`);
+  if (requirement.industries.length) parts.push(`${requirement.industries.map((item) => item.name).join('·')} 경험 가점`);
+  return parts.length ? parts.join(' · ') : '조건을 찾지 못함';
+}
+
+/** 체크 상태를 바꾼 새 목록 (고른 순서 유지). */
+export function toggleSelection(selected, profileId) {
+  return selected.includes(profileId) ? selected.filter((id) => id !== profileId) : [...selected, profileId];
+}
+
+export function sameSelection(left, right) {
+  return left.length === right.length && left.every((id, index) => id === right[index]);
+}

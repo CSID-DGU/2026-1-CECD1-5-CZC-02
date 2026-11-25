@@ -336,6 +336,9 @@ export function DashboardLayout({ children }) {
     if (/^\/meeting-notes\/mn_/.test(location.pathname)) {
       return '회의록 확인';
     }
+    if (location.pathname.startsWith('/talents/match')) {
+      return '후보 추천';
+    }
     if (/^\/talents\/rp_/.test(location.pathname)) {
       return '이력서 확인';
     }
