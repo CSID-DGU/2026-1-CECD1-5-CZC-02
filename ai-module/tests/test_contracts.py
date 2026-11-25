@@ -49,6 +49,7 @@ def test_example_ids_are_linked():
     resolution_ids = ids_of("identity_resolution", "resolutionId")
     note_ids = ids_of("meeting_note", "noteId")
     task_ids = ids_of("task", "taskId")
+    resume_profile_ids = ids_of("resume_profile", "profileId")
 
     for resolution in load_examples("identity_resolution"):
         linked = [resolution["personId"]] + [candidate["personId"] for candidate in resolution["candidates"]]
@@ -63,7 +64,8 @@ def test_example_ids_are_linked():
         assert task["noteId"] in note_ids | {None}
         assert task["counterpartPersonId"] in person_ids | {None}
 
-    targets = {"IDENTITY_RESOLUTION": resolution_ids, "MEETING_NOTE": note_ids, "TASK": task_ids}
+    targets = {"IDENTITY_RESOLUTION": resolution_ids, "MEETING_NOTE": note_ids, "TASK": task_ids,
+               "RESUME_PROFILE": resume_profile_ids}
     for revision in load_examples("revision"):
         if revision["targetType"] in targets:
             assert revision["targetId"] in targets[revision["targetType"]]

@@ -20,8 +20,8 @@ import java.util.LinkedHashSet;
 
 @Service
 public class RevisionService {
-    private static final Set<String> SCREENS = Set.of("IDENTITY_CANDIDATE", "MEETING_NOTE_REVIEW", "TASK_REVIEW", "BRIEFING");
-    private static final Set<String> TARGET_TYPES = Set.of("IDENTITY_RESOLUTION", "MEETING_NOTE", "TASK", "BRIEFING_ITEM");
+    private static final Set<String> SCREENS = Set.of("IDENTITY_CANDIDATE", "MEETING_NOTE_REVIEW", "TASK_REVIEW", "BRIEFING", "RESUME_REVIEW");
+    private static final Set<String> TARGET_TYPES = Set.of("IDENTITY_RESOLUTION", "MEETING_NOTE", "TASK", "BRIEFING_ITEM", "RESUME_PROFILE");
     private static final Set<String> ACTIONS = Set.of("ACCEPTED", "EDITED", "REJECTED", "SELECTED_CANDIDATE", "CREATED_NEW", "OPENED", "IGNORED");
     private static final Set<String> PROPOSERS = Set.of("RULE", "MODEL", "LLM");
 

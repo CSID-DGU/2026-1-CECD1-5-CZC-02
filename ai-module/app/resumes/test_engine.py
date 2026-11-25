@@ -296,6 +296,9 @@ def test_route_extracts_docx(client):
     assert data["resumeProfile"]["sourceRefs"] == [{"sourceId": "src_draft", "sourceType": "RESUME_FILE",
                                                     "fileName": "샘플_이력서.docx"}]
     assert data["llmProvider"] == "rule"
+    # 확인 화면이 근거를 원문에서 찾아 강조할 수 있어야 한다
+    assert data["resumeProfile"]["name"]["evidence"] in data["sourceText"]
+    assert all(project["evidence"] in data["sourceText"] for project in data["resumeProfile"]["projects"])
 
 
 def test_route_extracts_text(client):
