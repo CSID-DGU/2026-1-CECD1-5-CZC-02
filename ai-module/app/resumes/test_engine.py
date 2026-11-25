@@ -161,6 +161,30 @@ def test_doc_file_is_rejected():
         extract_resume(content=b"\xd0\xcf\x11\xe0 old word file", reference_date=REF)
 
 
+def _zip_with_document(xml: bytes) -> bytes:
+    import io
+    import zipfile
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("word/document.xml", xml)
+    return buffer.getvalue()
+
+
+def test_zip_bomb_is_rejected(monkeypatch):
+    import app.resumes.docx_reader as docx_reader
+    monkeypatch.setattr(docx_reader, "MAX_XML_BYTES", 1024)
+    content = _zip_with_document(b"<w:document>" + b" " * 100_000 + b"</w:document>")
+    assert len(content) < 2048   # 압축본은 작지만 풀면 크다
+    with pytest.raises(DocxError, match="너무 큽니다"):
+        extract_resume(content=content, reference_date=REF)
+
+
+def test_doctype_is_rejected():
+    xml = b'<?xml version="1.0"?><!DOCTYPE x [<!ENTITY a "aaaa">]><w:document>&a;</w:document>'
+    with pytest.raises(DocxError):
+        extract_resume(content=_zip_with_document(xml), reference_date=REF)
+
+
 # ---------- 줄글 (가짜 LLM) ----------
 
 def fake_free_text_llm(request):

@@ -15,6 +15,10 @@ from xml.etree import ElementTree
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 CELL_SEPARATOR = " | "
+# 압축을 푼 본문 XML 상한. 올리는 파일은 압축본 10MB까지라 작은 파일이 크게 풀리는 경우(zip 폭탄)를 막는다.
+# 실제 이력서 본문 XML은 대개 1MB 안팎이다.
+MAX_XML_BYTES = 30 * 1024 * 1024
+TOO_LARGE_MESSAGE = "워드 문서 내용이 너무 큽니다 (압축을 풀면 30MB 초과)."
 
 
 class DocxError(ValueError):
@@ -91,9 +95,16 @@ def read_docx(source: Union[bytes, str, Path]) -> DocxDocument:
         else:
             archive = zipfile.ZipFile(io.BytesIO(source))
         with archive:
-            xml = archive.read("word/document.xml")
+            if archive.getinfo("word/document.xml").file_size > MAX_XML_BYTES:
+                raise DocxError(TOO_LARGE_MESSAGE)
+            with archive.open("word/document.xml") as member:
+                xml = member.read(MAX_XML_BYTES + 1)   # 머리글의 크기가 거짓이어도 이만큼만 푼다
     except (zipfile.BadZipFile, KeyError, OSError) as exception:
         raise DocxError("워드(.docx) 파일을 읽을 수 없습니다. .doc 파일이면 워드에서 .docx로 다시 저장해 주세요.") from exception
+    if len(xml) > MAX_XML_BYTES:
+        raise DocxError(TOO_LARGE_MESSAGE)
+    if b"<!DOCTYPE" in xml[:4096].upper():
+        raise DocxError("워드 문서 내용(XML)이 올바르지 않습니다.")   # 워드는 DOCTYPE을 쓰지 않는다 (엔티티 폭탄 막기)
 
     try:
         root = ElementTree.fromstring(xml)
