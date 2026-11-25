@@ -20,6 +20,7 @@ def test_strict_output_and_local_model(data, expected):
         assert suggest_task_type('가상 업무') == expected
         assert provider.call_args.kwargs['task_models'] == {'task_type': 'gemma4:e4b'}
         assert provider.call_args.kwargs['task_think'] == {'task_type': False}
+        assert provider.call_args.kwargs['timeout_seconds'] == 30
 
 
 def test_unavailable_keeps_none():

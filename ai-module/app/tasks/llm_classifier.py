@@ -4,6 +4,9 @@ from app.llm.base import LLMError, LLMRequest
 from app.llm.ollama_provider import OllamaProvider
 from .classifier import RULES
 
+# 보조 분류라 오래 기다리지 않는다. 넘기면 LLMError → 기존 NONE 유지 (회의록 300초와 별개)
+TIMEOUT_SECONDS = 30
+
 SCHEMA = {
     "type": "object", "additionalProperties": False,
     "required": ["taskType"],
@@ -22,7 +25,8 @@ JSON 객체 {"taskType":"종류"}만 반환한다."""
 def suggest_task_type(text: str) -> str:
     # 공용 router를 거치지 않아 유료 API 또는 다른 과제 모델로 전환되지 않는다.
     provider = OllamaProvider(task_models={"task_type": "gemma4:e4b"},
-                              task_think={"task_type": False})
+                              task_think={"task_type": False},
+                              timeout_seconds=TIMEOUT_SECONDS)
     try:
         data = provider.generate(LLMRequest(
             task="task_type", system=SYSTEM, user=text, json_schema=SCHEMA,
