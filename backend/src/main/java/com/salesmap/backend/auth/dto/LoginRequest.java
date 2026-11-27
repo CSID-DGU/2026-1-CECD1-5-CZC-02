@@ -11,4 +11,9 @@ public record LoginRequest(
         @NotBlank(message = "비밀번호는 필수입니다.")
         String password
 ) {
+    // Spring MVC의 DEBUG/TRACE 객체 출력에도 인증 입력은 남기지 않는다.
+    @Override
+    public String toString() {
+        return "LoginRequest[credentials=REDACTED]";
+    }
 }

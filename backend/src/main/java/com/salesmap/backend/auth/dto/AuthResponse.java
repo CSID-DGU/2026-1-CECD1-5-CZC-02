@@ -8,4 +8,8 @@ public record AuthResponse(
         Long expiresIn,
         UserResponse user
 ) {
+    @Override
+    public String toString() {
+        return "AuthResponse[credentials=REDACTED]";
+    }
 }

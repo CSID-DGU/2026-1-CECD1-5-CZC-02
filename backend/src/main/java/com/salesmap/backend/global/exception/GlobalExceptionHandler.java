@@ -15,6 +15,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -88,7 +89,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleDataIntegrityViolationException(
             DataIntegrityViolationException exception
     ) {
-        log.error("Data integrity violation occurred.", exception);
+        // SQL 예외 메시지에는 입력값이 포함될 수 있어 오류 코드만 기록한다.
+        Throwable cause = exception.getMostSpecificCause();
+        String sqlState = "UNKNOWN";
+        int vendorCode = 0;
+        if (cause instanceof SQLException sqlException) {
+            String state = sqlException.getSQLState();
+            if (state != null && state.matches("[A-Z0-9]{5}")) {
+                sqlState = state;
+            }
+            vendorCode = sqlException.getErrorCode();
+        }
+        log.error("Data integrity violation: type={}, sqlState={}, vendorCode={}",
+                exception.getClass().getSimpleName(), sqlState, vendorCode);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.fail("데이터 저장 중 오류가 발생했습니다."));
